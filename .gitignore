@@ -1,0 +1,7 @@
+*.d
+*.o
+*~
+*.so
+
+binaries/client/quake2
+binaries/r1q2ded/r1q2ded
