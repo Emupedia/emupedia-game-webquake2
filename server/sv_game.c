@@ -853,12 +853,6 @@ SV_InitGameProgs
 Init the game subsystem for a new map
 ===============
 */
-#ifdef DEDICATED_ONLY
-void EXPORT SCR_DebugGraph (float value, int color)
-{
-}
-#endif
-
 void SV_InitGameProgs (void)
 {
 	edict_t			*ent;
