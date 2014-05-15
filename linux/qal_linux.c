@@ -62,7 +62,7 @@ void QAL_Shutdown (void){
  Binds our QAL function pointers to the appropriate AL stuff
  =================
 */
-qboolean QAL_Init (const char *driver){
+qboolean QAL_Init (){
 
 	Com_Printf("...initializing QAL\n", LOG_CLIENT);
 

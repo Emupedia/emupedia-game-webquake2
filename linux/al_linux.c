@@ -133,10 +133,10 @@ failed:
  AL_StartOpenAL
  =================
 */
-static qboolean AL_StartOpenAL (const char *driver)
+static qboolean AL_StartOpenAL ()
 {
 	// Initialize our QAL dynamic bindings
-	if (!QAL_Init(driver))
+	if (!QAL_Init())
 		return false;
 
 	// Get device list
@@ -165,7 +165,7 @@ qboolean AL_Init (void){
 	Com_Printf("Initializing OpenAL subsystem\n", LOG_CLIENT);
 
 	// Initialize OpenAL subsystem
-	if (!AL_StartOpenAL(AL_DRIVER_OPENAL))
+	if (!AL_StartOpenAL())
 	{
 		// Let the user continue without sound
 		Com_Printf ("WARNING: OpenAL initialization failed\n", LOG_CLIENT|LOG_WARNING);

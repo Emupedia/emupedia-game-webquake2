@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __QAL_H__
 
 
-qboolean	QAL_Init (const char *driver);
+qboolean	QAL_Init ();
 void		QAL_Shutdown (void);
 
 

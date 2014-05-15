@@ -157,7 +157,6 @@ extern alConfig_t		alConfig;
 
 #ifdef _WIN32
 
-#define AL_DRIVER_OPENAL	"OpenAL32"
 
 #define ALimp_Init						ALW_Init
 #define ALimp_Shutdown					ALW_Shutdown
@@ -165,7 +164,6 @@ extern alConfig_t		alConfig;
 #else
 #ifdef __linux__
 
-#define AL_DRIVER_OPENAL	"/usr/lib/libopenal.so"
 
 #define ALimp_Init						AL_Init
 #define ALimp_Shutdown					AL_Shutdown
