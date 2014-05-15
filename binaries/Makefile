@@ -1,35 +1,12 @@
-.PHONY: default all r1q2ded game client ref_gl clean distclean combine
+## DO NOT TOUCH THIS FILE
+# copy example.mk to local.mk and change that
 
-default: all
+# load defaults
+include example.mk
 
-all: r1q2ded client game ref_gl
+# load customizations if exist
+-include local.mk
 
-r1q2ded:
-	$(MAKE) -C r1q2ded
 
-client:
-	$(MAKE) -C client
-
-game:
-	$(MAKE) -C game
-
-ref_gl:
-	$(MAKE) -C ref_gl
-
-clean:
-	$(MAKE) -C r1q2ded clean
-	$(MAKE) -C client clean
-	$(MAKE) -C game clean
-	$(MAKE) -C ref_gl clean
-
-distclean:
-	$(MAKE) -C r1q2ded distclean
-	$(MAKE) -C client distclean
-	$(MAKE) -C game distclean
-	$(MAKE) -C ref_gl distclean
-
-combine:
-	$(MAKE) -C r1q2ded combine
-	$(MAKE) -C client combine
-	$(MAKE) -C game combine
-	$(MAKE) -C ref_gl combine
+VPATH=$(TOPDIR)
+include $(TOPDIR)/module.mk
