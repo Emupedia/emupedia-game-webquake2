@@ -150,10 +150,8 @@ void S_Spatialize(channel_t *ch);
 #define		SOUND_FULLVOLUME	80.0f
 #define		SOUND_LOOPATTENUATE	0.003f
 
-#ifdef USE_OPENAL
 qboolean S_OpenAL_LoadSound (sfx_t *sfx);
 extern cvar_t	*s_openal_device;
-#endif
 
 //OpenAL
 /*#define	MAX_OPENAL_BUFFERS 1024

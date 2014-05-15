@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // qal_win.c -- binding of AL to QAL function pointers
 
-#ifdef USE_OPENAL
 
 #include <dlfcn.h> // ELF dl loader
 #include "../client/snd_loc.h"
@@ -72,4 +71,3 @@ qboolean QAL_Init (const char *driver){
 
 	return true;
 }
-#endif

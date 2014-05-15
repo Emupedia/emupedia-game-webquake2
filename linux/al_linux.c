@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifdef USE_OPENAL
 
 #include "../client/snd_loc.h"
 
@@ -234,4 +233,3 @@ void AL_Shutdown (void){
 	memset(&alState, 0, sizeof(alState_t));
 }
 
-#endif

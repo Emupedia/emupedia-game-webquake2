@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifdef USE_OPENAL
 
 #include "../qcommon/qcommon.h"
 #include "winquake.h"
@@ -238,4 +237,3 @@ void ALW_Shutdown (void){
 	memset(&alwState, 0, sizeof(alwState_t));
 }
 
-#endif

@@ -1,6 +1,5 @@
 #include "../qcommon/qcommon.h"
 
-#ifdef USE_OPENAL
 #include <AL/al.h>
 #include <AL/alc.h>
 
@@ -20,7 +19,6 @@
 #ifdef __linux__
 #include "../linux/al_linux.h"
 #endif
-#endif
 
 typedef struct
 {
@@ -39,16 +37,13 @@ typedef struct sfx_s
 	sfxcache_t	*cache;
 	char 		*truename;
 
-#ifdef USE_OPENAL
 	qboolean			loaded;
 	int					samples;
 	int					rate;
 	unsigned			format;
 	unsigned			bufferNum;
-#endif
 } sfx_t;
 
-#ifdef USE_OPENAL
 
 typedef struct
 {
@@ -172,6 +167,5 @@ extern alConfig_t		alConfig;
 
 #error "ALimp_* not available for this platform"
 
-#endif
 #endif
 #endif
