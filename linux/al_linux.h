@@ -28,17 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 
-typedef struct {
-	void *ALlib;
-
-	ALCdevice	*hDevice;
-	ALCcontext	*hALC;
-} alState_t;
-
-extern alState_t	alState;
-
-qboolean	AL_Init (void);
-void		AL_Shutdown (void);
 
 
 #endif	// __ALW_WIN_H__

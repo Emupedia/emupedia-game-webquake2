@@ -13,12 +13,19 @@
 
 #include "qal.h"
 
-#ifdef _WIN32
-#include "../win32/alw_win.h"
-#endif
-#ifdef __linux__
-#include "../linux/al_linux.h"
-#endif
+
+typedef struct {
+	void *ALlib;
+
+	ALCdevice	*hDevice;
+	ALCcontext	*hALC;
+} alState_t;
+
+extern alState_t	alState;
+
+qboolean	AL_Init (void);
+void		AL_Shutdown (void);
+
 
 typedef struct
 {
