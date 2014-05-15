@@ -198,9 +198,6 @@ void S_Init (int fullInit)
 		Com_Printf ("not initializing.\n", LOG_CLIENT|LOG_NOTICE);
 	else
 	{
-		if (cv->intvalue == 2)
-		{
-#ifdef USE_OPENAL
 			if (ALimp_Init ())
 			{
 				sound_started = 1;
@@ -216,33 +213,6 @@ void S_Init (int fullInit)
 			{
 				Com_Printf ("OpenAL failed to initialize; no sound available\n", LOG_CLIENT);
 			}
-#else
-			Com_Printf ("This binary was compiled without OpenAL support.\n", LOG_CLIENT);
-#endif
-		}
-		else
-		{
-			if (!SNDDMA_Init(fullInit))
-				return;
-
-			Cmd_AddCommand("play", S_Play);
-			Cmd_AddCommand("stopsound", S_StopAllSounds);
-			Cmd_AddCommand("soundlist", S_SoundList_f);
-			Cmd_AddCommand("soundinfo", S_SoundInfo_f);
-
-			S_InitScaletable ();
-
-			sound_started = 1;
-			num_sfx = 0;
-
-			soundtime = 0;
-			paintedtime = 0;
-
-			if (!cl_quietstartup->intvalue || developer->intvalue)
-				Com_Printf ("sound sampling rate: %i\n", LOG_CLIENT|LOG_NOTICE, dma.speed);
-
-			S_StopAllSounds ();
-		}
 	}
 
 	if (!cl_quietstartup->intvalue || developer->intvalue)
