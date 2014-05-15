@@ -14,14 +14,16 @@ UBSAN:=n
 
 # compiler options etc
 CC:=gcc
-CFLAGS:=-g -DNDEBUG -DLINUX
+CFLAGS:=-g -DNDEBUG -DLINUX -DUSE_OPENAL
 CFLAGS+=$(shell sdl-config --cflags)
+CFLAGS+=$(shell pkg-config openal --cflags)
 OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
 
 
 LDFLAGS:=-g
 LDLIBS:=-lz -lm -ldl
 LDLIBS_ref_gl:=-lGL -ljpeg -lpng $(shell sdl-config --libs)
+LDLIBS_client:=$(shell pkg-config openal --libs)
 
 
 SOCFLAGS+=-fPIC -DPIC

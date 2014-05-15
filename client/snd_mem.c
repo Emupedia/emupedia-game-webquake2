@@ -131,8 +131,8 @@ static void S_OpenAL_UploadSound (byte *data, int width, int channels, sfx_t *sf
 	}
 
 	// Upload the sound
-	qalGenBuffers(1, &sfx->bufferNum);
-	qalBufferData(sfx->bufferNum, sfx->format, data, size, sfx->rate);
+	alGenBuffers(1, &sfx->bufferNum);
+	alBufferData(sfx->bufferNum, sfx->format, data, size, sfx->rate);
 }
 
 static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info);

@@ -42,14 +42,11 @@ static void AL_InitExtensions (void)
 
 	Com_Printf("Initializing OpenAL extensions\n", LOG_CLIENT);
 
-	if (qalIsExtensionPresent("EAX2.0"))
+	if (alIsExtensionPresent("EAX2.0"))
 	{
 		if (s_openal_eax->intvalue)
 		{
 			alConfig.eax = true;
-
-			qalEAXSet = (ALEAXSET)qalGetProcAddress("EAXSet");
-			qalEAXGet = (ALEAXGET)qalGetProcAddress("EAXGet");
 
 			Com_Printf("...using EAX2.0\n", LOG_CLIENT);
 		}
@@ -82,20 +79,20 @@ static qboolean AL_InitDriver (void)
 	else
 		Com_Printf("...opening device: ", LOG_CLIENT);
 
-	if ((alState.hDevice = qalcOpenDevice(deviceName)) == NULL)
+	if ((alState.hDevice = alcOpenDevice(deviceName)) == NULL)
 	{
 		Com_Printf("failed\n", LOG_CLIENT);
 		return false;
 	}
 
 	if (!deviceName)
-		Com_Printf("succeeded (%s)\n", LOG_CLIENT, qalcGetString(alState.hDevice, ALC_DEVICE_SPECIFIER));
+		Com_Printf("succeeded (%s)\n", LOG_CLIENT, alcGetString(alState.hDevice, ALC_DEVICE_SPECIFIER));
 	else
 		Com_Printf("succeeded\n", LOG_CLIENT);
 
 	// Create the AL context and make it current
 	Com_Printf("...creating AL context: ", LOG_CLIENT);
-	if ((alState.hALC = qalcCreateContext(alState.hDevice, NULL)) == NULL)
+	if ((alState.hALC = alcCreateContext(alState.hDevice, NULL)) == NULL)
 	{
 		Com_Printf("failed\n", LOG_CLIENT);
 		goto failed;
@@ -104,7 +101,7 @@ static qboolean AL_InitDriver (void)
 
 	// turol: FIXME: this is broken
 	Com_Printf("...making context current: ", LOG_CLIENT);
-	if (!qalcMakeContextCurrent(alState.hALC))
+	if (!alcMakeContextCurrent(alState.hALC))
 	{
 		Com_Printf("failed\n", LOG_CLIENT);
 		goto failed;
@@ -119,13 +116,13 @@ failed:
 
 	if (alState.hALC)
 	{
-		qalcDestroyContext(alState.hALC);
+		alcDestroyContext(alState.hALC);
 		alState.hALC = NULL;
 	}
 
 	if (alState.hDevice)
 	{
-		qalcCloseDevice(alState.hDevice);
+		alcCloseDevice(alState.hDevice);
 		alState.hDevice = NULL;
 	}
 
@@ -144,8 +141,8 @@ static qboolean AL_StartOpenAL (const char *driver)
 		return false;
 
 	// Get device list
-	if (qalcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT"))
-		alConfig.deviceList = qalcGetString(NULL, ALC_DEVICE_SPECIFIER);
+	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT"))
+		alConfig.deviceList = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
 	else
 		alConfig.deviceList = "DirectSound3D\0DirectSound\0MMSYSTEM\0\0";
 
@@ -177,13 +174,13 @@ qboolean AL_Init (void){
 	}
 
 	// Get AL strings
-	alConfig.vendorString = qalGetString(AL_VENDOR);
-	alConfig.rendererString = qalGetString(AL_RENDERER);
-	alConfig.versionString = qalGetString(AL_VERSION);
-	alConfig.extensionsString = qalGetString(AL_EXTENSIONS);
+	alConfig.vendorString = alGetString(AL_VENDOR);
+	alConfig.rendererString = alGetString(AL_RENDERER);
+	alConfig.versionString = alGetString(AL_VERSION);
+	alConfig.extensionsString = alGetString(AL_EXTENSIONS);
 
 	// Get device name
-	alConfig.deviceName = qalcGetString(alState.hDevice, ALC_DEVICE_SPECIFIER);
+	alConfig.deviceName = alcGetString(alState.hDevice, ALC_DEVICE_SPECIFIER);
 
 	// Initialize extensions
 	AL_InitExtensions();
@@ -202,19 +199,19 @@ void AL_Shutdown (void){
 
 	if (alState.hALC)
 	{
-		if (qalcMakeContextCurrent)
+		if (alcMakeContextCurrent)
 		{
 			Com_Printf("...alcMakeContextCurrent( NULL ): ", LOG_CLIENT);
-			if (!qalcMakeContextCurrent(NULL))
+			if (!alcMakeContextCurrent(NULL))
 				Com_Printf("failed\n", LOG_CLIENT);
 			else
 				Com_Printf("succeeded\n", LOG_CLIENT);
 		}
 
-		if (qalcDestroyContext)
+		if (alcDestroyContext)
 		{
 			Com_Printf("...destroying AL context\n", LOG_CLIENT);
-			qalcDestroyContext(alState.hALC);
+			alcDestroyContext(alState.hALC);
 		}
 
 		alState.hALC = NULL;
@@ -222,10 +219,10 @@ void AL_Shutdown (void){
 
 	if (alState.hDevice)
 	{
-		if (qalcCloseDevice)
+		if (alcCloseDevice)
 		{
 			Com_Printf("...closing device\n", LOG_CLIENT);
-			qalcCloseDevice(alState.hDevice);
+			alcCloseDevice(alState.hDevice);
 		}
 
 		alState.hDevice = NULL;
