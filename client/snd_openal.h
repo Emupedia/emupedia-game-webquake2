@@ -3,7 +3,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
-#ifndef _WIN32
+#if ! (defined(_WIN32) || defined(EMSCRIPTEN))
 #include <AL/alext.h>
 #endif
 
@@ -155,22 +155,7 @@ typedef struct
 
 extern alConfig_t		alConfig;
 
-#ifdef _WIN32
-
-
-#define ALimp_Init						ALW_Init
-#define ALimp_Shutdown					ALW_Shutdown
-
-#else
-#ifdef __linux__
-
 
 #define ALimp_Init						AL_Init
 #define ALimp_Shutdown					AL_Shutdown
 
-#else
-
-#error "ALimp_* not available for this platform"
-
-#endif
-#endif
