@@ -50,6 +50,7 @@ endif
 
 
 CFLAGS+=$(OPTFLAGS)
+CFLAGS+=-isystem$(TOPDIR)/foreign/libjpeg-turbo-1.3.1
 
 
 # (call directory-module, dirname)
@@ -72,6 +73,7 @@ endef  # directory-module
 
 DIRS:= \
 	client \
+	foreign \
 	game \
 	linux \
 	qcommon \
