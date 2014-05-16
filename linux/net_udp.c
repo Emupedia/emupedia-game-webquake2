@@ -13,7 +13,6 @@
 #include <sys/uio.h>
 #include <errno.h>
 
-#include <linux/types.h>
 #include <linux/errqueue.h>
 
 #ifdef NeXT
