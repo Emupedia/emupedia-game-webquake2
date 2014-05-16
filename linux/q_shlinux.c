@@ -119,13 +119,6 @@ void Sys_Mkdir (char *path)
     mkdir (path, 0755);
 }
 
-void strlwr (char *s)
-{
-	while (*s) {
-		*s = tolower(*s);
-		s++;
-	}
-}
 
 //============================================
 
