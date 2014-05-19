@@ -553,8 +553,22 @@ void GetEvent(SDL_Event *event)
 			(event->key.keysym.sym == SDLK_RETURN) ) {
 			cvar_t	*fullscreen;
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+			int flags = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
+
+			// this is AFTER the change
+			int fs = flags ? 0 : 1;
+			// TODO: support SDL_WINDOW_FULLSCREEN_DESKTOP
+			flags = fs ? SDL_WINDOW_FULLSCREEN : 0;
+
+			int retval = SDL_SetWindowFullscreen(window, flags);
+
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
+
 			SDL_WM_ToggleFullScreen(surface);
 			int fs = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
+
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 			ri.Cvar_SetValue( "vid_fullscreen", fs );
 
