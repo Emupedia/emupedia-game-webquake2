@@ -482,7 +482,17 @@ int XLateKey(unsigned int keysym)
 	return key;		
 }
 
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+
+static unsigned char KeyStates[SDL_NUM_SCANCODES];
+
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
+
 static unsigned char KeyStates[SDLK_LAST];
+
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
+
 
 void GetEvent(SDL_Event *event)
 {
@@ -525,7 +535,11 @@ void GetEvent(SDL_Event *event)
 	  break;
 #endif
 	case SDL_KEYDOWN:
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		if ( (KeyStates[SDL_SCANCODE_LALT] || KeyStates[SDL_SCANCODE_RALT]) &&
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			(event->key.keysym.sym == SDLK_RETURN) ) {
 			cvar_t	*fullscreen;
 
@@ -543,7 +557,11 @@ void GetEvent(SDL_Event *event)
 			break; /* ignore this key */
 		}
 		
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		if ( (KeyStates[SDL_SCANCODE_LCTRL] || KeyStates[SDL_SCANCODE_RCTRL]) &&
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			(event->key.keysym.sym == SDLK_g) ) {
 			SDL_GrabMode gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
 			/*	
@@ -555,7 +573,11 @@ void GetEvent(SDL_Event *event)
 			break; /* ignore this key */
 		}
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		KeyStates[event->key.keysym.scancode] = 1;
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		KeyStates[event->key.keysym.sym] = 1;
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 		
 		key = XLateKey(event->key.keysym.sym);
 		if (key) {
@@ -565,8 +587,13 @@ void GetEvent(SDL_Event *event)
 		}
 		break;
 	case SDL_KEYUP:
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		if (KeyStates[event->key.keysym.scancode]) {
+			KeyStates[event->key.keysym.scancode] = 0;
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if (KeyStates[event->key.keysym.sym]) {
 			KeyStates[event->key.keysym.sym] = 0;
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 		
 			key = XLateKey(event->key.keysym.sym);
 			if (key) {
