@@ -704,7 +704,7 @@ void InitJoystick() {
 */
 int SWimp_Init( void *hInstance, void *wndProc )
 {
-	if (SDL_WasInit(SDL_INIT_AUDIO|SDL_INIT_CDROM|SDL_INIT_VIDEO) == 0) {
+	if (SDL_WasInit(SDL_INIT_AUDIO | SDL_INIT_VIDEO) == 0) {
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
 			return false;
