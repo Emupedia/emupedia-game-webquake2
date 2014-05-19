@@ -376,6 +376,24 @@ int XLateKey(unsigned int keysym)
 	
 	key = 0;
 	switch(keysym) {
+
+#if SDL_VERSION_ATLEAST(1, 3, 0)
+		case SDLK_KP_0:			key = K_KP_INS; break;
+		case SDLK_KP_1:			key = K_KP_END; break;
+		case SDLK_KP_2:			key = K_KP_DOWNARROW; break;
+		case SDLK_KP_3:			key = K_KP_PGDN; break;
+		case SDLK_KP_4:			key = K_KP_LEFTARROW; break;
+		case SDLK_KP_5:			key = K_KP_5; break;
+		case SDLK_KP_6:			key = K_KP_RIGHTARROW; break;
+		case SDLK_KP_7:			key = K_KP_HOME; break;
+		case SDLK_KP_8:			key = K_KP_UPARROW; break;
+		case SDLK_KP_9:			key = K_KP_PGUP; break;
+		
+		/* suggestions on how to handle this better would be appreciated */
+		case SDLK_BACKQUOTE:	key = '`'; break;
+
+#else  // SDL_VERSION_ATLEAST(1, 3, 0)
+
 		case SDLK_KP0:			key = K_KP_INS; break;
 		case SDLK_KP1:			key = K_KP_END; break;
 		case SDLK_KP2:			key = K_KP_DOWNARROW; break;
@@ -389,6 +407,8 @@ int XLateKey(unsigned int keysym)
 		
 		/* suggestions on how to handle this better would be appreciated */
 		case SDLK_WORLD_7:		key = '`'; break;
+
+#endif  // SDL_VERSION_ATLEAST(1, 3, 0)
 		
 		case SDLK_PAGEUP:		key = K_PGUP; break;
 		
@@ -439,8 +459,10 @@ int XLateKey(unsigned int keysym)
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:		key = K_CTRL; break;
 		
+#if !SDL_VERSION_ATLEAST(1, 3, 0)
 		case SDLK_LMETA:
 		case SDLK_RMETA:
+#endif  // !SDL_VERSION_ATLEAST(1, 3, 0)
 		case SDLK_LALT:
 		case SDLK_RALT:			key = K_ALT; break;
 
