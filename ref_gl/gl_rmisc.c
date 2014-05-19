@@ -103,6 +103,7 @@ FS_CreatePath
 Creates any directories needed to store the given filename
 ============
 */
+#ifndef REF_HARD_LINKED
 void	FS_CreatePath (char *path)
 {
 	char	*ofs;
@@ -117,6 +118,8 @@ void	FS_CreatePath (char *path)
 		}
 	}
 }
+#endif  // REF_HARD_LINKED
+
 
 #define USE_THREADS 1
 
