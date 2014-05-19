@@ -330,6 +330,7 @@ void GL_SelectTexture( GLenum );
 
 void R_LightPoint (vec3_t p, vec3_t color);
 void R_PushDlights (void);
+void clearImageHash(void);
 unsigned int hashify (const char *S);
 //====================================================================
 

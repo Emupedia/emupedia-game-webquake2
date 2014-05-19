@@ -2960,6 +2960,13 @@ image_t *GL_LoadWal (const char *name)
 #define IMAGES_HASH_SIZE	64
 static image_t	*images_hash[IMAGES_HASH_SIZE];
 
+
+void clearImageHash(void)
+{
+	memset(&images_hash, 0, sizeof(images_hash));
+}
+
+
 unsigned int hashify (const char *S)
 {
   unsigned int hash_PeRlHaSh;

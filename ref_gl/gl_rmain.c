@@ -1541,6 +1541,8 @@ int EXPORT R_Init( void *hinstance, void *hWnd )
 	int		j;
 	extern float r_turbsin[256];
 
+	clearImageHash();
+
 	for ( j = 0; j < 256; j++ )
 	{
 		r_turbsin[j] *= 0.5;
