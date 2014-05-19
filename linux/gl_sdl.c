@@ -584,7 +584,12 @@ void GetEvent(SDL_Event *event)
 		if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			(event->key.keysym.sym == SDLK_g) ) {
-            int newValue = (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1;
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+			int newValue = (SDL_GetWindowGrab(window) == SDL_TRUE) ? /*1*/ 0 : /*0*/ 1;
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
+			int newValue = (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1;
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			/*	
 			SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
 			gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
