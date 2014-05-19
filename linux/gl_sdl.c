@@ -376,28 +376,34 @@ int XLateKey(unsigned int keysym)
 	
 	key = 0;
 	switch(keysym) {
+		case SDLK_KP0:			key = K_KP_INS; break;
+		case SDLK_KP1:			key = K_KP_END; break;
+		case SDLK_KP2:			key = K_KP_DOWNARROW; break;
+		case SDLK_KP3:			key = K_KP_PGDN; break;
+		case SDLK_KP4:			key = K_KP_LEFTARROW; break;
+		case SDLK_KP5:			key = K_KP_5; break;
+		case SDLK_KP6:			key = K_KP_RIGHTARROW; break;
+		case SDLK_KP7:			key = K_KP_HOME; break;
+		case SDLK_KP8:			key = K_KP_UPARROW; break;
 		case SDLK_KP9:			key = K_KP_PGUP; break;
+		
+		/* suggestions on how to handle this better would be appreciated */
+		case SDLK_WORLD_7:		key = '`'; break;
+		
 		case SDLK_PAGEUP:		key = K_PGUP; break;
 		
-		case SDLK_KP3:			key = K_KP_PGDN; break;
 		case SDLK_PAGEDOWN:		key = K_PGDN; break;
 		
-		case SDLK_KP7:			key = K_KP_HOME; break;
 		case SDLK_HOME:			key = K_HOME; break;
 		
-		case SDLK_KP1:			key = K_KP_END; break;
 		case SDLK_END:			key = K_END; break;
 		
-		case SDLK_KP4:			key = K_KP_LEFTARROW; break;
 		case SDLK_LEFT:			key = K_LEFTARROW; break;
 		
-		case SDLK_KP6:			key = K_KP_RIGHTARROW; break;
 		case SDLK_RIGHT:		key = K_RIGHTARROW; break;
 		
-		case SDLK_KP2:			key = K_KP_DOWNARROW; break;
 		case SDLK_DOWN:			key = K_DOWNARROW; break;
 		
-		case SDLK_KP8:			key = K_KP_UPARROW; break;
 		case SDLK_UP:			key = K_UPARROW; break;
 		
 		case SDLK_ESCAPE:		key = K_ESCAPE; break;
@@ -438,18 +444,12 @@ int XLateKey(unsigned int keysym)
 		case SDLK_LALT:
 		case SDLK_RALT:			key = K_ALT; break;
 
-		case SDLK_KP5:			key = K_KP_5; break;
-		
 		case SDLK_INSERT:		key = K_INS; break;
-		case SDLK_KP0:			key = K_KP_INS; break;
 		
 		case SDLK_KP_MULTIPLY:		key = '*'; break;
 		case SDLK_KP_PLUS:		key = K_KP_PLUS; break;
 		case SDLK_KP_MINUS:		key = K_KP_MINUS; break;
 		case SDLK_KP_DIVIDE:		key = K_KP_SLASH; break;
-		
-		/* suggestions on how to handle this better would be appreciated */
-		case SDLK_WORLD_7:		key = '`'; break;
 		
 		default: /* assuming that the other sdl keys are mapped to ascii */
 			if (keysym < 128)
