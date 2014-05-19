@@ -96,30 +96,6 @@ void R_InitParticleTexture (void)
 ============================================================================== 
 */ 
 
-/*
-============
-FS_CreatePath
-
-Creates any directories needed to store the given filename
-============
-*/
-#ifndef REF_HARD_LINKED
-void	FS_CreatePath (char *path)
-{
-	char	*ofs;
-	
-	for (ofs = path+1 ; *ofs ; ofs++)
-	{
-		if (*ofs == '/')
-		{	// create the directory
-			*ofs = 0;
-			Sys_Mkdir (path);
-			*ofs = '/';
-		}
-	}
-}
-#endif  // REF_HARD_LINKED
-
 
 #define USE_THREADS 1
 
