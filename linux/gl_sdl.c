@@ -544,12 +544,9 @@ void GetEvent(SDL_Event *event)
 			cvar_t	*fullscreen;
 
 			SDL_WM_ToggleFullScreen(surface);
+			int fs = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
 
-			if (surface->flags & SDL_FULLSCREEN) {
-				ri.Cvar_SetValue( "vid_fullscreen", 1 );
-			} else {
-				ri.Cvar_SetValue( "vid_fullscreen", 0 );
-			}
+				ri.Cvar_SetValue( "vid_fullscreen", fs );
 
 			fullscreen = ri.Cvar_Get( "vid_fullscreen", "0", 0 );
 			fullscreen->modified = false;	// we just changed it with SDL.
