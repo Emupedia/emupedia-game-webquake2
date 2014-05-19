@@ -236,6 +236,18 @@ typedef struct
 	void		(IMPORT *Vid_NewWindow)( int width, int height );
 } refimport_t;
 
+
+typedef void (*Key_Event_fp_t)(int key, qboolean down);
+
+typedef struct in_state {
+	// Pointers to functions back in client, set by vid_so
+	void (*IN_CenterView_fp)(void);
+	Key_Event_fp_t Key_Event_fp;
+	vec_t *viewangles;
+	int *in_strafe_state;
+} in_state_t;
+
+
 // this is the only function actually exported at the linker level
 typedef	refexport_t	(EXPORT *GetRefAPI_t) (refimport_t);
 typedef	void (EXPORT *GetExtraAPI_t) (refimportnew_t);
