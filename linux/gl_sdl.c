@@ -62,7 +62,17 @@
 
 static qboolean                 X11_active = false;
 
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+
+static SDL_Window *window;
+
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
+
 static SDL_Surface *surface;
+
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
+
 
 struct
 {
