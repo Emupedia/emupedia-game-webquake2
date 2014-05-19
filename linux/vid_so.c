@@ -28,7 +28,6 @@ cvar_t		*vid_fullscreen;
 
 // Global variables used internally by this module
 viddef_t	viddef;				// global video state; used by other modules
-void		*reflib_library;		// Handle to refresh DLL 
 qboolean	reflib_active = 0;
 
 #define VID_NUM_MODES ( sizeof( vid_modes ) / sizeof( vid_modes[0] ) )
@@ -157,13 +156,10 @@ void VID_NewWindow ( int width, int height)
 
 void VID_FreeReflib (void)
 {
-	if (reflib_library) {
 		if (KBD_Close_fp)
 			KBD_Close_fp();
 		if (RW_IN_Shutdown_fp)
 			RW_IN_Shutdown_fp();
-		dlclose(reflib_library);
-	}
 
 	KBD_Init_fp = NULL;
 	KBD_Update_fp = NULL;
@@ -176,7 +172,6 @@ void VID_FreeReflib (void)
 	RW_IN_Frame_fp = NULL;
 
 	memset (&re, 0, sizeof(re));
-	reflib_library = NULL;
 	reflib_active  = false;
 }
 
@@ -190,11 +185,6 @@ qboolean VID_LoadRefresh( char *name )
 	refimport_t		ri;
 	refimportnew_t  rx;
 
-	GetRefAPI_t		GetRefAPI;
-	GetExtraAPI_t	GetExtraAPI;
-
-	char	fn[MAX_OSPATH];
-	
 	if ( reflib_active )
 	{
 		if (KBD_Close_fp)
@@ -205,52 +195,6 @@ qboolean VID_LoadRefresh( char *name )
 		RW_IN_Shutdown_fp = NULL;
 		re.Shutdown();
 		VID_FreeReflib ();
-	}
-
-	Com_Printf( "------- Loading %s -------\n", LOG_CLIENT, name);
-
-
-	/*if ((fp = fopen(SO_FILE, "r")) == NULL) {
-		Com_Printf( "LoadLibrary(\"%s\") failed: can't open " SO_FILE " (required for location of ref libraries)\n", name);
-		return false;
-	}
-	fgets(fn, sizeof(fn), fp);
-	fclose(fp);
-	if (*fn && fn[strlen(fn) - 1] == '\n')
-		fn[strlen(fn) - 1] = 0;
-	*/
-
-	strcpy (fn, ".");
-	strcat(fn, "/");
-	strcat(fn, name);
-
-	// permission checking
-/*	if (strstr(fn, "softx") == NULL) { // softx doesn't require root
-		if (stat(fn, &st) == -1) {
-			Com_Printf( "LoadLibrary(\"%s\") failed: %s\n", name, strerror(errno));
-			return false;
-		}
-		if (st.st_uid != 0) {
-			Com_Printf( "LoadLibrary(\"%s\") failed: ref is not owned by root\n", name);
-			return false;
-		}
-#if 0
-		if ((st.st_mode & 0777) & ~0700) {
-			Com_Printf( "LoadLibrary(\"%s\") failed: invalid permissions, must be 700 for security considerations\n", name);
-			return false;
-		}
-#endif
-	} else {
-		// softx requires we give up root now
-		setreuid(getuid(), getuid());
-		setegid(getgid());
-	}
-*/
-
-	if ( ( reflib_library = dlopen( fn, RTLD_NOW ) ) == 0 )
-	{
-		Com_Printf( "LoadLibrary(\"%s\") failed: %s\n", LOG_CLIENT, name , dlerror());
-		return false;
 	}
 
 	ri.Cmd_AddCommand = Cmd_AddCommand;
@@ -276,14 +220,7 @@ qboolean VID_LoadRefresh( char *name )
 	rx.FS_Read = FS_Read;
 	
 	rx.APIVersion = EXTENDED_API_VERSION;
-
-	if ( ( GetRefAPI = (void *) dlsym( reflib_library, "GetRefAPI" ) ) == 0 )
-		Com_Error( ERR_FATAL, "dlsym failed on %s", name );
-
-	if ( ( GetExtraAPI = (GetExtraAPI_t) dlsym( reflib_library, "GetExtraAPI" ) ) == 0 )
 	{
-		Com_DPrintf ("No ExtraAPI found.\n");
-	} else {
 		Com_DPrintf ("Initializing ExtraAPI...");
 		GetExtraAPI (rx);
 		Com_DPrintf ("done.\n");
@@ -303,13 +240,12 @@ qboolean VID_LoadRefresh( char *name )
 	in_state.viewangles = cl.viewangles;
 	in_state.in_strafe_state = &in_strafe.state;
 
-	if ((RW_IN_Init_fp = dlsym(reflib_library, "RW_IN_Init")) == NULL ||
-		(RW_IN_Shutdown_fp = dlsym(reflib_library, "RW_IN_Shutdown")) == NULL ||
-		(RW_IN_Activate_fp = dlsym(reflib_library, "RW_IN_Activate")) == NULL ||
-		(RW_IN_Commands_fp = dlsym(reflib_library, "RW_IN_Commands")) == NULL ||
-		(RW_IN_Move_fp = dlsym(reflib_library, "RW_IN_Move")) == NULL ||
-		(RW_IN_Frame_fp = dlsym(reflib_library, "RW_IN_Frame")) == NULL)
-		Sys_Error("No RW_IN functions in REF.\n");
+	RW_IN_Init_fp = RW_IN_Init;
+	RW_IN_Shutdown_fp = RW_IN_Shutdown;
+	RW_IN_Activate_fp = RW_IN_Activate;
+	RW_IN_Commands_fp = RW_IN_Commands;
+	RW_IN_Move_fp = RW_IN_Move;
+	RW_IN_Frame_fp = RW_IN_Frame;
 
 	Real_IN_Init();
 
@@ -321,22 +257,10 @@ qboolean VID_LoadRefresh( char *name )
 	}
 
 	/* Init KBD */
-#if 1
-	if ((KBD_Init_fp = dlsym(reflib_library, "KBD_Init")) == NULL ||
-		(KBD_Update_fp = dlsym(reflib_library, "KBD_Update")) == NULL ||
-		(KBD_Close_fp = dlsym(reflib_library, "KBD_Close")) == NULL)
-		Sys_Error("No KBD functions in REF.\n");
-#else
-	{
-		void KBD_Init(void);
-		void KBD_Update(void);
-		void KBD_Close(void);
-
 		KBD_Init_fp = KBD_Init;
 		KBD_Update_fp = KBD_Update;
 		KBD_Close_fp = KBD_Close;
-	}
-#endif
+
 	KBD_Init_fp(Do_Key_Event);
 
 	// give up root now

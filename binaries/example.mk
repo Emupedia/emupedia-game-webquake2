@@ -15,6 +15,7 @@ UBSAN:=n
 # compiler options etc
 CC:=gcc
 CFLAGS:=-g -DNDEBUG -DLINUX
+CFLAGS+=-DREF_HARD_LINKED
 CFLAGS+=$(shell sdl-config --cflags)
 CFLAGS+=$(shell pkg-config openal --cflags)
 OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store

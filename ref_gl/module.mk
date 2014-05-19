@@ -24,14 +24,6 @@ FILES:= \
 	# empty line
 
 
-ref_gl_MODULES:=libjpeg qshared ref_gl shlinux
-
-
-LIBRARIES+= \
-	ref_gl \
-	#empty line
-
-
 SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 

@@ -248,8 +248,20 @@ typedef struct in_state {
 } in_state_t;
 
 
-// this is the only function actually exported at the linker level
-typedef	refexport_t	(EXPORT *GetRefAPI_t) (refimport_t);
-typedef	void (EXPORT *GetExtraAPI_t) (refimportnew_t);
+refexport_t EXPORT GetRefAPI (refimport_t rimp );
+
+
+// TODO: these should not be EXPORT
+void EXPORT RW_IN_Init(in_state_t *in_state_p);
+void EXPORT RW_IN_Shutdown(void);
+void EXPORT RW_IN_Activate(qboolean active);
+void EXPORT RW_IN_Commands(void);
+void EXPORT RW_IN_Move(usercmd_t *cmd);
+void EXPORT RW_IN_Frame(void);
+
+void EXPORT KBD_Init(Key_Event_fp_t fp);
+void EXPORT KBD_Update(void);
+void EXPORT KBD_Close(void);
+
 
 #endif // __REF_H
