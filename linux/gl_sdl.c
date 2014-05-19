@@ -584,12 +584,12 @@ void GetEvent(SDL_Event *event)
 		if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			(event->key.keysym.sym == SDLK_g) ) {
-			SDL_GrabMode gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
+            int newValue = (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1;
 			/*	
 			SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
 			gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
 			*/	
-			ri.Cvar_SetValue( "_windowed_mouse", (gm == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1 );
+			ri.Cvar_SetValue( "_windowed_mouse", newValue );
 			
 			break; /* ignore this key */
 		}
