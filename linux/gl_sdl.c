@@ -838,11 +838,21 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	if ((oldW == vid.width) && (oldH == vid.height)) {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		int isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
+		if (fullscreen != isfullscreen) {
+			// TODO: support SDL_WINDOW_FULLSCREEN_DESKTOP
+			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+		}
+
+		isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		int isfullscreen = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
 		if (fullscreen != isfullscreen)
 			SDL_WM_ToggleFullScreen(surface);
 
 		isfullscreen = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if (fullscreen == isfullscreen)
 			return true;
 	}
