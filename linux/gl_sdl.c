@@ -818,7 +818,11 @@ static void SetSDLIcon(void) {
 	}               
     }
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_SetWindowIcon(window, icon);
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
     SDL_WM_SetIcon(icon, NULL);
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
     SDL_FreeSurface(icon);
 }
 
