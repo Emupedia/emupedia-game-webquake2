@@ -783,7 +783,11 @@ static void SetSDLIcon(void) {
 				0, 0, 0, 0);
     if (icon == NULL)
 	return; /* oh well... */
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+    SDL_SetColorKey(icon, SDL_TRUE, 0);
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
     SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
     color.r = 255;
     color.g = 255;
