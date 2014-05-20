@@ -40,6 +40,11 @@ quake2_MODULES:=client libjpeg linux qcommon qshared ref_gl server shlinux
 quake2_SRC:=
 
 
+ifneq ($(BUILTIN_GAME),)
+quake2_MODULES+=$(BUILTIN_GAME)
+endif
+
+
 PROGRAMS+= \
 	quake2 \
 	#empty line

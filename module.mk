@@ -53,6 +53,11 @@ CFLAGS+=$(OPTFLAGS)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libjpeg-turbo-1.3.1
 
 
+ifneq ($(BUILTIN_GAME),)
+CFLAGS+=-DGAME_HARD_LINKED=$(BUILTIN_GAME)
+endif
+
+
 # (call directory-module, dirname)
 define directory-module
 

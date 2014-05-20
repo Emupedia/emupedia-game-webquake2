@@ -479,6 +479,12 @@ Loads the game dll
 */
 void *Sys_GetGameAPI (void *parms, int baseq2)
 {
+#if defined(GAME_HARD_LINKED)
+
+	return GetGameAPI(parms);
+
+#else  // BUILTIN_GAME
+
 	void	*(*GetGameAPI) (void *);
 
 	char	name[MAX_OSPATH];
@@ -559,6 +565,7 @@ void *Sys_GetGameAPI (void *parms, int baseq2)
 	}
 
 	return GetGameAPI (parms);
+#endif  // BUILTIN_GAME
 }
 
 /*****************************************************************************/

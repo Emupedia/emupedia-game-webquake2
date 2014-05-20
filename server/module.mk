@@ -27,6 +27,12 @@ r1q2ded_MODULES:=linux qcommon qshared server shlinux
 r1q2ded_SRC:=$(d)/q2ded.c
 
 
+ifneq ($(BUILTIN_GAME),)
+r1q2ded_MODULES+=$(BUILTIN_GAME)
+endif
+
+
+
 PROGRAMS+= \
 	r1q2ded \
 	#empty line

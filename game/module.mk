@@ -65,11 +65,14 @@ game_MODULES:=game qshared shlinux
 game_SRC:=
 
 
+ifeq ($(BUILTIN_GAME),)
 LIBRARIES+= \
 	game \
 	#empty line
+endif
 
 
+SRC_baseq2:=$(addprefix $(d)/,$(FILES))
 SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 
