@@ -968,9 +968,16 @@ int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboole
 
 void SWimp_Shutdown( void )
 {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	if (window) {
+		SDL_DestroyWindow(window);
+		window = NULL;
+	}
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 	if (surface)
 		SDL_FreeSurface(surface);
 	surface = NULL;
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 	
 	if (SDL_WasInit(SDL_INIT_EVERYTHING) == SDL_INIT_VIDEO)
 		SDL_Quit();
