@@ -859,10 +859,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	
 	srandom(getpid());
 
-	// free resources in use
-	if (surface)
-		SDL_FreeSurface(surface);
-
 	// let the sound and input subsystems know about the new window
 	ri.Vid_NewWindow (vid.width, vid.height);
 
@@ -872,6 +868,10 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	
+	// free resources in use
+	if (surface)
+		SDL_FreeSurface(surface);
+
 	flags = SDL_OPENGL;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
