@@ -826,10 +826,16 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	
 	/* Just toggle fullscreen if that's all that has been changed */
 	int oldW = -1, oldH = -1;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	if (window) {
+		SDL_GetWindowSize(window, &oldW, &oldH);
+	}
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 	if (surface) {
 		oldW = surface->w;
 		oldH = surface->h;
 	}
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	if ((oldW == vid.width) && (oldH == vid.height)) {
 		int isfullscreen = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
