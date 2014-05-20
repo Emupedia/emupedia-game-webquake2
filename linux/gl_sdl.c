@@ -783,11 +783,22 @@ static void SetSDLIcon(void) {
 				0, 0, 0, 0);
     if (icon == NULL)
 	return; /* oh well... */
+
 #if SDL_VERSION_ATLEAST(2, 0, 0)
     SDL_SetColorKey(icon, SDL_TRUE, 0);
+
+    color.r = 255;
+    color.g = 255;
+    color.b = 255;
+	icon->format->palette->colors[0] = color;
+    color.r = 0;
+    color.g = 16;
+    color.b = 0;
+	icon->format->palette->colors[1] = color;
+
 #else  // SDL_VERSION_ATLEAST(2, 0, 0)
-    SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
+
+	SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
 
     color.r = 255;
     color.g = 255;
@@ -797,6 +808,7 @@ static void SetSDLIcon(void) {
     color.g = 16;
     color.b = 0;
     SDL_SetColors(icon, &color, 1, 1);
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
     ptr = (Uint8 *)icon->pixels;
     for (i = 0; i < sizeof(q2icon_bits); i++) {
