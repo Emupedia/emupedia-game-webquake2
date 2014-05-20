@@ -1081,6 +1081,10 @@ void EXPORT KBD_Update(void)
 	if (old_windowed_mouse != _windowed_mouse->value) {
 		old_windowed_mouse = _windowed_mouse->value;
 
+		// TODO: should refactor all this grab stuff to one place
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if (!_windowed_mouse->value) {
 			/* ungrab the pointer */
 			SDL_WM_GrabInput(SDL_GRAB_OFF);
@@ -1088,6 +1092,7 @@ void EXPORT KBD_Update(void)
 			/* grab the pointer */
 			SDL_WM_GrabInput(SDL_GRAB_ON);
 		}
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 	}			
 		while (keyq_head != keyq_tail)
 		{
