@@ -868,6 +868,29 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	if (window) {
+		SDL_SetWindowSize(window, vid.width, vid.height);
+	} else {
+		// TODO: SDL_WINDOW_RESIZABLE
+		// TODO: SDL_WINDOW_INPUT_GRABBED?
+		// TODO: SDL_WINDOW_ALLOW_HIGHDPI?
+		uint32_t flags = SDL_WINDOW_OPENGL;
+		if (fullscreen) {
+			// TODO: SDL_WINDOW_FULLSCREEN_DESKTOP
+			flags |= SDL_WINDOW_FULLSCREEN;
+		}
+
+		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
+		if (!window) {
+			Sys_Error("(SDLGL) SDL CreateWindow failed: %s\n", SDL_GetError());
+			return false;
+		}
+		SetSDLIcon();
+		// TODO: store context and do proper cleanup
+		SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+	}
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 	// free resources in use
 	if (surface)
 		SDL_FreeSurface(surface);
@@ -884,6 +907,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	}
 
 	SDL_WM_SetCaption("Quake II", "Quake II");
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	SDL_ShowCursor(0);
 
