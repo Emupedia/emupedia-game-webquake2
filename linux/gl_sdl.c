@@ -948,7 +948,11 @@ void GLimp_BeginFrame(void)
 
 void GLimp_EndFrame (void)
 {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_GL_SwapWindow(window);
+#else  // SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_GL_SwapBuffers();
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 }
 
 /*
