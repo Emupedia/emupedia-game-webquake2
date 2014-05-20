@@ -909,6 +909,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		// TODO: store context and do proper cleanup
 		SDL_GLContext glcontext = SDL_GL_CreateContext(window);
 	}
+
 #else  // SDL_VERSION_ATLEAST(2, 0, 0)
 	// free resources in use
 	if (surface)
@@ -926,9 +927,9 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	}
 
 	SDL_WM_SetCaption("Quake II", "Quake II");
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	SDL_ShowCursor(0);
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	X11_active = true;
 
@@ -1107,6 +1108,7 @@ void EXPORT KBD_Update(void)
 		// TODO: should refactor all this grab stuff to one place
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+		SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
 #else  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if (!_windowed_mouse->value) {
 			/* ungrab the pointer */
