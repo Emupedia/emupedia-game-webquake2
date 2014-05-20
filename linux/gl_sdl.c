@@ -742,7 +742,9 @@ int SWimp_Init( void *hInstance, void *wndProc )
 		}
 	}
 
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+#endif  // !SDL_VERSION_ATLEAST(2, 0, 0)
 	
 // catch signals so i can turn on auto-repeat
 #if 0
