@@ -402,6 +402,9 @@ int XLateKey(unsigned int keysym)
 		/* suggestions on how to handle this better would be appreciated */
 		case SDLK_BACKQUOTE:	key = '`'; break;
 
+		// WTF: the above should get this but doesn't
+		case 167			:	key = '`'; break;
+
 #else  // SDL_VERSION_ATLEAST(1, 3, 0)
 
 		case SDLK_KP0:			key = K_KP_INS; break;
