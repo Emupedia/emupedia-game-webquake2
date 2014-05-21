@@ -62,18 +62,18 @@ static int SV_HullForEntity (const edict_t *ent);
 
 
 // ClearLink is used for new headnodes
-__inline void ClearLink (link_t *l)
+static void ClearLink (link_t *l)
 {
 	l->prev = l->next = l;
 }
 
-__inline void RemoveLink (link_t *l)
+static void RemoveLink (link_t *l)
 {
 	l->next->prev = l->prev;
 	l->prev->next = l->next;
 }
 
-__inline void InsertLinkBefore (link_t *l, link_t *before)
+static void InsertLinkBefore (link_t *l, link_t *before)
 {
 	l->next = before;
 	l->prev = before->prev;

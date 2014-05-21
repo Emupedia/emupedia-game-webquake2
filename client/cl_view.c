@@ -545,7 +545,7 @@ void V_Gun_Model_f (void)
 SCR_DrawCrosshair
 =================
 */
-__inline void SCR_DrawCrosshair (void)
+static void SCR_DrawCrosshair (void)
 {
 	if (!crosshair->intvalue)
 		return;
