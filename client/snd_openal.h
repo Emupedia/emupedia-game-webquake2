@@ -9,8 +9,6 @@
 
 #include "client.h"
 
-#include "eax.h"
-
 #include "qal.h"
 
 
