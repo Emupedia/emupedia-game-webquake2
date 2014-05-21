@@ -23,7 +23,7 @@ FILES:= \
 	# empty line
 
 
-r1q2ded_MODULES:=linux qcommon qshared server shlinux
+r1q2ded_MODULES:=linux qcommon qshared server shlinux zlib
 r1q2ded_SRC:=$(d)/q2ded.c
 
 

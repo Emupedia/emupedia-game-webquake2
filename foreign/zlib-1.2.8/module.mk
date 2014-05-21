@@ -4,9 +4,6 @@ d              := $(dir)
 
 
 SUBDIRS:= \
-	libjpeg-turbo-1.3.1 \
-	libpng-1.2.51 \
-	zlib-1.2.8 \
 	# empty line
 
 DIRS:=$(addprefix $(d)/,$(SUBDIRS))
@@ -15,10 +12,18 @@ $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))
 
 
 FILES:= \
+	adler32.c \
+	crc32.c \
+	deflate.c \
+	inffast.c \
+	inflate.c \
+	inftrees.c \
+	trees.c \
+	zutil.c \
 	# empty line
 
 
-SRC_$(d):=$(addprefix $(d)/,$(FILES))
+SRC_zlib:=$(addprefix $(d)/,$(FILES))
 
 
 d  := $(dirstack_$(sp))

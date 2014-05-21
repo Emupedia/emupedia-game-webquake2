@@ -36,7 +36,7 @@ FILES:= \
 	# empty line
 
 
-quake2_MODULES:=client libjpeg libpng linux qcommon qshared ref_gl server shlinux
+quake2_MODULES:=client libjpeg libpng linux qcommon qshared ref_gl server shlinux zlib
 quake2_SRC:=
 
 
