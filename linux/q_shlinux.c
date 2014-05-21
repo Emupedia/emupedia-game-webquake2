@@ -58,7 +58,7 @@ void *Hunk_Alloc (int size)
 
 int Hunk_End (void)
 {
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__)
 	byte *n;
 
 	n = mremap(membase, maxhunksize, curhunksize + sizeof(int), 0);
