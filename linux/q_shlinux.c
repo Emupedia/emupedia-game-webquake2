@@ -111,7 +111,7 @@ unsigned int Sys_Milliseconds (void)
 
 void Sys_DebugBreak (void)
 {
-        __asm ("int $3");
+	__builtin_trap();
 }
 
 void Sys_Mkdir (char *path)

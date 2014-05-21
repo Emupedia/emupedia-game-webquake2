@@ -302,9 +302,15 @@ void Sys_Spinstats_f (void)
 
 unsigned short Sys_GetFPUStatus (void)
 {
+#ifndef EMSCRIPTEN
 	unsigned short fpuword;
 	__asm__ __volatile__ ("fnstcw %0" : "=m" (fpuword));
 	return fpuword;
+
+#else  // EMSCRIPTEN
+
+	return 0;
+#endif  // EMSCRIPTEN
 }
 
 /*
@@ -312,6 +318,7 @@ unsigned short Sys_GetFPUStatus (void)
  */
 void Sys_SetFPU (void)
 {
+#ifndef EMSCRIPTEN
 	unsigned short fpuword;
 	fpuword = Sys_GetFPUStatus ();
 	fpuword &= ~(3 << 8);
@@ -319,6 +326,7 @@ void Sys_SetFPU (void)
 	fpuword &= ~(3 << 10);
 	fpuword |= (0 << 10);
 	__asm__ __volatile__ ("fldcw %0" : : "m" (fpuword));
+#endif  // EMSCRIPTEN
 }
 
 void Sys_Init(void)
