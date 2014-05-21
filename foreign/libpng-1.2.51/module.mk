@@ -4,8 +4,6 @@ d              := $(dir)
 
 
 SUBDIRS:= \
-	libjpeg-turbo-1.3.1 \
-	libpng-1.2.51 \
 	# empty line
 
 DIRS:=$(addprefix $(d)/,$(SUBDIRS))
@@ -14,10 +12,20 @@ $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))
 
 
 FILES:= \
+	png.c \
+	pngerror.c \
+	pngget.c \
+	pngmem.c \
+	pngread.c \
+	pngrio.c \
+	pngrtran.c \
+	pngrutil.c \
+	pngset.c \
+	pngtrans.c \
 	# empty line
 
 
-SRC_$(d):=$(addprefix $(d)/,$(FILES))
+SRC_libpng:=$(addprefix $(d)/,$(FILES))
 
 
 d  := $(dirstack_$(sp))

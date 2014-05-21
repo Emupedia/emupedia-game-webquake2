@@ -51,6 +51,7 @@ endif
 
 CFLAGS+=$(OPTFLAGS)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libjpeg-turbo-1.3.1
+CFLAGS+=-isystem$(TOPDIR)/foreign/libpng-1.2.51
 
 
 ifneq ($(BUILTIN_GAME),)

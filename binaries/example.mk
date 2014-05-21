@@ -23,7 +23,7 @@ OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
 
 LDFLAGS:=-g
 LDLIBS:=-lz -lm -ldl
-LDLIBS_ref_gl:=-lGL -lpng $(shell sdl-config --libs)
+LDLIBS_ref_gl:=-lGL $(shell sdl-config --libs)
 LDLIBS_client:=$(shell pkg-config openal --libs)
 
 
