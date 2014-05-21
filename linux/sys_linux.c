@@ -187,6 +187,9 @@ static int dlcallback (struct dl_phdr_info *info, size_t size, void *data)
 }
 #endif
 
+
+#ifndef EMSCRIPTEN
+
 /* Obtain a backtrace and print it to stderr. 
  * Adapted from http://www.delorie.com/gnu/docs/glibc/libc_665.html
  */
@@ -252,6 +255,10 @@ void Sys_Backtrace (int sig, siginfo_t *siginfo, void *secret)
 
 	raise (SIGSEGV);
 }
+
+
+#endif  // EMSCRIPTEN
+
 
 void Sys_ProcessTimes_f (void)
 {
@@ -335,6 +342,9 @@ void Sys_Init(void)
 //	Sys_SetFPCW();
 #endif
   /* Install our signal handler */
+
+#ifndef EMSCRIPTEN
+
 #ifndef __x86_64__
 	struct sigaction sa;
 
@@ -361,6 +371,8 @@ void Sys_Init(void)
 	
 	signal (SIGTERM, Sys_KillServer);
 	signal (SIGINT, Sys_KillServer);
+
+#endif  // EMSCRIPTEN
 
 	//initialize timer base
 	Sys_Milliseconds ();
