@@ -42,8 +42,6 @@
 
 #include <SDL.h>
 
-#include <GL/gl.h>
-
 #include "../client/client.h"
 #include "../ref_gl/gl_local.h"
 #include "../linux/glw.h"
