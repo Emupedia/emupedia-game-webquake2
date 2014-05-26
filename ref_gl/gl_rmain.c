@@ -1764,8 +1764,6 @@ retryQGL:
 		if ( FLOAT_NE_ZERO(gl_ext_multitexture->value) )
 		{
 			ri.Con_Printf( PRINT_ALL, "...using GL_ARB_multitexture\n" );
-			qglMTexCoord2fSGIS = ( void (__stdcall *)(GLenum, GLfloat, GLfloat) ) qwglGetProcAddress( "glMultiTexCoord2fARB" );
-			qglMTexCoord2fvSGIS = ( void (__stdcall *)(GLenum, GLfloat*) ) qwglGetProcAddress( "glMultiTexCoord2fvARB" );
 			qglActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glActiveTextureARB" );
 			qglClientActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glClientActiveTextureARB" );
 			GL_TEXTURE0 = GL_TEXTURE0_ARB;
@@ -1779,31 +1777,6 @@ retryQGL:
 	else
 	{
 		ri.Con_Printf( PRINT_ALL, "...GL_ARB_multitexture not found\n" );
-	}
-
-	if ( strstr( gl_config.extensions_string, "GL_SGIS_multitexture" ) )
-	{
-		if ( qglActiveTextureARB )
-		{
-			ri.Con_Printf( PRINT_ALL, "...GL_SGIS_multitexture deprecated in favor of ARB_multitexture\n" );
-		}
-		else if ( FLOAT_NE_ZERO(gl_ext_multitexture->value) )
-		{
-			ri.Con_Printf( PRINT_ALL, "...using GL_SGIS_multitexture\n" );
-			qglMTexCoord2fSGIS = ( void (__stdcall *)(GLenum, GLfloat, GLfloat) ) qwglGetProcAddress( "glMTexCoord2fSGIS" );
-			qglMTexCoord2fvSGIS = ( void (__stdcall *)(GLenum, GLfloat*) ) qwglGetProcAddress( "glMTexCoord2fvSGIS" );
-			qglSelectTextureSGIS = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glSelectTextureSGIS" );
-			GL_TEXTURE0 = GL_TEXTURE0_SGIS;
-			GL_TEXTURE1 = GL_TEXTURE1_SGIS;
-		}
-		else
-		{
-			ri.Con_Printf( PRINT_ALL, "...ignoring GL_SGIS_multitexture\n" );
-		}
-	}
-	else
-	{
-		ri.Con_Printf( PRINT_ALL, "...GL_SGIS_multitexture not found\n" );
 	}
 
 	ri.Con_Printf( PRINT_ALL, "Initializing r1gl extensions:\n" );

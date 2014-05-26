@@ -650,7 +650,7 @@ void DrawTextureChains (void)
 
 //	GL_TexEnv( GL_REPLACE );
 
-	if ( !qglSelectTextureSGIS && !qglActiveTextureARB )
+	if ( !qglActiveTextureARB )
 	{
 		for ( i = 0, image=gltextures ; i<numgltextures ; i++,image++)
 		{
@@ -936,10 +936,6 @@ void R_DrawInlineBModel (void)
 				psurf->texturechain = r_alpha_surfaces;
 				r_alpha_surfaces = psurf;
 			}
-			else if ( qglMTexCoord2fSGIS && !( psurf->flags & SURF_DRAWTURB ) )
-			{
-				GL_RenderLightmappedPoly( psurf );
-			}
 			else
 			{
 				GL_EnableMultitexture( false );
@@ -951,7 +947,6 @@ void R_DrawInlineBModel (void)
 
 	if ( !(currententity->flags & RF_TRANSLUCENT) )
 	{
-		if ( !qglMTexCoord2fSGIS )
 			R_BlendLightmaps ();
 	}
 	else
@@ -1203,19 +1198,12 @@ static void R_RecursiveWorldNode (mnode_t *node, int planebits)
 		}
 		else
 		{
-			if ( qglMTexCoord2fSGIS && !( surf->flags & SURF_DRAWTURB ) )
-			{
-				GL_RenderLightmappedPoly( surf );
-			}
-			else
-			{
 				// the polygon is visible, so add it to the texture
 				// sorted chain
 				// FIXME: this is a hack for animation
 				image = R_TextureAnimation (surf->texinfo);
 				surf->texturechain = image->texturechain;
 				image->texturechain = surf;
-			}
 		}
 	}
 
@@ -1290,35 +1278,7 @@ void R_DrawWorld (void)
 	memset (gl_lms.lightmap_surfaces, 0, sizeof(gl_lms.lightmap_surfaces));
 	R_ClearSkyBox ();
 
-	if ( qglMTexCoord2fSGIS )
-	{
-		GL_EnableMultitexture( true );
-
-		GL_SelectTexture( GL_TEXTURE0);
-		GL_TexEnv( GL_REPLACE );
-		GL_SelectTexture( GL_TEXTURE1);
-
-		if (FLOAT_EQ_ZERO(gl_overbrights->value) || gl_overbrights->modified)
-		{
-			GL_TexEnv( GL_MODULATE );
-		}
-		else
-		{
-			qglTexEnvi (GL_TEXTURE_ENV,	GL_TEXTURE_ENV_MODE,	GL_COMBINE_ARB);
-			qglTexEnvi (GL_TEXTURE_ENV,	GL_COMBINE_RGB_ARB,		GL_MODULATE);
-			qglTexEnvi (GL_TEXTURE_ENV,	GL_COMBINE_ALPHA_ARB,	GL_MODULATE);
-			qglTexEnvi (GL_TEXTURE_ENV,	GL_RGB_SCALE_ARB,		2);
-			GL_TexEnv (GL_COMBINE_ARB);
-		}
-
 		R_RecursiveWorldNode (r_worldmodel->nodes, 15);
-
-		GL_EnableMultitexture( false );
-	}
-	else
-	{
-		R_RecursiveWorldNode (r_worldmodel->nodes, 15);
-	}
 
 	/*
 	** theoretically nothing should happen in the next two functions

@@ -383,10 +383,6 @@ extern	void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void 
 extern	void ( APIENTRY * qglLockArraysEXT) (int , int);
 extern	void ( APIENTRY * qglUnlockArraysEXT) (void);
 
-extern	void ( APIENTRY * qglMTexCoord2fSGIS)( GLenum, GLfloat, GLfloat );
-extern	void ( APIENTRY * qglMTexCoord2fvSGIS)( GLenum, GLfloat * );
-extern	void ( APIENTRY * qglSelectTextureSGIS)( GLenum );
-
 //r1ch
 extern	void ( APIENTRY * qglPointParameterfARB) (GLenum, GLfloat);
 extern	void ( APIENTRY * qglPointParameterfvARB) (GLenum, const GLfloat *);
@@ -474,9 +470,6 @@ void Fake_glColorTableEXT( GLenum target, GLenum internalformat,
 #define GL_POINT_SIZE_MAX_EXT				0x8127
 #define GL_POINT_FADE_THRESHOLD_SIZE_EXT	0x8128
 #define GL_DISTANCE_ATTENUATION_EXT			0x8129
-
-#define GL_TEXTURE0_SGIS					0x835E
-#define GL_TEXTURE1_SGIS					0x835F
 
 #ifdef GL_TEXTURE0
 #undef GL_TEXTURE0

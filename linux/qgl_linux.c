@@ -383,8 +383,6 @@ void (APIENTRY *qglGetQueryObjectuivARB) (GLuint, GLenum, GLuint *);
 void ( APIENTRY * qglMTexCoord2fvSGIS)( GLenum, GLfloat *);
 
 void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
-void ( APIENTRY * qglSelectTextureSGIS)( GLenum );
-void ( APIENTRY * qglMTexCoord2fSGIS)( GLenum, GLfloat, GLfloat );
 
 static void ( APIENTRY * dllAccum )(GLenum op, GLfloat value);
 static void ( APIENTRY * dllAlphaFunc )(GLenum func, GLclampf ref);
@@ -3296,9 +3294,6 @@ qboolean QGL_Init( const char *dllname )
 	qglPointParameterfEXT = NULL;
 	qglPointParameterfvEXT = NULL;
 	qglColorTableEXT = NULL;
-	qglSelectTextureSGIS = NULL;
-	qglMTexCoord2fSGIS = NULL;
-	qglMTexCoord2fvSGIS = NULL;
 	qglBeginQueryARB = NULL;
 	qglEndQueryARB = NULL;
 	qglGenQueriesARB = NULL;

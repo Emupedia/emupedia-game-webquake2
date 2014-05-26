@@ -123,7 +123,7 @@ void EmptyImageCache (void)
 
 void GL_EnableMultitexture( qboolean enable )
 {
-	if ( !qglSelectTextureSGIS && !qglActiveTextureARB )
+	if ( !qglActiveTextureARB )
 		return;
 
 	GL_SelectTexture( GL_TEXTURE1 );
@@ -145,7 +145,7 @@ void GL_SelectTexture( GLenum texture )
 {
 	unsigned tmu;
 
-	if (!qglSelectTextureSGIS && !qglActiveTextureARB)
+	if (!qglActiveTextureARB)
 		return;
 
 	if ( texture == GL_TEXTURE0 )
@@ -160,12 +160,7 @@ void GL_SelectTexture( GLenum texture )
 	gl_state.currenttmu = tmu;
 	gl_state.currenttarget = texture;
 
-	if ( qglSelectTextureSGIS )
-	{
-		qglSelectTextureSGIS( texture );
-		GL_CheckForError ();
-	}
-	else if ( qglActiveTextureARB )
+	if ( qglActiveTextureARB )
 	{
 		qglActiveTextureARB( texture );
 		GL_CheckForError ();
