@@ -91,9 +91,6 @@ void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 void ( APIENTRY * qglDrawBuffer )(GLenum mode);
 void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 void ( APIENTRY * qglDrawPixels )(GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-void ( APIENTRY * qglEdgeFlag )(GLboolean flag);
-void ( APIENTRY * qglEdgeFlagPointer )(GLsizei stride, const GLvoid *pointer);
-void ( APIENTRY * qglEdgeFlagv )(const GLboolean *flag);
 void ( APIENTRY * qglEnable )(GLenum cap);
 void ( APIENTRY * qglEnableClientState )(GLenum array);
 void ( APIENTRY * qglEnd )(void);
@@ -453,9 +450,6 @@ static void ( APIENTRY * dllDrawArrays )(GLenum mode, GLint first, GLsizei count
 static void ( APIENTRY * dllDrawBuffer )(GLenum mode);
 static void ( APIENTRY * dllDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 static void ( APIENTRY * dllDrawPixels )(GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-static void ( APIENTRY * dllEdgeFlag )(GLboolean flag);
-static void ( APIENTRY * dllEdgeFlagPointer )(GLsizei stride, const GLvoid *pointer);
-static void ( APIENTRY * dllEdgeFlagv )(const GLboolean *flag);
 static void ( APIENTRY * dllEnable )(GLenum cap);
 static void ( APIENTRY * dllEnableClientState )(GLenum array);
 static void ( APIENTRY * dllEnd )(void);
@@ -1122,23 +1116,6 @@ static void APIENTRY logDrawPixels(GLsizei width, GLsizei height, GLenum format,
 	dllDrawPixels( width, height, format, type, pixels );
 }
 
-static void APIENTRY logEdgeFlag(GLboolean flag)
-{
-	SIG( "glEdgeFlag" );
-	dllEdgeFlag( flag );
-}
-
-static void APIENTRY logEdgeFlagPointer(GLsizei stride, const void *pointer)
-{
-	SIG( "glEdgeFlagPointer" );
-	dllEdgeFlagPointer( stride, pointer );
-}
-
-static void APIENTRY logEdgeFlagv(const GLboolean *flag)
-{
-	SIG( "glEdgeFlagv" );
-	dllEdgeFlagv( flag );
-}
 
 static void APIENTRY logEnable(GLenum cap)
 {
@@ -2673,9 +2650,6 @@ void QGL_Shutdown( void )
 	qglDrawBuffer                = NULL;
 	qglDrawElements              = NULL;
 	qglDrawPixels                = NULL;
-	qglEdgeFlag                  = NULL;
-	qglEdgeFlagPointer           = NULL;
-	qglEdgeFlagv                 = NULL;
 	qglEnable                    = NULL;
 	qglEnableClientState         = NULL;
 	qglEnd                       = NULL;
@@ -3023,9 +2997,6 @@ qboolean QGL_Init( const char *dllname )
 	qglDrawBuffer                = dllDrawBuffer = glDrawBuffer;
 	qglDrawElements              = dllDrawElements = glDrawElements;
 	qglDrawPixels                = dllDrawPixels = glDrawPixels;
-	qglEdgeFlag                  = dllEdgeFlag = glEdgeFlag;
-	qglEdgeFlagPointer           = dllEdgeFlagPointer = glEdgeFlagPointer;
-	qglEdgeFlagv                 = dllEdgeFlagv = glEdgeFlagv;
 	qglEnable                    = 	dllEnable                    = glEnable;
 	qglEnableClientState         = 	dllEnableClientState         = glEnableClientState;
 	qglEnd                       = 	dllEnd                       = glEnd;
@@ -3394,9 +3365,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglDrawBuffer                = logDrawBuffer ;
 		qglDrawElements              = logDrawElements ;
 		qglDrawPixels                = logDrawPixels ;
-		qglEdgeFlag                  = logEdgeFlag ;
-		qglEdgeFlagPointer           = logEdgeFlagPointer ;
-		qglEdgeFlagv                 = logEdgeFlagv ;
 		qglEnable                    = 	logEnable                    ;
 		qglEnableClientState         = 	logEnableClientState         ;
 		qglEnd                       = 	logEnd                       ;
@@ -3733,9 +3701,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglDrawBuffer                = dllDrawBuffer ;
 		qglDrawElements              = dllDrawElements ;
 		qglDrawPixels                = dllDrawPixels ;
-		qglEdgeFlag                  = dllEdgeFlag ;
-		qglEdgeFlagPointer           = dllEdgeFlagPointer ;
-		qglEdgeFlagv                 = dllEdgeFlagv ;
 		qglEnable                    = 	dllEnable                    ;
 		qglEnableClientState         = 	dllEnableClientState         ;
 		qglEnd                       = 	dllEnd                       ;
