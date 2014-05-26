@@ -31,10 +31,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <GL/gl.h>
 #include "glext.h"
 
-#ifdef __linux__
-//#include <GL/fxmesa.h>
-#include <GL/glx.h>
-#endif
 
 qboolean QGL_Init( const char *dllname );
 void     QGL_Shutdown( void );
@@ -464,14 +460,6 @@ extern fxMesaContext (*qfxMesaGetCurrentContext)(void);
 extern void (*qfxMesaSwapBuffers)(void);
 */
 
-//GLX Functions
-extern XVisualInfo * (*qglXChooseVisual)( Display *dpy, int screen, int *attribList );
-extern GLXContext (*qglXCreateContext)( Display *dpy, XVisualInfo *vis, GLXContext shareList, Bool direct );
-extern void (*qglXDestroyContext)( Display *dpy, GLXContext ctx );
-extern Bool (*qglXMakeCurrent)( Display *dpy, GLXDrawable drawable, GLXContext ctx);
-extern void (*qglXCopyContext)( Display *dpy, GLXContext src, GLXContext dst, GLuint mask );
-extern void (*qglXSwapBuffers)( Display *dpy, GLXDrawable drawable );
-
 // 3dfxSetPaletteEXT shunt
 void Fake_glColorTableEXT( GLenum target, GLenum internalformat,
                              GLsizei width, GLenum format, GLenum type,
@@ -487,17 +475,8 @@ void Fake_glColorTableEXT( GLenum target, GLenum internalformat,
 #define GL_POINT_FADE_THRESHOLD_SIZE_EXT	0x8128
 #define GL_DISTANCE_ATTENUATION_EXT			0x8129
 
-#ifdef __sgi
-#define GL_SHARED_TEXTURE_PALETTE_EXT		GL_TEXTURE_COLOR_TABLE_SGI
-#else
-#define GL_SHARED_TEXTURE_PALETTE_EXT		0x81FB
-#endif
-
 #define GL_TEXTURE0_SGIS					0x835E
 #define GL_TEXTURE1_SGIS					0x835F
-
-#define GL_TEXTURE0_ARB						0x84C0
-#define GL_TEXTURE1_ARB						0x84C1
 
 #ifdef GL_TEXTURE0
 #undef GL_TEXTURE0

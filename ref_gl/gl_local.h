@@ -463,23 +463,6 @@ void EmptyImageCache (void);
 
 #define GL_RENDERER_OTHER		0x80000000
 
-//r1ch: my super leet gl extensions!
-#define GL_GENERATE_MIPMAP_SGIS			0x8191
-#define	GL_GENERATE_MIPMAP_HINT_SGIS	0x8192
-#define GL_TEXTURE_MAX_ANISOTROPY_EXT   0x84FE
-
-#define GL_MULTISAMPLE_ARB                0x809D
-#define GL_SAMPLE_ALPHA_TO_COVERAGE_ARB   0x809E
-#define GL_SAMPLE_ALPHA_TO_ONE_ARB        0x809F
-#define GL_SAMPLE_COVERAGE_ARB            0x80A0
-#define GL_SAMPLE_BUFFERS_ARB             0x80A8
-#define GL_SAMPLES_ARB                    0x80A9
-#define GL_SAMPLE_COVERAGE_VALUE_ARB      0x80AA
-#define GL_SAMPLE_COVERAGE_INVERT_ARB     0x80AB
-#define GL_MULTISAMPLE_BIT_ARB            0x20000000
-
-/* NV_multisample_filter_hint */
-#define GL_MULTISAMPLE_FILTER_HINT_NV     0x8534
 
 typedef struct
 {
