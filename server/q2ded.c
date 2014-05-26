@@ -35,6 +35,7 @@ const char *CL_Get_Loc_Here (void)
 
 const char *CL_Get_Loc_There (void)
 {
+	return NULL;
 }
 
 
