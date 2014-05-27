@@ -264,7 +264,7 @@ void EmitWaterPolys (msurface_t *fa)
 			t *= (1.0/64);
 
 			qglTexCoord2f (s, t);
-			qglVertex3fv (v);
+			qglVertex3f(v[0], v[1], v[2]);
 		}
 		qglEnd ();
 	}
@@ -568,7 +568,7 @@ void MakeSkyVec (float s, float t, int axis)
 
 	t = 1.0f - t;
 	qglTexCoord2f (s, t);
-	qglVertex3fv (v);
+	qglVertex3f(v[0], v[1], v[2]);
 }
 
 /*

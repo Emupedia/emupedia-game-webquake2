@@ -332,7 +332,6 @@ void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglVertex2f )(GLfloat x, GLfloat y);
 void ( APIENTRY * qglVertex2i )(GLint x, GLint y);
 void ( APIENTRY * qglVertex3f )(GLfloat x, GLfloat y, GLfloat z);
-void ( APIENTRY * qglVertex3fv )(const GLfloat *v);
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
@@ -671,7 +670,6 @@ static void ( APIENTRY * dllTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 static void ( APIENTRY * dllVertex2f )(GLfloat x, GLfloat y);
 static void ( APIENTRY * dllVertex2i )(GLint x, GLint y);
 static void ( APIENTRY * dllVertex3f )(GLfloat x, GLfloat y, GLfloat z);
-static void ( APIENTRY * dllVertex3fv )(const GLfloat *v);
 static void ( APIENTRY * dllVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 static void ( APIENTRY * dllViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
@@ -993,7 +991,6 @@ void QGL_Shutdown( void )
 	qglVertex2f                  = NULL;
 	qglVertex2i                  = NULL;
 	qglVertex3f                  = NULL;
-	qglVertex3fv                 = NULL;
 	qglVertexPointer             = NULL;
 	qglViewport                  = NULL;
 }
@@ -1320,7 +1317,6 @@ qboolean QGL_Init( const char *dllname )
 	qglVertex2f                  = 	dllVertex2f                  = glVertex2f;
 	qglVertex2i                  = 	dllVertex2i                  = glVertex2i;
 	qglVertex3f                  = 	dllVertex3f                  = glVertex3f;
-	qglVertex3fv                 = 	dllVertex3fv                 = glVertex3fv;
 	qglVertexPointer             = 	dllVertexPointer             = glVertexPointer;
 	qglViewport                  = 	dllViewport                  = glViewport;
 
@@ -1649,7 +1645,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglVertex2f                  = 	dllVertex2f                  ;
 		qglVertex2i                  = 	dllVertex2i                  ;
 		qglVertex3f                  = 	dllVertex3f                  ;
-		qglVertex3fv                 = 	dllVertex3fv                 ;
 		qglVertexPointer             = 	dllVertexPointer             ;
 		qglViewport                  = 	dllViewport                  ;
 }

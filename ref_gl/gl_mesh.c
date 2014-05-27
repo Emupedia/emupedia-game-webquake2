@@ -238,7 +238,7 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 					index_xyz = order[2];
 					order += 3;
 
-					qglVertex3fv( s_lerped[index_xyz] );
+					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
 
 				} while (--count);
 			}
@@ -290,7 +290,7 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 					order += 3;
 
 					qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha);
-					qglVertex3fv (s_lerped[index_xyz]);
+					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
 
 				} while (--count);
 			}
@@ -307,7 +307,7 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 					l = shadedots[verts[index_xyz].lightnormalindex];
 					
 					qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
-					qglVertex3fv (s_lerped[index_xyz]);
+					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
 				} while (--count);
 			}
 
@@ -384,7 +384,7 @@ void GL_DrawAliasShadow (dmdl_t *paliashdr)
 			point[1] -= shadevector[1]*(point[2]+lheight);
 			point[2] = height;
 //			height -= 0.001;
-			qglVertex3fv (point);
+			qglVertex3f(point[0], point[1], point[2]);
 
 			order += 3;
 

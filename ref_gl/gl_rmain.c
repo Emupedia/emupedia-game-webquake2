@@ -314,22 +314,22 @@ void R_DrawSpriteModel (entity_t *e)
 	qglTexCoord2f (0, 1);
 	VectorMA (e->origin, -frame->origin_y, up, point);
 	VectorMA (point, -frame->origin_x, right, point);
-	qglVertex3fv (point);
+	qglVertex3f(point[0], point[1], point[2]);
 
 	qglTexCoord2f (0, 0);
 	VectorMA (e->origin, frame->height - frame->origin_y, up, point);
 	VectorMA (point, -frame->origin_x, right, point);
-	qglVertex3fv (point);
+	qglVertex3f(point[0], point[1], point[2]);
 
 	qglTexCoord2f (1, 0);
 	VectorMA (e->origin, frame->height - frame->origin_y, up, point);
 	VectorMA (point, frame->width - frame->origin_x, right, point);
-	qglVertex3fv (point);
+	qglVertex3f(point[0], point[1], point[2]);
 
 	qglTexCoord2f (1, 1);
 	VectorMA (e->origin, -frame->origin_y, up, point);
 	VectorMA (point, frame->width - frame->origin_x, right, point);
-	qglVertex3fv (point);
+	qglVertex3f(point[0], point[1], point[2]);
 	
 	qglEnd ();
 
@@ -659,7 +659,7 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
 		qglColor4fv( colorf );
 
 		qglTexCoord2f( 0.0625f, 0.0625f );
-		qglVertex3fv( p->origin );
+		qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
 
 		qglTexCoord2f( 1.0625f, 0.0625f );
 		qglVertex3f( p->origin[0] + up[0]*scale, 
@@ -738,7 +738,7 @@ void R_DrawParticles (void)
 				colorf[3] = p->alpha;
 				qglColor4fv( colorf );
 				
-				qglVertex3fv( p->origin );
+				qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
 			}
 		}
 		qglEnd();
@@ -777,7 +777,7 @@ void R_DrawParticles (void)
 			//color[3] = (byte)Q_ftol (p->alpha * 255);
 			//qglColor4ubv( color );
 			qglColor4fv( colorf );
-			qglVertex3fv( p->origin );
+			qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
 		}
 
 		qglEnd();
@@ -2297,10 +2297,11 @@ void R_DrawBeam( entity_t *e )
 	qglBegin( GL_TRIANGLE_STRIP );
 	for ( i = 0; i < NUM_BEAM_SEGS; i++ )
 	{
-		qglVertex3fv( start_points[i] );
-		qglVertex3fv( end_points[i] );
-		qglVertex3fv( start_points[(i+1)%NUM_BEAM_SEGS] );
-		qglVertex3fv( end_points[(i+1)%NUM_BEAM_SEGS] );
+		qglVertex3f(start_points[i][0], start_points[i][1], start_points[i][2]);
+		qglVertex3f(end_points[i][0], end_points[i][1], end_points[i][2]);
+		int lastPt = (i + 1) % NUM_BEAM_SEGS;
+		qglVertex3f(start_points[lastPt][0], start_points[lastPt][1], start_points[lastPt][2]);
+		qglVertex3f(end_points[lastPt][0], end_points[lastPt][1], end_points[lastPt][2]);
 	}
 	qglEnd();
 

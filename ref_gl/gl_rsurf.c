@@ -186,7 +186,7 @@ void DrawGLPoly (glpoly_t *p)
 	for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
 	{
 		qglTexCoord2f (v[3], v[4]);
-		qglVertex3fv (v);
+		qglVertex3f(v[0], v[1], v[2]);
 	}
 	qglEnd ();
 }
@@ -216,7 +216,7 @@ void DrawGLFlowingPoly (msurface_t *fa)
 	for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
 	{
 		qglTexCoord2f ((v[3] + scroll), v[4]);
-		qglVertex3fv (v);
+		qglVertex3f(v[0], v[1], v[2]);
 	}
 	qglEnd ();
 }
@@ -250,10 +250,10 @@ void R_DrawTriangleOutlines (void)
 				for (j=2 ; j<p->numverts ; j++ )
 				{
 					qglBegin (GL_LINE_STRIP);
-					qglVertex3fv (p->verts[0]);
-					qglVertex3fv (p->verts[j-1]);
-					qglVertex3fv (p->verts[j]);
-					qglVertex3fv (p->verts[0]);
+					qglVertex3f(p->verts[0][0],   p->verts[0][1],   p->verts[0][2]);
+					qglVertex3f(p->verts[j-1][0], p->verts[j-1][1], p->verts[j-1][2]);
+					qglVertex3f(p->verts[j][0],   p->verts[j][1],   p->verts[j][2]);
+					qglVertex3f(p->verts[0][0],   p->verts[0][1],   p->verts[0][2]);
 					qglEnd ();
 				}
 			}
@@ -281,7 +281,7 @@ void DrawGLPolyChain( glpoly_t *p, float soffset, float toffset )
 			for (j=0 ; j<p->numverts ; j++, v+= VERTEXSIZE)
 			{
 				qglTexCoord2f (v[5], v[6] );
-				qglVertex3fv (v);
+				qglVertex3f(v[0], v[1], v[2]);
 			}
 			qglEnd ();
 		}
@@ -298,7 +298,7 @@ void DrawGLPolyChain( glpoly_t *p, float soffset, float toffset )
 			for (j=0 ; j<p->numverts ; j++, v+= VERTEXSIZE)
 			{
 				qglTexCoord2f (v[5] - soffset, v[6] - toffset );
-				qglVertex3fv (v);
+				qglVertex3f(v[0], v[1], v[2]);
 			}
 			qglEnd ();
 		}

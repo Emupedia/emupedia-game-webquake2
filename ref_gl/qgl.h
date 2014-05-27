@@ -352,7 +352,6 @@ extern  void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglVertex2f )(GLfloat x, GLfloat y);
 extern  void ( APIENTRY * qglVertex2i )(GLint x, GLint y);
 extern  void ( APIENTRY * qglVertex3f )(GLfloat x, GLfloat y, GLfloat z);
-extern  void ( APIENTRY * qglVertex3fv )(const GLfloat *v);
 extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
