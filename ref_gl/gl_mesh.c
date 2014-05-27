@@ -767,7 +767,7 @@ void R_DrawAliasModel (entity_t *e)
 		qglPopMatrix ();
 	}
 #endif
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 }
 
 

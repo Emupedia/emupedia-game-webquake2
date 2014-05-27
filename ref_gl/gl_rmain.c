@@ -336,7 +336,7 @@ void R_DrawSpriteModel (entity_t *e)
 	if ( alpha != 1.0F )
 		qglDisable( GL_BLEND );
 
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 }
 
 //==================================================================================
@@ -653,7 +653,7 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
 		FastVectorCopy (d_8to24float[p->color], colorf);
 		colorf[3] = p->alpha;
 
-		qglColor4fv( colorf );
+		qglColor4f(colorf[0], colorf[1], colorf[2], colorf[3]);
 
 		qglTexCoord2f( 0.0625f, 0.0625f );
 		qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
@@ -671,7 +671,7 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
 
 	qglEnd ();
 	qglDisable( GL_BLEND );
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 	qglDepthMask( 1 );		// back to normal Z buffering
 	GL_TexEnv( GL_REPLACE );
 }
@@ -733,7 +733,7 @@ void R_DrawParticles (void)
 				
 				FastVectorCopy (d_8to24float[p->color], colorf);
 				colorf[3] = p->alpha;
-				qglColor4fv( colorf );
+				qglColor4f(colorf[0], colorf[1], colorf[2], colorf[3]);
 				
 				qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
 			}
@@ -742,7 +742,7 @@ void R_DrawParticles (void)
 
 		qglDisable( GL_POINT_SPRITE_ARB );
 		qglDisable( GL_BLEND );
-		qglColor4fv(colorWhite);
+		qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 		qglDepthMask( GL_TRUE );
 		qglEnable( GL_TEXTURE_2D );
 		qglDepthMask( 1 );		// back to normal Z buffering
@@ -773,14 +773,14 @@ void R_DrawParticles (void)
 			//*(int *)color = d_8to24table[p->color];
 			//color[3] = (byte)Q_ftol (p->alpha * 255);
 			//qglColor4ubv( color );
-			qglColor4fv( colorf );
+			qglColor4f(colorf[0], colorf[1], colorf[2], colorf[3]);
 			qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
 		}
 
 		qglEnd();
 
 		qglDisable( GL_BLEND );
-		qglColor4fv(colorWhite);
+		qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 		qglDepthMask( GL_TRUE );
 		qglEnable( GL_TEXTURE_2D );
 
@@ -815,7 +815,7 @@ void R_PolyBlend (void)
     qglRotatef (-90,  1, 0, 0);	    // put Z going up
     qglRotatef (90,  0, 0, 1);	    // put Z going up
 
-	qglColor4fv (v_blend);
+	qglColor4f(v_blend[0], v_blend[1], v_blend[2], v_blend[3]);
 
 	qglBegin (GL_QUADS);
 
@@ -829,7 +829,7 @@ void R_PolyBlend (void)
 	qglEnable (GL_TEXTURE_2D);
 	qglEnable (GL_ALPHA_TEST);
 
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 }
 
 //=======================================================================
@@ -1185,7 +1185,7 @@ void	R_SetGL2D (void)
 	qglDisable (GL_CULL_FACE);
 	//GLPROFqglDisable (GL_BLEND);
 	qglEnable (GL_ALPHA_TEST);
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 }
 
 #ifdef STEREO_SUPPORT
@@ -1966,7 +1966,7 @@ void EXPORT R_BeginFrame( float camera_separation )
 	//GLPROFqglDisable (GL_CULL_FACE);
 	//GLPROFqglDisable (GL_BLEND);
 	//GLPROFqglEnable (GL_ALPHA_TEST);
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
 	//qglEnable(GL_MULTISAMPLE_ARB);
 

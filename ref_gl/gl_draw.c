@@ -452,7 +452,7 @@ void EXPORT Draw_FadeScreen (void)
 
 	qglEnd ();
 
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
 	qglEnable (GL_TEXTURE_2D);
 

@@ -338,7 +338,7 @@ void GL_SetDefaultState( void )
 	qglDisable (GL_CULL_FACE);
 	qglDisable (GL_BLEND);
 
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
 	qglPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 	qglShadeModel (GL_FLAT);

@@ -236,7 +236,7 @@ void R_DrawTriangleOutlines (void)
 
 	qglDisable (GL_TEXTURE_2D);
 	qglDisable (GL_DEPTH_TEST);
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
 	for (i=0 ; i<MAX_LIGHTMAPS ; i++)
 	{
@@ -629,7 +629,7 @@ void R_DrawAlphaSurfaces (void)
 	}
 
 	GL_TexEnv( GL_REPLACE );
-	qglColor4fv(colorWhite);
+	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 	qglDisable (GL_BLEND);
 
 	r_alpha_surfaces = NULL;
@@ -952,7 +952,7 @@ void R_DrawInlineBModel (void)
 	else
 	{
 		qglDisable (GL_BLEND);
-		qglColor4fv(colorWhite);
+		qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 		GL_TexEnv( GL_REPLACE );
 	}
 }
