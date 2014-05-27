@@ -106,13 +106,13 @@ void Draw_AddText (void)
 		fcolbottom = conchars_texlimits[col];
 
 		qglTexCoord2f (fcol, frow);
-		qglVertex2i (x, y);
+		qglVertex2f(x, y);
 		qglTexCoord2f (fcolbottom, frow);
-		qglVertex2i (x+8, y);
+		qglVertex2f(x+8, y);
 		qglTexCoord2f (fcolbottom, frowbottom);
-		qglVertex2i (x+8, y+8);
+		qglVertex2f(x+8, y+8);
 		qglTexCoord2f (fcol, frowbottom);
-		qglVertex2i (x, y+8);
+		qglVertex2f(x, y+8);
 	}
 
 	qglEnd ();
@@ -192,13 +192,13 @@ void EXPORT Draw_Char (int x, int y, int num)
 
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (fcol, frow);
-	qglVertex2i (x, y);
+	qglVertex2f(x, y);
 	qglTexCoord2f (fcolbottom, frow);
-	qglVertex2i (x+8, y);
+	qglVertex2f(x+8, y);
 	qglTexCoord2f (fcolbottom, frowbottom);
-	qglVertex2i (x+8, y+8);
+	qglVertex2f(x+8, y+8);
 	qglTexCoord2f (fcol, frowbottom);
-	qglVertex2i (x, y+8);
+	qglVertex2f(x, y+8);
 	qglEnd ();
 	GL_CheckForError ();
 
@@ -297,13 +297,13 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 	GL_Bind (gl->texnum);
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (gl->sl, gl->tl);
-	qglVertex2i (x, y);
+	qglVertex2f(x, y);
 	qglTexCoord2f (gl->sh, gl->tl);
-	qglVertex2i (x+w, y);
+	qglVertex2f(x+w, y);
 	qglTexCoord2f (gl->sh, gl->th);
-	qglVertex2i (x+w, y+h);
+	qglVertex2f(x+w, y+h);
 	qglTexCoord2f (gl->sl, gl->th);
-	qglVertex2i (x, y+h);
+	qglVertex2f(x, y+h);
 	qglEnd ();
 
 	GL_CheckForError ();
@@ -368,13 +368,13 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (gl->sl, gl->tl);
-	qglVertex2i (x, y);
+	qglVertex2f(x, y);
 	qglTexCoord2f (gl->sh, gl->tl);
-	qglVertex2i (x+gl->width, y);
+	qglVertex2f(x+gl->width, y);
 	qglTexCoord2f (gl->sh, gl->th);
-	qglVertex2i (x+gl->width, y+gl->height);
+	qglVertex2f(x+gl->width, y+gl->height);
 	qglTexCoord2f (gl->sl, gl->th);
-	qglVertex2i (x, y+gl->height);
+	qglVertex2f(x, y+gl->height);
 	qglEnd ();
 
 	GL_CheckForError ();
@@ -424,13 +424,13 @@ void EXPORT Draw_TileClear (int x, int y, int w, int h, char *pic)
 	GL_Bind (image->texnum);
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (x/64.0f, y/64.0f);
-	qglVertex2i (x, y);
+	qglVertex2f(x, y);
 	qglTexCoord2f ( (x+w)/64.0f, y/64.0f);
-	qglVertex2i (x+w, y);
+	qglVertex2f(x+w, y);
 	qglTexCoord2f ( (x+w)/64.0f, (y+h)/64.0f);
-	qglVertex2i (x+w, y+h);
+	qglVertex2f(x+w, y+h);
 	qglTexCoord2f ( x/64.0f, (y+h)/64.0f );
-	qglVertex2i (x, y+h);
+	qglVertex2f(x, y+h);
 	qglEnd ();
 	GL_CheckForError ();
 
@@ -470,10 +470,10 @@ void EXPORT Draw_Fill (int x, int y, int w, int h, int c)
 
 	qglBegin (GL_QUADS);
 
-	qglVertex2i (x,y);
-	qglVertex2i (x+w, y);
-	qglVertex2i (x+w, y+h);
-	qglVertex2i (x, y+h);
+	qglVertex2f(x,y);
+	qglVertex2f(x+w, y);
+	qglVertex2f(x+w, y+h);
+	qglVertex2f(x, y+h);
 
 	qglEnd ();
 	GL_CheckForError ();
@@ -506,10 +506,10 @@ void EXPORT Draw_FadeScreen (void)
 
 	qglBegin (GL_QUADS);
 
-	qglVertex2i (0,0);
-	qglVertex2i (vid.width, 0);
-	qglVertex2i (vid.width, vid.height);
-	qglVertex2i (0, vid.height);
+	qglVertex2f(0,0);
+	qglVertex2f(vid.width, 0);
+	qglVertex2f(vid.width, vid.height);
+	qglVertex2f(0, vid.height);
 
 	qglEnd ();
 	GL_CheckForError ();
@@ -627,13 +627,13 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (0, 0);
-	qglVertex2i (x, y);
+	qglVertex2f(x, y);
 	qglTexCoord2f (1, 0);
-	qglVertex2i (x+w, y);
+	qglVertex2f(x+w, y);
 	qglTexCoord2f (1, t);
-	qglVertex2i (x+w, y+h);
+	qglVertex2f(x+w, y+h);
 	qglTexCoord2f (0, t);
-	qglVertex2i (x, y+h);
+	qglVertex2f(x, y+h);
 	qglEnd ();
 	GL_CheckForError ();
 

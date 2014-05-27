@@ -350,7 +350,6 @@ extern  void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint x
 extern  void ( APIENTRY * qglTranslated )(GLdouble x, GLdouble y, GLdouble z);
 extern  void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglVertex2f )(GLfloat x, GLfloat y);
-extern  void ( APIENTRY * qglVertex2i )(GLint x, GLint y);
 extern  void ( APIENTRY * qglVertex3f )(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);

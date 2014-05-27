@@ -330,7 +330,6 @@ void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, 
 void ( APIENTRY * qglTranslated )(GLdouble x, GLdouble y, GLdouble z);
 void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglVertex2f )(GLfloat x, GLfloat y);
-void ( APIENTRY * qglVertex2i )(GLint x, GLint y);
 void ( APIENTRY * qglVertex3f )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
@@ -668,7 +667,6 @@ static void ( APIENTRY * dllTexSubImage2D )(GLenum target, GLint level, GLint xo
 static void ( APIENTRY * dllTranslated )(GLdouble x, GLdouble y, GLdouble z);
 static void ( APIENTRY * dllTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 static void ( APIENTRY * dllVertex2f )(GLfloat x, GLfloat y);
-static void ( APIENTRY * dllVertex2i )(GLint x, GLint y);
 static void ( APIENTRY * dllVertex3f )(GLfloat x, GLfloat y, GLfloat z);
 static void ( APIENTRY * dllVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 static void ( APIENTRY * dllViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
@@ -989,7 +987,6 @@ void QGL_Shutdown( void )
 	qglTranslated                = NULL;
 	qglTranslatef                = NULL;
 	qglVertex2f                  = NULL;
-	qglVertex2i                  = NULL;
 	qglVertex3f                  = NULL;
 	qglVertexPointer             = NULL;
 	qglViewport                  = NULL;
@@ -1315,7 +1312,6 @@ qboolean QGL_Init( const char *dllname )
 	qglTranslated                = 	dllTranslated                = glTranslated;
 	qglTranslatef                = 	dllTranslatef                = glTranslatef;
 	qglVertex2f                  = 	dllVertex2f                  = glVertex2f;
-	qglVertex2i                  = 	dllVertex2i                  = glVertex2i;
 	qglVertex3f                  = 	dllVertex3f                  = glVertex3f;
 	qglVertexPointer             = 	dllVertexPointer             = glVertexPointer;
 	qglViewport                  = 	dllViewport                  = glViewport;
@@ -1643,7 +1639,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglTranslated                = 	dllTranslated                ;
 		qglTranslatef                = 	dllTranslatef                ;
 		qglVertex2f                  = 	dllVertex2f                  ;
-		qglVertex2i                  = 	dllVertex2i                  ;
 		qglVertex3f                  = 	dllVertex3f                  ;
 		qglVertexPointer             = 	dllVertexPointer             ;
 		qglViewport                  = 	dllViewport                  ;
