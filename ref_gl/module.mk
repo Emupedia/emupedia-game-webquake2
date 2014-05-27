@@ -21,6 +21,7 @@ FILES:= \
 	gl_rmisc.c \
 	gl_rsurf.c \
 	gl_warp.c \
+	qgl_linux.c \
 	# empty line
 
 
