@@ -157,17 +157,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 
 	GL_LerpVerts( paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv );
 
-	//TODO: use this somehow
-	/*qglEnableClientState (GL_VERTEX_ARRAY);
-	qglEnableClientState (GL_NORMAL_ARRAY);
-	qglEnableClientState (GL_TEXTURE_COORD_ARRAY);
-
-	qglVertexPointer (3, GL_FLOAT, 0, inVertexArray);
-	qglNormalPointer (GL_FLOAT, 12, inNormalsArray);
-	qglTexCoordPointer (2, GL_FLOAT, 0, inCoordArray);
-
-	qglDrawElements (GL_TRIANGLES, inNumIndexes, GL_UNSIGNED_INT, inIndexArray);*/
-
 		for (;;)
 		{
 			// get the vertex count and primitive type
@@ -216,7 +205,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 			qglEnd ();
 		}
 
-//	if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
 	// PMM - added double damage shell
 	if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM) )
 	{
