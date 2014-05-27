@@ -271,14 +271,6 @@ extern  void ( APIENTRY * qglRasterPos4s )(GLshort x, GLshort y, GLshort z, GLsh
 extern  void ( APIENTRY * qglRasterPos4sv )(const GLshort *v);
 extern  void ( APIENTRY * qglReadBuffer )(GLenum mode);
 extern  void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
-extern  void ( APIENTRY * qglRectd )(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2);
-extern  void ( APIENTRY * qglRectdv )(const GLdouble *v1, const GLdouble *v2);
-extern  void ( APIENTRY * qglRectf )(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
-extern  void ( APIENTRY * qglRectfv )(const GLfloat *v1, const GLfloat *v2);
-extern  void ( APIENTRY * qglRecti )(GLint x1, GLint y1, GLint x2, GLint y2);
-extern  void ( APIENTRY * qglRectiv )(const GLint *v1, const GLint *v2);
-extern  void ( APIENTRY * qglRects )(GLshort x1, GLshort y1, GLshort x2, GLshort y2);
-extern  void ( APIENTRY * qglRectsv )(const GLshort *v1, const GLshort *v2);
 extern  GLint ( APIENTRY * qglRenderMode )(GLenum mode);
 extern  void ( APIENTRY * qglRotated )(GLdouble angle, GLdouble x, GLdouble y, GLdouble z);
 extern  void ( APIENTRY * qglRotatef )(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
