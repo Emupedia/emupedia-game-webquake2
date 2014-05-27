@@ -19,7 +19,11 @@
 #include <execinfo.h>
 #include <sys/utsname.h>
 #define __USE_GNU 1
+
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif  // _GNU_SOURCE
+
 #include <link.h>
 #include <sys/ucontext.h>
 #include <sys/resource.h>
