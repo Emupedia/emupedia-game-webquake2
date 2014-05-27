@@ -220,9 +220,6 @@ void ( APIENTRY * qglVertex3f )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
-void ( APIENTRY * qglLockArraysEXT)( int, int);
-void ( APIENTRY * qglUnlockArraysEXT) ( void );
-
 //void ( APIENTRY * qglPointParameterfEXT)( GLenum param, GLfloat value );
 //void ( APIENTRY * qglPointParameterfvEXT)( GLenum param, const GLfloat *value );
 

@@ -245,9 +245,6 @@ extern	void ( APIENTRY * qglPointParameterfEXT)( GLenum param, GLfloat value );
 extern	void ( APIENTRY * qglPointParameterfvEXT)( GLenum param, const GLfloat *value );
 extern	void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
 
-extern	void ( APIENTRY * qglLockArraysEXT) (int , int);
-extern	void ( APIENTRY * qglUnlockArraysEXT) (void);
-
 //r1ch
 extern	void ( APIENTRY * qglPointParameterfARB) (GLenum, GLfloat);
 extern	void ( APIENTRY * qglPointParameterfvARB) (GLenum, const GLfloat *);
