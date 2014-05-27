@@ -299,21 +299,6 @@ void GL_ScreenShot_f (void)
 #endif
 } 
 
-#ifdef _DEBUG
-void GL_CheckForError (void)
-{
-	int error;
-
-	error = qglGetError ();
-
-	if (error != GL_NO_ERROR)
-		ri.Sys_Error (ERR_FATAL, "qglGetError: %d", error);
-}
-#else
-void GL_CheckForError (void)
-{
-}
-#endif
 
 /*
 ** GL_Strings_f

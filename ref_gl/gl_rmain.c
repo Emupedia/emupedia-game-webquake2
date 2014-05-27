@@ -1084,10 +1084,8 @@ void R_Clear (void)
 			if (gl_clear->value == 2)
 			{
 				qglClearColor (ref_frand(), ref_frand(), ref_frand(), 1.0);
-				GL_CheckForError ();
 			}
 			qglClear (GL_COLOR_BUFFER_BIT);
-			GL_CheckForError ();
 		}
 
 		trickframe++;
@@ -1096,14 +1094,12 @@ void R_Clear (void)
 			gldepthmin = 0;
 			gldepthmax = 0.49999;
 			qglDepthFunc (GL_LEQUAL);
-			GL_CheckForError ();
 		}
 		else
 		{
 			gldepthmin = 1;
 			gldepthmax = 0.5;
 			qglDepthFunc (GL_GEQUAL);
-			GL_CheckForError ();
 		}
 	}
 	else
@@ -1113,26 +1109,21 @@ void R_Clear (void)
 			if (gl_clear->value == 2)
 			{
 				qglClearColor (ref_frand(), ref_frand(), ref_frand(), 1.0);
-				GL_CheckForError ();
 			}
 
 			qglClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			GL_CheckForError ();
 		}
 		else
 		{
 			qglClear (GL_DEPTH_BUFFER_BIT);
-			GL_CheckForError ();
 		}
 
 		gldepthmin = 0;
 		gldepthmax = 1;
 		qglDepthFunc (GL_LEQUAL);
-		GL_CheckForError ();
 	}
 
 	qglDepthRange (gldepthmin, gldepthmax);
-	GL_CheckForError ();
 }
 
 /*void R_Flash( void )

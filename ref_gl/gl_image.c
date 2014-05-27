@@ -133,8 +133,6 @@ void GL_EnableMultitexture( qboolean enable )
 	else
 		qglDisable( GL_TEXTURE_2D );	
 
-	GL_CheckForError ();
-
 	GL_TexEnv( GL_REPLACE );
 
 	GL_SelectTexture( GL_TEXTURE0 );
@@ -163,10 +161,8 @@ void GL_SelectTexture( GLenum texture )
 	if ( qglActiveTextureARB )
 	{
 		qglActiveTextureARB( texture );
-		GL_CheckForError ();
 
 		qglClientActiveTextureARB( texture );
-		GL_CheckForError ();
 	}
 }
 
@@ -178,7 +174,6 @@ void GL_TexEnv( GLenum mode )
 	{
 		qglTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mode );
 		lastmodes[gl_state.currenttmu] = mode;
-		GL_CheckForError ();
 	}
 }
 
@@ -206,7 +201,6 @@ void GL_Bind (unsigned int texnum)
 	gl_state.currenttextures[gl_state.currenttmu] = texnum;
 
 	qglBindTexture (GL_TEXTURE_2D, texnum);
-	GL_CheckForError ();
 }
 
 void GL_MBind( GLenum target, unsigned int texnum )
@@ -226,7 +220,6 @@ void GL_MBind( GLenum target, unsigned int texnum )
 	}
 
 	GL_Bind( texnum );
-	GL_CheckForError ();
 }
 
 typedef struct
@@ -312,10 +305,8 @@ void GL_TextureMode( char *string )
 		{
 			GL_Bind (glt->texnum);
 			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
-			GL_CheckForError ();
 
 			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
-			GL_CheckForError ();
 		}
 	}
 }
@@ -2635,7 +2626,6 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	}*/
 
 	qglTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
-	GL_CheckForError ();
 
 	//if (mipmap && !(gl_config.r1gl_GL_SGIS_generate_mipmap))
 	if (mipmap)
@@ -2667,7 +2657,6 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 				scaled_height = 1;
 			miplevel++;
 			qglTexImage2D (GL_TEXTURE_2D, miplevel, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);;
-			GL_CheckForError ();
 		}
 	}
 done: ;
@@ -2678,28 +2667,22 @@ done: ;
 		if (gl_config.r1gl_GL_EXT_texture_filter_anisotropic)
 		{
 			qglTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (int)gl_ext_max_anisotropy->value);
-			GL_CheckForError ();
 		}
 
 		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
-		GL_CheckForError ();
 
 		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
-		GL_CheckForError ();
 	}
 	else
 	{
 		if (gl_config.r1gl_GL_EXT_texture_filter_anisotropic)
 		{
 			qglTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
-			GL_CheckForError ();
 		}
 
 		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		GL_CheckForError ();
 
 		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		GL_CheckForError ();
 	}
 
 	if (!r_registering)

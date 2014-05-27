@@ -173,25 +173,20 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 		float colorArray[MAX_VERTS*4];
 
 		qglEnableClientState( GL_VERTEX_ARRAY );
-		GL_CheckForError ();
 
 		qglVertexPointer( 3, GL_FLOAT, 16, s_lerped );	// padded for SIMD
-		GL_CheckForError ();
 
 //		if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
 		// PMM - added double damage shell
 		if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM) )
 		{
 			qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha );
-			GL_CheckForError ();
 		}
 		else
 		{
 			qglEnableClientState( GL_COLOR_ARRAY );
-			GL_CheckForError ();
 
 			qglColorPointer( 4, GL_FLOAT, 0, colorArray );
-			GL_CheckForError ();
 
 			//
 			// pre light everything
@@ -211,7 +206,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 		if ( qglLockArraysEXT != 0 )
 		{
 			qglLockArraysEXT( 0, paliashdr->num_xyz );
-			GL_CheckForError ();
 		}
 
 		for (;;)
@@ -255,13 +249,11 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 				} while (--count);
 			}
 			qglEnd ();
-			GL_CheckForError ();
 		}
 
 		if ( qglUnlockArraysEXT != 0 )
 		{
 			qglUnlockArraysEXT();
-			GL_CheckForError ();
 		}
 	}
 	else
@@ -312,7 +304,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 			}
 
 			qglEnd ();
-			GL_CheckForError ();
 		}
 	}
 
@@ -321,7 +312,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 	if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM) )
 	{
 		qglEnable( GL_TEXTURE_2D );
-		GL_CheckForError ();
 	}
 }
 
