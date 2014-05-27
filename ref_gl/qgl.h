@@ -183,17 +183,6 @@ extern  void ( APIENTRY * qglMatrixMode )(GLenum mode);
 extern  void ( APIENTRY * qglMultMatrixd )(const GLdouble *m);
 extern  void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
 extern  void ( APIENTRY * qglNewList )(GLuint list, GLenum mode);
-/*extern  void ( APIENTRY * qglNormal3b )(GLbyte nx, GLbyte ny, GLbyte nz);
-extern  void ( APIENTRY * qglNormal3bv )(const GLbyte *v);
-extern  void ( APIENTRY * qglNormal3d )(GLdouble nx, GLdouble ny, GLdouble nz);
-extern  void ( APIENTRY * qglNormal3dv )(const GLdouble *v);
-extern  void ( APIENTRY * qglNormal3f )(GLfloat nx, GLfloat ny, GLfloat nz);
-extern  void ( APIENTRY * qglNormal3fv )(const GLfloat *v);
-extern  void ( APIENTRY * qglNormal3i )(GLint nx, GLint ny, GLint nz);
-extern  void ( APIENTRY * qglNormal3iv )(const GLint *v);
-extern  void ( APIENTRY * qglNormal3s )(GLshort nx, GLshort ny, GLshort nz);
-extern  void ( APIENTRY * qglNormal3sv )(const GLshort *v);*/
-extern  void ( APIENTRY * qglNormalPointer )(GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 extern  void ( APIENTRY * qglPassThrough )(GLfloat token);
 extern  void ( APIENTRY * qglPixelMapfv )(GLenum map, GLsizei mapsize, const GLfloat *values);
