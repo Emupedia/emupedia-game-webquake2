@@ -360,7 +360,7 @@ void R_DrawNullModel (void)
 	R_RotateForEntity (currententity);
 
 	qglDisable (GL_TEXTURE_2D);
-	qglColor3fv (shadelight);
+	qglColor3f(shadelight[0], shadelight[1], shadelight[2]);
 
 	qglBegin (GL_TRIANGLE_FAN);
 	qglVertex3f (0, 0, -16);

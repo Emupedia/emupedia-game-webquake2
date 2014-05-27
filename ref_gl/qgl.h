@@ -57,7 +57,6 @@ extern  void ( APIENTRY * qglClearIndex )(GLfloat c);
 extern  void ( APIENTRY * qglClearStencil )(GLint s);
 extern  void ( APIENTRY * qglClipPlane )(GLenum plane, const GLdouble *equation);
 extern  void ( APIENTRY * qglColor3f )(GLfloat red, GLfloat green, GLfloat blue);
-extern  void ( APIENTRY * qglColor3fv )(const GLfloat *v);
 extern  void ( APIENTRY * qglColor4f )(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 extern  void ( APIENTRY * qglColor4fv )(const GLfloat *v);
 extern  void ( APIENTRY * qglColorMask )(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
