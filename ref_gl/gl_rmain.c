@@ -158,7 +158,6 @@ cvar_t	*gl_round_down;
 cvar_t	*gl_picmip;
 cvar_t	*gl_skymip;
 cvar_t	*gl_showtris;
-cvar_t	*gl_ztrick;
 cvar_t	*gl_finish;
 cvar_t	*gl_flush;
 cvar_t	*gl_clear;
@@ -1075,35 +1074,6 @@ float ref_frand(void)
 
 void R_Clear (void)
 {
-	if (FLOAT_NE_ZERO(gl_ztrick->value) && r_worldmodel != NULL)
-	{
-		static int trickframe;
-
-		if (FLOAT_NE_ZERO(gl_clear->value))
-		{
-			if (gl_clear->value == 2)
-			{
-				qglClearColor (ref_frand(), ref_frand(), ref_frand(), 1.0);
-			}
-			qglClear (GL_COLOR_BUFFER_BIT);
-		}
-
-		trickframe++;
-		if (trickframe & 1)
-		{
-			gldepthmin = 0;
-			gldepthmax = 0.49999;
-			qglDepthFunc (GL_LEQUAL);
-		}
-		else
-		{
-			gldepthmin = 1;
-			gldepthmax = 0.5;
-			qglDepthFunc (GL_GEQUAL);
-		}
-	}
-	else
-	{
 		if (FLOAT_NE_ZERO(gl_clear->value))
 		{
 			if (gl_clear->value == 2)
@@ -1121,7 +1091,6 @@ void R_Clear (void)
 		gldepthmin = 0;
 		gldepthmax = 1;
 		qglDepthFunc (GL_LEQUAL);
-	}
 
 	qglDepthRange (gldepthmin, gldepthmax);
 }
@@ -1351,7 +1320,6 @@ void R_Register( void )
 	gl_picmip = ri.Cvar_Get ("gl_picmip", "0", 0);
 	gl_skymip = ri.Cvar_Get ("gl_skymip", "0", 0);
 	gl_showtris = ri.Cvar_Get ("gl_showtris", "0", 0);
-	gl_ztrick = ri.Cvar_Get ("gl_ztrick", "0", 0);
 	gl_finish = ri.Cvar_Get ("gl_finish", "0", CVAR_ARCHIVE);
 	gl_flush = ri.Cvar_Get ("gl_flush", "0", CVAR_ARCHIVE);
 	gl_clear = ri.Cvar_Get ("gl_clear", "0", 0);
