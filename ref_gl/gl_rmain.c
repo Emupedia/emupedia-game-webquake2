@@ -1620,33 +1620,6 @@ retryQGL:
 	Q_strlwr( vendor_buffer );
 
 	if ( strstr( renderer_buffer, "voodoo" ) )
-	{
-		if ( !strstr( renderer_buffer, "rush" ) )
-			gl_config.renderer = GL_RENDERER_VOODOO;
-		else
-			gl_config.renderer = GL_RENDERER_VOODOO_RUSH;
-	}
-	else if ( strstr( vendor_buffer, "sgi" ) )
-		gl_config.renderer = GL_RENDERER_SGI;
-	else if ( strstr( renderer_buffer, "permedia" ) )
-		gl_config.renderer = GL_RENDERER_PERMEDIA2;
-	else if ( strstr( renderer_buffer, "glint" ) )
-		gl_config.renderer = GL_RENDERER_GLINT_MX;
-	else if ( strstr( renderer_buffer, "glzicd" ) )
-		gl_config.renderer = GL_RENDERER_REALIZM;
-	else if ( strstr( renderer_buffer, "gdi" ) )
-		gl_config.renderer = GL_RENDERER_MCD;
-	else if ( strstr( renderer_buffer, "pcx2" ) )
-		gl_config.renderer = GL_RENDERER_PCX2;
-	else if ( strstr( renderer_buffer, "verite" ) )
-		gl_config.renderer = GL_RENDERER_RENDITION;
-	else if ( strstr (vendor_buffer, "ati tech"))
-		gl_config.renderer = GL_RENDERER_ATI;
-	else if ( strstr (vendor_buffer, "nvidia corp"))
-		gl_config.renderer = GL_RENDERER_NV;
-	else
-		gl_config.renderer = GL_RENDERER_OTHER;
-
 	/*if ( toupper( gl_monolightmap->string[1] ) != 'F' )
 	{
 		if ( gl_config.renderer == GL_RENDERER_PERMEDIA2 )
@@ -1664,22 +1637,7 @@ retryQGL:
 		}
 	}*/
 
-	// power vr can't have anything stay in the framebuffer, so
-	// the screen needs to redraw the tiled background every frame
-	if ( gl_config.renderer & GL_RENDERER_POWERVR ) 
-	{
-		ri.Cvar_Set( "scr_drawall", "1" );
-	}
-	else
-	{
 		ri.Cvar_Set( "scr_drawall", "0" );
-	}
-
-	// MCD has buffering issues
-	if ( gl_config.renderer == GL_RENDERER_MCD )
-	{
-		ri.Cvar_SetValue( "gl_finish", 1 );
-	}
 
 	/*
 	** grab extensions
@@ -1710,12 +1668,9 @@ retryQGL:
 
 	if ( strstr( gl_config.extensions_string, "GL_EXT_point_parameters" ) )
 	{
-		if (gl_config.renderer == GL_RENDERER_ATI)
-			gl_ext_pointparameters = ri.Cvar_Get( "gl_ext_pointparameters", "0", CVAR_ARCHIVE );
-		else
 			gl_ext_pointparameters = ri.Cvar_Get( "gl_ext_pointparameters", "1", CVAR_ARCHIVE );
 
-		if ( FLOAT_NE_ZERO(gl_ext_pointparameters->value) && (gl_config.renderer != GL_RENDERER_ATI || gl_ext_pointparameters->value == 2) )
+		if ( FLOAT_NE_ZERO(gl_ext_pointparameters->value) )
 		{
 			qglPointParameterfEXT = ( void (APIENTRY *)( GLenum, GLfloat ) ) qwglGetProcAddress( "glPointParameterfEXT" );
 			qglPointParameterfvEXT = ( void (APIENTRY *)( GLenum, const GLfloat * ) ) qwglGetProcAddress( "glPointParameterfvEXT" );

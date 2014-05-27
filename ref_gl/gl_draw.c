@@ -267,11 +267,6 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 	if (scrap_dirty)
 		Scrap_Upload ();
 
-	if ( ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) ) && !gl->has_alpha)
-	{
-		qglDisable (GL_ALPHA_TEST);
-	}
-
 	if (gl->has_alpha)
 	{
 		qglDisable(GL_ALPHA_TEST);
@@ -301,11 +296,6 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 
 		qglDisable(GL_BLEND);
 	}
-
-	if ( ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) ) && !gl->has_alpha)
-	{
-		qglEnable (GL_ALPHA_TEST);
-	}
 }
 
 
@@ -328,11 +318,6 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 
 	if (scrap_dirty)
 		Scrap_Upload ();
-
-	if ( ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) ) && !gl->has_alpha)
-	{
-		qglDisable (GL_ALPHA_TEST);
-	}
 
 	if (gl->has_alpha)
 	{
@@ -363,7 +348,7 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 		qglDisable(GL_BLEND);
 	}
 
-	if ( ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) )  && !gl->has_alpha)
+	if ( ( ( false) || ( false ) )  && !gl->has_alpha)
 	{
 		qglEnable (GL_ALPHA_TEST);
 	}
@@ -389,11 +374,6 @@ void EXPORT Draw_TileClear (int x, int y, int w, int h, char *pic)
 		image = r_notexture;
 	}
 
-	if ( ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) )  && !image->has_alpha)
-	{
-		qglDisable (GL_ALPHA_TEST);
-	}
-
 	GL_Bind (image->texnum);
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (x/64.0f, y/64.0f);
@@ -405,11 +385,6 @@ void EXPORT Draw_TileClear (int x, int y, int w, int h, char *pic)
 	qglTexCoord2f ( x/64.0f, (y+h)/64.0f );
 	qglVertex2f(x, y+h);
 	qglEnd ();
-
-	if ( ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) )  && !image->has_alpha)
-	{
-		qglEnable (GL_ALPHA_TEST);
-	}
 }
 
 
@@ -575,11 +550,6 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) ) 
-	{
-		qglDisable (GL_ALPHA_TEST);
-	}
-
 	qglBegin (GL_QUADS);
 	qglTexCoord2f (0, 0);
 	qglVertex2f(x, y);
@@ -590,10 +560,5 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 	qglTexCoord2f (0, t);
 	qglVertex2f(x, y+h);
 	qglEnd ();
-
-	if ( ( gl_config.renderer == GL_RENDERER_MCD ) || ( gl_config.renderer & GL_RENDERER_RENDITION ) ) 
-	{
-		qglEnable (GL_ALPHA_TEST);
-	}
 }
 
