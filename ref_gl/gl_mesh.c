@@ -168,96 +168,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 
 	qglDrawElements (GL_TRIANGLES, inNumIndexes, GL_UNSIGNED_INT, inIndexArray);*/
 
-	if (FLOAT_NE_ZERO(gl_vertex_arrays->value))
-	{
-		float colorArray[MAX_VERTS*4];
-
-		qglEnableClientState( GL_VERTEX_ARRAY );
-
-		qglVertexPointer( 3, GL_FLOAT, 16, s_lerped );	// padded for SIMD
-
-//		if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
-		// PMM - added double damage shell
-		if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM) )
-		{
-			qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha );
-		}
-		else
-		{
-			qglEnableClientState( GL_COLOR_ARRAY );
-
-			qglColorPointer( 4, GL_FLOAT, 0, colorArray );
-
-			//
-			// pre light everything
-			//
-			for ( i = 0; i < paliashdr->num_xyz; i++ )
-			{
-				float l = shadedots[verts[i].lightnormalindex];
-
-				colorArray[i*4+0] = l * shadelight[0];
-				colorArray[i*4+1] = l * shadelight[1];
-				colorArray[i*4+2] = l * shadelight[2];
-				colorArray[i*4+3] = alpha;
-				//qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
-			}
-		}
-
-		if ( qglLockArraysEXT != 0 )
-		{
-			qglLockArraysEXT( 0, paliashdr->num_xyz );
-		}
-
-		for (;;)
-		{
-			// get the vertex count and primitive type
-			count = *order++;
-			if (!count)
-				break;		// done
-			if (count < 0)
-			{
-				count = -count;
-				qglBegin (GL_TRIANGLE_FAN);
-			}
-			else
-			{
-				qglBegin (GL_TRIANGLE_STRIP);
-			}
-
-			// PMM - added double damage shell
-			if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM) )
-			{
-				do
-				{
-					index_xyz = order[2];
-					order += 3;
-
-					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
-
-				} while (--count);
-			}
-			else
-			{
-				do
-				{
-					// texture coordinates come from the draw list
-					qglTexCoord2f (((float *)order)[0], ((float *)order)[1]);
-					index_xyz = order[2];
-					order += 3;
-					qglArrayElement( index_xyz );
-
-				} while (--count);
-			}
-			qglEnd ();
-		}
-
-		if ( qglUnlockArraysEXT != 0 )
-		{
-			qglUnlockArraysEXT();
-		}
-	}
-	else
-	{
 		for (;;)
 		{
 			// get the vertex count and primitive type
@@ -305,7 +215,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 
 			qglEnd ();
 		}
-	}
 
 //	if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
 	// PMM - added double damage shell

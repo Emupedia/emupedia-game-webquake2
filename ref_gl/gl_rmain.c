@@ -94,8 +94,6 @@ cvar_t	*r_lightlevel;	// FIXME: This is a HACK to get the client's light level
 //cvar_t	*gl_nosubimage;
 cvar_t	*gl_allow_software;
 
-cvar_t	*gl_vertex_arrays;
-
 cvar_t	*gl_particle_min_size;
 cvar_t	*gl_particle_max_size;
 cvar_t	*gl_particle_size;
@@ -1333,8 +1331,6 @@ void R_Register( void )
 	gl_texturealphamode = ri.Cvar_Get( "gl_texturealphamode", "default", CVAR_ARCHIVE );
 	gl_texturesolidmode = ri.Cvar_Get( "gl_texturesolidmode", "default", CVAR_ARCHIVE );
 	gl_lockpvs = ri.Cvar_Get( "gl_lockpvs", "0", 0 );
-
-	gl_vertex_arrays = ri.Cvar_Get( "gl_vertex_arrays", "1", CVAR_ARCHIVE );
 
 	//gl_ext_swapinterval = ri.Cvar_Get( "gl_ext_swapinterval", "1", CVAR_ARCHIVE );
 	//gl_ext_palettedtexture = ri.Cvar_Get( "gl_ext_palettedtexture", "0", CVAR_ARCHIVE );
