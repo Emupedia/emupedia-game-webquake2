@@ -16,7 +16,6 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <errno.h>
-#include <execinfo.h>
 #include <sys/utsname.h>
 #define __USE_GNU 1
 
@@ -39,9 +38,18 @@
 //#include <fenv.h>
 #include <dlfcn.h>
 
+#ifndef EMSCRIPTEN
+
+#include <execinfo.h>
+
+#endif  // EMSCRIPTEN
+
 #include "../qcommon/qcommon.h"
 
 #include "../linux/rw_linux.h"
+
+#include "../game/game.h"
+
 
 cvar_t *nostdin;
 cvar_t *nostdout;
