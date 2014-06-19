@@ -180,6 +180,7 @@ extern  void ( APIENTRY * qglMaterialiv )(GLenum face, GLenum pname, const GLint
 extern  void ( APIENTRY * qglMatrixMode )(GLenum mode);
 extern  void ( APIENTRY * qglMultMatrixd )(const GLdouble *m);
 extern  void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
+extern  void ( APIENTRY * qglMTexCoord2f )(GLenum tex, GLfloat s, GLfloat t);
 extern  void ( APIENTRY * qglNewList )(GLuint list, GLenum mode);
 extern  void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 extern  void ( APIENTRY * qglPassThrough )(GLfloat token);

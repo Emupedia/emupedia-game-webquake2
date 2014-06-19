@@ -801,10 +801,9 @@ dynamic:
 				qglBegin (GL_POLYGON);
 				for (i=0 ; i< nv; i++, v+= VERTEXSIZE)
 				{
-					qglMTexCoord2fSGIS( GL_TEXTURE0, (v[3]+scroll), v[4]);
-					qglMTexCoord2fvSGIS ( GL_TEXTURE1, &v[5]);
-					//qglMTexCoord2fSGIS( GL_TEXTURE1, v[5], v[6]);
-					qglVertex3fv (v);
+					qglMTexCoord2f( GL_TEXTURE0, (v[3]+scroll), v[4]);
+					qglMTexCoord2f( GL_TEXTURE1, v[5], v[6]);
+					qglVertex3f(v[0], v[1], v[2]);
 				}
 				qglEnd ();
 			}
@@ -817,11 +816,9 @@ dynamic:
 				qglBegin (GL_POLYGON);
 				for (i=0 ; i< nv; i++, v+= VERTEXSIZE)
 				{
-					qglMTexCoord2fvSGIS ( GL_TEXTURE0, &v[3]);
-					qglMTexCoord2fvSGIS ( GL_TEXTURE1, &v[5]);
-					//qglMTexCoord2fSGIS( GL_TEXTURE0, v[3], v[4]);
-					//qglMTexCoord2fSGIS( GL_TEXTURE1, v[5], v[6]);
-					qglVertex3fv (v);
+					qglMTexCoord2f( GL_TEXTURE0, v[3], v[4]);
+					qglMTexCoord2f( GL_TEXTURE1, v[5], v[6]);
+					qglVertex3f(v[0], v[1], v[2]);
 				}
 				qglEnd ();
 			}
@@ -852,9 +849,9 @@ dynamic:
 				qglBegin (GL_POLYGON);
 				for (i=0 ; i< nv; i++, v+= VERTEXSIZE)
 				{
-					qglMTexCoord2fSGIS( GL_TEXTURE0, (v[3]+scroll), v[4]);
-					qglMTexCoord2fSGIS( GL_TEXTURE1, v[5], v[6]);
-					qglVertex3fv (v);
+					qglMTexCoord2f( GL_TEXTURE0, (v[3]+scroll), v[4]);
+					qglMTexCoord2f( GL_TEXTURE1, v[5], v[6]);
+					qglVertex3f(v[0], v[1], v[2]);
 				}
 				qglEnd ();
 			}
@@ -869,11 +866,9 @@ dynamic:
 				qglBegin (GL_POLYGON);
 				for (i=0 ; i< nv; i++, v+= VERTEXSIZE)
 				{
-					qglMTexCoord2fvSGIS ( GL_TEXTURE0, &v[3]);
-					qglMTexCoord2fvSGIS ( GL_TEXTURE1, &v[5]);
-					//qglMTexCoord2fSGIS( GL_TEXTURE0, v[3], v[4]);
-					//qglMTexCoord2fSGIS( GL_TEXTURE1, v[5], v[6]);
-					qglVertex3fv (v);
+					qglMTexCoord2f( GL_TEXTURE0, v[3], v[4]);
+					qglMTexCoord2f( GL_TEXTURE1, v[5], v[6]);
+					qglVertex3f(v[0], v[1], v[2]);
 				}
 				qglEnd ();
 			}
