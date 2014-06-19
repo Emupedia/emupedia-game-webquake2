@@ -249,6 +249,7 @@ typedef struct in_state {
 
 
 refexport_t EXPORT GetRefAPI (refimport_t rimp );
+void EXPORT GetExtraAPI (refimportnew_t rimp );
 
 
 // TODO: these should not be EXPORT
@@ -262,6 +263,8 @@ void EXPORT RW_IN_Frame(void);
 void EXPORT KBD_Init(Key_Event_fp_t fp);
 void EXPORT KBD_Update(void);
 void EXPORT KBD_Close(void);
+
+void * qwglGetProcAddress(const char *procname);
 
 
 #endif // __REF_H

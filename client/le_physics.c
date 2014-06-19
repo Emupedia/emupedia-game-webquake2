@@ -42,6 +42,13 @@ int ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 }
 
 
+#else  // GAME_HARD_LINKED
+
+
+// implementation in g_phys.c
+int ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce);
+
+
 #endif  // GAME_HARD_LINKED
 
 
