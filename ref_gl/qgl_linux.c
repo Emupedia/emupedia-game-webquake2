@@ -11,11 +11,12 @@
 #define QGL
 #include "../ref_gl/gl_local.h"
 
+#include <SDL.h>
 
-void *GLimp_GetProcAddress(const char *procname);
+
 void * qwglGetProcAddress(const char *procname)
 {
-	return GLimp_GetProcAddress(procname);
+	return SDL_GL_GetProcAddress(procname);
 }
 
 void ( APIENTRY * qglActiveTextureARB) ( GLenum );

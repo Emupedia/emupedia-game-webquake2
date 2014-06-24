@@ -763,10 +763,6 @@ int SWimp_Init( void *hInstance, void *wndProc )
 	return true;
 }
 
-void *GLimp_GetProcAddress(const char *func)
-{
-	return SDL_GL_GetProcAddress(func);
-}
 
 int GLimp_Init( void *hInstance, void *wndProc )
 {
