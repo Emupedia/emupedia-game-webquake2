@@ -114,14 +114,6 @@ extern  void ( APIENTRY * qglGetFloatv )(GLenum pname, GLfloat *params);
 extern  void ( APIENTRY * qglGetIntegerv )(GLenum pname, GLint *params);
 extern  void ( APIENTRY * qglGetLightfv )(GLenum light, GLenum pname, GLfloat *params);
 extern  void ( APIENTRY * qglGetLightiv )(GLenum light, GLenum pname, GLint *params);
-extern  void ( APIENTRY * qglGetMapdv )(GLenum target, GLenum query, GLdouble *v);
-extern  void ( APIENTRY * qglGetMapfv )(GLenum target, GLenum query, GLfloat *v);
-extern  void ( APIENTRY * qglGetMapiv )(GLenum target, GLenum query, GLint *v);
-extern  void ( APIENTRY * qglGetMaterialfv )(GLenum face, GLenum pname, GLfloat *params);
-extern  void ( APIENTRY * qglGetMaterialiv )(GLenum face, GLenum pname, GLint *params);
-extern  void ( APIENTRY * qglGetPixelMapfv )(GLenum map, GLfloat *values);
-extern  void ( APIENTRY * qglGetPixelMapuiv )(GLenum map, GLuint *values);
-extern  void ( APIENTRY * qglGetPixelMapusv )(GLenum map, GLushort *values);
 extern  void ( APIENTRY * qglGetPointerv )(GLenum pname, GLvoid* *params);
 extern  void ( APIENTRY * qglGetPolygonStipple )(GLubyte *mask);
 extern  const GLubyte * ( APIENTRY * qglGetString )(GLenum name);
@@ -236,16 +228,6 @@ extern	void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void 
 extern	void ( APIENTRY * qglPointParameterfARB) (GLenum, GLfloat);
 extern	void ( APIENTRY * qglPointParameterfvARB) (GLenum, const GLfloat *);
 
-
-
-extern	void  (APIENTRY *qglGenQueriesARB) (GLsizei, GLuint *);
-extern	void (APIENTRY *qglDeleteQueriesARB) (GLsizei, const GLuint *);
-extern	GLboolean (APIENTRY *qglIsQueryARB) (GLuint);
-extern	void (APIENTRY *qglBeginQueryARB) (GLenum, GLuint);
-extern	void (APIENTRY *qglEndQueryARB) (GLenum);
-extern	void (APIENTRY *qglGetQueryivARB) (GLenum, GLenum, GLint *);
-extern	void (APIENTRY *qglGetQueryObjectivARB) (GLuint, GLenum, GLint *);
-extern	void (APIENTRY *qglGetQueryObjectuivARB) (GLuint, GLenum, GLuint *);
 
 extern	void ( APIENTRY * qglActiveTextureARB)( GLenum );
 extern	void ( APIENTRY * qglClientActiveTextureARB)( GLenum );

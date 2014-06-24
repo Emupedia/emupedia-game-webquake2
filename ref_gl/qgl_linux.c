@@ -96,16 +96,6 @@ void ( APIENTRY * qglPointParameterfvEXT)( GLenum param, const GLfloat *value );
 void ( APIENTRY * qglPointParameterfARB) (GLenum, GLfloat);
 void ( APIENTRY * qglPointParameterfvARB) (GLenum, const GLfloat *);
 
-void  (APIENTRY *qglGenQueriesARB) (GLsizei, GLuint *);
-void (APIENTRY *qglDeleteQueriesARB) (GLsizei, const GLuint *);
-GLboolean (APIENTRY *qglIsQueryARB) (GLuint);
-void (APIENTRY *qglBeginQueryARB) (GLenum, GLuint);
-void (APIENTRY *qglEndQueryARB) (GLenum);
-void (APIENTRY *qglGetQueryivARB) (GLenum, GLenum, GLint *);
-void (APIENTRY *qglGetQueryObjectivARB) (GLuint, GLenum, GLint *);
-void (APIENTRY *qglGetQueryObjectuivARB) (GLuint, GLenum, GLuint *);
-
-
 void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
 
 static void ( APIENTRY * dllAlphaFunc )(GLenum func, GLclampf ref);
@@ -342,12 +332,6 @@ qboolean QGL_Init( const char *dllname )
 	qglPointParameterfEXT = NULL;
 	qglPointParameterfvEXT = NULL;
 	qglColorTableEXT = NULL;
-	qglBeginQueryARB = NULL;
-	qglEndQueryARB = NULL;
-	qglGenQueriesARB = NULL;
-	qglGetQueryivARB = NULL;
-	qglGetQueryObjectivARB = NULL;
-	qglGetQueryObjectuivARB = NULL;
 
 	return true;
 }

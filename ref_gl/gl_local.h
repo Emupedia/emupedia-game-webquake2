@@ -433,8 +433,6 @@ typedef struct
 	qboolean	wglPFD;
 
 	int			bitDepth;
-	int			r1gl_QueryBits;
-	unsigned int r1gl_Queries[MAX_ENTITIES];
 } glconfig_t;
 
 typedef struct
@@ -451,11 +449,6 @@ typedef struct
 	unsigned	currenttextures[2];
 	unsigned int currenttmu;
 	GLenum currenttarget;
-
-#ifdef STEREO_SUPPORT
-	float camera_separation;
-	qboolean stereo_enabled;
-#endif
 
 	unsigned char originalRedGammaTable[256];
 	unsigned char originalGreenGammaTable[256];
@@ -486,11 +479,7 @@ IMPLEMENTATION SPECIFIC FUNCTIONS
 ====================================================================
 */
 
-#ifdef STEREO_SUPPORT
-void		GLimp_BeginFrame( float camera_separation );
-#else
 void		GLimp_BeginFrame( void );
-#endif
 void	EXPORT	GLimp_EndFrame( void );
 int 		GLimp_Init( void *hinstance, void *hWnd );
 void		GLimp_Shutdown( void );
