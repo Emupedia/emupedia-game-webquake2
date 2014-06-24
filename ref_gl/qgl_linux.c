@@ -11,7 +11,6 @@
 #define QGL
 #include "../ref_gl/gl_local.h"
 
-static FILE *log_fp = NULL;
 
 void *GLimp_GetProcAddress(const char *procname);
 void * qwglGetProcAddress(const char *procname)
