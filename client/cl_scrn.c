@@ -1598,11 +1598,6 @@ text to the screen.
 */
 void SCR_UpdateScreen (void)
 {
-#ifdef CL_STEREO_SUPPORT
-	int i;
-	int numframes;
-	float separation[2] = { 0, 0 };
-#endif
 
 	// if the screen is disabled (loading plaque is up, or vid mode changing)
 	// do nothing at all
@@ -1623,33 +1618,8 @@ void SCR_UpdateScreen (void)
 	** range check cl_camera_separation so we don't inadvertently fry someone's
 	** brain
 	*/
-#ifdef CL_STEREO_SUPPORT
-	if ( cl_stereo_separation->value > 1.0f )
-		Cvar_SetValue( "cl_stereo_separation", 1.0 );
-	else if (FLOAT_LT_ZERO(cl_stereo_separation->value))
-		Cvar_SetValue( "cl_stereo_separation", 0.0 );
 
-	if ( cl_stereo->intvalue )
-	{
-		numframes = 2;
-		separation[0] = -cl_stereo_separation->value / 2;
-		separation[1] =  cl_stereo_separation->value / 2;
-	}		
-	else
-	{
-		separation[0] = 0;
-		separation[1] = 0;
-		numframes = 1;
-	}
-#endif
-
-#ifdef CL_STEREO_SUPPORT
-	for ( i = 0; i < numframes; i++ )
-	{
-		re.BeginFrame( separation[i] );
-#else
 		re.BeginFrame( 0 );
-#endif
 
 		//r1: only update console during load
 		if (!cl.refresh_prepped)
@@ -1724,11 +1694,7 @@ void SCR_UpdateScreen (void)
 			// clear any dirty part of the background
 			SCR_TileClear ();
 
-#ifdef CL_STEREO_SUPPORT
-			V_RenderView ( separation[i] );
-#else
 			V_RenderView ();
-#endif
 
 			if (scr_timegraph->intvalue)
 				SCR_DebugGraph (cls.frametime*300, (int)(cls.frametime*300));
@@ -1756,8 +1722,5 @@ void SCR_UpdateScreen (void)
 
 			SCR_DrawLoading ();
 		}
-#ifdef CL_STEREO_SUPPORT
-	}
-#endif
 	re.EndFrame();
 }

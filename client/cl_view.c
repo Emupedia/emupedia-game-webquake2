@@ -581,11 +581,7 @@ V_RenderView
 
 ==================
 */
-#ifdef CL_STEREO_SUPPORT
-void V_RenderView( float stereo_separation )
-#else
 void V_RenderView(void)
-#endif
 {
 	if (cls.state != ca_active)
 		return;
@@ -631,15 +627,6 @@ void V_RenderView(void)
 		}
 
 		// offset vieworg appropriately if we're doing stereo separation
-#ifdef CL_STEREO_SUPPORT
-		if ( stereo_separation != 0 )
-		{
-			vec3_t tmp;
-
-			VectorScale( cl.v_right, stereo_separation, tmp );
-			VectorAdd( cl.refdef.vieworg, tmp, cl.refdef.vieworg );
-		}
-#endif
 
 		// never let it sit exactly on a node line, because a water plane can
 		// dissapear when viewed with the eye exactly on it.
