@@ -84,7 +84,6 @@ void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param)
 void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
 void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
 void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
-void ( APIENTRY * qglVertex3f )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
@@ -160,7 +159,6 @@ static void ( APIENTRY * dllTexParameterf )(GLenum target, GLenum pname, GLfloat
 static void ( APIENTRY * dllTexParameteri )(GLenum target, GLenum pname, GLint param);
 static void ( APIENTRY * dllTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
 static void ( APIENTRY * dllTranslatef )(GLfloat x, GLfloat y, GLfloat z);
-static void ( APIENTRY * dllVertex3f )(GLfloat x, GLfloat y, GLfloat z);
 static void ( APIENTRY * dllVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 static void ( APIENTRY * dllViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
@@ -234,7 +232,6 @@ void QGL_Shutdown( void )
 	qglTexParameteri             = NULL;
 	qglTexSubImage2D             = NULL;
 	qglTranslatef                = NULL;
-	qglVertex3f                  = NULL;
 	qglVertexPointer             = NULL;
 	qglViewport                  = NULL;
 }
@@ -313,7 +310,6 @@ qboolean QGL_Init( const char *dllname )
 	qglTexParameteri             = 	dllTexParameteri             = glTexParameteri;
 	qglTexSubImage2D             = 	dllTexSubImage2D             = glTexSubImage2D;
 	qglTranslatef                = 	dllTranslatef                = glTranslatef;
-	qglVertex3f                  = 	dllVertex3f                  = glVertex3f;
 	qglVertexPointer             = 	dllVertexPointer             = glVertexPointer;
 	qglViewport                  = 	dllViewport                  = glViewport;
 
@@ -388,7 +384,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglTexParameteri             = 	dllTexParameteri             ;
 		qglTexSubImage2D             = 	dllTexSubImage2D             ;
 		qglTranslatef                = 	dllTranslatef                ;
-		qglVertex3f                  = 	dllVertex3f                  ;
 		qglVertexPointer             = 	dllVertexPointer             ;
 		qglViewport                  = 	dllViewport                  ;
 }
@@ -403,3 +398,7 @@ void qglVertex2f(GLfloat x, GLfloat y) {
 	qglVertex3f(x, y, 0.0f);
 }
 
+
+void qglVertex3f(GLfloat x, GLfloat y, GLfloat z) {
+	glVertex3f(x, y, z);
+}
