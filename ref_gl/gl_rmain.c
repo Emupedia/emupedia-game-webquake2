@@ -143,7 +143,6 @@ cvar_t	*vid_topmost;
 
 //cvar_t	*gl_log;
 cvar_t	*gl_bitdepth;
-cvar_t	*gl_drawbuffer;
 cvar_t  *gl_driver;
 //cvar_t	*gl_lightmap;
 cvar_t	*gl_shadows;
@@ -1340,7 +1339,6 @@ void R_Register( void )
 	gl_pic_scale = ri.Cvar_Get ("gl_pic_scale", "1", 0);
 	//r1ch end my shit
 
-	gl_drawbuffer = ri.Cvar_Get( "gl_drawbuffer", "GL_BACK", 0 );
 	gl_swapinterval = ri.Cvar_Get( "gl_swapinterval", "1", CVAR_ARCHIVE );
 
 	//gl_saturatelighting = ri.Cvar_Get( "gl_saturatelighting", "0", 0 );
@@ -1920,21 +1918,6 @@ void EXPORT R_BeginFrame( float camera_separation )
 	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
 	//qglEnable(GL_MULTISAMPLE_ARB);
-
-	/*
-	** draw buffer stuff
-	*/
-	if ( gl_drawbuffer->modified )
-	{
-		gl_drawbuffer->modified = false;
-
-		{
-			if ( Q_stricmp( gl_drawbuffer->string, "GL_FRONT" ) == 0 )
-				qglDrawBuffer( GL_FRONT );
-			else
-				qglDrawBuffer( GL_BACK );
-		}
-	}
 
 	/*
 	** texturemode stuff
