@@ -30,7 +30,6 @@ void ( APIENTRY * qglClear )(GLbitfield mask);
 void ( APIENTRY * qglClearColor )(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 void ( APIENTRY * qglClearDepth )(GLclampd depth);
 void ( APIENTRY * qglClearStencil )(GLint s);
-void ( APIENTRY * qglColor4f )(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 void ( APIENTRY * qglColorMask )(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
 void ( APIENTRY * qglColorPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglCullFace )(GLenum mode);
@@ -102,7 +101,6 @@ static void ( APIENTRY * dllClear )(GLbitfield mask);
 static void ( APIENTRY * dllClearColor )(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 static void ( APIENTRY * dllClearDepth )(GLclampd depth);
 static void ( APIENTRY * dllClearStencil )(GLint s);
-static void ( APIENTRY * dllColor4f )(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 static void ( APIENTRY * dllColorMask )(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
 static void ( APIENTRY * dllColorPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 static void ( APIENTRY * dllCullFace )(GLenum mode);
@@ -178,7 +176,6 @@ void QGL_Shutdown( void )
 	qglClearColor                = NULL;
 	qglClearDepth                = NULL;
 	qglClearStencil              = NULL;
-	qglColor4f                   = NULL;
 	qglColorMask                 = NULL;
 	qglColorPointer              = NULL;
 	qglCullFace                  = NULL;
@@ -256,7 +253,6 @@ qboolean QGL_Init( const char *dllname )
 	qglClearColor                = dllClearColor = glClearColor;
 	qglClearDepth                = dllClearDepth = glClearDepth;
 	qglClearStencil              = dllClearStencil = glClearStencil;
-	qglColor4f                   = dllColor4f = glColor4f;
 	qglColorMask                 = dllColorMask = glColorMask;
 	qglColorPointer              = dllColorPointer = glColorPointer;
 	qglCullFace                  = dllCullFace = glCullFace;
@@ -330,7 +326,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglClearColor                = dllClearColor;
 		qglClearDepth                = dllClearDepth;
 		qglClearStencil              = dllClearStencil;
-		qglColor4f                   = dllColor4f;
 		qglColorMask                 = dllColorMask;
 		qglColorPointer              = dllColorPointer;
 		qglCullFace                  = dllCullFace;
@@ -391,6 +386,11 @@ void GLimp_EnableLogging( qboolean enable )
 
 void qglColor3f(GLfloat red, GLfloat green, GLfloat blue) {
 	qglColor4f(red, green, blue, 1.0f);
+}
+
+
+void qglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
+	glColor4f(red, green, blue, alpha);
 }
 
 
