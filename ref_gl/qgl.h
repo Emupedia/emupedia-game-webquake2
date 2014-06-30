@@ -43,7 +43,7 @@ void     QGL_Shutdown( void );
 extern  void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
 extern  GLboolean ( APIENTRY * qglAreTexturesResident )(GLsizei n, const GLuint *textures, GLboolean *residences);
 extern  void ( APIENTRY * qglArrayElement )(GLint i);
-extern  void ( APIENTRY * qglBegin )(GLenum mode);
+void qglBegin(GLenum mode);
 extern  void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
 extern  void ( APIENTRY * qglBitmap )(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte *bitmap);
 extern  void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
@@ -79,7 +79,7 @@ extern  void ( APIENTRY * qglDrawPixels )(GLsizei width, GLsizei height, GLenum 
 //extern  void ( APIENTRY * qglEdgeFlagPointer )(GLsizei stride, const GLvoid *pointer);
 //extern  void ( APIENTRY * qglEdgeFlagv )(const GLboolean *flag);
 extern  void ( APIENTRY * qglEnable )(GLenum cap);
-extern  void ( APIENTRY * qglEnd )(void);
+void qglEnd(void);
 extern  void ( APIENTRY * qglEndList )(void);
 /*extern  void ( APIENTRY * qglEvalCoord1d )(GLdouble u);
 extern  void ( APIENTRY * qglEvalCoord1dv )(const GLdouble *u);

@@ -27,6 +27,8 @@ typedef struct QGLState {
 	unsigned int numVertices;
 	unsigned int usedVertices;
 
+	GLenum primitive;
+
 	Vertex currentVertex;
 } QGLState;
 
@@ -43,7 +45,6 @@ void ( APIENTRY * qglActiveTextureARB) ( GLenum );
 void ( APIENTRY * qglClientActiveTextureARB) ( GLenum );
 
 void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
-void ( APIENTRY * qglBegin )(GLenum mode);
 void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
 void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
 void ( APIENTRY * qglClear )(GLbitfield mask);
@@ -61,7 +62,6 @@ void ( APIENTRY * qglDisable )(GLenum cap);
 void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 void ( APIENTRY * qglEnable )(GLenum cap);
-void ( APIENTRY * qglEnd )(void);
 void ( APIENTRY * qglFinish )(void);
 void ( APIENTRY * qglFlush )(void);
 void ( APIENTRY * qglFrontFace )(GLenum mode);
@@ -187,7 +187,6 @@ static void ( APIENTRY * dllViewport )(GLint x, GLint y, GLsizei width, GLsizei 
 void QGL_Shutdown( void )
 {
 	qglAlphaFunc                 = NULL;
-	qglBegin                     = NULL;
 	qglBindTexture               = NULL;
 	qglBlendFunc                 = NULL;
 	qglClear                     = NULL;
@@ -205,7 +204,6 @@ void QGL_Shutdown( void )
 	qglDrawArrays                = NULL;
 	qglDrawElements              = NULL;
 	qglEnable                    = NULL;
-	qglEnd                       = NULL;
 	qglFinish                    = NULL;
 	qglFlush                     = NULL;
 	qglFrontFace                 = NULL;
@@ -270,7 +268,6 @@ qboolean QGL_Init( const char *dllname )
 	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
 
 	qglAlphaFunc                 = dllAlphaFunc = glAlphaFunc;
-	qglBegin                     = dllBegin = glBegin;
 	qglBindTexture               = dllBindTexture = glBindTexture;
 	qglBlendFunc                 = dllBlendFunc = glBlendFunc;
 	qglClear                     = dllClear = glClear;
@@ -288,7 +285,6 @@ qboolean QGL_Init( const char *dllname )
 	qglDrawArrays                = dllDrawArrays = glDrawArrays;
 	qglDrawElements              = dllDrawElements = glDrawElements;
 	qglEnable                    = 	dllEnable                    = glEnable;
-	qglEnd                       = 	dllEnd                       = glEnd;
 	qglFinish                    = 	dllFinish                    = glFinish;
 	qglFlush                     = 	dllFlush                     = glFlush;
 	qglFrontFace                 = 	dllFrontFace                 = glFrontFace;
@@ -342,7 +338,6 @@ qboolean QGL_Init( const char *dllname )
 void GLimp_EnableLogging( qboolean enable )
 {
 		qglAlphaFunc                 = dllAlphaFunc;
-		qglBegin                     = dllBegin;
 		qglBindTexture               = dllBindTexture;
 		qglBlendFunc                 = dllBlendFunc;
 		qglClear                     = dllClear;
@@ -360,7 +355,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglDrawArrays                = dllDrawArrays ;
 		qglDrawElements              = dllDrawElements ;
 		qglEnable                    = 	dllEnable                    ;
-		qglEnd                       = 	dllEnd                       ;
 		qglFinish                    = 	dllFinish                    ;
 		qglFlush                     = 	dllFlush                     ;
 		qglFrontFace                 = 	dllFrontFace                 ;
@@ -474,3 +468,19 @@ void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
 		qglState->currentVertex.tex1[1] = t;
 	}
 }
+
+
+void qglBegin(GLenum mode) {
+	glBegin(mode);
+
+	qglState->usedVertices = 0;
+	qglState->primitive = mode;
+}
+
+
+void qglEnd(void) {
+	glEnd();
+
+	qglState->primitive = GL_NONE;
+}
+
