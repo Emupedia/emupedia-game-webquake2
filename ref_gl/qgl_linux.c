@@ -433,6 +433,16 @@ void qglColor3f(GLfloat red, GLfloat green, GLfloat blue) {
 
 
 void qglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
+	uint32_t r = red * 255, g = green * 255, b = blue * 255, a = alpha * 255;
+
+	// TODO: big-endian, if anyone cares
+	uint32_t c =
+		  (r      )
+		| (g << 8 )
+		| (b << 16)
+		| (a << 24);
+	qglState->currentVertex.color = c;
+
 	glColor4f(red, green, blue, alpha);
 }
 
@@ -444,9 +454,23 @@ void qglVertex2f(GLfloat x, GLfloat y) {
 
 void qglVertex3f(GLfloat x, GLfloat y, GLfloat z) {
 	glVertex3f(x, y, z);
+
+	qglState->currentVertex.pos[0] = x;
+	qglState->currentVertex.pos[1] = y;
+	qglState->currentVertex.pos[2] = z;
+
+	// pushVertex(qglState->currentVertex);
 }
 
 
 void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
 	glMultiTexCoord2f(tex, s, t);
+
+	if (tex == GL_TEXTURE0) {
+		qglState->currentVertex.tex0[0] = s;
+		qglState->currentVertex.tex0[1] = t;
+	} else {
+		qglState->currentVertex.tex1[0] = s;
+		qglState->currentVertex.tex1[1] = t;
+	}
 }
