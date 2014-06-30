@@ -14,6 +14,26 @@
 #include <SDL.h>
 
 
+typedef struct Vertex {
+	float pos[3];
+	uint32_t color;
+	float tex0[2];
+	float tex1[2];
+} Vertex;
+
+
+typedef struct QGLState {
+	Vertex *vertices;
+	unsigned int numVertices;
+	unsigned int usedVertices;
+
+	Vertex currentVertex;
+} QGLState;
+
+
+static QGLState *qglState = NULL;
+
+
 void * qwglGetProcAddress(const char *procname)
 {
 	return SDL_GL_GetProcAddress(procname);
@@ -242,6 +262,13 @@ void QGL_Shutdown( void )
 */
 qboolean QGL_Init( const char *dllname )
 {
+	qglState = (QGLState *) malloc(sizeof(QGLState));
+	// qglState = new QGLState;   ... oh shit, not C++. sigh ...
+	memset(qglState, 0, sizeof(QGLState));
+	qglState->numVertices = 1024;
+	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
+	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
+
 	qglAlphaFunc                 = dllAlphaFunc = glAlphaFunc;
 	qglBegin                     = dllBegin = glBegin;
 	qglBindTexture               = dllBindTexture = glBindTexture;
@@ -376,6 +403,27 @@ void GLimp_EnableLogging( qboolean enable )
 		qglTranslatef                = 	dllTranslatef                ;
 		qglVertexPointer             = 	dllVertexPointer             ;
 		qglViewport                  = 	dllViewport                  ;
+}
+
+
+// add a new vertex to vertices array
+// resize if necessary
+// return pointer to new vertex
+static Vertex *pushVertex() {
+	if (qglState->numVertices == qglState->usedVertices) {
+		// resize needed
+		size_t oldVerticesSize = qglState->numVertices * sizeof(Vertex);
+
+		qglState->numVertices *= 2;
+		Vertex *newVertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
+		memset(newVertices, 0, qglState->numVertices * sizeof(Vertex));
+		memcpy(newVertices, qglState->vertices, oldVerticesSize);
+
+		free(qglState->vertices);
+		qglState->vertices = newVertices;
+	}
+
+	return qglState->vertices + (qglState->usedVertices++);
 }
 
 
