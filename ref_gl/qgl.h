@@ -168,7 +168,7 @@ extern  void ( APIENTRY * qglMateriali )(GLenum face, GLenum pname, GLint param)
 extern  void ( APIENTRY * qglMaterialiv )(GLenum face, GLenum pname, const GLint *params);*/
 extern  void ( APIENTRY * qglMatrixMode )(GLenum mode);
 extern  void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
-extern  void ( APIENTRY * qglMTexCoord2f )(GLenum tex, GLfloat s, GLfloat t);
+void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t);
 extern  void ( APIENTRY * qglNewList )(GLuint list, GLenum mode);
 extern  void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 extern  void ( APIENTRY * qglPassThrough )(GLfloat token);
@@ -201,7 +201,6 @@ extern  void ( APIENTRY * qglShadeModel )(GLenum mode);
 extern  void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 extern  void ( APIENTRY * qglStencilMask )(GLuint mask);
 extern  void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-extern  void ( APIENTRY * qglTexCoord2f )(GLfloat s, GLfloat t);
 extern  void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglTexEnvf )(GLenum target, GLenum pname, GLfloat param);
 extern  void ( APIENTRY * qglTexEnvi )(GLenum target, GLenum pname, GLint param);

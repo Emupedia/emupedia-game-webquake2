@@ -306,22 +306,22 @@ void R_DrawSpriteModel (entity_t *e)
 
 	qglBegin (GL_QUADS);
 
-	qglTexCoord2f (0, 1);
+	qglMTexCoord2f(GL_TEXTURE0, 0, 1);
 	VectorMA (e->origin, -frame->origin_y, up, point);
 	VectorMA (point, -frame->origin_x, right, point);
 	qglVertex3f(point[0], point[1], point[2]);
 
-	qglTexCoord2f (0, 0);
+	qglMTexCoord2f(GL_TEXTURE0, 0, 0);
 	VectorMA (e->origin, frame->height - frame->origin_y, up, point);
 	VectorMA (point, -frame->origin_x, right, point);
 	qglVertex3f(point[0], point[1], point[2]);
 
-	qglTexCoord2f (1, 0);
+	qglMTexCoord2f(GL_TEXTURE0, 1, 0);
 	VectorMA (e->origin, frame->height - frame->origin_y, up, point);
 	VectorMA (point, frame->width - frame->origin_x, right, point);
 	qglVertex3f(point[0], point[1], point[2]);
 
-	qglTexCoord2f (1, 1);
+	qglMTexCoord2f(GL_TEXTURE0, 1, 1);
 	VectorMA (e->origin, -frame->origin_y, up, point);
 	VectorMA (point, frame->width - frame->origin_x, right, point);
 	qglVertex3f(point[0], point[1], point[2]);
@@ -516,15 +516,15 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
 
 		qglColor4f(colorf[0], colorf[1], colorf[2], colorf[3]);
 
-		qglTexCoord2f( 0.0625f, 0.0625f );
+		qglMTexCoord2f( GL_TEXTURE0, 0.0625f, 0.0625f );
 		qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
 
-		qglTexCoord2f( 1.0625f, 0.0625f );
+		qglMTexCoord2f( GL_TEXTURE0, 1.0625f, 0.0625f );
 		qglVertex3f( p->origin[0] + up[0]*scale, 
 			         p->origin[1] + up[1]*scale, 
 					 p->origin[2] + up[2]*scale);
 
-		qglTexCoord2f( 0.0625f, 1.0625f );
+		qglMTexCoord2f( GL_TEXTURE0, 0.0625f, 1.0625f );
 		qglVertex3f( p->origin[0] + right[0]*scale, 
 			         p->origin[1] + right[1]*scale, 
 					 p->origin[2] + right[2]*scale);

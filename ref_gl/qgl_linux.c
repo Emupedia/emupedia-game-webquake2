@@ -74,7 +74,6 @@ void ( APIENTRY * qglShadeModel )(GLenum mode);
 void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 void ( APIENTRY * qglStencilMask )(GLuint mask);
 void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-void ( APIENTRY * qglTexCoord2f )(GLfloat s, GLfloat t);
 void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglTexEnvf )(GLenum target, GLenum pname, GLfloat param);
 void ( APIENTRY * qglTexEnvi )(GLenum target, GLenum pname, GLint param);
@@ -148,7 +147,6 @@ static void ( APIENTRY * dllShadeModel )(GLenum mode);
 static void ( APIENTRY * dllStencilFunc )(GLenum func, GLint ref, GLuint mask);
 static void ( APIENTRY * dllStencilMask )(GLuint mask);
 static void ( APIENTRY * dllStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-static void ( APIENTRY * dllTexCoord2f )(GLfloat s, GLfloat t);
 static void ( APIENTRY * dllTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 static void ( APIENTRY * dllTexEnvf )(GLenum target, GLenum pname, GLfloat param);
 static void ( APIENTRY * dllTexEnvi )(GLenum target, GLenum pname, GLint param);
@@ -220,7 +218,6 @@ void QGL_Shutdown( void )
 	qglStencilFunc               = NULL;
 	qglStencilMask               = NULL;
 	qglStencilOp                 = NULL;
-	qglTexCoord2f                = NULL;
 	qglTexCoordPointer           = NULL;
 	qglTexEnvf                   = NULL;
 	qglTexEnvi                   = NULL;
@@ -297,7 +294,6 @@ qboolean QGL_Init( const char *dllname )
 	qglStencilFunc               = 	dllStencilFunc               = glStencilFunc;
 	qglStencilMask               = 	dllStencilMask               = glStencilMask;
 	qglStencilOp                 = 	dllStencilOp                 = glStencilOp;
-	qglTexCoord2f                = 	dllTexCoord2f                = glTexCoord2f;
 	qglTexCoordPointer           = 	dllTexCoordPointer           = glTexCoordPointer;
 	qglTexEnvf                   = 	dllTexEnvf                   = glTexEnvf;
 	qglTexEnvi                   = 	dllTexEnvi                   = glTexEnvi;
@@ -370,7 +366,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglStencilFunc               = 	dllStencilFunc               ;
 		qglStencilMask               = 	dllStencilMask               ;
 		qglStencilOp                 = 	dllStencilOp                 ;
-		qglTexCoord2f                = 	dllTexCoord2f                ;
 		qglTexCoordPointer           = 	dllTexCoordPointer           ;
 		qglTexEnvf                   = 	dllTexEnvf                   ;
 		qglTexEnvi                   = 	dllTexEnvi                   ;
@@ -401,4 +396,9 @@ void qglVertex2f(GLfloat x, GLfloat y) {
 
 void qglVertex3f(GLfloat x, GLfloat y, GLfloat z) {
 	glVertex3f(x, y, z);
+}
+
+
+void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
+	glMultiTexCoord2f(tex, s, t);
 }

@@ -185,7 +185,7 @@ void DrawGLPoly (glpoly_t *p)
 	v = p->verts[0];
 	for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
 	{
-		qglTexCoord2f (v[3], v[4]);
+		qglMTexCoord2f(GL_TEXTURE0, v[3], v[4]);
 		qglVertex3f(v[0], v[1], v[2]);
 	}
 	qglEnd ();
@@ -215,7 +215,7 @@ void DrawGLFlowingPoly (msurface_t *fa)
 	v = p->verts[0];
 	for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
 	{
-		qglTexCoord2f ((v[3] + scroll), v[4]);
+		qglMTexCoord2f(GL_TEXTURE0, (v[3] + scroll), v[4]);
 		qglVertex3f(v[0], v[1], v[2]);
 	}
 	qglEnd ();
@@ -280,7 +280,7 @@ void DrawGLPolyChain( glpoly_t *p, float soffset, float toffset )
 			v = p->verts[0];
 			for (j=0 ; j<p->numverts ; j++, v+= VERTEXSIZE)
 			{
-				qglTexCoord2f (v[5], v[6] );
+				qglMTexCoord2f(GL_TEXTURE0, v[5], v[6] );
 				qglVertex3f(v[0], v[1], v[2]);
 			}
 			qglEnd ();
@@ -297,7 +297,7 @@ void DrawGLPolyChain( glpoly_t *p, float soffset, float toffset )
 			v = p->verts[0];
 			for (j=0 ; j<p->numverts ; j++, v+= VERTEXSIZE)
 			{
-				qglTexCoord2f (v[5] - soffset, v[6] - toffset );
+				qglMTexCoord2f(GL_TEXTURE0, v[5] - soffset, v[6] - toffset );
 				qglVertex3f(v[0], v[1], v[2]);
 			}
 			qglEnd ();

@@ -190,7 +190,7 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 				do
 				{
 					// texture coordinates come from the draw list
-					qglTexCoord2f (((float *)order)[0], ((float *)order)[1]);
+					qglMTexCoord2f(GL_TEXTURE0, ((float *)order)[0], ((float *)order)[1]);
 					index_xyz = order[2];
 					order += 3;
 
