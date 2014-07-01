@@ -402,8 +402,7 @@ void GLimp_EnableLogging( qboolean enable )
 
 // add a new vertex to vertices array
 // resize if necessary
-// return pointer to new vertex
-static Vertex *pushVertex() {
+static void pushVertex(const Vertex *v) {
 	if (qglState->numVertices == qglState->usedVertices) {
 		// resize needed
 		size_t oldVerticesSize = qglState->numVertices * sizeof(Vertex);
@@ -417,7 +416,7 @@ static Vertex *pushVertex() {
 		qglState->vertices = newVertices;
 	}
 
-	return qglState->vertices + (qglState->usedVertices++);
+	memcpy(&qglState->vertices[qglState->usedVertices++], v, sizeof(Vertex));
 }
 
 
@@ -426,19 +425,28 @@ void qglColor3f(GLfloat red, GLfloat green, GLfloat blue) {
 }
 
 
+#define CLAMP(x) if ((x) > 1.0f) { (x) = 1.0f; } else if ((x) < 0.0f) { (x) = 0.0f; }
+
+
 void qglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
+	CLAMP(red)
+	CLAMP(green)
+	CLAMP(blue)
+	CLAMP(alpha)
+
 	uint32_t r = red * 255, g = green * 255, b = blue * 255, a = alpha * 255;
 
 	// TODO: big-endian, if anyone cares
 	uint32_t c =
-		  (r      )
-		| (g << 8 )
+		  (r <<  0)
+		| (g <<  8)
 		| (b << 16)
 		| (a << 24);
 	qglState->currentVertex.color = c;
-
-	glColor4f(red, green, blue, alpha);
 }
+
+
+#undef CLAMP
 
 
 void qglVertex2f(GLfloat x, GLfloat y) {
@@ -447,19 +455,15 @@ void qglVertex2f(GLfloat x, GLfloat y) {
 
 
 void qglVertex3f(GLfloat x, GLfloat y, GLfloat z) {
-	glVertex3f(x, y, z);
-
 	qglState->currentVertex.pos[0] = x;
 	qglState->currentVertex.pos[1] = y;
 	qglState->currentVertex.pos[2] = z;
 
-	// pushVertex(qglState->currentVertex);
+	pushVertex(&qglState->currentVertex);
 }
 
 
 void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
-	glMultiTexCoord2f(tex, s, t);
-
 	if (tex == GL_TEXTURE0) {
 		qglState->currentVertex.tex0[0] = s;
 		qglState->currentVertex.tex0[1] = t;
@@ -471,15 +475,22 @@ void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
 
 
 void qglBegin(GLenum mode) {
-	glBegin(mode);
-
 	qglState->usedVertices = 0;
 	qglState->primitive = mode;
 }
 
 
 void qglEnd(void) {
-	glEnd();
+	qglVertexPointer(3, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].pos[0]);
+	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), &qglState->vertices[0].color);
+
+	glClientActiveTexture(GL_TEXTURE0);
+	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
+
+	glClientActiveTexture(GL_TEXTURE1);
+	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+
+	glDrawArrays(qglState->primitive, 0, qglState->usedVertices);
 
 	qglState->primitive = GL_NONE;
 }
