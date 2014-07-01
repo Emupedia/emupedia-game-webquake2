@@ -30,6 +30,8 @@ typedef struct QGLState {
 	GLenum primitive;
 
 	Vertex currentVertex;
+
+	unsigned int activeTexture;
 } QGLState;
 
 
@@ -484,11 +486,19 @@ void qglEnd(void) {
 	qglVertexPointer(3, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].pos[0]);
 	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), &qglState->vertices[0].color);
 
-	glClientActiveTexture(GL_TEXTURE0);
+	if (qglState->activeTexture == 0) {
 	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
 
 	glClientActiveTexture(GL_TEXTURE1);
+		qglState->activeTexture = 1;
 	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+	} else {
+	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+
+	glClientActiveTexture(GL_TEXTURE0);
+		qglState->activeTexture = 0;
+	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
+	}
 
 	glDrawArrays(qglState->primitive, 0, qglState->usedVertices);
 
