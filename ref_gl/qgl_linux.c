@@ -32,6 +32,8 @@ typedef struct QGLState {
 	Vertex currentVertex;
 
 	unsigned int activeTexture;
+
+	GLenum matrixMode;
 } QGLState;
 
 
@@ -80,7 +82,6 @@ GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
 void ( APIENTRY * qglLineWidth )(GLfloat width);
 void ( APIENTRY * qglLoadIdentity )(void);
 void ( APIENTRY * qglLoadMatrixf )(const GLfloat *m);
-void ( APIENTRY * qglMatrixMode )(GLenum mode);
 void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
 void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 void ( APIENTRY * qglPointSize )(GLfloat size);
@@ -150,7 +151,6 @@ GLboolean ( APIENTRY * dllIsTexture )(GLuint texture);
 static void ( APIENTRY * dllLineWidth )(GLfloat width);
 static void ( APIENTRY * dllLoadIdentity )(void);
 static void ( APIENTRY * dllLoadMatrixf )(const GLfloat *m);
-static void ( APIENTRY * dllMatrixMode )(GLenum mode);
 static void ( APIENTRY * dllMultMatrixf )(const GLfloat *m);
 static void ( APIENTRY * dllOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 static void ( APIENTRY * dllPointSize )(GLfloat size);
@@ -222,7 +222,6 @@ void QGL_Shutdown( void )
 	qglLineWidth                 = NULL;
 	qglLoadIdentity              = NULL;
 	qglLoadMatrixf               = NULL;
-	qglMatrixMode                = NULL;
 	qglMultMatrixf               = NULL;
 	qglOrtho                     = NULL;
 	qglPointSize                 = NULL;
@@ -303,7 +302,6 @@ qboolean QGL_Init( const char *dllname )
 	qglLineWidth                 = 	dllLineWidth                 = glLineWidth;
 	qglLoadIdentity              = 	dllLoadIdentity              = glLoadIdentity;
 	qglLoadMatrixf               = 	dllLoadMatrixf               = glLoadMatrixf;
-	qglMatrixMode                = 	dllMatrixMode                = glMatrixMode;
 	qglMultMatrixf               = 	dllMultMatrixf               = glMultMatrixf;
 	qglOrtho                     = 	dllOrtho                     = glOrtho;
 	qglPointSize                 = 	dllPointSize                 = glPointSize;
@@ -373,7 +371,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglLineWidth                 = 	dllLineWidth                 ;
 		qglLoadIdentity              = 	dllLoadIdentity              ;
 		qglLoadMatrixf               = 	dllLoadMatrixf               ;
-		qglMatrixMode                = 	dllMatrixMode                ;
 		qglMultMatrixf               = 	dllMultMatrixf               ;
 		qglOrtho                     = 	dllOrtho                     ;
 		qglPointSize                 = 	dllPointSize                 ;
@@ -505,3 +502,9 @@ void qglEnd(void) {
 	qglState->primitive = GL_NONE;
 }
 
+
+void qglMatrixMode(GLenum mode) {
+	qglState->matrixMode = mode;
+
+	glMatrixMode(mode);
+}

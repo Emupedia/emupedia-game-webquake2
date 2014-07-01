@@ -166,7 +166,7 @@ extern  void ( APIENTRY * qglMaterialf )(GLenum face, GLenum pname, GLfloat para
 extern  void ( APIENTRY * qglMaterialfv )(GLenum face, GLenum pname, const GLfloat *params);
 extern  void ( APIENTRY * qglMateriali )(GLenum face, GLenum pname, GLint param);
 extern  void ( APIENTRY * qglMaterialiv )(GLenum face, GLenum pname, const GLint *params);*/
-extern  void ( APIENTRY * qglMatrixMode )(GLenum mode);
+void qglMatrixMode(GLenum mode);
 extern  void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
 void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t);
 extern  void ( APIENTRY * qglNewList )(GLuint list, GLenum mode);
