@@ -487,17 +487,17 @@ void qglEnd(void) {
 	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), &qglState->vertices[0].color);
 
 	if (qglState->activeTexture == 0) {
-	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
 
-	glClientActiveTexture(GL_TEXTURE1);
+		glClientActiveTexture(GL_TEXTURE1);
 		qglState->activeTexture = 1;
-	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
 	} else {
-	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
 
-	glClientActiveTexture(GL_TEXTURE0);
+		glClientActiveTexture(GL_TEXTURE0);
 		qglState->activeTexture = 0;
-	qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
 	}
 
 	glDrawArrays(qglState->primitive, 0, qglState->usedVertices);
