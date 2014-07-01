@@ -933,21 +933,20 @@ float ref_frand(void)
 
 void R_Clear (void)
 {
-
-		gldepthmin = 0;
-		gldepthmax = 1;
-		qglDepthFunc (GL_LEQUAL);
+	gldepthmin = 0;
+	gldepthmax = 1;
+	qglDepthFunc (GL_LEQUAL);
 
 	qglDepthRange (gldepthmin, gldepthmax);
 
-		if (FLOAT_NE_ZERO(gl_clear->value) && gl_clear->value == 2)
-			{
-				qglClearColor (ref_frand(), ref_frand(), ref_frand(), 1.0);
-			} else {
-				qglClearColor(0.0f, 0.0f, 0.0f, 1.0);
-			}
+	if (FLOAT_NE_ZERO(gl_clear->value) && gl_clear->value == 2)
+	{
+		qglClearColor (ref_frand(), ref_frand(), ref_frand(), 1.0);
+	} else {
+		qglClearColor(0.0f, 0.0f, 0.0f, 1.0);
+	}
 
-			qglClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	qglClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 /*void R_Flash( void )
