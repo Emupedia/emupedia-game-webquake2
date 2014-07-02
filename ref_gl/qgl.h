@@ -209,7 +209,7 @@ extern  void ( APIENTRY * qglTexParameterfv )(GLenum target, GLenum pname, const
 extern  void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
 extern  void ( APIENTRY * qglTexParameteriv )(GLenum target, GLenum pname, const GLint *params);
 extern  void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-extern  void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
+void qglTranslatef(GLfloat x, GLfloat y, GLfloat z);
 void qglVertex2f(GLfloat x, GLfloat y);
 void qglVertex3f(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);

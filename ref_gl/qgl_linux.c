@@ -98,7 +98,6 @@ void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalform
 void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
 void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
 void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-void ( APIENTRY * qglTranslatef )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
@@ -232,7 +231,6 @@ void QGL_Shutdown( void )
 	qglTexParameterf             = NULL;
 	qglTexParameteri             = NULL;
 	qglTexSubImage2D             = NULL;
-	qglTranslatef                = NULL;
 	qglVertexPointer             = NULL;
 	qglViewport                  = NULL;
 }
@@ -306,7 +304,6 @@ qboolean QGL_Init( const char *dllname )
 	qglTexParameterf             = 	dllTexParameterf             = glTexParameterf;
 	qglTexParameteri             = 	dllTexParameteri             = glTexParameteri;
 	qglTexSubImage2D             = 	dllTexSubImage2D             = glTexSubImage2D;
-	qglTranslatef                = 	dllTranslatef                = glTranslatef;
 	qglVertexPointer             = 	dllVertexPointer             = glVertexPointer;
 	qglViewport                  = 	dllViewport                  = glViewport;
 
@@ -369,7 +366,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglTexParameterf             = 	dllTexParameterf             ;
 		qglTexParameteri             = 	dllTexParameteri             ;
 		qglTexSubImage2D             = 	dllTexSubImage2D             ;
-		qglTranslatef                = 	dllTranslatef                ;
 		qglVertexPointer             = 	dllVertexPointer             ;
 		qglViewport                  = 	dllViewport                  ;
 }
@@ -513,4 +509,9 @@ void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
 
 void qglScalef(GLfloat x, GLfloat y, GLfloat z) {
 	glScalef(x, y, z);
+}
+
+
+void qglTranslatef(GLfloat x, GLfloat y, GLfloat z) {
+	glTranslatef(x, y, z);
 }
