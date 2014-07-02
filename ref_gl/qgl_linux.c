@@ -543,7 +543,18 @@ void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
 
 
 void qglScalef(GLfloat x, GLfloat y, GLfloat z) {
-	glScalef(x, y, z);
+	float mat[16];
+	memset(mat, 0, sizeof(float) * 16);
+
+	mat[0 * 4 + 0] = x;
+
+	mat[1 * 4 + 1] = y;
+
+	mat[2 * 4 + 2] = z;
+
+	mat[3 * 4 + 3] = 1.0f;
+
+	qglMultMatrixf(mat);
 }
 
 
