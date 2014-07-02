@@ -86,7 +86,6 @@ void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
 void ( APIENTRY * qglPopMatrix )(void);
 void ( APIENTRY * qglPushMatrix )(void);
 void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
-void ( APIENTRY * qglRotatef )(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglScalef )(GLfloat x, GLfloat y, GLfloat z);
 void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
 void ( APIENTRY * qglShadeModel )(GLenum mode);
@@ -222,7 +221,6 @@ void QGL_Shutdown( void )
 	qglPopMatrix                 = NULL;
 	qglPushMatrix                = NULL;
 	qglReadPixels                = NULL;
-	qglRotatef                   = NULL;
 	qglScalef                    = NULL;
 	qglScissor                   = NULL;
 	qglShadeModel                = NULL;
@@ -298,7 +296,6 @@ qboolean QGL_Init( const char *dllname )
 	qglPopMatrix                 = 	dllPopMatrix                 = glPopMatrix;
 	qglPushMatrix                = 	dllPushMatrix                = glPushMatrix;
 	qglReadPixels                = 	dllReadPixels                = glReadPixels;
-	qglRotatef                   = 	dllRotatef                   = glRotatef;
 	qglScalef                    = 	dllScalef                    = glScalef;
 	qglScissor                   = 	dllScissor                   = glScissor;
 	qglShadeModel                = 	dllShadeModel                = glShadeModel;
@@ -363,7 +360,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglPopMatrix                 = 	dllPopMatrix                 ;
 		qglPushMatrix                = 	dllPushMatrix                ;
 		qglReadPixels                = 	dllReadPixels                ;
-		qglRotatef                   = 	dllRotatef                   ;
 		qglScalef                    = 	dllScalef                    ;
 		qglScissor                   = 	dllScissor                   ;
 		qglShadeModel                = 	dllShadeModel                ;
@@ -511,4 +507,9 @@ void qglLoadMatrixf(const GLfloat *m) {
 
 void qglMultMatrixf(const GLfloat *m) {
 	glMultMatrixf(m);
+}
+
+
+void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
+	glRotatef(angle, x, y, z);
 }
