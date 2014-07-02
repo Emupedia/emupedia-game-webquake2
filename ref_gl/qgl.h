@@ -194,7 +194,7 @@ extern  void ( APIENTRY * qglPushMatrix )(void);
 extern  void ( APIENTRY * qglPushName )(GLuint name);
 extern  void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
 void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
-extern  void ( APIENTRY * qglScalef )(GLfloat x, GLfloat y, GLfloat z);
+void qglScalef(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
 extern  void ( APIENTRY * qglShadeModel )(GLenum mode);
 extern  void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
