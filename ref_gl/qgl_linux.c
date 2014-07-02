@@ -82,8 +82,6 @@ void ( APIENTRY * qglLineWidth )(GLfloat width);
 void ( APIENTRY * qglPointSize )(GLfloat size);
 void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
-void ( APIENTRY * qglPopMatrix )(void);
-void ( APIENTRY * qglPushMatrix )(void);
 void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
 void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
 void ( APIENTRY * qglShadeModel )(GLenum mode);
@@ -214,8 +212,6 @@ void QGL_Shutdown( void )
 	qglPointSize                 = NULL;
 	qglPolygonMode               = NULL;
 	qglPolygonOffset             = NULL;
-	qglPopMatrix                 = NULL;
-	qglPushMatrix                = NULL;
 	qglReadPixels                = NULL;
 	qglScissor                   = NULL;
 	qglShadeModel                = NULL;
@@ -286,8 +282,6 @@ qboolean QGL_Init( const char *dllname )
 	qglPointSize                 = 	dllPointSize                 = glPointSize;
 	qglPolygonMode               = 	dllPolygonMode               = glPolygonMode;
 	qglPolygonOffset             = 	dllPolygonOffset             = glPolygonOffset;
-	qglPopMatrix                 = 	dllPopMatrix                 = glPopMatrix;
-	qglPushMatrix                = 	dllPushMatrix                = glPushMatrix;
 	qglReadPixels                = 	dllReadPixels                = glReadPixels;
 	qglScissor                   = 	dllScissor                   = glScissor;
 	qglShadeModel                = 	dllShadeModel                = glShadeModel;
@@ -347,8 +341,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglPointSize                 = 	dllPointSize                 ;
 		qglPolygonMode               = 	dllPolygonMode               ;
 		qglPolygonOffset             = 	dllPolygonOffset             ;
-		qglPopMatrix                 = 	dllPopMatrix                 ;
-		qglPushMatrix                = 	dllPushMatrix                ;
 		qglReadPixels                = 	dllReadPixels                ;
 		qglScissor                   = 	dllScissor                   ;
 		qglShadeModel                = 	dllShadeModel                ;
@@ -516,3 +508,14 @@ void qglScalef(GLfloat x, GLfloat y, GLfloat z) {
 void qglTranslatef(GLfloat x, GLfloat y, GLfloat z) {
 	glTranslatef(x, y, z);
 }
+
+
+void qglPopMatrix(void) {
+	glPopMatrix();
+}
+
+
+void qglPushMatrix(void) {
+	glPushMatrix();
+}
+
