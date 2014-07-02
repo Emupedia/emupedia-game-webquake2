@@ -661,11 +661,39 @@ void qglTranslatef(GLfloat x, GLfloat y, GLfloat z) {
 
 
 void qglPopMatrix(void) {
+	if (qglState->matrixMode == GL_MODELVIEW) {
+		qglState->mvMatrixTop--;
+
+		assert(qglState->mvMatrixTop >= 0 && qglState->mvMatrixTop <= NUMMATRICES);
+	} else if (qglState->matrixMode == GL_PROJECTION) {
+		qglState->projMatrixTop--;
+
+		assert(qglState->projMatrixTop >= 0 && qglState->projMatrixTop <= NUMMATRICES);
+	} else {
+		assert(false);
+	}
+
 	glPopMatrix();
 }
 
 
 void qglPushMatrix(void) {
+	if (qglState->matrixMode == GL_MODELVIEW) {
+		qglState->mvMatrixTop++;
+
+		assert(qglState->mvMatrixTop >= 0 && qglState->mvMatrixTop <= NUMMATRICES);
+
+		memcpy(qglState->mvMatrices[qglState->mvMatrixTop], qglState->mvMatrices[qglState->mvMatrixTop - 1], sizeof(float) * 16);
+	} else if (qglState->matrixMode == GL_PROJECTION) {
+		qglState->projMatrixTop++;
+
+		assert(qglState->projMatrixTop >= 0 && qglState->projMatrixTop <= NUMMATRICES);
+
+		memcpy(qglState->projMatrices[qglState->projMatrixTop], qglState->projMatrices[qglState->projMatrixTop - 1], sizeof(float) * 16);
+	} else {
+		assert(false);
+	}
+
 	glPushMatrix();
 }
 
