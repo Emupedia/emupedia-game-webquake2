@@ -488,7 +488,22 @@ void qglLoadIdentity(void) {
 
 
 void qglFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar) {
-	glFrustum(left, right, bottom, top, zNear, zFar);
+	float mat[16];
+	memset(mat, 0, sizeof(float) * 16);
+
+	mat[0 * 4 + 0] = 2 * zNear / (right - left);
+
+	mat[1 * 4 + 1] = 2 * zNear / (top - bottom);
+
+	mat[2 * 4 + 0] = (right + left) / (right - left);
+	mat[2 * 4 + 1] = (top + bottom) / (top - bottom);
+	mat[2 * 4 + 2] = -(zFar + zNear) / (zFar - zNear);
+	mat[2 * 4 + 3] = -1.0f;
+
+	mat[3 * 4 + 2] = -(2 * zFar * zNear) / (zFar - zNear);
+
+	// should really be MultMatrix but since we always load identity before...
+	qglLoadMatrixf(mat);
 }
 
 
