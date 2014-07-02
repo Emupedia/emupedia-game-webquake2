@@ -101,7 +101,7 @@ extern  void ( APIENTRY * qglFogfv )(GLenum pname, const GLfloat *params);
 extern  void ( APIENTRY * qglFogi )(GLenum pname, GLint param);
 extern  void ( APIENTRY * qglFogiv )(GLenum pname, const GLint *params);
 extern  void ( APIENTRY * qglFrontFace )(GLenum mode);
-extern  void ( APIENTRY * qglFrustum )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
+void qglFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 extern  GLuint ( APIENTRY * qglGenLists )(GLsizei range);
 extern  void ( APIENTRY * qglGenTextures )(GLsizei n, GLuint *textures);
 extern  void ( APIENTRY * qglGetBooleanv )(GLenum pname, GLboolean *params);

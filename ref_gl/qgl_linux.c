@@ -69,7 +69,6 @@ void ( APIENTRY * qglEnable )(GLenum cap);
 void ( APIENTRY * qglFinish )(void);
 void ( APIENTRY * qglFlush )(void);
 void ( APIENTRY * qglFrontFace )(GLenum mode);
-void ( APIENTRY * qglFrustum )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 void ( APIENTRY * qglGenTextures )(GLsizei n, GLuint *textures);
 void ( APIENTRY * qglGetBooleanv )(GLenum pname, GLboolean *params);
 GLenum ( APIENTRY * qglGetError )(void);
@@ -202,7 +201,6 @@ void QGL_Shutdown( void )
 	qglFinish                    = NULL;
 	qglFlush                     = NULL;
 	qglFrontFace                 = NULL;
-	qglFrustum                   = NULL;
 	qglGenTextures               = NULL;
 	qglGetBooleanv               = NULL;
 	qglGetError                  = NULL;
@@ -275,7 +273,6 @@ qboolean QGL_Init( const char *dllname )
 	qglFinish                    = 	dllFinish                    = glFinish;
 	qglFlush                     = 	dllFlush                     = glFlush;
 	qglFrontFace                 = 	dllFrontFace                 = glFrontFace;
-	qglFrustum                   = 	dllFrustum                   = glFrustum;
 	qglGenTextures               = 	dllGenTextures               = glGenTextures;
 	qglGetBooleanv               = 	dllGetBooleanv               = glGetBooleanv;
 	qglGetError                  = 	dllGetError                  = glGetError;
@@ -337,7 +334,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglFinish                    = 	dllFinish                    ;
 		qglFlush                     = 	dllFlush                     ;
 		qglFrontFace                 = 	dllFrontFace                 ;
-		qglFrustum                   = 	dllFrustum                   ;
 		qglGenTextures               = 	dllGenTextures               ;
 		qglGetBooleanv               = 	dllGetBooleanv               ;
 		qglGetError                  = 	dllGetError                  ;
@@ -484,6 +480,11 @@ void qglMatrixMode(GLenum mode) {
 
 void qglLoadIdentity(void) {
 	glLoadIdentity();
+}
+
+
+void qglFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar) {
+	glFrustum(left, right, bottom, top, zNear, zFar);
 }
 
 
