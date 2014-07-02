@@ -596,7 +596,7 @@ void qglMultMatrixf(const GLfloat *m) {
 	multMatrices(mat, targetMat, m);
 	memcpy(targetMat, mat, sizeof(float) * 16);
 
-	glMultMatrixf(m);
+	glLoadMatrixf(targetMat);
 }
 
 
