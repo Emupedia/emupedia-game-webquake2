@@ -149,7 +149,7 @@ extern  void ( APIENTRY * qglLightiv )(GLenum light, GLenum pname, const GLint *
 extern  void ( APIENTRY * qglLineStipple )(GLint factor, GLushort pattern);
 extern  void ( APIENTRY * qglLineWidth )(GLfloat width);
 extern  void ( APIENTRY * qglListBase )(GLuint base);
-extern  void ( APIENTRY * qglLoadIdentity )(void);
+void qglLoadIdentity(void);
 extern  void ( APIENTRY * qglLoadMatrixd )(const GLdouble *m);
 extern  void ( APIENTRY * qglLoadMatrixf )(const GLfloat *m);
 extern  void ( APIENTRY * qglLoadName )(GLuint name);

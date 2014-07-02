@@ -80,7 +80,6 @@ void ( APIENTRY * qglHint )(GLenum target, GLenum mode);
 GLboolean ( APIENTRY * qglIsEnabled )(GLenum cap);
 GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
 void ( APIENTRY * qglLineWidth )(GLfloat width);
-void ( APIENTRY * qglLoadIdentity )(void);
 void ( APIENTRY * qglLoadMatrixf )(const GLfloat *m);
 void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
 void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
@@ -220,7 +219,6 @@ void QGL_Shutdown( void )
 	qglIsEnabled                 = NULL;
 	qglIsTexture                 = NULL;
 	qglLineWidth                 = NULL;
-	qglLoadIdentity              = NULL;
 	qglLoadMatrixf               = NULL;
 	qglMultMatrixf               = NULL;
 	qglOrtho                     = NULL;
@@ -300,7 +298,6 @@ qboolean QGL_Init( const char *dllname )
 	qglIsEnabled                 = 	dllIsEnabled                 = glIsEnabled;
 	qglIsTexture                 = 	dllIsTexture                 = glIsTexture;
 	qglLineWidth                 = 	dllLineWidth                 = glLineWidth;
-	qglLoadIdentity              = 	dllLoadIdentity              = glLoadIdentity;
 	qglLoadMatrixf               = 	dllLoadMatrixf               = glLoadMatrixf;
 	qglMultMatrixf               = 	dllMultMatrixf               = glMultMatrixf;
 	qglOrtho                     = 	dllOrtho                     = glOrtho;
@@ -369,7 +366,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglIsEnabled                 = 	dllIsEnabled                 ;
 		qglIsTexture                 = 	dllIsTexture                 ;
 		qglLineWidth                 = 	dllLineWidth                 ;
-		qglLoadIdentity              = 	dllLoadIdentity              ;
 		qglLoadMatrixf               = 	dllLoadMatrixf               ;
 		qglMultMatrixf               = 	dllMultMatrixf               ;
 		qglOrtho                     = 	dllOrtho                     ;
@@ -507,4 +503,9 @@ void qglMatrixMode(GLenum mode) {
 	qglState->matrixMode = mode;
 
 	glMatrixMode(mode);
+}
+
+
+void qglLoadIdentity(void) {
+	glLoadIdentity();
 }
