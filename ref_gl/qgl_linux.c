@@ -470,8 +470,20 @@ void qglMatrixMode(GLenum mode) {
 }
 
 
+static void identityMatrix(float *matrix) {
+	memset(matrix, 0, sizeof(float) * 16);
+	matrix[0 * 4 + 0] = 1.0f;
+	matrix[1 * 4 + 1] = 1.0f;
+	matrix[2 * 4 + 2] = 1.0f;
+	matrix[3 * 4 + 3] = 1.0f;
+}
+
+
 void qglLoadIdentity(void) {
-	glLoadIdentity();
+	float idM[16];
+	identityMatrix(idM);
+
+	qglLoadMatrixf(idM);
 }
 
 
