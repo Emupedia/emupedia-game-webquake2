@@ -80,7 +80,6 @@ void ( APIENTRY * qglHint )(GLenum target, GLenum mode);
 GLboolean ( APIENTRY * qglIsEnabled )(GLenum cap);
 GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
 void ( APIENTRY * qglLineWidth )(GLfloat width);
-void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
 void ( APIENTRY * qglPointSize )(GLfloat size);
 void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
@@ -217,7 +216,6 @@ void QGL_Shutdown( void )
 	qglIsEnabled                 = NULL;
 	qglIsTexture                 = NULL;
 	qglLineWidth                 = NULL;
-	qglMultMatrixf               = NULL;
 	qglPointSize                 = NULL;
 	qglPolygonMode               = NULL;
 	qglPolygonOffset             = NULL;
@@ -294,7 +292,6 @@ qboolean QGL_Init( const char *dllname )
 	qglIsEnabled                 = 	dllIsEnabled                 = glIsEnabled;
 	qglIsTexture                 = 	dllIsTexture                 = glIsTexture;
 	qglLineWidth                 = 	dllLineWidth                 = glLineWidth;
-	qglMultMatrixf               = 	dllMultMatrixf               = glMultMatrixf;
 	qglPointSize                 = 	dllPointSize                 = glPointSize;
 	qglPolygonMode               = 	dllPolygonMode               = glPolygonMode;
 	qglPolygonOffset             = 	dllPolygonOffset             = glPolygonOffset;
@@ -360,7 +357,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglIsEnabled                 = 	dllIsEnabled                 ;
 		qglIsTexture                 = 	dllIsTexture                 ;
 		qglLineWidth                 = 	dllLineWidth                 ;
-		qglMultMatrixf               = 	dllMultMatrixf               ;
 		qglPointSize                 = 	dllPointSize                 ;
 		qglPolygonMode               = 	dllPolygonMode               ;
 		qglPolygonOffset             = 	dllPolygonOffset             ;
@@ -510,4 +506,9 @@ void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdo
 
 void qglLoadMatrixf(const GLfloat *m) {
 	glLoadMatrixf(m);
+}
+
+
+void qglMultMatrixf(const GLfloat *m) {
+	glMultMatrixf(m);
 }
