@@ -588,7 +588,14 @@ void qglScalef(GLfloat x, GLfloat y, GLfloat z) {
 
 
 void qglTranslatef(GLfloat x, GLfloat y, GLfloat z) {
-	glTranslatef(x, y, z);
+	float mat[16];
+	identityMatrix(mat);
+
+	mat[3 * 4 + 0] = x;
+	mat[3 * 4 + 1] = y;
+	mat[3 * 4 + 2] = z;
+
+	qglMultMatrixf(mat);
 }
 
 
