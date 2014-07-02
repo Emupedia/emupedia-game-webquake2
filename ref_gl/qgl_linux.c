@@ -11,6 +11,8 @@
 #define QGL
 #include "../ref_gl/gl_local.h"
 
+#include <float.h>
+
 #include <SDL.h>
 
 
@@ -538,7 +540,34 @@ void qglMultMatrixf(const GLfloat *m) {
 
 
 void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
-	glRotatef(angle, x, y, z);
+	float mat[16];
+	memset(mat, 0, sizeof(float) * 16);
+
+	// someone calls this with zero vector
+	// add FLT_MIN to prevent division by zero
+	float norm = 1.0f / (sqrtf(x*x + y*y + z*z) + FLT_MIN);
+	x *= norm;
+	y *= norm;
+	z *= norm;
+
+	float c = cosf(angle * M_PI / 180.0f);
+	float s = sinf(angle * M_PI / 180.0f);
+
+	mat[0 * 4 + 0] = x * x * (1 - c) + c;
+	mat[0 * 4 + 1] = y * x * (1 - c) + z * s;
+	mat[0 * 4 + 2] = x * z * (1 - c) - y * s;
+
+	mat[1 * 4 + 0] = x * y * (1 - c) - z * s;
+	mat[1 * 4 + 1] = y * y * (1 - c) + c;
+	mat[1 * 4 + 2] = y * z * (1 - c) + x * s;
+
+	mat[2 * 4 + 0] = x * z * (1 - c) + y * s;
+	mat[2 * 4 + 1] = y * z * (1 - c) - x * s;
+	mat[2 * 4 + 2] = z * z * (1 - c) + c;
+
+	mat[3 * 4 + 3] = 1.0f;
+
+	qglMultMatrixf(mat);
 }
 
 
