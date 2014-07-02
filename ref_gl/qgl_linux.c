@@ -12,6 +12,7 @@
 #include "../ref_gl/gl_local.h"
 
 #include <float.h>
+#include <assert.h>
 
 #include <SDL.h>
 
@@ -22,6 +23,9 @@ typedef struct Vertex {
 	float tex0[2];
 	float tex1[2];
 } Vertex;
+
+
+#define NUMMATRICES 32
 
 
 typedef struct QGLState {
@@ -36,6 +40,11 @@ typedef struct QGLState {
 	unsigned int activeTexture;
 
 	GLenum matrixMode;
+
+	float mvMatrices[NUMMATRICES][16];
+	float projMatrices[NUMMATRICES][16];
+
+	int mvMatrixTop, projMatrixTop;
 } QGLState;
 
 
@@ -530,6 +539,17 @@ void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdo
 
 
 void qglLoadMatrixf(const GLfloat *m) {
+	float *targetMat = NULL;
+	if (qglState->matrixMode == GL_MODELVIEW) {
+		targetMat = qglState->mvMatrices[qglState->mvMatrixTop];
+	} else if (qglState->matrixMode == GL_PROJECTION) {
+		targetMat = qglState->projMatrices[qglState->projMatrixTop];
+	} else {
+		assert(false);
+	}
+
+	memcpy(targetMat, m, sizeof(float) * 16);
+
 	glLoadMatrixf(m);
 }
 
