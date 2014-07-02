@@ -12,6 +12,7 @@
 #include "../ref_gl/gl_local.h"
 
 #include <float.h>
+#include <stdbool.h>
 #include <assert.h>
 
 #include <SDL.h>
@@ -45,6 +46,7 @@ typedef struct QGLState {
 	float projMatrices[NUMMATRICES][16];
 
 	int mvMatrixTop, projMatrixTop;
+	bool mvMatrixDirty, projMatrixDirty;
 } QGLState;
 
 
@@ -468,6 +470,18 @@ void qglEnd(void) {
 		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
 	}
 
+	if (qglState->mvMatrixDirty) {
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(qglState->mvMatrices[qglState->mvMatrixTop]);
+		qglState->mvMatrixDirty = false;
+	}
+
+	if (qglState->projMatrixDirty) {
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(qglState->projMatrices[qglState->projMatrixTop]);
+		qglState->projMatrixDirty = false;
+	}
+
 	glDrawArrays(qglState->primitive, 0, qglState->usedVertices);
 
 	qglState->primitive = GL_NONE;
@@ -476,8 +490,6 @@ void qglEnd(void) {
 
 void qglMatrixMode(GLenum mode) {
 	qglState->matrixMode = mode;
-
-	glMatrixMode(mode);
 }
 
 
@@ -570,15 +582,15 @@ void qglLoadMatrixf(const GLfloat *m) {
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
 		targetMat = qglState->mvMatrices[qglState->mvMatrixTop];
+		qglState->mvMatrixDirty = true;
 	} else if (qglState->matrixMode == GL_PROJECTION) {
 		targetMat = qglState->projMatrices[qglState->projMatrixTop];
+		qglState->projMatrixDirty = true;
 	} else {
 		assert(false);
 	}
 
 	memcpy(targetMat, m, sizeof(float) * 16);
-
-	glLoadMatrixf(m);
 }
 
 
@@ -586,8 +598,10 @@ void qglMultMatrixf(const GLfloat *m) {
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
 		targetMat = qglState->mvMatrices[qglState->mvMatrixTop];
+		qglState->mvMatrixDirty = true;
 	} else if (qglState->matrixMode == GL_PROJECTION) {
 		targetMat = qglState->projMatrices[qglState->projMatrixTop];
+		qglState->projMatrixDirty = true;
 	} else {
 		assert(false);
 	}
@@ -595,8 +609,6 @@ void qglMultMatrixf(const GLfloat *m) {
 	float mat[16];
 	multMatrices(mat, targetMat, m);
 	memcpy(targetMat, mat, sizeof(float) * 16);
-
-	glLoadMatrixf(targetMat);
 }
 
 
@@ -667,16 +679,16 @@ void qglPopMatrix(void) {
 
 		assert(qglState->mvMatrixTop >= 0 && qglState->mvMatrixTop <= NUMMATRICES);
 		targetMat = qglState->mvMatrices[qglState->mvMatrixTop];
+		qglState->mvMatrixDirty = true;
 	} else if (qglState->matrixMode == GL_PROJECTION) {
 		qglState->projMatrixTop--;
 
 		assert(qglState->projMatrixTop >= 0 && qglState->projMatrixTop <= NUMMATRICES);
 		targetMat = qglState->projMatrices[qglState->projMatrixTop];
+		qglState->projMatrixDirty = true;
 	} else {
 		assert(false);
 	}
-
-	glLoadMatrixf(targetMat);
 }
 
 
