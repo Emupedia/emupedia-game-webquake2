@@ -82,7 +82,6 @@ GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
 void ( APIENTRY * qglLineWidth )(GLfloat width);
 void ( APIENTRY * qglLoadMatrixf )(const GLfloat *m);
 void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
-void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 void ( APIENTRY * qglPointSize )(GLfloat size);
 void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
@@ -221,7 +220,6 @@ void QGL_Shutdown( void )
 	qglLineWidth                 = NULL;
 	qglLoadMatrixf               = NULL;
 	qglMultMatrixf               = NULL;
-	qglOrtho                     = NULL;
 	qglPointSize                 = NULL;
 	qglPolygonMode               = NULL;
 	qglPolygonOffset             = NULL;
@@ -300,7 +298,6 @@ qboolean QGL_Init( const char *dllname )
 	qglLineWidth                 = 	dllLineWidth                 = glLineWidth;
 	qglLoadMatrixf               = 	dllLoadMatrixf               = glLoadMatrixf;
 	qglMultMatrixf               = 	dllMultMatrixf               = glMultMatrixf;
-	qglOrtho                     = 	dllOrtho                     = glOrtho;
 	qglPointSize                 = 	dllPointSize                 = glPointSize;
 	qglPolygonMode               = 	dllPolygonMode               = glPolygonMode;
 	qglPolygonOffset             = 	dllPolygonOffset             = glPolygonOffset;
@@ -368,7 +365,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglLineWidth                 = 	dllLineWidth                 ;
 		qglLoadMatrixf               = 	dllLoadMatrixf               ;
 		qglMultMatrixf               = 	dllMultMatrixf               ;
-		qglOrtho                     = 	dllOrtho                     ;
 		qglPointSize                 = 	dllPointSize                 ;
 		qglPolygonMode               = 	dllPolygonMode               ;
 		qglPolygonOffset             = 	dllPolygonOffset             ;
@@ -508,4 +504,9 @@ void qglMatrixMode(GLenum mode) {
 
 void qglLoadIdentity(void) {
 	glLoadIdentity();
+}
+
+
+void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar) {
+	glOrtho(left, right, bottom, top, zNear, zFar);
 }

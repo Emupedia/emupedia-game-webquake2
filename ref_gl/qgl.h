@@ -170,7 +170,7 @@ void qglMatrixMode(GLenum mode);
 extern  void ( APIENTRY * qglMultMatrixf )(const GLfloat *m);
 void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t);
 extern  void ( APIENTRY * qglNewList )(GLuint list, GLenum mode);
-extern  void ( APIENTRY * qglOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
+void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 extern  void ( APIENTRY * qglPassThrough )(GLfloat token);
 extern  void ( APIENTRY * qglPixelMapfv )(GLenum map, GLsizei mapsize, const GLfloat *values);
 extern  void ( APIENTRY * qglPixelMapuiv )(GLenum map, GLsizei mapsize, const GLuint *values);
