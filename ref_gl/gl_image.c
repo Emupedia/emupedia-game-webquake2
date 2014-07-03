@@ -154,7 +154,7 @@ void GL_TexEnv(GLenum target, GLenum mode)
 	}
 }
 
-void GL_Bind (unsigned int texnum)
+static void GL_Bind (unsigned int texnum)
 {
 #ifdef _DEBUG
 	extern	image_t	*draw_chars;

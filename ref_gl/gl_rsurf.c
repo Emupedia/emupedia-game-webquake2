@@ -355,7 +355,7 @@ void R_BlendLightmaps (void)
 		{
 			if (currentmodel == r_worldmodel)
 				c_visible_lightmaps++;
-			GL_Bind( gl_state.lightmap_textures + i);
+			GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures + i);
 
 			for ( surf = gl_lms.lightmap_surfaces[i]; surf != 0; surf = surf->lightmapchain )
 			{
@@ -372,7 +372,7 @@ void R_BlendLightmaps (void)
 	{
 		memset( gl_lms.allocated, 0, sizeof(gl_lms.allocated));
 
-		GL_Bind( gl_state.lightmap_textures+0 );
+		GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures+0 );
 
 		if (currentmodel == r_worldmodel)
 			c_visible_lightmaps++;
@@ -469,7 +469,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 
 	if (fa->flags & SURF_DRAWTURB)
 	{	
-		GL_Bind( image->texnum );
+		GL_MBind(GL_TEXTURE0, image->texnum);
 
 		// warp texture, no lightmaps
 		GL_TexEnv(GL_TEXTURE0, GL_MODULATE );
@@ -484,7 +484,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 	}
 	else
 	{
-		GL_Bind( image->texnum );
+		GL_MBind(GL_TEXTURE0, image->texnum);
 
 		/*if (image->detailtexnum) {
 			// Activate the second texture ID and bind the fog texture to it
@@ -558,7 +558,7 @@ dynamic:
 			R_BuildLightMap( fa, (void *)temp, smax*4 );
 			R_SetCacheState( fa );
 
-			GL_Bind( gl_state.lightmap_textures + fa->lightmaptexturenum );
+			GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures + fa->lightmaptexturenum);
 
 			qglTexSubImage2D( GL_TEXTURE_2D, 0,
 							  fa->light_s, fa->light_t, 
@@ -611,7 +611,7 @@ void R_DrawAlphaSurfaces (void)
 
 	for (s=r_alpha_surfaces ; s ; s=s->texturechain)
 	{
-		GL_Bind(s->texinfo->image->texnum);
+		GL_MBind(GL_TEXTURE0, s->texinfo->image->texnum);
 		c_brush_polys++;
 
 		if (s->texinfo->flags & SURF_TRANS33)
@@ -1397,7 +1397,7 @@ static void LM_UploadBlock( qboolean dynamic )
 		texture = gl_lms.current_lightmap_texture;
 	}
 
-	GL_Bind( gl_state.lightmap_textures + texture );
+	GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures + texture);
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -1667,7 +1667,7 @@ void GL_BeginBuildingLightmaps (void)
 	/*
 	** initialize the dynamic lightmap texture
 	*/
-	GL_Bind( gl_state.lightmap_textures + 0 );
+	GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures + 0);
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	qglTexImage2D( GL_TEXTURE_2D, 

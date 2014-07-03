@@ -609,7 +609,7 @@ void R_DrawSkyBox (void)
 		|| skymins[1][i] >= skymaxs[1][i])
 			continue;
 
-		GL_Bind (sky_images[skytexorder[i]]->texnum);
+		GL_MBind(GL_TEXTURE0, sky_images[skytexorder[i]]->texnum);
 
 		qglBegin (GL_QUADS);
 		MakeSkyVec (skymins[0][i], skymins[1][i], i);

@@ -696,7 +696,7 @@ void R_DrawAliasModel (entity_t *e)
 		skin = r_notexture;	// fallback...
 
 
-	GL_Bind(skin->texnum);
+	GL_MBind(GL_TEXTURE0, skin->texnum);
 
 	// draw it
 

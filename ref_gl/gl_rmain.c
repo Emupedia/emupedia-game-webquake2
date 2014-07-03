@@ -292,7 +292,7 @@ void R_DrawSpriteModel (entity_t *e)
 
 	qglColor4f( 1, 1, 1, alpha );
 
-    GL_Bind(currentmodel->skins[e->frame]->texnum);
+    GL_MBind(GL_TEXTURE0, currentmodel->skins[e->frame]->texnum);
 
 	GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 
@@ -484,7 +484,7 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
 	//byte			color[4];
 	vec4_t			colorf;
 
-    GL_Bind(r_particletexture->texnum);
+    GL_MBind(GL_TEXTURE0, r_particletexture->texnum);
 	qglDepthMask( GL_FALSE );		// no z buffering
 	qglEnable( GL_BLEND );
 	GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
@@ -1475,7 +1475,7 @@ void GL_UpdateAnisotropy (void)
 	{
 		if (glt->type != it_pic && glt->type != it_sky)
 		{
-			GL_Bind (glt->texnum);
+			GL_MBind(GL_TEXTURE0, glt->texnum);
 			qglTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, value);
 		}
 	}

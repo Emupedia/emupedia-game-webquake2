@@ -52,7 +52,7 @@ void Draw_InitLocal (void)
 	draw_chars = GL_FindImage ("pics/conchars.pcx", "pics/conchars.pcx", it_pic);
 	if (!draw_chars)
 		ri.Sys_Error (ERR_FATAL, "R1GL: Couldn't load conchars.pcx\n\nEither you aren't running Quake 2 from the correct directory or you are missing important files.");
-	GL_Bind( draw_chars->texnum );
+	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
@@ -85,7 +85,7 @@ void Draw_AddText (void)
 		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
-	GL_Bind (draw_chars->texnum);
+	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
 	qglBegin (GL_QUADS);
 
 	for (i = 0; i < drawcharsindex; i++)
@@ -172,7 +172,7 @@ void EXPORT Draw_Char (int x, int y, int num)
 	frowbottom = conchars_texlimits[row];
 	fcolbottom = conchars_texlimits[col];
 
-	GL_Bind (draw_chars->texnum);
+	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
 
 	if (draw_chars->has_alpha)
 	{
@@ -276,7 +276,7 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
-	GL_Bind (gl->texnum);
+	GL_MBind(GL_TEXTURE0, gl->texnum);
 	qglBegin (GL_QUADS);
 	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->tl);
 	qglVertex2f(x, y);
@@ -328,7 +328,7 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
-	GL_Bind (gl->texnum);
+	GL_MBind(GL_TEXTURE0, gl->texnum);
 
 	qglBegin (GL_QUADS);
 	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->tl);
@@ -374,7 +374,7 @@ void EXPORT Draw_TileClear (int x, int y, int w, int h, char *pic)
 		image = r_notexture;
 	}
 
-	GL_Bind (image->texnum);
+	GL_MBind(GL_TEXTURE0, image->texnum);
 	qglBegin (GL_QUADS);
 	qglMTexCoord2f(GL_TEXTURE0, x/64.0f, y/64.0f);
 	qglVertex2f(x, y);
@@ -481,7 +481,7 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 	int			row;
 	float		t;
 
-	GL_Bind (0);
+	GL_MBind(GL_TEXTURE0, 0);
 
 	if (rows<=256)
 	{
