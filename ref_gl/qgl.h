@@ -179,7 +179,6 @@ extern  void ( APIENTRY * qglPixelStorei )(GLenum pname, GLint param);
 extern  void ( APIENTRY * qglPixelTransferf )(GLenum pname, GLfloat param);
 extern  void ( APIENTRY * qglPixelTransferi )(GLenum pname, GLint param);
 extern  void ( APIENTRY * qglPixelZoom )(GLfloat xfactor, GLfloat yfactor);
-extern  void ( APIENTRY * qglPointSize )(GLfloat size);
 extern  void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 extern  void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
 extern  void ( APIENTRY * qglPolygonStipple )(const GLubyte *mask);
@@ -215,14 +214,7 @@ void qglVertex3f(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
-extern	void ( APIENTRY * qglPointParameterfEXT)( GLenum param, GLfloat value );
-extern	void ( APIENTRY * qglPointParameterfvEXT)( GLenum param, const GLfloat *value );
 extern	void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
-
-//r1ch
-extern	void ( APIENTRY * qglPointParameterfARB) (GLenum, GLfloat);
-extern	void ( APIENTRY * qglPointParameterfvARB) (GLenum, const GLfloat *);
-
 
 extern	void ( APIENTRY * qglActiveTextureARB)( GLenum );
 extern	void ( APIENTRY * qglClientActiveTextureARB)( GLenum );

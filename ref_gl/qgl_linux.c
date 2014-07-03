@@ -108,7 +108,6 @@ void ( APIENTRY * qglHint )(GLenum target, GLenum mode);
 GLboolean ( APIENTRY * qglIsEnabled )(GLenum cap);
 GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
 void ( APIENTRY * qglLineWidth )(GLfloat width);
-void ( APIENTRY * qglPointSize )(GLfloat size);
 void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
 void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
@@ -126,11 +125,6 @@ void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
 void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
-
-void ( APIENTRY * qglPointParameterfEXT)( GLenum param, GLfloat value );
-void ( APIENTRY * qglPointParameterfvEXT)( GLenum param, const GLfloat *value );
-void ( APIENTRY * qglPointParameterfARB) (GLenum, GLfloat);
-void ( APIENTRY * qglPointParameterfvARB) (GLenum, const GLfloat *);
 
 void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
 
@@ -172,7 +166,6 @@ static void ( APIENTRY * dllLoadIdentity )(void);
 static void ( APIENTRY * dllLoadMatrixf )(const GLfloat *m);
 static void ( APIENTRY * dllMultMatrixf )(const GLfloat *m);
 static void ( APIENTRY * dllOrtho )(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
-static void ( APIENTRY * dllPointSize )(GLfloat size);
 static void ( APIENTRY * dllPolygonMode )(GLenum face, GLenum mode);
 static void ( APIENTRY * dllPolygonOffset )(GLfloat factor, GLfloat units);
 static void ( APIENTRY * dllPopMatrix )(void);
@@ -243,7 +236,6 @@ void QGL_Shutdown( void )
 	qglIsEnabled                 = NULL;
 	qglIsTexture                 = NULL;
 	qglLineWidth                 = NULL;
-	qglPointSize                 = NULL;
 	qglPolygonMode               = NULL;
 	qglPolygonOffset             = NULL;
 	qglReadPixels                = NULL;
@@ -313,7 +305,6 @@ qboolean QGL_Init( const char *dllname )
 	qglIsEnabled                 = 	dllIsEnabled                 = glIsEnabled;
 	qglIsTexture                 = 	dllIsTexture                 = glIsTexture;
 	qglLineWidth                 = 	dllLineWidth                 = glLineWidth;
-	qglPointSize                 = 	dllPointSize                 = glPointSize;
 	qglPolygonMode               = 	dllPolygonMode               = glPolygonMode;
 	qglPolygonOffset             = 	dllPolygonOffset             = glPolygonOffset;
 	qglReadPixels                = 	dllReadPixels                = glReadPixels;
@@ -331,10 +322,6 @@ qboolean QGL_Init( const char *dllname )
 	qglTexSubImage2D             = 	dllTexSubImage2D             = glTexSubImage2D;
 	qglVertexPointer             = 	dllVertexPointer             = glVertexPointer;
 	qglViewport                  = 	dllViewport                  = glViewport;
-
-	qglPointParameterfEXT = NULL;
-	qglPointParameterfvEXT = NULL;
-	qglColorTableEXT = NULL;
 
 	return true;
 }
@@ -372,7 +359,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglIsEnabled                 = 	dllIsEnabled                 ;
 		qglIsTexture                 = 	dllIsTexture                 ;
 		qglLineWidth                 = 	dllLineWidth                 ;
-		qglPointSize                 = 	dllPointSize                 ;
 		qglPolygonMode               = 	dllPolygonMode               ;
 		qglPolygonOffset             = 	dllPolygonOffset             ;
 		qglReadPixels                = 	dllReadPixels                ;

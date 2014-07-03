@@ -426,7 +426,6 @@ typedef struct
 	const char *extensions_string;
 
 	//qboolean	r1gl_GL_SGIS_generate_mipmap;
-	qboolean	r1gl_GL_ARB_point_sprite;
 	qboolean	r1gl_GL_EXT_texture_filter_anisotropic;
 	qboolean	r1gl_GL_EXT_nv_multisample_filter_hint;
 	qboolean	r1gl_GL_ARB_texture_non_power_of_two;

@@ -544,112 +544,7 @@ R_DrawParticles
 */
 void R_DrawParticles (void)
 {
-	if (gl_config.r1gl_GL_ARB_point_sprite && FLOAT_NE_ZERO(gl_ext_point_sprite->value))
-	{
-		const float quadratic[] =  { 1.0f, 0.0f, 0.0005f };
-
-		GL_Bind (r_particletexture->texnum);
-
-		GL_TexEnv( GL_MODULATE );
-		qglDepthMask( GL_FALSE );
-		//qglDisable( GL_TEXTURE_2D );
-
-		qglEnable( GL_BLEND );
-		qglBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-		qglPointParameterfvARB( GL_POINT_DISTANCE_ATTENUATION_ARB, quadratic );
-
-		qglPointSize( gl_particle_size->value );
-
-		// The alpha of a point is calculated to allow the fading of points 
-		// instead of shrinking them past a defined threshold size. The threshold 
-		// is defined by GL_POINT_FADE_THRESHOLD_SIZE_ARB and is not clamped to 
-		// the minimum and maximum point sizes.
-		qglPointParameterfARB( GL_POINT_FADE_THRESHOLD_SIZE_ARB, gl_particle_max_size->value );
-
-		qglPointParameterfARB( GL_POINT_SIZE_MIN_ARB, gl_particle_min_size->value );
-		qglPointParameterfARB( GL_POINT_SIZE_MAX_ARB, gl_particle_max_size->value );
-
-		// Specify point sprite texture coordinate replacement mode for each texture unit
-		qglTexEnvf( GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE );
-
-		//
-		// Render point sprites...
-		//
-
-		qglEnable( GL_POINT_SPRITE_ARB );
-		qglBegin( GL_POINTS );
-		{
-			const particle_t *p;
-			int i;
-			//unsigned char color[4];
-			vec4_t	colorf;
-
-			for ( i = 0, p = r_newrefdef.particles; i < r_newrefdef.num_particles; i++, p++ )
-			{
-				//*(int *)color = d_8to24table[p->color];
-				//color[3] = (byte)Q_ftol(p->alpha*255);
-
-				//qglColor4ubv( color );
-				
-				FastVectorCopy (d_8to24float[p->color], colorf);
-				colorf[3] = p->alpha;
-				qglColor4f(colorf[0], colorf[1], colorf[2], colorf[3]);
-				
-				qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
-			}
-		}
-		qglEnd();
-
-		qglDisable( GL_POINT_SPRITE_ARB );
-		qglDisable( GL_BLEND );
-		qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
-		qglDepthMask( GL_TRUE );
-		qglEnable( GL_TEXTURE_2D );
-		qglDepthMask( 1 );		// back to normal Z buffering
-		GL_TexEnv( GL_REPLACE );
-	}
-	else if ( qglPointParameterfEXT && FLOAT_NE_ZERO(gl_ext_pointparameters->value))
-	{
-		int i;
-		vec4_t			colorf;
-		//unsigned char color[4];
-		const particle_t *p;
-
-		qglDepthMask( GL_FALSE );
-		qglEnable( GL_BLEND );
-		qglDisable( GL_TEXTURE_2D );
-
-		qglPointSize( gl_particle_size->value );
-
-		qglBegin( GL_POINTS );
-
-		for ( i = 0, p = r_newrefdef.particles; i < r_newrefdef.num_particles; i++, p++ )
-		{
-			//*(vec4_t **)&colorf = *(vec4_t *)&d_8to24float[p->color];
-			//memcpy (colorf, d_8to24float[p->color], sizeof(colorf));
-			FastVectorCopy (d_8to24float[p->color], colorf);
-			colorf[3] = p->alpha;
-
-			//*(int *)color = d_8to24table[p->color];
-			//color[3] = (byte)Q_ftol (p->alpha * 255);
-			//qglColor4ubv( color );
-			qglColor4f(colorf[0], colorf[1], colorf[2], colorf[3]);
-			qglVertex3f(p->origin[0], p->origin[1], p->origin[2]);
-		}
-
-		qglEnd();
-
-		qglDisable( GL_BLEND );
-		qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
-		qglDepthMask( GL_TRUE );
-		qglEnable( GL_TEXTURE_2D );
-
-	}
-	else
-	{
 		GL_DrawParticles( r_newrefdef.num_particles, r_newrefdef.particles );
-	}
 }
 
 /*
@@ -1428,27 +1323,7 @@ retryQGL:
 	}
 #endif
 
-	if ( strstr( gl_config.extensions_string, "GL_EXT_point_parameters" ) )
-	{
-			gl_ext_pointparameters = ri.Cvar_Get( "gl_ext_pointparameters", "1", CVAR_ARCHIVE );
-
-		if ( FLOAT_NE_ZERO(gl_ext_pointparameters->value) )
-		{
-			qglPointParameterfEXT = ( void (APIENTRY *)( GLenum, GLfloat ) ) qwglGetProcAddress( "glPointParameterfEXT" );
-			qglPointParameterfvEXT = ( void (APIENTRY *)( GLenum, const GLfloat * ) ) qwglGetProcAddress( "glPointParameterfvEXT" );
-			ri.Con_Printf( PRINT_ALL, "...using GL_EXT_point_parameters\n" );
-		}
-		else
-		{
-			ri.Con_Printf( PRINT_ALL, "...ignoring GL_EXT_point_parameters\n" );
-		}
-	}
-	else
-	{
-		ri.Con_Printf( PRINT_ALL, "...GL_EXT_point_parameters not found\n" );
-	}
-
-	/*if ( !qglColorTableEXT &&
+    /*if ( !qglColorTableEXT &&
 		strstr( gl_config.extensions_string, "GL_EXT_paletted_texture" ) && 
 		strstr( gl_config.extensions_string, "GL_EXT_shared_texture_palette" ) )
 	{
@@ -1500,28 +1375,6 @@ retryQGL:
 	} else {
 		ri.Con_Printf( PRINT_ALL, "...GL_SGIS_generate_mipmap not found\n" );
 	}*/
-
-	gl_config.r1gl_GL_ARB_point_sprite = false;
-	if ( strstr( gl_config.extensions_string, "GL_ARB_point_sprite" ) )
-	{
-		//if ( gl_ext_point_sprite->value ) {
-			qglPointParameterfARB = (void (__stdcall *)(GLenum,GLfloat))qwglGetProcAddress("glPointParameterfARB");
-			qglPointParameterfvARB = (void (__stdcall *)(GLenum,const GLfloat *))qwglGetProcAddress("glPointParameterfvARB");
-			if (!qglPointParameterfARB)
-			{
-				ri.Con_Printf( PRINT_ALL, "!!! qglGetProcAddress for GL_ARB_point_sprite failed\n" );
-			}
-			else
-			{
-				ri.Con_Printf( PRINT_ALL, "...using GL_ARB_point_sprite\n" );
-				gl_config.r1gl_GL_ARB_point_sprite = true;
-			}
-		//} else {
-		//	ri.Con_Printf( PRINT_ALL, "...ignoring GL_ARB_point_sprite\n" );		
-		//}
-	} else {
-		ri.Con_Printf( PRINT_ALL, "...GL_ARB_point_sprite not found\n" );
-	}
 
 	gl_config.r1gl_GL_EXT_texture_filter_anisotropic = false;
 	if ( strstr( gl_config.extensions_string, "GL_EXT_texture_filter_anisotropic" ) )
