@@ -309,54 +309,6 @@ qboolean QGL_Init( const char *dllname )
 	return true;
 }
 
-void GLimp_EnableLogging( qboolean enable )
-{
-		qglAlphaFunc                 = dllAlphaFunc;
-		qglBindTexture               = dllBindTexture;
-		qglBlendFunc                 = dllBlendFunc;
-		qglClear                     = dllClear;
-		qglClearColor                = dllClearColor;
-		qglClearDepth                = dllClearDepth;
-		qglClearStencil              = dllClearStencil;
-		qglColorMask                 = dllColorMask;
-		qglColorPointer              = dllColorPointer;
-		qglCullFace                  = dllCullFace;
-		qglDeleteTextures            = dllDeleteTextures ;
-		qglDepthFunc                 = dllDepthFunc ;
-		qglDepthMask                 = dllDepthMask ;
-		qglDepthRange                = dllDepthRange ;
-		qglDisable                   = dllDisable ;
-		qglDrawArrays                = dllDrawArrays ;
-		qglDrawElements              = dllDrawElements ;
-		qglEnable                    = 	dllEnable                    ;
-		qglFinish                    = 	dllFinish                    ;
-		qglFlush                     = 	dllFlush                     ;
-		qglFrontFace                 = 	dllFrontFace                 ;
-		qglGenTextures               = 	dllGenTextures               ;
-		qglGetError                  = 	dllGetError                  ;
-		qglGetString                 = 	dllGetString                 ;
-		qglHint                      = 	dllHint                      ;
-		qglIsEnabled                 = 	dllIsEnabled                 ;
-		qglIsTexture                 = 	dllIsTexture                 ;
-		qglLineWidth                 = 	dllLineWidth                 ;
-		qglPolygonMode               = 	dllPolygonMode               ;
-		qglPolygonOffset             = 	dllPolygonOffset             ;
-		qglReadPixels                = 	dllReadPixels                ;
-		qglScissor                   = 	dllScissor                   ;
-		qglShadeModel                = 	dllShadeModel                ;
-		qglStencilFunc               = 	dllStencilFunc               ;
-		qglStencilMask               = 	dllStencilMask               ;
-		qglStencilOp                 = 	dllStencilOp                 ;
-		qglTexCoordPointer           = 	dllTexCoordPointer           ;
-		qglTexEnvi                   = 	dllTexEnvi                   ;
-		qglTexImage2D                = 	dllTexImage2D                ;
-		qglTexParameterf             = 	dllTexParameterf             ;
-		qglTexParameteri             = 	dllTexParameteri             ;
-		qglTexSubImage2D             = 	dllTexSubImage2D             ;
-		qglVertexPointer             = 	dllVertexPointer             ;
-		qglViewport                  = 	dllViewport                  ;
-}
-
 
 // add a new vertex to vertices array
 // resize if necessary

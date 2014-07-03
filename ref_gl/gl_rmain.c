@@ -138,7 +138,6 @@ cvar_t	*gl_forceheight;
 
 cvar_t	*vid_topmost;
 
-//cvar_t	*gl_log;
 cvar_t	*gl_bitdepth;
 cvar_t  *gl_driver;
 //cvar_t	*gl_lightmap;
@@ -1011,7 +1010,6 @@ void R_Register( void )
 	gl_particle_att_c = ri.Cvar_Get( "gl_particle_att_c", "0.01", CVAR_ARCHIVE );
 
 	gl_modulate = ri.Cvar_Get ("gl_modulate", "2", CVAR_ARCHIVE );
-	//gl_log = ri.Cvar_Get( "gl_log", "0", 0 );
 	gl_bitdepth = ri.Cvar_Get( "gl_bitdepth", "0", 0 );
 	gl_mode = ri.Cvar_Get( "gl_mode", "3", CVAR_ARCHIVE );
 	//gl_lightmap = ri.Cvar_Get ("gl_lightmap", "0", 0);
@@ -1503,17 +1501,6 @@ void EXPORT R_BeginFrame( float camera_separation )
 		ref = ri.Cvar_Get ("vid_ref", "r1gl", 0);
 		ref->modified = true;
 	}
-
-	/*if ( gl_log->modified )
-	{
-		GLimp_EnableLogging( gl_log->value );
-		gl_log->modified = false;
-	}
-
-	if ( gl_log->value )
-	{
-		GLimp_LogNewFrame();
-	}*/
 
 	if (gl_ext_nv_multisample_filter_hint->modified)
 	{
