@@ -126,8 +126,6 @@ void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, 
 void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
-void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
-
 static void ( APIENTRY * dllAlphaFunc )(GLenum func, GLclampf ref);
 static void ( APIENTRY * dllBegin )(GLenum mode);
 static void ( APIENTRY * dllBindTexture )(GLenum target, GLuint texture);

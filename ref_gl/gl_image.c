@@ -98,28 +98,6 @@ void EmptyImageCache (void)
 
 #endif
 
-/*void GL_SetTexturePalette( unsigned palette[256] )
-{
-	int i;
-	unsigned char temptable[768];
-
-	if ( qglColorTableEXT && gl_ext_palettedtexture->value )
-	{
-		for ( i = 0; i < 256; i++ )
-		{
-			temptable[i*3+0] = ( palette[i] >> 0 ) & 0xff;
-			temptable[i*3+1] = ( palette[i] >> 8 ) & 0xff;
-			temptable[i*3+2] = ( palette[i] >> 16 ) & 0xff;
-		}
-
-		qglColorTableEXT( GL_SHARED_TEXTURE_PALETTE_EXT,
-						   GL_RGB,
-						   256,
-						   GL_RGB,
-						   GL_UNSIGNED_BYTE,
-						   temptable );
-	}
-}*/
 
 void GL_EnableMultitexture( qboolean enable )
 {
@@ -3408,13 +3386,6 @@ void	GL_InitImages (void)
 	gl_state.inverse_intensity = 1 / intensity->value;
 
 	Draw_GetPalette ();
-
-	if ( qglColorTableEXT )
-	{
-		ri.FS_LoadFile( "pics/16to8.dat", (void *)&gl_state.d_16to8table );
-		if ( !gl_state.d_16to8table )
-			ri.Sys_Error( ERR_FATAL, "Couldn't load pics/16to8.pcx");
-	}
 
 	for ( i = 0; i < 256; i++ )
 	{

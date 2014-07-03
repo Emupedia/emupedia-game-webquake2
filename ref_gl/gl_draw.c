@@ -495,8 +495,6 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 	}
 	t = rows*hscale / 256;
 
-	if ( !qglColorTableEXT )
-	{
 		unsigned *dest;
 
 		for (i=0 ; i<trows ; i++)
@@ -516,36 +514,6 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 		}
 
 		qglTexImage2D (GL_TEXTURE_2D, 0, gl_tex_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, image32);
-	}
-	else
-	{
-		unsigned char *dest;
-
-		for (i=0 ; i<trows ; i++)
-		{
-			row = (int)(i*hscale);
-			if (row > rows)
-				break;
-			source = data + cols*row;
-			dest = &image8[i*256];
-			fracstep = cols*0x10000/256;
-			frac = fracstep >> 1;
-			for (j=0 ; j<256 ; j++)
-			{
-				dest[j] = source[frac>>16];
-				frac += fracstep;
-			}
-		}
-
-		qglTexImage2D( GL_TEXTURE_2D, 
-			           0, 
-					   GL_COLOR_INDEX8_EXT, 
-					   256, 256, 
-					   0, 
-					   GL_COLOR_INDEX, 
-					   GL_UNSIGNED_BYTE, 
-					   image8 );
-	}
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -214,8 +214,6 @@ void qglVertex3f(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
-extern	void ( APIENTRY * qglColorTableEXT)( int, int, int, int, int, const void * );
-
 extern	void ( APIENTRY * qglActiveTextureARB)( GLenum );
 extern	void ( APIENTRY * qglClientActiveTextureARB)( GLenum );
 
