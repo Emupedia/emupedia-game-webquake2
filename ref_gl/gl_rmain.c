@@ -33,8 +33,6 @@ viddef_t	vid;
 refimport_t		ri;
 refimportnew_t	rx;
 
-unsigned int GL_TEXTURE0, GL_TEXTURE1;
-
 model_t		*r_worldmodel;
 
 double		gldepthmin, gldepthmax;
@@ -1330,8 +1328,6 @@ retryQGL:
 			ri.Con_Printf( PRINT_ALL, "...using GL_ARB_multitexture\n" );
 			qglActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glActiveTextureARB" );
 			qglClientActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glClientActiveTextureARB" );
-			GL_TEXTURE0 = GL_TEXTURE0_ARB;
-			GL_TEXTURE1 = GL_TEXTURE1_ARB;
 		}
 		else
 		{

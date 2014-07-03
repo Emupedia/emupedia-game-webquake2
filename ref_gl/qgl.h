@@ -131,22 +131,5 @@ extern void *qwglGetProcAddress(const char *symbol);
 
 #endif // linux
 
-/*
-** extension constants
-*/
-#define GL_POINT_SIZE_MIN_EXT				0x8126
-#define GL_POINT_SIZE_MAX_EXT				0x8127
-#define GL_POINT_FADE_THRESHOLD_SIZE_EXT	0x8128
-#define GL_DISTANCE_ATTENUATION_EXT			0x8129
-
-#ifdef GL_TEXTURE0
-#undef GL_TEXTURE0
-#endif
-
-#ifdef GL_TEXTURE1
-#undef GL_TEXTURE1
-#endif
-
-extern unsigned int GL_TEXTURE0, GL_TEXTURE1;
 
 #endif
