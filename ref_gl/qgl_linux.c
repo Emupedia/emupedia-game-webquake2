@@ -18,6 +18,20 @@
 #include <SDL.h>
 
 
+#ifdef EMSCRIPTEN
+
+
+// these are here only so we can compile
+// TODO: use an actual opengl loader
+void glBindBuffer(GLenum target, GLuint buffer);
+void glBufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
+void glDeleteBuffers(GLsizei n, const GLuint *buffers);
+void glGenBuffers(GLsizei n, GLuint *buffers);
+
+
+#endif // EMSCRIPTEN
+
+
 typedef struct Vertex {
 	float pos[3];
 	uint32_t color;
@@ -47,6 +61,8 @@ typedef struct QGLState {
 
 	int mvMatrixTop, projMatrixTop;
 	bool mvMatrixDirty, projMatrixDirty;
+
+	GLuint vbo;
 } QGLState;
 
 
@@ -191,6 +207,11 @@ static void ( APIENTRY * dllViewport )(GLint x, GLint y, GLsizei width, GLsizei 
 */
 void QGL_Shutdown( void )
 {
+	if (qglState->vbo != 0) {
+		glDeleteBuffers(1, &qglState->vbo);
+		qglState->vbo = 0;
+	}
+
 	qglAlphaFunc                 = NULL;
 	qglBindTexture               = NULL;
 	qglBlendFunc                 = NULL;
@@ -453,21 +474,29 @@ void qglBegin(GLenum mode) {
 
 
 void qglEnd(void) {
-	qglVertexPointer(3, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].pos[0]);
-	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), &qglState->vertices[0].color);
+	if (qglState->vbo == 0) {
+		// can't be called in QGL_Init, GL context doesn't exist there
+		glGenBuffers(1, &qglState->vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, qglState->vbo);
+	}
+
+	glBufferData(GL_ARRAY_BUFFER, qglState->usedVertices * sizeof(Vertex), &qglState->vertices[0], GL_DYNAMIC_DRAW);
+
+	qglVertexPointer(3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, pos));
+	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), offsetof(Vertex, color));
 
 	if (qglState->activeTexture == 0) {
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex0));
 
 		glClientActiveTexture(GL_TEXTURE1);
 		qglState->activeTexture = 1;
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex1));
 	} else {
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex1[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex1));
 
 		glClientActiveTexture(GL_TEXTURE0);
 		qglState->activeTexture = 0;
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &qglState->vertices[0].tex0[0]);
+		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, tex0));
 	}
 
 	if (qglState->mvMatrixDirty) {
