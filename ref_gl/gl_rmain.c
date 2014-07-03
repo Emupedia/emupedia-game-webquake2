@@ -1319,23 +1319,6 @@ retryQGL:
 	}
 #endif
 
-	if ( strstr( gl_config.extensions_string, "GL_ARB_multitexture" ) )
-	{
-		if ( FLOAT_NE_ZERO(gl_ext_multitexture->value) )
-		{
-			ri.Con_Printf( PRINT_ALL, "...using GL_ARB_multitexture\n" );
-			qglActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glActiveTextureARB" );
-		}
-		else
-		{
-			ri.Con_Printf( PRINT_ALL, "...ignoring GL_ARB_multitexture\n" );
-		}
-	}
-	else
-	{
-		ri.Con_Printf( PRINT_ALL, "...GL_ARB_multitexture not found\n" );
-	}
-
 	ri.Con_Printf( PRINT_ALL, "Initializing r1gl extensions:\n" );
 
 	/*gl_config.r1gl_GL_SGIS_generate_mipmap = false;

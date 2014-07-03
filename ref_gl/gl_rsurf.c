@@ -650,25 +650,6 @@ void DrawTextureChains (void)
 
 //	GL_TexEnv( GL_REPLACE );
 
-	if ( !qglActiveTextureARB )
-	{
-		for ( i = 0, image=gltextures ; i<numgltextures ; i++,image++)
-		{
-			if (!image->registration_sequence)
-				continue;
-			s = image->texturechain;
-			if (!s)
-				continue;
-			c_visible_textures++;
-
-			for ( ; s ; s=s->texturechain)
-				R_RenderBrushPoly (s);
-
-			image->texturechain = NULL;
-		}
-	}
-	else
-	{
 		for ( i = 0, image=gltextures ; i<numgltextures ; i++,image++)
 		{
 			if (!image->registration_sequence)
@@ -702,7 +683,6 @@ void DrawTextureChains (void)
 			image->texturechain = NULL;
 		}
 //		GL_EnableMultitexture( true );
-	}
 
 	GL_TexEnv(GL_TEXTURE0, GL_REPLACE );
 }

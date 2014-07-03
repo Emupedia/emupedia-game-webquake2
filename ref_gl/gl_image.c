@@ -101,9 +101,6 @@ void EmptyImageCache (void)
 
 void GL_EnableMultitexture( qboolean enable )
 {
-	if ( !qglActiveTextureARB )
-		return;
-
 	GL_TexEnv(GL_TEXTURE1, GL_REPLACE);
 
 	if ( enable )
@@ -118,9 +115,6 @@ void GL_SelectTexture( GLenum texture )
 {
 	unsigned tmu;
 
-	if (!qglActiveTextureARB)
-		return;
-
 	if ( texture == GL_TEXTURE0 )
 	{
 		tmu = 0;
@@ -133,10 +127,7 @@ void GL_SelectTexture( GLenum texture )
 	gl_state.currenttmu = tmu;
 	gl_state.currenttarget = texture;
 
-	if ( qglActiveTextureARB )
-	{
-		qglActiveTextureARB( texture );
-	}
+	qglActiveTexture(texture);
 }
 
 void GL_TexEnv(GLenum target, GLenum mode)

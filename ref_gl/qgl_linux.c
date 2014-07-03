@@ -23,6 +23,7 @@
 
 // these are here only so we can compile
 // TODO: use an actual opengl loader
+void glActiveTexture(GLenum tex);
 void glBindBuffer(GLenum target, GLuint buffer);
 void glBufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
 void glDeleteBuffers(GLsizei n, const GLuint *buffers);
@@ -73,8 +74,6 @@ void * qwglGetProcAddress(const char *procname)
 {
 	return SDL_GL_GetProcAddress(procname);
 }
-
-void ( APIENTRY * qglActiveTextureARB) ( GLenum );
 
 void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
 void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
@@ -660,4 +659,9 @@ void qglGetFloatv(GLenum pname, GLfloat *params) {
 	assert(pname == GL_MODELVIEW_MATRIX);
 
 	memcpy(params, qglState->mvMatrices[qglState->mvMatrixTop], sizeof(float) * 16);
+}
+
+
+void qglActiveTexture(GLenum tex) {
+	glActiveTexture(tex);
 }
