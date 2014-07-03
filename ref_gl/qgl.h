@@ -119,7 +119,6 @@ extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei st
 extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
 extern	void ( APIENTRY * qglActiveTextureARB)( GLenum );
-extern	void ( APIENTRY * qglClientActiveTextureARB)( GLenum );
 
 
 #ifdef __linux__

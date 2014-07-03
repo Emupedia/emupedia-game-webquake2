@@ -1325,7 +1325,6 @@ retryQGL:
 		{
 			ri.Con_Printf( PRINT_ALL, "...using GL_ARB_multitexture\n" );
 			qglActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glActiveTextureARB" );
-			qglClientActiveTextureARB = ( void (__stdcall *)(GLenum) ) qwglGetProcAddress( "glClientActiveTextureARB" );
 		}
 		else
 		{

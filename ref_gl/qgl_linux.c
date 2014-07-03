@@ -75,7 +75,6 @@ void * qwglGetProcAddress(const char *procname)
 }
 
 void ( APIENTRY * qglActiveTextureARB) ( GLenum );
-void ( APIENTRY * qglClientActiveTextureARB) ( GLenum );
 
 void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
 void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);

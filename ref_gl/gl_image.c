@@ -139,8 +139,6 @@ void GL_SelectTexture( GLenum texture )
 	if ( qglActiveTextureARB )
 	{
 		qglActiveTextureARB( texture );
-
-		qglClientActiveTextureARB( texture );
 	}
 }
 
