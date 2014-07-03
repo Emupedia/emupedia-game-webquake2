@@ -111,10 +111,10 @@ void GL_EnableMultitexture( qboolean enable )
 	else
 		qglDisable( GL_TEXTURE_2D );	
 
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE1, GL_REPLACE);
 
 	GL_SelectTexture( GL_TEXTURE0 );
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 }
 
 void GL_SelectTexture( GLenum texture )
@@ -142,8 +142,12 @@ void GL_SelectTexture( GLenum texture )
 	}
 }
 
-void GL_TexEnv( GLenum mode )
+void GL_TexEnv(GLenum target, GLenum mode)
 {
+	if (gl_state.currenttarget != target) {
+		GL_SelectTexture(target);
+	}
+
 	static GLenum lastmodes[2] = { 0xFFFFFFFF, 0xFFFFFFFF };
 
 	if ( mode != lastmodes[gl_state.currenttmu] )

@@ -472,13 +472,13 @@ void R_RenderBrushPoly (msurface_t *fa)
 		GL_Bind( image->texnum );
 
 		// warp texture, no lightmaps
-		GL_TexEnv( GL_MODULATE );
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE );
 		qglColor4f( gl_state.inverse_intensity, 
 			        gl_state.inverse_intensity,
 					gl_state.inverse_intensity,
 					1.0F );
 		EmitWaterPolys (fa);
-		GL_TexEnv( GL_REPLACE );
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE );
 
 		return;
 	}
@@ -511,7 +511,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 			qglMatrixMode(GL_MODELVIEW);
 		}*/
 
-		GL_TexEnv( GL_REPLACE );
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE );
 	}
 
 //======
@@ -603,7 +603,7 @@ void R_DrawAlphaSurfaces (void)
     qglLoadMatrixf (r_world_matrix);
 
 	qglEnable (GL_BLEND);
-	GL_TexEnv( GL_MODULATE );
+	GL_TexEnv(GL_TEXTURE0, GL_MODULATE );
 
 	// the textures are prescaled up for a better lighting range,
 	// so scale it back down
@@ -628,7 +628,7 @@ void R_DrawAlphaSurfaces (void)
 			DrawGLPoly (s->polys);
 	}
 
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE );
 	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 	qglDisable (GL_BLEND);
 
@@ -704,7 +704,7 @@ void DrawTextureChains (void)
 //		GL_EnableMultitexture( true );
 	}
 
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE );
 }
 
 
@@ -909,7 +909,7 @@ void R_DrawInlineBModel (void)
 	{
 		qglEnable (GL_BLEND);
 		qglColor4f (1,1,1,0.25);
-		GL_TexEnv( GL_MODULATE );
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE );
 	}
 
 	//
@@ -948,7 +948,7 @@ void R_DrawInlineBModel (void)
 	{
 		qglDisable (GL_BLEND);
 		qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
-		GL_TexEnv( GL_REPLACE );
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE );
 	}
 }
 
@@ -1013,13 +1013,13 @@ e->angles[2] = -e->angles[2];	// stupid quake bug
 
 	GL_EnableMultitexture( true );
 	GL_SelectTexture( GL_TEXTURE0);
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 	GL_SelectTexture( GL_TEXTURE1);
 	
 	//GL_TexEnv( GL_MODULATE );
 	if (FLOAT_EQ_ZERO(gl_overbrights->value) || gl_overbrights->modified)
 	{
-		GL_TexEnv( GL_MODULATE );
+		GL_TexEnv(GL_TEXTURE1, GL_MODULATE);
 	}
 	else
 	{
@@ -1027,7 +1027,7 @@ e->angles[2] = -e->angles[2];	// stupid quake bug
 		qglTexEnvi (GL_TEXTURE_ENV,	GL_COMBINE_RGB_ARB,		GL_MODULATE);
 		qglTexEnvi (GL_TEXTURE_ENV,	GL_COMBINE_ALPHA_ARB,	GL_MODULATE);
 		qglTexEnvi (GL_TEXTURE_ENV,	GL_RGB_SCALE_ARB,		2);
-		GL_TexEnv (GL_COMBINE_ARB);
+		GL_TexEnv(GL_TEXTURE1, GL_COMBINE_ARB);
 	}
 
 	R_DrawInlineBModel ();

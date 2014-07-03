@@ -82,7 +82,7 @@ void Draw_AddText (void)
 
 		qglEnable(GL_BLEND);
 
-		GL_TexEnv(GL_MODULATE);
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
 	GL_Bind (draw_chars->texnum);
@@ -117,7 +117,7 @@ void Draw_AddText (void)
 
 	if (draw_chars->has_alpha)
 	{
-		GL_TexEnv (GL_REPLACE);
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 		
 		qglEnable(GL_ALPHA_TEST);
 
@@ -180,7 +180,7 @@ void EXPORT Draw_Char (int x, int y, int num)
 
 		qglEnable(GL_BLEND);
 
-		GL_TexEnv(GL_MODULATE);
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
 	qglBegin (GL_QUADS);
@@ -196,7 +196,7 @@ void EXPORT Draw_Char (int x, int y, int num)
 
 	if (draw_chars->has_alpha)
 	{
-		GL_TexEnv (GL_REPLACE);
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 		
 		qglEnable(GL_ALPHA_TEST);
 
@@ -273,7 +273,7 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 
 		qglEnable(GL_BLEND);
 
-		GL_TexEnv(GL_MODULATE);
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
 	GL_Bind (gl->texnum);
@@ -290,7 +290,7 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 
 	if (gl->has_alpha)
 	{
-		GL_TexEnv (GL_REPLACE);
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 		
 		qglEnable(GL_ALPHA_TEST);
 
@@ -325,7 +325,7 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 
 		qglEnable(GL_BLEND);
 
-		GL_TexEnv(GL_MODULATE);
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
 	GL_Bind (gl->texnum);
@@ -343,7 +343,7 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 
 	if (gl->has_alpha)
 	{
-		GL_TexEnv (GL_REPLACE);
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 		qglEnable(GL_ALPHA_TEST);
 		qglDisable(GL_BLEND);
 	}

@@ -294,7 +294,7 @@ void R_DrawSpriteModel (entity_t *e)
 
     GL_Bind(currentmodel->skins[e->frame]->texnum);
 
-	GL_TexEnv( GL_MODULATE );
+	GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 
 	if ( alpha == 1.0 )
 		qglEnable (GL_ALPHA_TEST);
@@ -326,7 +326,7 @@ void R_DrawSpriteModel (entity_t *e)
 	qglEnd ();
 
 	qglDisable (GL_ALPHA_TEST);
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 
 	if ( alpha != 1.0F )
 		qglDisable( GL_BLEND );
@@ -487,7 +487,7 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
     GL_Bind(r_particletexture->texnum);
 	qglDepthMask( GL_FALSE );		// no z buffering
 	qglEnable( GL_BLEND );
-	GL_TexEnv( GL_MODULATE );
+	GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	qglBegin( GL_TRIANGLES );
 
 	VectorScale (vup, 1.5f, up);
@@ -531,7 +531,7 @@ void GL_DrawParticles( int num_particles, const particle_t particles[])
 	qglDisable( GL_BLEND );
 	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 	qglDepthMask( 1 );		// back to normal Z buffering
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 }
 
 /*

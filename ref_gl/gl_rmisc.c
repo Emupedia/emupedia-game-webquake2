@@ -355,7 +355,7 @@ void GL_SetDefaultState( void )
 
 	qglBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GL_TexEnv( GL_REPLACE );
+	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 
 	gl_swapinterval->modified = true;
 	GL_UpdateSwapInterval();

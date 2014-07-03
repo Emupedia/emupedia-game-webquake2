@@ -311,7 +311,7 @@ extern	float	r_world_matrix[16];
 void R_TranslatePlayerSkin (int playernum);
 void GL_Bind (unsigned int texnum);
 void GL_MBind( GLenum target, unsigned int texnum );
-void GL_TexEnv( GLenum value );
+void GL_TexEnv( GLenum target, GLenum value );
 void GL_EnableMultitexture( qboolean enable );
 void GL_SelectTexture( GLenum );
 
