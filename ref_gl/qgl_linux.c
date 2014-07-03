@@ -101,7 +101,7 @@ void ( APIENTRY * qglFrontFace )(GLenum mode);
 void ( APIENTRY * qglGenTextures )(GLsizei n, GLuint *textures);
 void ( APIENTRY * qglGetBooleanv )(GLenum pname, GLboolean *params);
 GLenum ( APIENTRY * qglGetError )(void);
-void ( APIENTRY * qglGetFloatv )(GLenum pname, GLfloat *params);
+void qglGetFloatv(GLenum pname, GLfloat *params);
 void ( APIENTRY * qglGetIntegerv )(GLenum pname, GLint *params);
 const GLubyte * ( APIENTRY * qglGetString )(GLenum name);
 void ( APIENTRY * qglHint )(GLenum target, GLenum mode);
@@ -153,7 +153,6 @@ static void ( APIENTRY * dllFrustum )(GLdouble left, GLdouble right, GLdouble bo
 static void ( APIENTRY * dllGenTextures )(GLsizei n, GLuint *textures);
 static void ( APIENTRY * dllGetBooleanv )(GLenum pname, GLboolean *params);
 GLenum ( APIENTRY * dllGetError )(void);
-static void ( APIENTRY * dllGetFloatv )(GLenum pname, GLfloat *params);
 static void ( APIENTRY * dllGetIntegerv )(GLenum pname, GLint *params);
 const GLubyte * ( APIENTRY * dllGetString )(GLenum name);
 static void ( APIENTRY * dllHint )(GLenum target, GLenum mode);
@@ -227,7 +226,6 @@ void QGL_Shutdown( void )
 	qglGenTextures               = NULL;
 	qglGetBooleanv               = NULL;
 	qglGetError                  = NULL;
-	qglGetFloatv                 = NULL;
 	qglGetIntegerv               = NULL;
 	qglGetString                 = NULL;
 	qglHint                      = NULL;
@@ -296,7 +294,6 @@ qboolean QGL_Init( const char *dllname )
 	qglGenTextures               = 	dllGenTextures               = glGenTextures;
 	qglGetBooleanv               = 	dllGetBooleanv               = glGetBooleanv;
 	qglGetError                  = 	dllGetError                  = glGetError;
-	qglGetFloatv                 = 	dllGetFloatv                 = glGetFloatv;
 	qglGetIntegerv               = 	dllGetIntegerv               = glGetIntegerv;
 	qglGetString                 = 	dllGetString                 = glGetString;
 	qglHint                      = 	dllHint                      = glHint;
@@ -350,7 +347,6 @@ void GLimp_EnableLogging( qboolean enable )
 		qglGenTextures               = 	dllGenTextures               ;
 		qglGetBooleanv               = 	dllGetBooleanv               ;
 		qglGetError                  = 	dllGetError                  ;
-		qglGetFloatv                 = 	dllGetFloatv                 ;
 		qglGetIntegerv               = 	dllGetIntegerv               ;
 		qglGetString                 = 	dllGetString                 ;
 		qglHint                      = 	dllHint                      ;
@@ -723,3 +719,9 @@ void qglPushMatrix(void) {
 	}
 }
 
+
+void qglGetFloatv(GLenum pname, GLfloat *params) {
+	assert(pname == GL_MODELVIEW_MATRIX);
+
+	memcpy(params, qglState->mvMatrices[qglState->mvMatrixTop], sizeof(float) * 16);
+}
