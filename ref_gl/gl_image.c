@@ -104,16 +104,13 @@ void GL_EnableMultitexture( qboolean enable )
 	if ( !qglActiveTextureARB )
 		return;
 
-	GL_SelectTexture( GL_TEXTURE1 );
+	GL_TexEnv(GL_TEXTURE1, GL_REPLACE);
 
 	if ( enable )
 		qglEnable( GL_TEXTURE_2D );
 	else
 		qglDisable( GL_TEXTURE_2D );	
 
-	GL_TexEnv(GL_TEXTURE1, GL_REPLACE);
-
-	GL_SelectTexture( GL_TEXTURE0 );
 	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 }
 
