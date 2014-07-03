@@ -201,11 +201,11 @@ void GL_MBind( GLenum target, unsigned int texnum )
 
 typedef struct
 {
-	char *name;
+	const char *name;
 	int	minimize, maximize;
 } glmode_t;
 
-glmode_t modes[] =
+const glmode_t modes[] =
 {
 	{"GL_NEAREST",					GL_NEAREST,					GL_NEAREST},
 	{"GL_LINEAR",					GL_LINEAR,					GL_LINEAR},
@@ -225,7 +225,7 @@ typedef struct
 	int mode;
 } gltmode_t;
 
-gltmode_t gl_alpha_modes[] = {
+const gltmode_t gl_alpha_modes[] = {
 	{"default", 4},
 	{"GL_RGBA", GL_RGBA},
 	{"GL_RGBA8", GL_RGBA8},
@@ -236,7 +236,7 @@ gltmode_t gl_alpha_modes[] = {
 
 #define NUM_GL_ALPHA_MODES (sizeof(gl_alpha_modes) / sizeof (gltmode_t))
 
-gltmode_t gl_solid_modes[] = {
+const gltmode_t gl_solid_modes[] = {
 	{"default", 3},
 	{"GL_RGB", GL_RGB},
 	{"GL_RGB8", GL_RGB8},
