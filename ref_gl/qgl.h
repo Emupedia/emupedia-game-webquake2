@@ -105,7 +105,6 @@ extern  void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 extern  void ( APIENTRY * qglStencilMask )(GLuint mask);
 extern  void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
 extern  void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
-extern  void ( APIENTRY * qglTexEnvf )(GLenum target, GLenum pname, GLfloat param);
 extern  void ( APIENTRY * qglTexEnvi )(GLenum target, GLenum pname, GLint param);
 extern  void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 extern  void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
