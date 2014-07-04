@@ -62,7 +62,6 @@ extern  void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei coun
 extern  void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 void qglEnable(GLenum cap);
 void qglEnd(void);
-extern  void ( APIENTRY * qglFlush )(void);
 extern  void ( APIENTRY * qglFrontFace )(GLenum mode);
 void qglFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 extern  void ( APIENTRY * qglGenTextures )(GLsizei n, GLuint *textures);

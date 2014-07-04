@@ -103,7 +103,6 @@ void ( APIENTRY * qglDepthMask )(GLboolean flag);
 void ( APIENTRY * qglDepthRange )(GLclampd zNear, GLclampd zFar);
 void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
-void ( APIENTRY * qglFlush )(void);
 void ( APIENTRY * qglFrontFace )(GLenum mode);
 void ( APIENTRY * qglGenTextures )(GLsizei n, GLuint *textures);
 GLenum ( APIENTRY * qglGetError )(void);
@@ -214,7 +213,6 @@ void QGL_Shutdown( void )
 	qglDepthRange                = NULL;
 	qglDrawArrays                = NULL;
 	qglDrawElements              = NULL;
-	qglFlush                     = NULL;
 	qglFrontFace                 = NULL;
 	qglGenTextures               = NULL;
 	qglGetError                  = NULL;
@@ -273,7 +271,6 @@ qboolean QGL_Init( const char *dllname )
 	qglDepthRange                = dllDepthRange = glDepthRange;
 	qglDrawArrays                = dllDrawArrays = glDrawArrays;
 	qglDrawElements              = dllDrawElements = glDrawElements;
-	qglFlush                     = 	dllFlush                     = glFlush;
 	qglFrontFace                 = 	dllFrontFace                 = glFrontFace;
 	qglGenTextures               = 	dllGenTextures               = glGenTextures;
 	qglGetError                  = 	dllGetError                  = glGetError;

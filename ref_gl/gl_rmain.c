@@ -151,7 +151,6 @@ cvar_t	*gl_round_down;
 cvar_t	*gl_picmip;
 cvar_t	*gl_skymip;
 cvar_t	*gl_showtris;
-cvar_t	*gl_flush;
 cvar_t	*gl_clear;
 cvar_t	*gl_cull;
 cvar_t	*gl_polyblend;
@@ -878,9 +877,6 @@ void R_RenderView (refdef_t *fd)
 
 	R_PushDlights ();
 
-	if (FLOAT_NE_ZERO(gl_flush->value))
-		qglFlush ();
-
 	R_SetupFrame ();
 
 	R_SetFrustum ();
@@ -1016,7 +1012,6 @@ void R_Register( void )
 	gl_picmip = ri.Cvar_Get ("gl_picmip", "0", 0);
 	gl_skymip = ri.Cvar_Get ("gl_skymip", "0", 0);
 	gl_showtris = ri.Cvar_Get ("gl_showtris", "0", 0);
-	gl_flush = ri.Cvar_Get ("gl_flush", "0", CVAR_ARCHIVE);
 	gl_clear = ri.Cvar_Get ("gl_clear", "0", 0);
 	gl_cull = ri.Cvar_Get ("gl_cull", "1", 0);
 	gl_polyblend = ri.Cvar_Get ("gl_polyblend", "1", 0);
