@@ -98,9 +98,8 @@ typedef struct QGLState {
 	GLuint vbo;
 
 	ShaderState wantShader;
-	ShaderState activeShader;
+	Shader *activeShader;
 
-	GLuint activeProgram;
 	Shader *shaders;
 } QGLState;
 
@@ -399,39 +398,6 @@ void qglBegin(GLenum mode) {
 }
 
 
-static void commitTexState(unsigned int unit) {
-	if (memcmp(&qglState->activeShader.texState[unit], &qglState->wantShader.texState[unit], sizeof(ShaderTexState)) == 0) {
-		// no change
-		return;
-	}
-
-	if (qglState->activeTexture != unit) {
-		glActiveTexture(GL_TEXTURE0 + unit);
-		qglState->activeTexture = unit;
-	}
-
-	if (qglState->activeShader.texState[unit].texEnable != qglState->wantShader.texState[unit].texEnable) {
-		qglState->activeShader.texState[unit].texEnable = qglState->wantShader.texState[unit].texEnable;
-		if (qglState->activeShader.texState[unit].texEnable) {
-			glEnable(GL_TEXTURE_2D);
-		} else {
-			glDisable(GL_TEXTURE_2D);
-		}
-	}
-
-	if (qglState->activeShader.texState[unit].texMode != qglState->wantShader.texState[unit].texMode) {
-		qglState->activeShader.texState[unit].texMode = qglState->wantShader.texState[unit].texMode;
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, qglState->activeShader.texState[unit].texMode);
-
-		if (qglState->activeShader.texState[unit].texMode == GL_COMBINE_ARB) {
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA_ARB, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 2);
-		}
-	}
-}
-
-
 static Shader *createShader(const ShaderState *state) {
 	const char *srcArray[1];
 	GLuint program = glCreateProgram();
@@ -486,40 +452,32 @@ static Shader *createShader(const ShaderState *state) {
 	return shader;
 }
 
+
+static Shader *findShader(const ShaderState *state) {
+	Shader *shader = qglState->shaders;
+	while (shader != NULL) {
+		if (memcmp(&shader->key, state, sizeof(ShaderState)) == 0) {
+			return shader;
+		}
+
+		shader = shader->next;
+	}
+
+	// not found, create
+	shader = createShader(state);
+	shader->next = qglState->shaders;
+	qglState->shaders = shader;
+
+	return shader;
+
+}
+
+
 static void commitShaderState() {
-#if 0
-	if (qglState->activeShader.shadeModel != qglState->wantShader.shadeModel) {
-		qglState->activeShader.shadeModel = qglState->wantShader.shadeModel;
-		glShadeModel(qglState->wantShader.shadeModel);
-	}
-
-	if (qglState->activeShader.alphaTest != qglState->wantShader.alphaTest) {
-		qglState->activeShader.alphaTest = qglState->wantShader.alphaTest;
-		if (qglState->wantShader.alphaTest) {
-			glEnable(GL_ALPHA_TEST);
-		} else {
-			glDisable(GL_ALPHA_TEST);
-		}
-	}
-
-	if (qglState->activeShader.alphaTest) {
-		if (qglState->activeShader.alphaFunc != qglState->wantShader.alphaFunc
-		   || qglState->activeShader.alphaRef != qglState->wantShader.alphaRef) {
-			qglState->activeShader.alphaFunc = qglState->wantShader.alphaFunc;
-			qglState->activeShader.alphaRef = qglState->wantShader.alphaRef;
-
-			glAlphaFunc(qglState->wantShader.alphaFunc, qglState->wantShader.alphaRef);
-		}
-	}
-
-	commitTexState(qglState->activeShader.activeTex);
-	commitTexState((qglState->activeShader.activeTex + 1) % 2);
-
-#endif
-
-	if (qglState->activeProgram == 0) {
-		qglState->shaders = createShader(&qglState->wantShader);
-		qglState->activeProgram = qglState->shaders->program;
+	Shader *newShader = findShader(&qglState->wantShader);
+	if (qglState->activeShader != newShader) {
+		qglState->activeShader = newShader;
+		glUseProgram(qglState->activeShader->program);
 	}
 
 	if (qglState->mvMatrixDirty) {
