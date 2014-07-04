@@ -18,9 +18,6 @@
 #include <SDL.h>
 
 
-#ifdef EMSCRIPTEN
-
-
 // these are here only so we can compile
 // TODO: use an actual opengl loader
 void glActiveTexture(GLenum tex);
@@ -28,9 +25,6 @@ void glBindBuffer(GLenum target, GLuint buffer);
 void glBufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
 void glDeleteBuffers(GLsizei n, const GLuint *buffers);
 void glGenBuffers(GLsizei n, GLuint *buffers);
-
-
-#endif // EMSCRIPTEN
 
 
 typedef struct Vertex {
@@ -44,7 +38,20 @@ typedef struct Vertex {
 #define NUMMATRICES 32
 
 
+typedef struct ShaderTexState {
+	bool texEnable;
+	GLenum texMode;
+} ShaderTexState;
+
+
 typedef struct ShaderState {
+	GLenum shadeModel;
+	bool alphaTest;
+	GLenum alphaFunc;
+	float alphaRef;
+
+	unsigned int activeTex;
+	ShaderTexState texState[2];
 } ShaderState;
 
 
@@ -68,6 +75,8 @@ typedef struct QGLState {
 	bool mvMatrixDirty, projMatrixDirty;
 
 	GLuint vbo;
+
+	ShaderState wantShader;
 } QGLState;
 
 
@@ -79,7 +88,6 @@ void * qwglGetProcAddress(const char *procname)
 	return SDL_GL_GetProcAddress(procname);
 }
 
-void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
 void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
 void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
 void ( APIENTRY * qglClear )(GLbitfield mask);
@@ -93,10 +101,8 @@ void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures);
 void ( APIENTRY * qglDepthFunc )(GLenum func);
 void ( APIENTRY * qglDepthMask )(GLboolean flag);
 void ( APIENTRY * qglDepthRange )(GLclampd zNear, GLclampd zFar);
-void ( APIENTRY * qglDisable )(GLenum cap);
 void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
-void ( APIENTRY * qglEnable )(GLenum cap);
 void ( APIENTRY * qglFinish )(void);
 void ( APIENTRY * qglFlush )(void);
 void ( APIENTRY * qglFrontFace )(GLenum mode);
@@ -112,12 +118,10 @@ void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
 void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
 void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
-void ( APIENTRY * qglShadeModel )(GLenum mode);
 void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 void ( APIENTRY * qglStencilMask )(GLuint mask);
 void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
 void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
-void ( APIENTRY * qglTexEnvi )(GLenum target, GLenum pname, GLint param);
 void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
 void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
@@ -171,12 +175,10 @@ static void ( APIENTRY * dllRotatef )(GLfloat angle, GLfloat x, GLfloat y, GLflo
 static void ( APIENTRY * dllScaled )(GLdouble x, GLdouble y, GLdouble z);
 static void ( APIENTRY * dllScalef )(GLfloat x, GLfloat y, GLfloat z);
 static void ( APIENTRY * dllScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
-static void ( APIENTRY * dllShadeModel )(GLenum mode);
 static void ( APIENTRY * dllStencilFunc )(GLenum func, GLint ref, GLuint mask);
 static void ( APIENTRY * dllStencilMask )(GLuint mask);
 static void ( APIENTRY * dllStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
 static void ( APIENTRY * dllTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
-static void ( APIENTRY * dllTexEnvi )(GLenum target, GLenum pname, GLint param);
 static void ( APIENTRY * dllTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 static void ( APIENTRY * dllTexParameterf )(GLenum target, GLenum pname, GLfloat param);
 static void ( APIENTRY * dllTexParameteri )(GLenum target, GLenum pname, GLint param);
@@ -198,7 +200,6 @@ void QGL_Shutdown( void )
 		qglState->vbo = 0;
 	}
 
-	qglAlphaFunc                 = NULL;
 	qglBindTexture               = NULL;
 	qglBlendFunc                 = NULL;
 	qglClear                     = NULL;
@@ -212,10 +213,8 @@ void QGL_Shutdown( void )
 	qglDepthFunc                 = NULL;
 	qglDepthMask                 = NULL;
 	qglDepthRange                = NULL;
-	qglDisable                   = NULL;
 	qglDrawArrays                = NULL;
 	qglDrawElements              = NULL;
-	qglEnable                    = NULL;
 	qglFinish                    = NULL;
 	qglFlush                     = NULL;
 	qglFrontFace                 = NULL;
@@ -230,12 +229,10 @@ void QGL_Shutdown( void )
 	qglPolygonOffset             = NULL;
 	qglReadPixels                = NULL;
 	qglScissor                   = NULL;
-	qglShadeModel                = NULL;
 	qglStencilFunc               = NULL;
 	qglStencilMask               = NULL;
 	qglStencilOp                 = NULL;
 	qglTexCoordPointer           = NULL;
-	qglTexEnvi                   = NULL;
 	qglTexImage2D                = NULL;
 	qglTexParameterf             = NULL;
 	qglTexParameteri             = NULL;
@@ -263,7 +260,6 @@ qboolean QGL_Init( const char *dllname )
 	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
 	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
 
-	qglAlphaFunc                 = dllAlphaFunc = glAlphaFunc;
 	qglBindTexture               = dllBindTexture = glBindTexture;
 	qglBlendFunc                 = dllBlendFunc = glBlendFunc;
 	qglClear                     = dllClear = glClear;
@@ -277,10 +273,8 @@ qboolean QGL_Init( const char *dllname )
 	qglDepthFunc                 = dllDepthFunc = glDepthFunc;
 	qglDepthMask                 = dllDepthMask = glDepthMask;
 	qglDepthRange                = dllDepthRange = glDepthRange;
-	qglDisable                   = dllDisable = glDisable;
 	qglDrawArrays                = dllDrawArrays = glDrawArrays;
 	qglDrawElements              = dllDrawElements = glDrawElements;
-	qglEnable                    = 	dllEnable                    = glEnable;
 	qglFinish                    = 	dllFinish                    = glFinish;
 	qglFlush                     = 	dllFlush                     = glFlush;
 	qglFrontFace                 = 	dllFrontFace                 = glFrontFace;
@@ -295,12 +289,10 @@ qboolean QGL_Init( const char *dllname )
 	qglPolygonOffset             = 	dllPolygonOffset             = glPolygonOffset;
 	qglReadPixels                = 	dllReadPixels                = glReadPixels;
 	qglScissor                   = 	dllScissor                   = glScissor;
-	qglShadeModel                = 	dllShadeModel                = glShadeModel;
 	qglStencilFunc               = 	dllStencilFunc               = glStencilFunc;
 	qglStencilMask               = 	dllStencilMask               = glStencilMask;
 	qglStencilOp                 = 	dllStencilOp                 = glStencilOp;
 	qglTexCoordPointer           = 	dllTexCoordPointer           = glTexCoordPointer;
-	qglTexEnvi                   = 	dllTexEnvi                   = glTexEnvi;
 	qglTexImage2D                = 	dllTexImage2D                = glTexImage2D;
 	qglTexParameterf             = 	dllTexParameterf             = glTexParameterf;
 	qglTexParameteri             = 	dllTexParameteri             = glTexParameteri;
@@ -667,5 +659,69 @@ void qglGetFloatv(GLenum pname, GLfloat *params) {
 
 
 void qglActiveTexture(GLenum tex) {
+	qglState->wantShader.activeTex = tex - GL_TEXTURE0;
+
 	glActiveTexture(tex);
+}
+
+
+void qglShadeModel(GLenum mode) {
+	qglState->wantShader.shadeModel = mode;
+
+	glShadeModel(mode);
+}
+
+
+void qglAlphaFunc(GLenum func, GLclampf ref) {
+	qglState->wantShader.alphaFunc = func;
+	qglState->wantShader.alphaRef = func;
+
+
+	glAlphaFunc(func, ref);
+}
+
+
+void qglDisable(GLenum cap) {
+	if (cap == GL_ALPHA_TEST) {
+		qglState->wantShader.alphaTest = false;
+	} else if (cap == GL_TEXTURE_2D) {
+		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = false;
+	}
+
+    glDisable(cap);
+}
+
+
+void qglEnable(GLenum cap) {
+	if (cap == GL_ALPHA_TEST) {
+		qglState->wantShader.alphaTest = true;
+	} else if (cap == GL_TEXTURE_2D) {
+		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = true;
+	}
+
+    glEnable(cap);
+}
+
+
+void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
+	assert(target == GL_TEXTURE_ENV);
+
+	// we only use one combine mode
+	if (pname == GL_TEXTURE_ENV_MODE) {
+		assert(param == GL_COMBINE_ARB
+			  || param == GL_MODULATE
+			  || param == GL_REPLACE);
+		qglState->wantShader.texState[qglState->wantShader.activeTex].texMode = param;
+	} else if (pname == GL_COMBINE_RGB_ARB) {
+		assert(param == GL_MODULATE);
+	} else if (pname == GL_COMBINE_ALPHA_ARB) {
+		assert(param == GL_MODULATE);
+	} else if (pname == GL_RGB_SCALE_ARB) {
+		assert(param == 2);
+	} else {
+		assert(false);
+	}
+
+
+	glTexEnvi(target, pname, param);
 }

@@ -40,7 +40,7 @@ void     QGL_Shutdown( void );
 #endif
 
 //extern  void ( APIENTRY * qglAccum )(GLenum op, GLfloat value);
-extern  void ( APIENTRY * qglAlphaFunc )(GLenum func, GLclampf ref);
+void qglAlphaFunc(GLenum func, GLclampf ref);
 void qglBegin(GLenum mode);
 extern  void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
 extern  void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
@@ -61,11 +61,11 @@ extern  void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures)
 extern  void ( APIENTRY * qglDepthFunc )(GLenum func);
 extern  void ( APIENTRY * qglDepthMask )(GLboolean flag);
 extern  void ( APIENTRY * qglDepthRange )(GLclampd zNear, GLclampd zFar);
-extern  void ( APIENTRY * qglDisable )(GLenum cap);
+void qglDisable(GLenum cap);
 extern  void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 extern  void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 extern  void ( APIENTRY * qglDrawPixels )(GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-extern  void ( APIENTRY * qglEnable )(GLenum cap);
+void qglEnable(GLenum cap);
 void qglEnd(void);
 extern  void ( APIENTRY * qglEndList )(void);
 extern  void ( APIENTRY * qglFinish )(void);
@@ -100,12 +100,12 @@ extern  void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsiz
 void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 void qglScalef(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
-extern  void ( APIENTRY * qglShadeModel )(GLenum mode);
+void qglShadeModel(GLenum mode);
 extern  void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 extern  void ( APIENTRY * qglStencilMask )(GLuint mask);
 extern  void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
 extern  void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
-extern  void ( APIENTRY * qglTexEnvi )(GLenum target, GLenum pname, GLint param);
+void qglTexEnvi(GLenum target, GLenum pname, GLint param);
 extern  void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 extern  void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
 extern  void ( APIENTRY * qglTexParameterfv )(GLenum target, GLenum pname, const GLfloat *params);
