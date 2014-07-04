@@ -85,7 +85,7 @@ typedef struct QGLState {
 
 	Vertex currentVertex;
 
-	unsigned int activeTexture;
+	unsigned int clientActiveTexture;
 
 	GLenum matrixMode;
 
@@ -549,17 +549,17 @@ void qglEnd(void) {
 	qglVertexPointer(3, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, pos));
 	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, color));
 
-	if (qglState->activeTexture == 0) {
+	if (qglState->clientActiveTexture == 0) {
 		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
 
 		glClientActiveTexture(GL_TEXTURE1);
-		qglState->activeTexture = 1;
+		qglState->clientActiveTexture = 1;
 		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
 	} else {
 		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
 
 		glClientActiveTexture(GL_TEXTURE0);
-		qglState->activeTexture = 0;
+		qglState->clientActiveTexture = 0;
 		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
 	}
 
