@@ -41,7 +41,6 @@ typedef struct ShaderState {
 	GLenum alphaFunc;
 	float alphaRef;
 
-	unsigned int activeTex;
 	ShaderTexState texState[2];
 } ShaderState;
 
@@ -86,6 +85,7 @@ typedef struct QGLState {
 	Vertex currentVertex;
 
 	unsigned int clientActiveTexture;
+	unsigned int wantActiveTexture, activeTexture;
 
 	GLenum matrixMode;
 
@@ -405,9 +405,9 @@ static void commitTexState(unsigned int unit) {
 		return;
 	}
 
-	if (qglState->activeShader.activeTex != unit) {
+	if (qglState->activeTexture != unit) {
 		glActiveTexture(GL_TEXTURE0 + unit);
-		qglState->activeShader.activeTex = unit;
+		qglState->activeTexture = unit;
 	}
 
 	if (qglState->activeShader.texState[unit].texEnable != qglState->wantShader.texState[unit].texEnable) {
@@ -802,7 +802,7 @@ void qglGetFloatv(GLenum pname, GLfloat *params) {
 
 
 void qglActiveTexture(GLenum tex) {
-	qglState->wantShader.activeTex = tex - GL_TEXTURE0;
+	qglState->wantActiveTexture = tex - GL_TEXTURE0;
 }
 
 
@@ -821,7 +821,7 @@ void qglDisable(GLenum cap) {
 	if (cap == GL_ALPHA_TEST) {
 		qglState->wantShader.alphaTest = false;
 	} else if (cap == GL_TEXTURE_2D) {
-		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = false;
+		qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = false;
 	} else {
 		glDisable(cap);
 	}
@@ -832,7 +832,7 @@ void qglEnable(GLenum cap) {
 	if (cap == GL_ALPHA_TEST) {
 		qglState->wantShader.alphaTest = true;
 	} else if (cap == GL_TEXTURE_2D) {
-		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = true;
+		qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = true;
 	} else {
 		glEnable(cap);
 	}
@@ -847,7 +847,7 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 		assert(param == GL_COMBINE_ARB
 			  || param == GL_MODULATE
 			  || param == GL_REPLACE);
-		qglState->wantShader.texState[qglState->wantShader.activeTex].texMode = param;
+		qglState->wantShader.texState[qglState->wantActiveTexture].texMode = param;
 	} else if (pname == GL_COMBINE_RGB_ARB) {
 		assert(param == GL_MODULATE);
 	} else if (pname == GL_COMBINE_ALPHA_ARB) {
@@ -861,9 +861,9 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 
 void qglBindTexture(GLenum target, GLuint texture) {
-	if (qglState->activeShader.activeTex != qglState->wantShader.activeTex) {
+	if (qglState->activeTexture != qglState->wantActiveTexture) {
 		glActiveTexture(GL_TEXTURE0);
-		qglState->activeShader.activeTex = qglState->wantShader.activeTex;
+		qglState->activeTexture = qglState->wantActiveTexture;
 	}
 
 	glBindTexture(target, texture);
