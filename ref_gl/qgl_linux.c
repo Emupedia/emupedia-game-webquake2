@@ -378,6 +378,22 @@ void qglBegin(GLenum mode) {
 }
 
 
+static void commitShaderState() {
+	if (qglState->mvMatrixDirty) {
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(qglState->mvMatrices[qglState->mvMatrixTop]);
+		qglState->mvMatrixDirty = false;
+	}
+
+	if (qglState->projMatrixDirty) {
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(qglState->projMatrices[qglState->projMatrixTop]);
+		qglState->projMatrixDirty = false;
+	}
+
+}
+
+
 void qglEnd(void) {
 	if (qglState->vbo == 0) {
 		// can't be called in QGL_Init, GL context doesn't exist there
@@ -404,17 +420,7 @@ void qglEnd(void) {
 		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
 	}
 
-	if (qglState->mvMatrixDirty) {
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(qglState->mvMatrices[qglState->mvMatrixTop]);
-		qglState->mvMatrixDirty = false;
-	}
-
-	if (qglState->projMatrixDirty) {
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(qglState->projMatrices[qglState->projMatrixTop]);
-		qglState->projMatrixDirty = false;
-	}
+	commitShaderState();
 
 	glDrawArrays(qglState->primitive, 0, qglState->usedVertices);
 
