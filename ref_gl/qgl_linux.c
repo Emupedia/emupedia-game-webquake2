@@ -737,7 +737,7 @@ void qglDisable(GLenum cap) {
 	} else if (cap == GL_TEXTURE_2D) {
 		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = false;
 	} else {
-    glDisable(cap);
+		glDisable(cap);
 	}
 }
 
@@ -748,7 +748,7 @@ void qglEnable(GLenum cap) {
 	} else if (cap == GL_TEXTURE_2D) {
 		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = true;
 	} else {
-    glEnable(cap);
+		glEnable(cap);
 	}
 }
 
