@@ -77,6 +77,7 @@ typedef struct QGLState {
 	GLuint vbo;
 
 	ShaderState wantShader;
+	ShaderState activeShader;
 } QGLState;
 
 
@@ -374,7 +375,67 @@ void qglBegin(GLenum mode) {
 }
 
 
+static void commitTexState(unsigned int unit) {
+	if (memcmp(&qglState->activeShader.texState[unit], &qglState->wantShader.texState[unit], sizeof(ShaderTexState)) == 0) {
+		// no change
+		return;
+	}
+
+	if (qglState->activeShader.activeTex != unit) {
+		glActiveTexture(GL_TEXTURE0 + unit);
+		qglState->activeShader.activeTex = unit;
+	}
+
+	if (qglState->activeShader.texState[unit].texEnable != qglState->wantShader.texState[unit].texEnable) {
+		qglState->activeShader.texState[unit].texEnable = qglState->wantShader.texState[unit].texEnable;
+		if (qglState->activeShader.texState[unit].texEnable) {
+			glEnable(GL_TEXTURE_2D);
+		} else {
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
+
+	if (qglState->activeShader.texState[unit].texMode != qglState->wantShader.texState[unit].texMode) {
+		qglState->activeShader.texState[unit].texMode = qglState->wantShader.texState[unit].texMode;
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, qglState->activeShader.texState[unit].texMode);
+
+		if (qglState->activeShader.texState[unit].texMode == GL_COMBINE_ARB) {
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA_ARB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 2);
+		}
+	}
+}
+
+
 static void commitShaderState() {
+	if (qglState->activeShader.shadeModel != qglState->wantShader.shadeModel) {
+		qglState->activeShader.shadeModel = qglState->wantShader.shadeModel;
+		glShadeModel(qglState->wantShader.shadeModel);
+	}
+
+	if (qglState->activeShader.alphaTest != qglState->wantShader.alphaTest) {
+		qglState->activeShader.alphaTest = qglState->wantShader.alphaTest;
+		if (qglState->wantShader.alphaTest) {
+			glEnable(GL_ALPHA_TEST);
+		} else {
+			glDisable(GL_ALPHA_TEST);
+		}
+	}
+
+	if (qglState->activeShader.alphaTest) {
+		if (qglState->activeShader.alphaFunc != qglState->wantShader.alphaFunc
+		   || qglState->activeShader.alphaRef != qglState->wantShader.alphaRef) {
+			qglState->activeShader.alphaFunc = qglState->wantShader.alphaFunc;
+			qglState->activeShader.alphaRef = qglState->wantShader.alphaRef;
+
+			glAlphaFunc(qglState->wantShader.alphaFunc, qglState->wantShader.alphaRef);
+		}
+	}
+
+	commitTexState(qglState->activeShader.activeTex);
+	commitTexState((qglState->activeShader.activeTex + 1) % 2);
+
 	if (qglState->mvMatrixDirty) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(qglState->mvMatrices[qglState->mvMatrixTop]);
@@ -656,24 +717,17 @@ void qglGetFloatv(GLenum pname, GLfloat *params) {
 
 void qglActiveTexture(GLenum tex) {
 	qglState->wantShader.activeTex = tex - GL_TEXTURE0;
-
-	glActiveTexture(tex);
 }
 
 
 void qglShadeModel(GLenum mode) {
 	qglState->wantShader.shadeModel = mode;
-
-	glShadeModel(mode);
 }
 
 
 void qglAlphaFunc(GLenum func, GLclampf ref) {
 	qglState->wantShader.alphaFunc = func;
 	qglState->wantShader.alphaRef = func;
-
-
-	glAlphaFunc(func, ref);
 }
 
 
@@ -682,9 +736,9 @@ void qglDisable(GLenum cap) {
 		qglState->wantShader.alphaTest = false;
 	} else if (cap == GL_TEXTURE_2D) {
 		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = false;
-	}
-
+	} else {
     glDisable(cap);
+	}
 }
 
 
@@ -693,9 +747,9 @@ void qglEnable(GLenum cap) {
 		qglState->wantShader.alphaTest = true;
 	} else if (cap == GL_TEXTURE_2D) {
 		qglState->wantShader.texState[qglState->wantShader.activeTex].texEnable = true;
-	}
-
+	} else {
     glEnable(cap);
+	}
 }
 
 
@@ -717,12 +771,14 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 	} else {
 		assert(false);
 	}
-
-
-	glTexEnvi(target, pname, param);
 }
 
 
 void qglBindTexture(GLenum target, GLuint texture) {
+	if (qglState->activeShader.activeTex != qglState->wantShader.activeTex) {
+		glActiveTexture(GL_TEXTURE0);
+		qglState->activeShader.activeTex = qglState->wantShader.activeTex;
+	}
+
 	glBindTexture(target, texture);
 }
