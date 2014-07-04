@@ -412,13 +412,18 @@ void qglBegin(GLenum mode) {
 
 
 static Shader *createShader(const ShaderState *state) {
-	const char *srcArray[1];
+#define BUFSIZE 512
+	char defineBuf[BUFSIZE];
+	memset(defineBuf, '\0', BUFSIZE);
+
+	const char *srcArray[2];
+	srcArray[0] = &defineBuf;
 	GLuint program = glCreateProgram();
 	GLint temp = 0;
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	srcArray[0] = vertexShaderSrc;
-	glShaderSource(vertexShader, 1, srcArray, NULL);
+	srcArray[1] = vertexShaderSrc;
+	glShaderSource(vertexShader, 2, srcArray, NULL);
 	glCompileShader(vertexShader);
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &temp);
 	if (temp != GL_TRUE) {
@@ -435,8 +440,8 @@ static Shader *createShader(const ShaderState *state) {
 	glDeleteShader(vertexShader);
 
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	srcArray[0] = fragmentShaderSrc;
-	glShaderSource(fragmentShader, 1, srcArray, NULL);
+	srcArray[1] = fragmentShaderSrc;
+	glShaderSource(fragmentShader, 2, srcArray, NULL);
 	glCompileShader(fragmentShader);
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &temp);
 	if (temp != GL_TRUE) {
