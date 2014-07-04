@@ -18,15 +18,6 @@
 #include <SDL.h>
 
 
-// these are here only so we can compile
-// TODO: use an actual opengl loader
-void glActiveTexture(GLenum tex);
-void glBindBuffer(GLenum target, GLuint buffer);
-void glBufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
-void glDeleteBuffers(GLsizei n, const GLuint *buffers);
-void glGenBuffers(GLsizei n, GLuint *buffers);
-
-
 typedef struct Vertex {
 	float pos[3];
 	uint32_t color;
