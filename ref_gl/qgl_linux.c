@@ -46,6 +46,36 @@ typedef struct ShaderState {
 } ShaderState;
 
 
+const char *vertexShaderSrc =
+"void main(void) {"
+"	gl_FrontColor = gl_Color;"
+"	gl_TexCoord[0] = gl_MultiTexCoord0;"
+"	gl_TexCoord[1] = gl_MultiTexCoord1;"
+
+"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
+"}"
+;
+
+
+const char *fragmentShaderSrc =
+"uniform sampler2D tex0;"
+
+"void main(void) {"
+"	gl_FragColor = gl_Color * texture2D(tex0, gl_TexCoord[0].xy);"
+"}"
+;
+
+
+struct Shader;
+
+typedef struct Shader {
+	ShaderState key;
+	GLuint program;
+
+	struct Shader *next;
+} Shader;
+
+
 typedef struct QGLState {
 	Vertex *vertices;
 	unsigned int numVertices;
@@ -69,6 +99,9 @@ typedef struct QGLState {
 
 	ShaderState wantShader;
 	ShaderState activeShader;
+
+	GLuint activeProgram;
+	Shader *shaders;
 } QGLState;
 
 
@@ -399,7 +432,62 @@ static void commitTexState(unsigned int unit) {
 }
 
 
+static Shader *createShader(const ShaderState *state) {
+	const char *srcArray[1];
+	GLuint program = glCreateProgram();
+	GLint temp = 0;
+
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	srcArray[0] = vertexShaderSrc;
+	glShaderSource(vertexShader, 1, srcArray, NULL);
+	glCompileShader(vertexShader);
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &temp);
+	if (temp != GL_TRUE) {
+		printf("vertex shader compile failed:\n");
+		glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &temp);
+		char buf[temp + 1];
+		memset(buf, '\0', temp + 1);
+		glGetShaderInfoLog(vertexShader, temp, NULL, buf);
+
+		printf("%s\n", buf);
+		abort();
+	}
+	glAttachShader(program, vertexShader);
+	glDeleteShader(vertexShader);
+
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	srcArray[0] = fragmentShaderSrc;
+	glShaderSource(fragmentShader, 1, srcArray, NULL);
+	glCompileShader(fragmentShader);
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &temp);
+	if (temp != GL_TRUE) {
+		printf("fragment shader compile failed:\n");
+		glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &temp);
+		char buf[temp + 1];
+		memset(buf, '\0', temp + 1);
+		glGetShaderInfoLog(fragmentShader, temp, NULL, buf);
+
+		printf("%s\n", buf);
+		abort();
+	}
+	glAttachShader(program, fragmentShader);
+	glDeleteShader(fragmentShader);
+
+	glLinkProgram(program);
+	glUseProgram(program);
+	glUniform1i(glGetUniformLocation(program, "tex0"), 0);
+	glUniform1i(glGetUniformLocation(program, "tex1"), 1);
+
+	Shader *shader = (Shader *) malloc(sizeof(Shader));
+	shader->program = program;
+	memcpy(&shader->key, state, sizeof(ShaderState));
+	shader->next = NULL;
+
+	return shader;
+}
+
 static void commitShaderState() {
+#if 0
 	if (qglState->activeShader.shadeModel != qglState->wantShader.shadeModel) {
 		qglState->activeShader.shadeModel = qglState->wantShader.shadeModel;
 		glShadeModel(qglState->wantShader.shadeModel);
@@ -426,6 +514,13 @@ static void commitShaderState() {
 
 	commitTexState(qglState->activeShader.activeTex);
 	commitTexState((qglState->activeShader.activeTex + 1) % 2);
+
+#endif
+
+	if (qglState->activeProgram == 0) {
+		qglState->shaders = createShader(&qglState->wantShader);
+		qglState->activeProgram = qglState->shaders->program;
+	}
 
 	if (qglState->mvMatrixDirty) {
 		glMatrixMode(GL_MODELVIEW);
