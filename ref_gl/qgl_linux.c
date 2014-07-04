@@ -44,6 +44,10 @@ typedef struct Vertex {
 #define NUMMATRICES 32
 
 
+typedef struct ShaderState {
+} ShaderState;
+
+
 typedef struct QGLState {
 	Vertex *vertices;
 	unsigned int numVertices;
