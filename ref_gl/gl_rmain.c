@@ -1423,14 +1423,14 @@ void EXPORT R_Shutdown (void)
 	GL_ShutdownImages ();
 
 	/*
-	** shut down OS specific OpenGL stuff like contexts, etc.
-	*/
-	GLimp_Shutdown();
-
-	/*
 	** shutdown our QGL subsystem
 	*/
 	QGL_Shutdown();
+
+	/*
+	** shut down OS specific OpenGL stuff like contexts, etc.
+	*/
+	GLimp_Shutdown();
 }
 
 void GL_UpdateAnisotropy (void)
