@@ -413,8 +413,30 @@ void qglBegin(GLenum mode) {
 
 static Shader *createShader(const ShaderState *state) {
 #define BUFSIZE 512
+#define EMITDEF(x) defSize += snprintf(defineBuf + defSize, BUFSIZE - defSize, "#define %s 1\n", x)
 	char defineBuf[BUFSIZE];
+	unsigned int defSize = 0;
 	memset(defineBuf, '\0', BUFSIZE);
+
+	if (state->shadeModel == GL_FLAT) {
+		EMITDEF("SHADE_FLAT");
+	} else if (state->shadeModel == GL_SMOOTH) {
+		EMITDEF("SHADE_SMOOTH");
+	} else {
+		assert(false);
+	}
+
+	if (state->alphaTest) {
+		EMITDEF("ALPHA");
+	}
+
+	if (state->texState[0].texEnable) {
+		EMITDEF("TEX0");
+	}
+
+	if (state->texState[1].texEnable) {
+		EMITDEF("TEX1");
+	}
 
 	const char *srcArray[2];
 	srcArray[0] = &defineBuf;
