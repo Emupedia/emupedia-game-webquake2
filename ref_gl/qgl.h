@@ -42,7 +42,7 @@ void     QGL_Shutdown( void );
 //extern  void ( APIENTRY * qglAccum )(GLenum op, GLfloat value);
 void qglAlphaFunc(GLenum func, GLclampf ref);
 void qglBegin(GLenum mode);
-extern  void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
+void qglBindTexture(GLenum target, GLuint texture);
 extern  void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
 extern  void ( APIENTRY * qglClear )(GLbitfield mask);
 extern  void ( APIENTRY * qglClearColor )(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);

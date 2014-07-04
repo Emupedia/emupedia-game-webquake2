@@ -88,7 +88,6 @@ void * qwglGetProcAddress(const char *procname)
 	return SDL_GL_GetProcAddress(procname);
 }
 
-void ( APIENTRY * qglBindTexture )(GLenum target, GLuint texture);
 void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
 void ( APIENTRY * qglClear )(GLbitfield mask);
 void ( APIENTRY * qglClearColor )(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
@@ -129,7 +128,6 @@ void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height)
 
 static void ( APIENTRY * dllAlphaFunc )(GLenum func, GLclampf ref);
 static void ( APIENTRY * dllBegin )(GLenum mode);
-static void ( APIENTRY * dllBindTexture )(GLenum target, GLuint texture);
 static void ( APIENTRY * dllBlendFunc )(GLenum sfactor, GLenum dfactor);
 static void ( APIENTRY * dllClear )(GLbitfield mask);
 static void ( APIENTRY * dllClearColor )(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
@@ -198,7 +196,6 @@ void QGL_Shutdown( void )
 		qglState->vbo = 0;
 	}
 
-	qglBindTexture               = NULL;
 	qglBlendFunc                 = NULL;
 	qglClear                     = NULL;
 	qglClearColor                = NULL;
@@ -256,7 +253,6 @@ qboolean QGL_Init( const char *dllname )
 	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
 	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
 
-	qglBindTexture               = dllBindTexture = glBindTexture;
 	qglBlendFunc                 = dllBlendFunc = glBlendFunc;
 	qglClear                     = dllClear = glClear;
 	qglClearColor                = dllClearColor = glClearColor;
@@ -724,4 +720,9 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 
 	glTexEnvi(target, pname, param);
+}
+
+
+void qglBindTexture(GLenum target, GLuint texture) {
+	glBindTexture(target, texture);
 }
