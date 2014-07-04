@@ -220,6 +220,19 @@ void QGL_Shutdown( void )
 		qglState->vbo = 0;
 	}
 
+	// this pointer is not unique
+	qglState->activeShader = NULL;
+
+	// these are
+	while (qglState->shaders != NULL) {
+		glDeleteProgram(qglState->shaders->program);
+		Shader *old = qglState->shaders;
+		qglState->shaders = old->next;
+		free(old);
+	}
+
+	free(qglState); qglState = NULL;
+
 	qglBlendFunc                 = NULL;
 	qglClear                     = NULL;
 	qglClearColor                = NULL;
