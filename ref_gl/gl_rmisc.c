@@ -340,7 +340,6 @@ void GL_SetDefaultState( void )
 
 	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
-	qglPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 	qglShadeModel (GL_FLAT);
 
 	GL_TextureMode( gl_texturemode->string );

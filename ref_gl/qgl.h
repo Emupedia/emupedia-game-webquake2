@@ -79,7 +79,6 @@ void qglMatrixMode(GLenum mode);
 void qglMultMatrixf(const GLfloat *m);
 void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t);
 void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
-extern  void ( APIENTRY * qglPolygonMode )(GLenum face, GLenum mode);
 extern  void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
 void qglPopMatrix(void);
 void qglPushMatrix(void);
