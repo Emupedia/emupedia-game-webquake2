@@ -13,7 +13,6 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <ctype.h>
-#include <sys/wait.h>
 #include <sys/mman.h>
 #include <errno.h>
 #include <sys/utsname.h>
@@ -40,6 +39,7 @@
 
 #ifndef EMSCRIPTEN
 
+#include <sys/wait.h>
 #include <execinfo.h>
 
 #endif  // EMSCRIPTEN
@@ -159,7 +159,9 @@ void Sys_Quit (void)
 	CL_Shutdown ();
 #endif
 	Qcommon_Shutdown ();
-    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+#ifndef EMSCRIPTEN
+	fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+#endif  // EMSCRIPTEN
 	exit(0);
 }
 
@@ -395,8 +397,10 @@ void Sys_Error (const char *error, ...)
     va_list     argptr;
     char        string[1024];
 
+#ifndef EMSCRIPTEN
 // change stdin to non blocking
     fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+#endif  // EMSCRIPTEN
 
 #ifndef DEDICATED_ONLY
 	CL_Shutdown ();
@@ -642,14 +646,18 @@ int main (int argc, char **argv)
 
 	Qcommon_Init(argc, argv);
 
+#ifndef EMSCRIPTEN
 	fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
+#endif  // EMSCRIPTEN
 
 	nostdin = Cvar_Get ("nostdin", "0", 0);
 	nostdout = Cvar_Get("nostdout", "0", 0);
+#ifndef EMSCRIPTEN
 	if (!nostdout->intvalue) {
 		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
 //		printf ("Linux Quake -- Version %0.3f\n", LINUX_VERSION);
 	}
+#endif  // EMSCRIPTEN
 
     oldtime = Sys_Milliseconds ();
     while (1)

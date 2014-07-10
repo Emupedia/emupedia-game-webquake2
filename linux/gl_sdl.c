@@ -1030,7 +1030,7 @@ Sys_MakeCodeWriteable
 */
 void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 {
-
+#ifndef EMSCRIPTEN
 	int r;
 	unsigned long addr;
 	int psize = getpagesize();
@@ -1045,6 +1045,7 @@ void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 	if (r < 0)
     		Sys_Error("Protection change failed\n");
 
+#endif  // EMSCRIPTEN
 }
 
 /*****************************************************************************/

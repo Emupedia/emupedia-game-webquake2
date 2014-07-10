@@ -16,7 +16,7 @@ BUILTIN_GAME:=baseq2
 # compiler options etc
 CC:=emcc
 CXX:=em++
-CFLAGS:=-g -DNDEBUG -DLINUX# -std=c99
+CFLAGS:=-g -DNDEBUG -DLINUX -std=c99 -D_GNU_SOURCE=1
 CFLAGS+=-DREF_HARD_LINKED
 OPTFLAGS:=-fno-strict-aliasing
 

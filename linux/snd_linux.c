@@ -1,11 +1,4 @@
-#include <unistd.h>
-#include <fcntl.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-#include <sys/shm.h>
-#include <sys/wait.h>
 #include <stdio.h>
 
 #include "../client/client.h"
