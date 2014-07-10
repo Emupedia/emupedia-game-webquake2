@@ -53,7 +53,6 @@ extern  void ( APIENTRY * qglClearStencil )(GLint s);
 void qglColor3f(GLfloat red, GLfloat green, GLfloat blue);
 void qglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 extern  void ( APIENTRY * qglColorMask )(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-extern  void ( APIENTRY * qglColorPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglCullFace )(GLenum mode);
 extern  void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures);
 extern  void ( APIENTRY * qglDepthFunc )(GLenum func);
@@ -90,7 +89,6 @@ void qglShadeModel(GLenum mode);
 extern  void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 extern  void ( APIENTRY * qglStencilMask )(GLuint mask);
 extern  void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-extern  void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void qglTexEnvi(GLenum target, GLenum pname, GLint param);
 extern  void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 extern  void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
@@ -101,7 +99,6 @@ extern  void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint x
 void qglTranslatef(GLfloat x, GLfloat y, GLfloat z);
 void qglVertex2f(GLfloat x, GLfloat y);
 void qglVertex3f(GLfloat x, GLfloat y, GLfloat z);
-extern  void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
 void qglActiveTexture(GLenum);

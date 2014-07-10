@@ -122,7 +122,6 @@ void ( APIENTRY * qglClearColor )(GLclampf red, GLclampf green, GLclampf blue, G
 void ( APIENTRY * qglClearDepth )(GLclampd depth);
 void ( APIENTRY * qglClearStencil )(GLint s);
 void ( APIENTRY * qglColorMask )(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-void ( APIENTRY * qglColorPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglCullFace )(GLenum mode);
 void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures);
 void ( APIENTRY * qglDepthFunc )(GLenum func);
@@ -145,12 +144,10 @@ void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
 void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 void ( APIENTRY * qglStencilMask )(GLuint mask);
 void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-void ( APIENTRY * qglTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
 void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
 void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-void ( APIENTRY * qglVertexPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
 static void ( APIENTRY * dllAlphaFunc )(GLenum func, GLclampf ref);
@@ -200,7 +197,6 @@ static void ( APIENTRY * dllScissor )(GLint x, GLint y, GLsizei width, GLsizei h
 static void ( APIENTRY * dllStencilFunc )(GLenum func, GLint ref, GLuint mask);
 static void ( APIENTRY * dllStencilMask )(GLuint mask);
 static void ( APIENTRY * dllStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-static void ( APIENTRY * dllTexCoordPointer )(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 static void ( APIENTRY * dllTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 static void ( APIENTRY * dllTexParameterf )(GLenum target, GLenum pname, GLfloat param);
 static void ( APIENTRY * dllTexParameteri )(GLenum target, GLenum pname, GLint param);
@@ -241,7 +237,6 @@ void QGL_Shutdown( void )
 	qglClearDepth                = NULL;
 	qglClearStencil              = NULL;
 	qglColorMask                 = NULL;
-	qglColorPointer              = NULL;
 	qglCullFace                  = NULL;
 	qglDeleteTextures            = NULL;
 	qglDepthFunc                 = NULL;
@@ -263,12 +258,10 @@ void QGL_Shutdown( void )
 	qglStencilFunc               = NULL;
 	qglStencilMask               = NULL;
 	qglStencilOp                 = NULL;
-	qglTexCoordPointer           = NULL;
 	qglTexImage2D                = NULL;
 	qglTexParameterf             = NULL;
 	qglTexParameteri             = NULL;
 	qglTexSubImage2D             = NULL;
-	qglVertexPointer             = NULL;
 	qglViewport                  = NULL;
 }
 
@@ -297,7 +290,6 @@ qboolean QGL_Init( const char *dllname )
 	qglClearDepth                = dllClearDepth = glClearDepth;
 	qglClearStencil              = dllClearStencil = glClearStencil;
 	qglColorMask                 = dllColorMask = glColorMask;
-	qglColorPointer              = dllColorPointer = glColorPointer;
 	qglCullFace                  = dllCullFace = glCullFace;
 	qglDeleteTextures            = dllDeleteTextures = glDeleteTextures;
 	qglDepthFunc                 = dllDepthFunc = glDepthFunc;
@@ -319,12 +311,10 @@ qboolean QGL_Init( const char *dllname )
 	qglStencilFunc               = 	dllStencilFunc               = glStencilFunc;
 	qglStencilMask               = 	dllStencilMask               = glStencilMask;
 	qglStencilOp                 = 	dllStencilOp                 = glStencilOp;
-	qglTexCoordPointer           = 	dllTexCoordPointer           = glTexCoordPointer;
 	qglTexImage2D                = 	dllTexImage2D                = glTexImage2D;
 	qglTexParameterf             = 	dllTexParameterf             = glTexParameterf;
 	qglTexParameteri             = 	dllTexParameteri             = glTexParameteri;
 	qglTexSubImage2D             = 	dllTexSubImage2D             = glTexSubImage2D;
-	qglVertexPointer             = 	dllVertexPointer             = glVertexPointer;
 	qglViewport                  = 	dllViewport                  = glViewport;
 
 	return true;
