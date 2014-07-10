@@ -55,18 +55,22 @@ const char *vertexShaderSrc =
 "varying vec2 vTex0;\n"
 "varying vec2 vTex1;\n"
 
+"uniform mat4 mvp;\n"
+
 "void main(void) {\n"
 "	vColor = col;\n"
 "	vTex0 = texcoord0;\n"
 "	vTex1 = texcoord1;\n"
 
-"	gl_Position = gl_ModelViewProjectionMatrix * vec4(pos, 1.0);\n"
+"	gl_Position = mvp * vec4(pos, 1.0);\n"
 "}\n"
 ;
 
 
 const char *fragmentShaderSrc =
 "uniform sampler2D tex0;"
+
+"precision highp float;\n"
 
 "varying vec4 vColor;\n"
 "varying vec2 vTex0;\n"
@@ -517,25 +521,26 @@ static Shader *findShader(const ShaderState *state) {
 }
 
 
+static void multMatrices(float *target, const float *left, const float *right);
+
+
 static void commitShaderState() {
 	Shader *newShader = findShader(&qglState->wantShader);
+	bool shaderChanged = false;
 	if (qglState->activeShader != newShader) {
 		qglState->activeShader = newShader;
 		glUseProgram(qglState->activeShader->program);
+		shaderChanged = true;
 	}
 
-	if (qglState->mvMatrixDirty) {
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(qglState->mvMatrices[qglState->mvMatrixTop]);
+	if (shaderChanged || qglState->mvMatrixDirty || qglState->projMatrixDirty) {
+		float mvp[16];
+		multMatrices(mvp, qglState->projMatrices[qglState->projMatrixTop], qglState->mvMatrices[qglState->mvMatrixTop]);
+
+		glUniformMatrix4fv(glGetUniformLocation(qglState->activeShader->program, "mvp"), 1, GL_FALSE, &mvp[0]);
 		qglState->mvMatrixDirty = false;
-	}
-
-	if (qglState->projMatrixDirty) {
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(qglState->projMatrices[qglState->projMatrixTop]);
 		qglState->projMatrixDirty = false;
 	}
-
 }
 
 
