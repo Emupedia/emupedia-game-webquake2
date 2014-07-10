@@ -510,6 +510,10 @@ void GetEvent(SDL_Event *event)
 	unsigned int key;
 	
 	switch(event->type) {
+	case SDL_MOUSEMOTION:
+		mx += event->motion.xrel; my += event->motion.yrel;
+		break;
+
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == 4) {
 			keyq[keyq_head].key = K_MWHEELUP;
@@ -1067,14 +1071,12 @@ void EXPORT KBD_Update(void)
 // get events from x server
 	if (X11_active)
 	{
+		mx = 0; my = 0;
 		int bstate;
 		
 		while (SDL_PollEvent(&event))
 			GetEvent(&event);
 
-	if (!mx && !my)
-		SDL_GetRelativeMouseState(&mx, &my);
-	
 #ifdef HAVE_JOYSTICK
 	if (joystick_avail && joy) {
 	  jx = SDL_JoystickGetAxis(joy, lr_axis);
