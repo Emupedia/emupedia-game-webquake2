@@ -46,14 +46,19 @@ typedef struct ShaderState {
 
 
 const char *vertexShaderSrc =
-"in vec3 pos;\n"
-"in vec4 col;\n"
-"in vec2 texcoord0;\n"
-"in vec2 texcoord1;\n"
+"attribute vec3 pos;\n"
+"attribute vec4 col;\n"
+"attribute vec2 texcoord0;\n"
+"attribute vec2 texcoord1;\n"
+
+"varying vec4 vColor;\n"
+"varying vec2 vTex0;\n"
+"varying vec2 vTex1;\n"
+
 "void main(void) {\n"
-"	gl_FrontColor = col;\n"
-"	gl_TexCoord[0] = vec4(texcoord0, 0.0, 1.0);\n"
-"	gl_TexCoord[1] = vec4(texcoord1, 0.0, 1.0);\n"
+"	vColor = col;\n"
+"	vTex0 = texcoord0;\n"
+"	vTex1 = texcoord1;\n"
 
 "	gl_Position = gl_ModelViewProjectionMatrix * vec4(pos, 1.0);\n"
 "}\n"
@@ -63,8 +68,12 @@ const char *vertexShaderSrc =
 const char *fragmentShaderSrc =
 "uniform sampler2D tex0;"
 
+"varying vec4 vColor;\n"
+"varying vec2 vTex0;\n"
+"varying vec2 vTex1;\n"
+
 "void main(void) {"
-"	gl_FragColor = gl_Color * texture2D(tex0, gl_TexCoord[0].xy);"
+"	gl_FragColor = vColor * texture2D(tex0, vTex0);"
 "}"
 ;
 
