@@ -20,6 +20,7 @@ FILES:= \
 	gl_rmain.c \
 	gl_rmisc.c \
 	gl_rsurf.c \
+	gl_sdl.c \
 	gl_warp.c \
 	qgl_linux.c \
 	# empty line
