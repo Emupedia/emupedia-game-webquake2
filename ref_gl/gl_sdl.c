@@ -827,6 +827,131 @@ static void SetSDLIcon(void) {
     SDL_FreeSurface(icon);
 }
 
+
+#ifdef EPOXY
+
+
+static const char *errorSource(GLenum source)
+{
+	switch (source)
+	{
+	case GL_DEBUG_SOURCE_API:
+		return "API";
+		break;
+
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+		return "window system";
+		break;
+
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:
+		return "shader compiler";
+		break;
+
+	case GL_DEBUG_SOURCE_THIRD_PARTY:
+		return "third party";
+		break;
+
+	case GL_DEBUG_SOURCE_APPLICATION:
+		return "application";
+		break;
+
+	case GL_DEBUG_SOURCE_OTHER:
+		return "other";
+		break;
+
+	default:
+		break;
+	}
+
+	return "unknown source";
+}
+
+
+static const char *errorType(GLenum type)
+{
+	switch (type)
+	{
+	case GL_DEBUG_TYPE_ERROR:
+	case GL_DEBUG_CATEGORY_API_ERROR_AMD:
+		return "error";
+		break;
+
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+	case GL_DEBUG_CATEGORY_DEPRECATION_AMD:
+		return "deprecated behavior";
+		break;
+
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+	case GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD:
+		return "undefined behavior";
+		break;
+
+	case GL_DEBUG_TYPE_PORTABILITY:
+		return "portability";
+		break;
+
+	case GL_DEBUG_TYPE_PERFORMANCE:
+	case GL_DEBUG_CATEGORY_PERFORMANCE_AMD:
+		return "performance";
+		break;
+
+	case GL_DEBUG_TYPE_OTHER:
+	case GL_DEBUG_CATEGORY_OTHER_AMD:
+		return "other";
+		break;
+
+	case GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD:
+		return "window system error";
+		break;
+
+	case GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD:
+		return "shader compiler error";
+		break;
+
+	case GL_DEBUG_CATEGORY_APPLICATION_AMD:
+		return "application error";
+		break;
+
+	default:
+		break;
+
+	}
+
+	return "unknown type";
+}
+
+
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
+
+void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char *message, void *userParam)
+{
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH_ARB:
+		ri.Con_Printf( PRINT_ALL, "GL error from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
+		break;
+
+	case GL_DEBUG_SEVERITY_MEDIUM_ARB:
+		ri.Con_Printf( PRINT_ALL, "GL warning from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
+		break;
+
+	case GL_DEBUG_SEVERITY_LOW_ARB:
+		ri.Con_Printf( PRINT_ALL, "GL debug from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
+		break;
+
+	default:
+		ri.Con_Printf( PRINT_ALL, "GL error of unknown severity %x from %s type %s: (%d) %s\n", severity, errorSource(source), errorType(type), id, message);
+		break;
+	}
+}
+
+
+#endif  // EPOXY
+
+
 /*
 ** SWimp_InitGraphics
 **
@@ -882,10 +1007,20 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 #if 0
 	// for testing on desktop
 	// nvidia lets us create GLES contexts
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
+#if 0
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
+#else
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
+
 #endif  // 0
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
@@ -915,6 +1050,29 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		SetSDLIcon();
 		// TODO: store context and do proper cleanup
 		SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+
+#ifdef EPOXY
+		if (epoxy_has_gl_extension("GL_KHR_debug")) {
+			ri.Con_Printf( PRINT_ALL, "KHR_debug found\n" );
+
+			glDebugMessageCallback(glDebugCallback, NULL);
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+			// nvidia warning about inconsistent texture base level
+			// which fires on all glClear operations
+			// tell the driver to STFU
+			{
+				const unsigned int ids[] = { 131204 };
+				glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE, 1, ids, GL_FALSE);
+			}
+
+		} else {
+			ri.Con_Printf( PRINT_ALL, "No KHR_debug\n" );
+		}
+#endif  // EPOXY
+
 	}
 
 #else  // SDL_VERSION_ATLEAST(2, 0, 0)
