@@ -632,9 +632,11 @@ int main (int argc, char **argv)
 	//saved_euid = geteuid();
 	//seteuid(getuid());
 	//
-	
+
+#ifndef EMSCRIPTEN
 	if (getuid() == 0 || geteuid() == 0)
 		Sys_Error ("For security reasons, do not run Quake II as root.");
+#endif  // EMSCRIPTEN
 
 	binary_name = argv[0];
 
