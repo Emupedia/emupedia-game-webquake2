@@ -46,13 +46,17 @@ typedef struct ShaderState {
 
 
 const char *vertexShaderSrc =
-"void main(void) {"
-"	gl_FrontColor = gl_Color;"
-"	gl_TexCoord[0] = gl_MultiTexCoord0;"
-"	gl_TexCoord[1] = gl_MultiTexCoord1;"
+"in vec3 pos;\n"
+"in vec4 col;\n"
+"in vec2 texcoord0;\n"
+"in vec2 texcoord1;\n"
+"void main(void) {\n"
+"	gl_FrontColor = col;\n"
+"	gl_TexCoord[0] = vec4(texcoord0, 0.0, 1.0);\n"
+"	gl_TexCoord[1] = vec4(texcoord1, 0.0, 1.0);\n"
 
-"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
-"}"
+"	gl_Position = gl_ModelViewProjectionMatrix * vec4(pos, 1.0);\n"
+"}\n"
 ;
 
 
@@ -475,6 +479,11 @@ static Shader *createShader(const ShaderState *state) {
 	glAttachShader(program, fragmentShader);
 	glDeleteShader(fragmentShader);
 
+	glBindAttribLocation(program, 0, "pos");
+	glBindAttribLocation(program, 1, "col");
+	glBindAttribLocation(program, 2, "texcoord0");
+	glBindAttribLocation(program, 3, "texcoord1");
+
 	glLinkProgram(program);
 	glUseProgram(program);
 	glUniform1i(glGetUniformLocation(program, "tex0"), 0);
@@ -540,22 +549,10 @@ void qglEnd(void) {
 
 	glBufferData(GL_ARRAY_BUFFER, qglState->usedVertices * sizeof(Vertex), &qglState->vertices[0], GL_DYNAMIC_DRAW);
 
-	qglVertexPointer(3, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, pos));
-	qglColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, color));
-
-	if (qglState->clientActiveTexture == 0) {
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
-
-		glClientActiveTexture(GL_TEXTURE1);
-		qglState->clientActiveTexture = 1;
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
-	} else {
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
-
-		glClientActiveTexture(GL_TEXTURE0);
-		qglState->clientActiveTexture = 0;
-		qglTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
-	}
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, pos));
+	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, color));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
 
 	commitShaderState();
 
