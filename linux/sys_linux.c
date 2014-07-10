@@ -42,6 +42,10 @@
 #include <sys/wait.h>
 #include <execinfo.h>
 
+#else  // EMSCRIPTEN
+
+#include <emscripten.h>
+
 #endif  // EMSCRIPTEN
 
 #include "../qcommon/qcommon.h"
@@ -628,6 +632,18 @@ char *Sys_GetClipboardData(void)
 	return NULL;
 }
 
+
+#ifdef EMSCRIPTEN
+
+
+void mainloop() {
+	Qcommon_Frame (1000 / 60);
+}
+
+
+#endif  // EMSCRIPTEN
+
+
 int main (int argc, char **argv)
 {
 	unsigned int 	time, oldtime, newtime, spins;
@@ -659,7 +675,11 @@ int main (int argc, char **argv)
 	}
 #endif  // EMSCRIPTEN
 
-    oldtime = Sys_Milliseconds ();
+#ifdef EMSCRIPTEN
+	emscripten_set_main_loop(mainloop, 60, 1);
+
+#else  // EMSCRIPTEN
+	oldtime = Sys_Milliseconds ();
     while (1)
     {
 		// find time spent rendering last frame
@@ -688,7 +708,7 @@ int main (int argc, char **argv)
 		Qcommon_Frame (time);
 		oldtime = newtime;
     }
-
+#endif  // EMSCRIPTEN
 }
 
 //r1 :redundant
