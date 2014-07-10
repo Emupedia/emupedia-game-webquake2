@@ -874,7 +874,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			return true;
 	}
 	
-	srandom(getpid());
+	srand(getpid());
 
 	// let the sound and input subsystems know about the new window
 	ri.Vid_NewWindow (vid.width, vid.height);
