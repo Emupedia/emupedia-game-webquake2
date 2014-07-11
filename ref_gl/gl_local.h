@@ -104,7 +104,6 @@ typedef struct image_s
 
 #define	TEXNUM_LIGHTMAPS	1024
 #define	TEXNUM_SCRAPS		1152
-#define	TEXNUM_IMAGES		1153
 //#define TEXNUM_DETAIL		5555
 #define		MAX_GLTEXTURES	1024
 

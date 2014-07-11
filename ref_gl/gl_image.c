@@ -2825,7 +2825,7 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 	}
 
 nonscrap:
-	image->texnum = TEXNUM_IMAGES + (image - gltextures);
+	glGenTextures(1, &image->texnum);
 	GL_Bind(image->texnum);
 
 	mipmap = (image->type != it_pic && image->type != it_sky) ? true : false;
