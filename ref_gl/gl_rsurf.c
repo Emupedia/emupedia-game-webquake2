@@ -179,7 +179,9 @@ void DrawGLPoly (glpoly_t *p)
 	int		i;
 	float	*v;
 
-	qglBegin (GL_POLYGON);
+	qglBegin(GL_TRIANGLE_FAN);
+	// these polygons appear to be convex and arranged just so we can render
+	// them as triangle fans
 	v = p->verts[0];
 	for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
 	{
@@ -274,7 +276,7 @@ void DrawGLPolyChain( glpoly_t *p, float soffset, float toffset )
 			float *v;
 			int j;
 
-			qglBegin (GL_POLYGON);
+			qglBegin(GL_TRIANGLE_FAN);
 			v = p->verts[0];
 			for (j=0 ; j<p->numverts ; j++, v+= VERTEXSIZE)
 			{
@@ -291,7 +293,7 @@ void DrawGLPolyChain( glpoly_t *p, float soffset, float toffset )
 			float *v;
 			int j;
 
-			qglBegin (GL_POLYGON);
+			qglBegin(GL_TRIANGLE_FAN);
 			v = p->verts[0];
 			for (j=0 ; j<p->numverts ; j++, v+= VERTEXSIZE)
 			{
