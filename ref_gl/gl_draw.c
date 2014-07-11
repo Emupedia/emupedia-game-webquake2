@@ -435,14 +435,17 @@ void EXPORT Draw_Fill (int x, int y, int w, int h, int c)
 		color.v[1]/255.0f,
 		color.v[2]/255.0f);
 
-	qglBegin (GL_QUADS);
+	qglBegin(GL_QUADS);
 
-	qglVertex2f(x,y);
-	qglVertex2f(x+w, y);
-	qglVertex2f(x+w, y+h);
-	qglVertex2f(x, y+h);
+	qglVertex2f(x, y);
 
-	qglEnd ();
+	qglVertex2f(x + w, y);
+
+	qglVertex2f(x + w, y + h);
+
+	qglVertex2f(x, y + h);
+
+	qglEnd();
 
 	qglColor3f (1,1,1);
 
