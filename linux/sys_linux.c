@@ -636,8 +636,16 @@ char *Sys_GetClipboardData(void)
 #ifdef EMSCRIPTEN
 
 
+static unsigned int g_oldtime = 0;
+
 void mainloop() {
-	Qcommon_Frame (1000 / 60);
+	unsigned int newtime = Sys_Milliseconds();
+	unsigned int time = newtime - g_oldtime;
+
+	if (time >= 1) {
+		g_oldtime = newtime;
+		Qcommon_Frame(time);
+	}
 }
 
 
@@ -676,6 +684,8 @@ int main (int argc, char **argv)
 #endif  // EMSCRIPTEN
 
 #ifdef EMSCRIPTEN
+
+	g_oldtime = Sys_Milliseconds();
 	emscripten_set_main_loop(mainloop, 60, 1);
 
 #else  // EMSCRIPTEN
