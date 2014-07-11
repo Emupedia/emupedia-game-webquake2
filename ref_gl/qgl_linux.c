@@ -69,6 +69,7 @@ const char *vertexShaderSrc =
 
 const char *fragmentShaderSrc =
 "uniform sampler2D tex0;"
+"uniform sampler2D tex1;"
 
 "precision highp float;\n"
 
@@ -76,9 +77,19 @@ const char *fragmentShaderSrc =
 "varying vec2 vTex0;\n"
 "varying vec2 vTex1;\n"
 
-"void main(void) {"
-"	gl_FragColor = vColor * texture2D(tex0, vTex0);"
-"}"
+"void main(void) {\n"
+"	vec4 temp = vColor;\n"
+
+"#ifdef TEX0\n"
+"	temp = temp * texture2D(tex0, vTex0);\n"
+"#endif  // TEX0\n"
+
+"#ifdef TEX1\n"
+"	temp = temp * texture2D(tex1, vTex1);\n"
+"#endif  // TEX1\n"
+
+"	gl_FragColor = temp;\n"
+"}\n"
 ;
 
 
