@@ -277,7 +277,7 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 	}
 
 	GL_MBind(GL_TEXTURE0, gl->texnum);
-	qglBegin (GL_QUADS);
+	qglBegin (GL_TRIANGLES);
 
 	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->tl);
 	qglVertex2f(x, y);
@@ -287,6 +287,12 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 
 	qglMTexCoord2f(GL_TEXTURE0, gl->sh, gl->th);
 	qglVertex2f(x + w, y + h);
+
+	qglMTexCoord2f(GL_TEXTURE0, gl->sh, gl->th);
+	qglVertex2f(x + w, y + h);
+
+	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->tl);
+	qglVertex2f(x, y);
 
 	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->th);
 	qglVertex2f(x, y + h);
