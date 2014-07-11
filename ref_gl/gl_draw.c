@@ -183,7 +183,7 @@ void EXPORT Draw_Char (int x, int y, int num)
 		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	}
 
-	qglBegin (GL_QUADS);
+	qglBegin (GL_TRIANGLES);
 
 	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
 	qglVertex2f(x, y);
@@ -193,6 +193,12 @@ void EXPORT Draw_Char (int x, int y, int num)
 
 	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
 	qglVertex2f(x + 8, y + 8);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
+	qglVertex2f(x + 8, y + 8);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
+	qglVertex2f(x, y);
 
 	qglMTexCoord2f (GL_TEXTURE0, fcol, frowbottom);
 	qglVertex2f(x, y + 8);
