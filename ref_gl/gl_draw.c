@@ -184,14 +184,19 @@ void EXPORT Draw_Char (int x, int y, int num)
 	}
 
 	qglBegin (GL_QUADS);
+
 	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
 	qglVertex2f(x, y);
+
 	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frow);
-	qglVertex2f(x+8, y);
+	qglVertex2f(x + 8, y);
+
 	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
-	qglVertex2f(x+8, y+8);
+	qglVertex2f(x + 8, y + 8);
+
 	qglMTexCoord2f (GL_TEXTURE0, fcol, frowbottom);
-	qglVertex2f(x, y+8);
+	qglVertex2f(x, y + 8);
+
 	qglEnd ();
 
 	if (draw_chars->has_alpha)
