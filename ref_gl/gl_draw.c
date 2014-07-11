@@ -352,16 +352,21 @@ void EXPORT Draw_Pic (int x, int y, char *pic)
 
 	GL_MBind(GL_TEXTURE0, gl->texnum);
 
-	qglBegin (GL_QUADS);
+	qglBegin(GL_QUADS);
+
 	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->tl);
 	qglVertex2f(x, y);
+
 	qglMTexCoord2f(GL_TEXTURE0, gl->sh, gl->tl);
-	qglVertex2f(x+gl->width, y);
+	qglVertex2f(x + gl->width, y);
+
 	qglMTexCoord2f(GL_TEXTURE0, gl->sh, gl->th);
-	qglVertex2f(x+gl->width, y+gl->height);
+	qglVertex2f(x + gl->width, y+gl->height);
+
 	qglMTexCoord2f(GL_TEXTURE0, gl->sl, gl->th);
-	qglVertex2f(x, y+gl->height);
-	qglEnd ();
+	qglVertex2f(x, y + gl->height);
+
+	qglEnd();
 
 	if (gl->has_alpha)
 	{
