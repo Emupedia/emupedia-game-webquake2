@@ -68,7 +68,7 @@ extern  void ( APIENTRY * qglCullFace )(GLenum mode);
 extern  void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures);
 extern  void ( APIENTRY * qglDepthFunc )(GLenum func);
 extern  void ( APIENTRY * qglDepthMask )(GLboolean flag);
-extern  void ( APIENTRY * qglDepthRange )(GLclampd zNear, GLclampd zFar);
+void qglDepthRange(GLclampd zNear, GLclampd zFar);
 void qglDisable(GLenum cap);
 extern  void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 extern  void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);

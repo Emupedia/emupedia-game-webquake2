@@ -112,6 +112,8 @@ typedef struct QGLState {
 	int mvMatrixTop, projMatrixTop;
 	bool mvMatrixDirty, projMatrixDirty;
 
+	float zNear, zFar;
+
 	GLuint vbo;
 
 	ShaderState wantShader;
@@ -139,7 +141,6 @@ void ( APIENTRY * qglCullFace )(GLenum mode);
 void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures);
 void ( APIENTRY * qglDepthFunc )(GLenum func);
 void ( APIENTRY * qglDepthMask )(GLboolean flag);
-void ( APIENTRY * qglDepthRange )(GLclampd zNear, GLclampd zFar);
 void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
 void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 void ( APIENTRY * qglFrontFace )(GLenum mode);
@@ -176,7 +177,6 @@ static void ( APIENTRY * dllCullFace )(GLenum mode);
 static void ( APIENTRY * dllDeleteTextures )(GLsizei n, const GLuint *textures);
 static void ( APIENTRY * dllDepthFunc )(GLenum func);
 static void ( APIENTRY * dllDepthMask )(GLboolean flag);
-static void ( APIENTRY * dllDepthRange )(GLclampd zNear, GLclampd zFar);
 static void ( APIENTRY * dllDisable )(GLenum cap);
 static void ( APIENTRY * dllDrawArrays )(GLenum mode, GLint first, GLsizei count);
 static void ( APIENTRY * dllDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
@@ -254,7 +254,6 @@ void QGL_Shutdown( void )
 	qglDeleteTextures            = NULL;
 	qglDepthFunc                 = NULL;
 	qglDepthMask                 = NULL;
-	qglDepthRange                = NULL;
 	qglDrawArrays                = NULL;
 	qglDrawElements              = NULL;
 	qglFrontFace                 = NULL;
@@ -297,6 +296,8 @@ qboolean QGL_Init( const char *dllname )
 	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
 	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
 
+	qglState->zFar = 1.0f;
+
 	qglBlendFunc                 = dllBlendFunc = glBlendFunc;
 	qglClear                     = dllClear = glClear;
 	qglClearColor                = dllClearColor = glClearColor;
@@ -307,7 +308,6 @@ qboolean QGL_Init( const char *dllname )
 	qglDeleteTextures            = dllDeleteTextures = glDeleteTextures;
 	qglDepthFunc                 = dllDepthFunc = glDepthFunc;
 	qglDepthMask                 = dllDepthMask = glDepthMask;
-	qglDepthRange                = dllDepthRange = glDepthRange;
 	qglDrawArrays                = dllDrawArrays = glDrawArrays;
 	qglDrawElements              = dllDrawElements = glDrawElements;
 	qglFrontFace                 = 	dllFrontFace                 = glFrontFace;
@@ -522,6 +522,7 @@ static Shader *findShader(const ShaderState *state) {
 
 
 static void multMatrices(float *target, const float *left, const float *right);
+static void identityMatrix(float *matrix);
 
 
 static void commitShaderState() {
@@ -535,7 +536,15 @@ static void commitShaderState() {
 
 	if (shaderChanged || qglState->mvMatrixDirty || qglState->projMatrixDirty) {
 		float mvp[16];
-		multMatrices(mvp, qglState->projMatrices[qglState->projMatrixTop], qglState->mvMatrices[qglState->mvMatrixTop]);
+
+		float depthAdjust[16];
+		identityMatrix(depthAdjust);
+		depthAdjust[2 * 4 + 2] = qglState->zFar - qglState->zNear;
+		depthAdjust[3 * 4 + 2] = qglState->zNear;
+
+		float temp[16];
+		multMatrices(temp, depthAdjust, qglState->projMatrices[qglState->projMatrixTop]);
+		multMatrices(mvp, temp, qglState->mvMatrices[qglState->mvMatrixTop]);
 
 		glUniformMatrix4fv(glGetUniformLocation(qglState->activeShader->program, "mvp"), 1, GL_FALSE, &mvp[0]);
 		qglState->mvMatrixDirty = false;
@@ -862,4 +871,10 @@ void qglBindTexture(GLenum target, GLuint texture) {
 	}
 
 	glBindTexture(target, texture);
+}
+
+
+void qglDepthRange(GLclampd zNear, GLclampd zFar) {
+	qglState->zNear = zNear;
+	qglState->zFar = zFar;
 }
