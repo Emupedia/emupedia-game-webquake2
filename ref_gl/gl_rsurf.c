@@ -1640,7 +1640,7 @@ void GL_BeginBuildingLightmaps (void)
 	{
 		gl_lms.internal_format = gl_tex_solid_format;
 	}*/
-	gl_lms.internal_format = gl_tex_solid_format;
+	gl_lms.internal_format = gl_tex_alpha_format;
 
 	/*
 	** initialize the dynamic lightmap texture
