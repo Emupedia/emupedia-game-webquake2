@@ -27,8 +27,8 @@ LDLIBS_ref_gl:=
 LDLIBS_client:=
 
 
-LTOCFLAGS:=-flto -fuse-linker-plugin -fno-fat-lto-objects
-LTOLDFLAGS:=-flto -fuse-linker-plugin
+LTOCFLAGS:=--llvm-lto 3
+LTOLDFLAGS:=--llvm-lto 3
 
 
 OBJSUFFIX:=.o
