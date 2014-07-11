@@ -107,6 +107,9 @@ typedef struct image_s
 //#define TEXNUM_DETAIL		5555
 #define		MAX_GLTEXTURES	1024
 
+#define	MAX_LIGHTMAPS	128
+
+
 //extern	cvar_t	*con_alpha;
 
 extern	vec4_t	colorWhite;
@@ -440,7 +443,7 @@ typedef struct
 
 	unsigned char *d_16to8table;
 
-	int lightmap_textures;
+	GLuint lightmap_textures[MAX_LIGHTMAPS];
 
 	unsigned	currenttextures[2];
 	unsigned int currenttmu;

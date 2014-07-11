@@ -1188,6 +1188,8 @@ int EXPORT R_Init( void *hinstance, void *hWnd )
 
 	clearImageHash();
 
+	memset(gl_state.lightmap_textures, 0, MAX_LIGHTMAPS * sizeof(GLuint));
+
 	for ( j = 0; j < 256; j++ )
 	{
 		r_turbsin[j] *= 0.5;
@@ -1404,6 +1406,11 @@ R_Shutdown
 */
 void EXPORT R_Shutdown (void)
 {
+	if (gl_state.lightmap_textures[0] != 0) {
+		glDeleteTextures(MAX_LIGHTMAPS, gl_state.lightmap_textures);
+		memset(gl_state.lightmap_textures, 0, MAX_LIGHTMAPS * sizeof(GLuint));
+	}
+
 	ri.Cmd_RemoveCommand ("modellist");
 	ri.Cmd_RemoveCommand ("screenshot");
 	ri.Cmd_RemoveCommand ("imagelist");
