@@ -36,7 +36,6 @@ typedef struct ShaderTexState {
 
 
 typedef struct ShaderState {
-	GLenum shadeModel;
 	bool alphaTest;
 	GLenum alphaFunc;
 	float alphaRef;
@@ -403,14 +402,6 @@ static Shader *createShader(const ShaderState *state) {
 	char defineBuf[BUFSIZE];
 	unsigned int defSize = 0;
 	memset(defineBuf, '\0', BUFSIZE);
-
-	if (state->shadeModel == GL_FLAT) {
-		EMITDEF("SHADE_FLAT");
-	} else if (state->shadeModel == GL_SMOOTH) {
-		EMITDEF("SHADE_SMOOTH");
-	} else {
-		assert(false);
-	}
 
 	if (state->alphaTest) {
 		EMITDEF("ALPHA");
@@ -825,11 +816,6 @@ void qglGetFloatv(GLenum pname, GLfloat *params) {
 
 void qglActiveTexture(GLenum tex) {
 	qglState->wantActiveTexture = tex - GL_TEXTURE0;
-}
-
-
-void qglShadeModel(GLenum mode) {
-	qglState->wantShader.shadeModel = mode;
 }
 
 

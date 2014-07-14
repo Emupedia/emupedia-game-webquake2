@@ -700,7 +700,6 @@ void R_DrawAliasModel (entity_t *e)
 
 	// draw it
 
-	qglShadeModel (GL_SMOOTH);
 
 	GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
 	if ( currententity->flags & RF_TRANSLUCENT || (skin->has_alpha && FLOAT_NE_ZERO(gl_alphaskins->value)))
@@ -733,7 +732,6 @@ void R_DrawAliasModel (entity_t *e)
 	GL_DrawAliasFrameLerp (paliashdr, currententity->backlerp);
 
 	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
-	qglShadeModel (GL_FLAT);
 
 	qglPopMatrix ();
 

@@ -96,7 +96,6 @@ extern  void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsiz
 void qglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 void qglScalef(GLfloat x, GLfloat y, GLfloat z);
 extern  void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
-void qglShadeModel(GLenum mode);
 extern  void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
 extern  void ( APIENTRY * qglStencilMask )(GLuint mask);
 extern  void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
