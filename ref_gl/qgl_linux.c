@@ -68,8 +68,12 @@ const char *vertexShaderSrc =
 
 
 const char *fragmentShaderSrc =
-"uniform sampler2D tex0;"
-"uniform sampler2D tex1;"
+"uniform sampler2D tex0;\n"
+"uniform sampler2D tex1;\n"
+
+"#ifdef ALPHA\n"
+"uniform float alphaRef;\n"
+"#endif  // ALPHA\n"
 
 "precision highp float;\n"
 
@@ -87,6 +91,14 @@ const char *fragmentShaderSrc =
 "#ifdef TEX1\n"
 "	temp = temp * texture2D(tex1, vTex1);\n"
 "#endif  // TEX1\n"
+
+"#ifdef ALPHA\n"
+	// alpha function shows the fragment if test passes and discard if fails
+	// so for GREATER we check <=
+"	if (temp.a <= alphaRef) {\n"
+"		discard;\n"
+"	}\n"
+"#endif  // ALPHA\n"
 
 "	gl_FragColor = temp;\n"
 "}\n"
@@ -388,6 +400,9 @@ static Shader *createShader(const ShaderState *state) {
 
 	if (state->alphaTest) {
 		EMITDEF("ALPHA");
+
+		// the only one currently used
+		assert(state->alphaFunc == GL_GREATER);
 	}
 
 	if (state->texState[0].texEnable) {
@@ -506,6 +521,10 @@ static void commitShaderState() {
 		glUniformMatrix4fv(glGetUniformLocation(qglState->activeShader->program, "mvp"), 1, GL_FALSE, &mvp[0]);
 		qglState->mvMatrixDirty = false;
 		qglState->projMatrixDirty = false;
+	}
+
+	if (qglState->wantShader.alphaTest) {
+		glUniform1f(glGetUniformLocation(newShader->program, "alphaRef"), qglState->wantShader.alphaRef);
 	}
 }
 
@@ -774,7 +793,7 @@ void qglShadeModel(GLenum mode) {
 
 void qglAlphaFunc(GLenum func, GLclampf ref) {
 	qglState->wantShader.alphaFunc = func;
-	qglState->wantShader.alphaRef = func;
+	qglState->wantShader.alphaRef = ref;
 }
 
 
