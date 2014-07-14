@@ -71,11 +71,11 @@ const char *fragmentShaderSrc =
 "uniform sampler2D tex0;\n"
 "uniform sampler2D tex1;\n"
 
+"precision highp float;\n"
+
 "#ifdef ALPHA\n"
 "uniform float alphaRef;\n"
 "#endif  // ALPHA\n"
-
-"precision highp float;\n"
 
 "varying vec4 vColor;\n"
 "varying vec2 vTex0;\n"
@@ -85,11 +85,25 @@ const char *fragmentShaderSrc =
 "	vec4 temp = vColor;\n"
 
 "#ifdef TEX0\n"
-"	temp = temp * texture2D(tex0, vTex0);\n"
+"	vec4 t0col = texture2D(tex0, vTex0);\n"
+"#ifdef TEX0_MODULATE\n"
+"	temp = temp * t0col;\n"
+"#elif TEX0_REPLACE\n"
+"	temp = t0col;\n"
+"#else\n"
+"#error Unknown tex0 mode\n"
+"#endif  // TEX0 mode\n"
 "#endif  // TEX0\n"
 
 "#ifdef TEX1\n"
-"	temp = temp * texture2D(tex1, vTex1);\n"
+"	vec4 t1col = texture2D(tex1, vTex1);\n"
+"#ifdef TEX1_MODULATE\n"
+"	temp = temp * t1col;\n"
+"#elif TEX1_REPLACE\n"
+"	temp = t1col;\n"
+"#else\n"
+"#error Unknown tex1 mode\n"
+"#endif  // TEX1 mode\n"
 "#endif  // TEX1\n"
 
 "#ifdef ALPHA\n"
@@ -407,10 +421,38 @@ static Shader *createShader(const ShaderState *state) {
 
 	if (state->texState[0].texEnable) {
 		EMITDEF("TEX0");
+
+		switch(state->texState[0].texMode) {
+		case GL_MODULATE:
+			EMITDEF("TEX0_MODULATE");
+			break;
+
+		case GL_REPLACE:
+			EMITDEF("TEX0_REPLACE");
+			break;
+
+		default:
+			assert(false);
+			break;
+		}
 	}
 
 	if (state->texState[1].texEnable) {
 		EMITDEF("TEX1");
+
+		switch(state->texState[1].texMode) {
+		case GL_MODULATE:
+			EMITDEF("TEX1_MODULATE");
+			break;
+
+		case GL_REPLACE:
+			EMITDEF("TEX1_REPLACE");
+			break;
+
+		default:
+			assert(false);
+			break;
+		}
 	}
 
 	const char *srcArray[2];
