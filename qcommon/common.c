@@ -1908,7 +1908,10 @@ RESTRICT void * EXPORT Z_TagMallocGame (int size, int tag)
 	b = Z_TagMalloc (size+4, tag);
 
 	memset (b, 0, size);
-	*(int *)(b + size) = 0xFDFEFDFE;
+	b[size + 0] = 0xFE;
+	b[size + 1] = 0xFD;
+	b[size + 2] = 0xFE;
+	b[size + 3] = 0xFD;
 
 	if (tag == TAG_LEVEL)
 		z_level_allocs++;
