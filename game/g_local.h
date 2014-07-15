@@ -505,10 +505,10 @@ extern	int	meansOfDeath;
 
 extern	edict_t			*g_edicts;
 
-#define	FOFS(x) (int)&(((edict_t *)0)->x)
-#define	STOFS(x) (int)&(((spawn_temp_t *)0)->x)
-#define	LLOFS(x) (int)&(((level_locals_t *)0)->x)
-#define	CLOFS(x) (int)&(((gclient_t *)0)->x)
+#define	FOFS(x)  offsetof(edict_t, x)
+#define	STOFS(x) offsetof(spawn_temp_t, x)
+#define	LLOFS(x) offsetof(level_locals_t, x)
+#define	CLOFS(x) offsetof(gclient_t, x)
 
 #ifdef random
 #undef random
