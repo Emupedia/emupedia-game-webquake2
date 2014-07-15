@@ -4,3 +4,5 @@
 *.so
 
 *-bin
+
+local.mk
