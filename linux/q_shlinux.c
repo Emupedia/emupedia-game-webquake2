@@ -31,16 +31,16 @@ int curhunksize;
 void *Hunk_Begin (int maxsize, int precommit)
 {
 	// reserve a huge chunk of memory, but don't commit any yet
-	maxhunksize = maxsize + sizeof(int);
+	maxhunksize = maxsize + sizeof(intptr_t);
 	curhunksize = 0;
 	membase = mmap(0, maxhunksize, PROT_READ|PROT_WRITE, 
 		MAP_PRIVATE|MMAP_ANON, -1, 0);
 	if (membase == NULL || membase == (byte *)-1)
 		Sys_Error("unable to virtual allocate %d bytes", maxsize);
 
-	*((int *)membase) = curhunksize;
+	*((intptr_t *)membase) = curhunksize;
 
-	return membase + sizeof(int);
+	return membase + sizeof(intptr_t);
 }
 
 void *Hunk_Alloc (int size)
@@ -51,7 +51,7 @@ void *Hunk_Alloc (int size)
 	size = (size+31)&~31;
 	if (curhunksize + size > maxhunksize)
 		Sys_Error("Hunk_Alloc overflow");
-	buf = membase + sizeof(int) + curhunksize;
+	buf = membase + sizeof(intptr_t) + curhunksize;
 	curhunksize += size;
 	return buf;
 }
@@ -61,10 +61,10 @@ int Hunk_End (void)
 #if !(defined(__FreeBSD__) || defined(EMSCRIPTEN))
 	byte *n;
 
-	n = mremap(membase, maxhunksize, curhunksize + sizeof(int), 0);
+	n = mremap(membase, maxhunksize, curhunksize + sizeof(intptr_t), 0);
 	if (n != membase)
 		Sys_Error("Hunk_End:  Could not remap virtual block (%d)", errno);
-	*((int *)membase) = curhunksize + sizeof(int);
+	*((intptr_t *)membase) = curhunksize + sizeof(intptr_t);
 #endif
 	
 	return curhunksize;
@@ -75,8 +75,8 @@ void Hunk_Free (void *base)
 	byte *m;
 
 	if (base) {
-		m = ((byte *)base) - sizeof(int);
-		if (munmap(m, *((int *)m)))
+		m = ((byte *)base) - sizeof(intptr_t);
+		if (munmap(m, *((intptr_t *)m)))
 			Sys_Error("Hunk_Free: munmap failed (%d)", errno);
 	}
 }
