@@ -1956,7 +1956,11 @@ void EXPORT Z_FreeGame (void *buf)
 		loc = loc->next;
 		if (buf == loc->address)
 		{
-			if (*(int *)((byte *)buf + loc->size) != 0xFDFEFDFE)
+			unsigned int magic = ((byte *)loc->address)[loc->size + 3];
+			magic = (magic << 8) + ((byte *)loc->address)[loc->size + 2];
+			magic = (magic << 8) + ((byte *)loc->address)[loc->size + 1];
+			magic = (magic << 8) + ((byte *)loc->address)[loc->size + 0];
+			if (magic != 0xFDFEFDFE)
 			{
 				Com_Printf ("Memory corruption detected within the Game DLL. Please contact the mod author and inform them that they are not managing dynamically allocated memory correctly.\n", LOG_GENERAL);
 				Com_Error (ERR_DIE, "Z_FreeGame: Game DLL corrupted a memory block of size %d at %p (allocated %u ms ago from code at %p), detected during free at %p", loc->size, loc->address, curtime - loc->time, loc->allocationLocation, retAddr);
@@ -1995,7 +1999,11 @@ void EXPORT Z_FreeTagsGame (int tag)
 	{
 		loc = loc->next;
 
-		if (*(int *)((byte *)loc->address + loc->size) != 0xFDFEFDFE)
+		unsigned int magic = ((byte *)loc->address)[loc->size + 3];
+		magic = (magic << 8) + ((byte *)loc->address)[loc->size + 2];
+		magic = (magic << 8) + ((byte *)loc->address)[loc->size + 1];
+		magic = (magic << 8) + ((byte *)loc->address)[loc->size + 0];
+		if (magic != 0xFDFEFDFE)
 		{
 			Com_Printf ("Memory corruption detected within the Game DLL. Please contact the mod author and inform them that they are not managing dynamically allocated memory correctly.\n", LOG_GENERAL);
 			Com_Error (ERR_DIE, "Z_FreeTagsGame: Game DLL corrupted a memory block of size %d at %p (allocated %u ms ago from code at %p)", loc->size, loc->address, curtime - loc->time, loc->allocationLocation);
