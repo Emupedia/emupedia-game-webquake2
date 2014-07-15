@@ -568,10 +568,13 @@ void R_PolyBlend (void)
 
 	qglColor4f(v_blend[0], v_blend[1], v_blend[2], v_blend[3]);
 
-	qglBegin (GL_QUADS);
+	qglBegin (GL_TRIANGLES);
 
 	qglVertex3f (10, 100, 100);
 	qglVertex3f (10, -100, 100);
+	qglVertex3f (10, -100, -100);
+
+	qglVertex3f (10, 100, 100);
 	qglVertex3f (10, -100, -100);
 	qglVertex3f (10, 100, -100);
 	qglEnd ();
