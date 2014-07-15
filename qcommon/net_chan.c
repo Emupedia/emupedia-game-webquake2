@@ -284,8 +284,8 @@ int Netchan_Transmit (netchan_t *chan, int length, const byte *data)
 	else
 		SZ_Init (&send, send_buf, 1400);
 
-	w1 = ( chan->outgoing_sequence & ~(1<<31) ) | (send_reliable<<31);
-	w2 = ( chan->incoming_sequence & ~(1<<31) ) | (chan->incoming_reliable_sequence<<31);
+	w1 = ( chan->outgoing_sequence & ~(1UL<<31) ) | (((unsigned int) send_reliable) << 31);
+	w2 = ( chan->incoming_sequence & ~(1UL<<31) ) | (((unsigned int) chan->incoming_reliable_sequence) << 31);
 
 	chan->outgoing_sequence++;
 	chan->last_sent = curtime;
@@ -388,8 +388,8 @@ qboolean Netchan_Process (netchan_t *chan, sizebuf_t *msg)
 
 	chan->got_reliable = reliable_message;
 
-	sequence &= ~(1<<31);
-	sequence_ack &= ~(1<<31);	
+	sequence &= ~(1UL<<31);
+	sequence_ack &= ~(1UL<<31);
 
 	if (showpackets->intvalue)
 	{
