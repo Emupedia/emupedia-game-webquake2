@@ -299,7 +299,7 @@ void R_DrawSpriteModel (entity_t *e)
 	else
 		qglDisable( GL_ALPHA_TEST );
 
-	qglBegin (GL_QUADS);
+	qglBegin (GL_TRIANGLES);
 
 	qglMTexCoord2f(GL_TEXTURE0, 0, 1);
 	VectorMA (e->origin, -frame->origin_y, up, point);
@@ -308,6 +308,16 @@ void R_DrawSpriteModel (entity_t *e)
 
 	qglMTexCoord2f(GL_TEXTURE0, 0, 0);
 	VectorMA (e->origin, frame->height - frame->origin_y, up, point);
+	VectorMA (point, -frame->origin_x, right, point);
+	qglVertex3f(point[0], point[1], point[2]);
+
+	qglMTexCoord2f(GL_TEXTURE0, 1, 0);
+	VectorMA (e->origin, frame->height - frame->origin_y, up, point);
+	VectorMA (point, frame->width - frame->origin_x, right, point);
+	qglVertex3f(point[0], point[1], point[2]);
+
+	qglMTexCoord2f(GL_TEXTURE0, 0, 1);
+	VectorMA (e->origin, -frame->origin_y, up, point);
 	VectorMA (point, -frame->origin_x, right, point);
 	qglVertex3f(point[0], point[1], point[2]);
 
