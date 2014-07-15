@@ -3032,10 +3032,9 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 
 		if (load_tga_pics)
 		{
-			//png_name[len-3] = 't';
-			//png_name[len-2] = 'g';
-			//png_name[len-1] = 'a';
-			*(int *)(png_name + (len-3)) = '\0agt';
+			png_name[len-3] = 't';
+			png_name[len-2] = 'g';
+			png_name[len-1] = 'a';
 			current_texture_filename = png_name;
 			LoadTGA (png_name, &pic, &width, &height);
 		}
@@ -3043,19 +3042,17 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 		{
 			if (load_png_pics)
 			{
-				//png_name[len-3] = 'p';
-				//png_name[len-2] = 'n';
-				//png_name[len-1] = 'g';
-				*(int *)(png_name + (len-3)) = '\0gnp';
+				png_name[len-3] = 'p';
+				png_name[len-2] = 'n';
+				png_name[len-1] = 'g';
 				LoadPNG (png_name, &pic, &width, &height);
 			}
 			if (!pic)
 			{
 				if (load_jpg_pics)
 				{
-					//png_name[len-3] = 'j';
-					//png_name[len-2] = 'p';
-					*(int *)(png_name + (len-3)) = '\0gpj';
+					png_name[len-3] = 'j';
+					png_name[len-2] = 'p';
 					LoadJPG (png_name, &pic, &width, &height);
 				}
 				if (!pic)
