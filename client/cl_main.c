@@ -3062,9 +3062,10 @@ skipplayer:;
 
 		CM_LoadMap (cl.configstrings[CS_MODELS+1], true, &map_checksum);
 
-		if (map_checksum && map_checksum != strtoul(cl.configstrings[CS_MAPCHECKSUM], NULL, 10)) {
+		uint32 expected_checksum = strtoul(cl.configstrings[CS_MAPCHECKSUM], NULL, 10);
+		if (map_checksum && map_checksum != expected_checksum) {
 			Com_Error (ERR_DROP, "Local map version differs from server: 0x%.8x != 0x%.8x",
-				map_checksum, atoi(cl.configstrings[CS_MAPCHECKSUM]));
+				map_checksum, expected_checksum);
 			return;
 		}
 	}
