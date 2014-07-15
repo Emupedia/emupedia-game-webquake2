@@ -611,9 +611,12 @@ void R_DrawSkyBox (void)
 
 		GL_MBind(GL_TEXTURE0, sky_images[skytexorder[i]]->texnum);
 
-		qglBegin (GL_QUADS);
+		qglBegin(GL_TRIANGLES);
 		MakeSkyVec (skymins[0][i], skymins[1][i], i);
 		MakeSkyVec (skymins[0][i], skymaxs[1][i], i);
+		MakeSkyVec (skymaxs[0][i], skymaxs[1][i], i);
+
+		MakeSkyVec (skymins[0][i], skymins[1][i], i);
 		MakeSkyVec (skymaxs[0][i], skymaxs[1][i], i);
 		MakeSkyVec (skymaxs[0][i], skymins[1][i], i);
 		qglEnd ();
