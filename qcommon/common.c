@@ -1050,10 +1050,10 @@ int MSG_ReadLong (sizebuf_t *msg_read)
 	if (msg_read->readcount+4 > msg_read->cursize)
 		c = -1;
 	else
-		c = msg_read->data[msg_read->readcount]
-		+ (msg_read->data[msg_read->readcount+1]<<8)
-		+ (msg_read->data[msg_read->readcount+2]<<16)
-		+ (msg_read->data[msg_read->readcount+3]<<24);
+		c = ((unsigned int) msg_read->data[msg_read->readcount])
+		+ (((unsigned int) msg_read->data[msg_read->readcount+1])<<8)
+		+ (((unsigned int) msg_read->data[msg_read->readcount+2])<<16)
+		+ (((unsigned int) msg_read->data[msg_read->readcount+3])<<24);
 	
 	msg_read->readcount += 4;
 	
