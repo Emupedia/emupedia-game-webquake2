@@ -686,7 +686,7 @@ int main (int argc, char **argv)
 #ifdef EMSCRIPTEN
 
 	g_oldtime = Sys_Milliseconds();
-	emscripten_set_main_loop(mainloop, 60, 1);
+	emscripten_set_main_loop(mainloop, 0, 1);
 
 #else  // EMSCRIPTEN
 	oldtime = Sys_Milliseconds ();
