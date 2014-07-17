@@ -128,6 +128,13 @@ typedef struct Shader {
 } Shader;
 
 
+typedef struct DrawCall {
+	GLenum primitive;
+	unsigned int firstVert;
+	unsigned int numVertices;
+} DrawCall;
+
+
 typedef struct QGLState {
 	Vertex *vertices;
 	unsigned int numVertices;
@@ -156,6 +163,11 @@ typedef struct QGLState {
 	Shader *activeShader;
 
 	Shader *shaders;
+
+	DrawCall *drawCalls;
+	unsigned int numDrawCalls, maxDrawCalls;
+
+	unsigned int currentDrawFirstVertex;
 } QGLState;
 
 
@@ -278,6 +290,9 @@ qboolean QGL_Init( const char *dllname )
 	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
 	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
 
+	qglState->maxDrawCalls = 128;
+	qglState->drawCalls = (DrawCall *) malloc(qglState->maxDrawCalls * sizeof(DrawCall));
+
 	qglState->zFar = 1.0f;
 
 	qglBlendFunc                 = glBlendFunc;
@@ -390,8 +405,57 @@ void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
 }
 
 
-void qglBegin(GLenum mode) {
+static void pushDraw(GLenum primitive, unsigned int firstVert, unsigned int numVertices) {
+	if (qglState->numDrawCalls == qglState->maxDrawCalls) {
+		// add more space
+		qglState->maxDrawCalls *= 2;
+		qglState->drawCalls = realloc(qglState->drawCalls, qglState->maxDrawCalls * sizeof(DrawCall));
+	}
+
+	qglState->drawCalls[qglState->numDrawCalls].primitive = primitive;
+	qglState->drawCalls[qglState->numDrawCalls].firstVert = firstVert;
+	qglState->drawCalls[qglState->numDrawCalls].numVertices = numVertices;
+
+	qglState->numDrawCalls++;
+}
+
+
+static void commitShaderState();
+
+
+static void flushDraws() {
+	if (qglState->numDrawCalls == 0) {
+		// nothing to do
+		return;
+	}
+
+	commitShaderState();
+
+	if (qglState->vbo == 0) {
+		// can't be called in QGL_Init, GL context doesn't exist there
+		glGenBuffers(1, &qglState->vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, qglState->vbo);
+	}
+
+	glBufferData(GL_ARRAY_BUFFER, qglState->usedVertices * sizeof(Vertex), &qglState->vertices[0], GL_DYNAMIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, pos));
+	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, color));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
+
+	for (unsigned int i = 0; i < qglState->numDrawCalls; i++) {
+		DrawCall *d = qglState->drawCalls + i;
+		glDrawArrays(d->primitive, d->firstVert, d->numVertices);
+	}
+
+	qglState->numDrawCalls = 0;
 	qglState->usedVertices = 0;
+}
+
+
+void qglBegin(GLenum mode) {
+	qglState->currentDrawFirstVertex = qglState->usedVertices;
 	qglState->primitive = mode;
 }
 
@@ -563,8 +627,6 @@ static void multMatrices(float *target, const float *left, const float *right) {
 }
 
 
-
-
 static void commitShaderState() {
 	Shader *newShader = findShader(&qglState->wantShader);
 	bool shaderChanged = false;
@@ -598,22 +660,7 @@ static void commitShaderState() {
 
 
 void qglEnd(void) {
-	if (qglState->vbo == 0) {
-		// can't be called in QGL_Init, GL context doesn't exist there
-		glGenBuffers(1, &qglState->vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, qglState->vbo);
-	}
-
-	glBufferData(GL_ARRAY_BUFFER, qglState->usedVertices * sizeof(Vertex), &qglState->vertices[0], GL_DYNAMIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, pos));
-	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, color));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
-
-	commitShaderState();
-
-	glDrawArrays(qglState->primitive, 0, qglState->usedVertices);
+	pushDraw(qglState->primitive, qglState->currentDrawFirstVertex, qglState->usedVertices - qglState->currentDrawFirstVertex);
 
 	qglState->primitive = GL_NONE;
 }
@@ -673,6 +720,8 @@ void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdo
 
 
 void qglLoadMatrixf(const GLfloat *m) {
+	flushDraws();
+
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
 		targetMat = qglState->mvMatrices[qglState->mvMatrixTop];
@@ -689,6 +738,8 @@ void qglLoadMatrixf(const GLfloat *m) {
 
 
 void qglMultMatrixf(const GLfloat *m) {
+	flushDraws();
+
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
 		targetMat = qglState->mvMatrices[qglState->mvMatrixTop];
@@ -767,6 +818,8 @@ void qglTranslatef(GLfloat x, GLfloat y, GLfloat z) {
 
 
 void qglPopMatrix(void) {
+	flushDraws();
+
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
 		qglState->mvMatrixTop--;
@@ -818,12 +871,16 @@ void qglActiveTexture(GLenum tex) {
 
 
 void qglAlphaFunc(GLenum func, GLclampf ref) {
+	flushDraws();
+
 	qglState->wantShader.alphaFunc = func;
 	qglState->wantShader.alphaRef = ref;
 }
 
 
 void qglDisable(GLenum cap) {
+	flushDraws();
+
 	if (cap == GL_ALPHA_TEST) {
 		qglState->wantShader.alphaTest = false;
 	} else if (cap == GL_TEXTURE_2D) {
@@ -835,6 +892,8 @@ void qglDisable(GLenum cap) {
 
 
 void qglEnable(GLenum cap) {
+	flushDraws();
+
 	if (cap == GL_ALPHA_TEST) {
 		qglState->wantShader.alphaTest = true;
 	} else if (cap == GL_TEXTURE_2D) {
@@ -850,6 +909,8 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 	// we only use one combine mode
 	if (pname == GL_TEXTURE_ENV_MODE) {
+		flushDraws();
+
 		assert(param == GL_COMBINE_ARB
 			  || param == GL_MODULATE
 			  || param == GL_REPLACE);
@@ -867,6 +928,8 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 
 void qglBindTexture(GLenum target, GLuint texture) {
+	flushDraws();
+
 	if (qglState->activeTexture != qglState->wantActiveTexture) {
 		glActiveTexture(GL_TEXTURE0);
 		qglState->activeTexture = qglState->wantActiveTexture;
