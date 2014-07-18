@@ -524,14 +524,15 @@ static Shader *createShader(const ShaderState *state) {
 		}
 	}
 
-	const char *srcArray[2];
-	srcArray[0] = &defineBuf;
+	const char *srcArray[3];
+	srcArray[0] = "#version 100\n";
+	srcArray[1] = &defineBuf;
 	GLuint program = glCreateProgram();
 	GLint temp = 0;
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	srcArray[1] = vertexShaderSrc;
-	glShaderSource(vertexShader, 2, srcArray, NULL);
+	srcArray[2] = vertexShaderSrc;
+	glShaderSource(vertexShader, 3, srcArray, NULL);
 	glCompileShader(vertexShader);
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &temp);
 	if (temp != GL_TRUE) {
@@ -548,8 +549,8 @@ static Shader *createShader(const ShaderState *state) {
 	glDeleteShader(vertexShader);
 
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	srcArray[1] = fragmentShaderSrc;
-	glShaderSource(fragmentShader, 2, srcArray, NULL);
+	srcArray[2] = fragmentShaderSrc;
+	glShaderSource(fragmentShader, 3, srcArray, NULL);
 	glCompileShader(fragmentShader);
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &temp);
 	if (temp != GL_TRUE) {
