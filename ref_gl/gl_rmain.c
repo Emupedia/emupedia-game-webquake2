@@ -1288,26 +1288,6 @@ retryQGL:
 	Q_strncpy( vendor_buffer, gl_config.vendor_string, sizeof(vendor_buffer)-1);
 	Q_strlwr( vendor_buffer );
 
-	if ( strstr( renderer_buffer, "voodoo" ) )
-	/*if ( toupper( gl_monolightmap->string[1] ) != 'F' )
-	{
-		if ( gl_config.renderer == GL_RENDERER_PERMEDIA2 )
-		{
-			ri.Cvar_Set( "gl_monolightmap", "A" );
-			ri.Con_Printf( PRINT_ALL, "...using gl_monolightmap 'a'\n" );
-		}
-		else if ( gl_config.renderer & GL_RENDERER_POWERVR ) 
-		{
-			ri.Cvar_Set( "gl_monolightmap", "0" );
-		}
-		else
-		{
-			ri.Cvar_Set( "gl_monolightmap", "0" );
-		}
-	}*/
-
-		ri.Cvar_Set( "scr_drawall", "0" );
-
 	/*
 	** grab extensions
 	*/
