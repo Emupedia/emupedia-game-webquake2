@@ -558,13 +558,20 @@ void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byt
 
 	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	qglBegin (GL_QUADS);
+	qglBegin (GL_TRIANGLES);
 	qglMTexCoord2f(GL_TEXTURE0, 0, 0);
 	qglVertex2f(x, y);
 	qglMTexCoord2f(GL_TEXTURE0, 1, 0);
 	qglVertex2f(x+w, y);
 	qglMTexCoord2f(GL_TEXTURE0, 1, t);
 	qglVertex2f(x+w, y+h);
+
+	qglMTexCoord2f(GL_TEXTURE0, 1, t);
+	qglVertex2f(x+w, y+h);
+
+	qglMTexCoord2f(GL_TEXTURE0, 0, 0);
+	qglVertex2f(x, y);
+
 	qglMTexCoord2f(GL_TEXTURE0, 0, t);
 	qglVertex2f(x, y+h);
 	qglEnd ();
