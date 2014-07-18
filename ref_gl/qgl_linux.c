@@ -135,6 +135,9 @@ typedef struct DrawCall {
 } DrawCall;
 
 
+#define NUMVBOS 1024
+
+
 typedef struct QGLState {
 	Vertex *vertices;
 	unsigned int numVertices;
@@ -157,7 +160,10 @@ typedef struct QGLState {
 
 	float zNear, zFar;
 
-	GLuint vbo;
+	GLuint vbos[NUMVBOS];
+
+	// this is index into the array, not a VBO id
+	unsigned int currentVBOidx;
 
 	ShaderState wantShader;
 	Shader *activeShader;
@@ -220,9 +226,9 @@ void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height)
 */
 void QGL_Shutdown( void )
 {
-	if (qglState->vbo != 0) {
-		glDeleteBuffers(1, &qglState->vbo);
-		qglState->vbo = 0;
+	if (qglState->vbos[0] != 0) {
+		glDeleteBuffers(NUMVBOS, qglState->vbos);
+		memset(qglState->vbos, 0, sizeof(GLuint) * NUMVBOS);
 	}
 
 	// this pointer is not unique
@@ -423,6 +429,18 @@ static void pushDraw(GLenum primitive, unsigned int firstVert, unsigned int numV
 static void commitShaderState();
 
 
+static void bindVBO() {
+	if (qglState->vbos[qglState->currentVBOidx] == 0) {
+		// can't be called in QGL_Init, GL context doesn't exist there
+		glGenBuffers(NUMVBOS, qglState->vbos);
+	}
+
+	qglState->currentVBOidx = (qglState->currentVBOidx + 1) % NUMVBOS;
+
+	glBindBuffer(GL_ARRAY_BUFFER, qglState->vbos[qglState->currentVBOidx]);
+}
+
+
 static void flushDraws() {
 	if (qglState->numDrawCalls == 0) {
 		// nothing to do
@@ -431,11 +449,7 @@ static void flushDraws() {
 
 	commitShaderState();
 
-	if (qglState->vbo == 0) {
-		// can't be called in QGL_Init, GL context doesn't exist there
-		glGenBuffers(1, &qglState->vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, qglState->vbo);
-	}
+	bindVBO();
 
 	glBufferData(GL_ARRAY_BUFFER, qglState->usedVertices * sizeof(Vertex), &qglState->vertices[0], GL_DYNAMIC_DRAW);
 
