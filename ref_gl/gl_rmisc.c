@@ -24,7 +24,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #include "gl_local.h"
+
+#ifdef USE_JPEG
 #include <jpeglib.h>
+#endif  // USE_JPEG
+
 #include <png.h>
 
 /*
@@ -196,6 +200,10 @@ unsigned int __stdcall png_write_thread (byte *buffer)
 }
 #endif
 
+
+#ifdef USE_JPEG
+
+
 void GL_ScreenShot_JPG (byte *buffer)
 {
 	struct jpeg_compress_struct cinfo;
@@ -264,7 +272,11 @@ void GL_ScreenShot_JPG (byte *buffer)
 	ri.Con_Printf (PRINT_ALL, "Wrote %s\n", picname);
 }
 
-/* 
+
+#endif  // USE_JPEG
+
+
+/*
 ================== 
 GL_ScreenShot_f
 ================== 
@@ -290,13 +302,23 @@ void GL_ScreenShot_f (void)
 		//_beginthreadex (NULL, 0, (unsigned int (__stdcall *)(void *))png_write_thread, (void *)buffer, 0, &tID);
 		CreateThread (NULL, 0, (LPTHREAD_START_ROUTINE)png_write_thread, (LPVOID)buffer, 0, &tID);
 		ri.Con_Printf (PRINT_ALL, "Taking PNG screenshot...\n");
-#else
+#else  // USE_THREADS
 		png_write_thread (buffer);
-#endif
+#endif  // USE_THREADS
 	}
-#else
+#else  // WIN32
+
+#ifdef USE_JPEG
+
 	GL_ScreenShot_JPG (buffer);
-#endif
+
+#else  // USE_JPEG
+
+	ri.Con_Printf (PRINT_ALL, "No JPEG support, no screenshot...\n");
+
+#endif  // USE_JPEG
+
+#endif  // WIN32
 } 
 
 

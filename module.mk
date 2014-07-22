@@ -50,7 +50,11 @@ endif
 
 
 CFLAGS+=$(OPTFLAGS)
+
+ifeq ($(USE_JPEG),y)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libjpeg-turbo-1.3.1
+endif
+
 CFLAGS+=-isystem$(TOPDIR)/foreign/libpng-1.2.51
 CFLAGS+=-isystem$(TOPDIR)/foreign/zlib-1.2.8
 

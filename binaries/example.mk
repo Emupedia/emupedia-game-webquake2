@@ -12,6 +12,9 @@ TSAN:=n
 UBSAN:=n
 
 
+USE_JPEG:=y
+
+
 # compiler options etc
 CC:=gcc
 CFLAGS:=-g -DNDEBUG -DLINUX -std=c99

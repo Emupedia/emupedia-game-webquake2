@@ -20,7 +20,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "gl_local.h"
 #include <png.h>
+
+#ifdef USE_JPEG
 #include <jpeglib.h>
+#endif  // USE_JPEG
+
 
 image_t		gltextures[MAX_GLTEXTURES];
 int			numgltextures = 0;
@@ -1448,6 +1452,10 @@ breakOut:;
 	ri.FS_FreeFile (buffer);
 }
 #endif
+
+
+
+#ifdef USE_JPEG
 /*
 =================================================================
 
@@ -1576,6 +1584,9 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 
 	*pic = rgbadata;
 }
+
+
+#endif  // USE_JPEG
 
 
 /*typedef struct _TargaHeader {
@@ -3049,12 +3060,14 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 			}
 			if (!pic)
 			{
+#ifdef USE_JPEG
 				if (load_jpg_pics)
 				{
 					png_name[len-3] = 'j';
 					png_name[len-2] = 'p';
 					LoadJPG (png_name, &pic, &width, &height);
 				}
+#endif  // USE_JPEG
 				if (!pic)
 				{
 					current_texture_filename = name;
@@ -3092,6 +3105,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 		if (!image)
 			return NULL;
 	}
+#ifdef USE_JPEG
 	else if (!strcmp(name+len-4, ".jpg"))
 	{
 		LoadJPG (name, &pic, &width, &height);
@@ -3099,6 +3113,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 			return NULL;
 		image = GL_LoadPic (name, pic, width, height, type, 32);
 	}
+#endif  // USE_JPEG
 	else if (!strcmp(name+len-4, ".tga"))
 	{
 		LoadTGA (name, &pic, &width, &height);

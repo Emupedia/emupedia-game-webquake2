@@ -11,6 +11,10 @@ ASAN:=n
 TSAN:=n
 UBSAN:=n
 
+
+USE_JPEG:=y
+
+
 BUILTIN_GAME:=baseq2
 
 # compiler options etc

@@ -36,8 +36,16 @@ FILES:= \
 	# empty line
 
 
-quake2_MODULES:=client libjpeg libpng linux qcommon qshared ref_gl server shlinux zlib
+quake2_MODULES:=client libpng linux qcommon qshared ref_gl server shlinux zlib
 quake2_SRC:=
+
+
+ifeq ($(USE_JPEG),y)
+
+quake2_MODULES+=libjpeg
+CFLAGS+=-DUSE_JPEG
+
+endif
 
 
 ifneq ($(BUILTIN_GAME),)
