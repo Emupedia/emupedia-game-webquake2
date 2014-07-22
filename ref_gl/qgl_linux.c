@@ -526,7 +526,7 @@ static Shader *createShader(const ShaderState *state) {
 
 	const char *srcArray[3];
 	srcArray[0] = "#version 100\n";
-	srcArray[1] = &defineBuf;
+	srcArray[1] = (const char *) &defineBuf;
 	GLuint program = glCreateProgram();
 	GLint temp = 0;
 
