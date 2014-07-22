@@ -519,8 +519,9 @@ Creates a server's entity / program execution context by
 parsing textual entity definitions out of an ent file.
 ==============
 */
-void SpawnEntities (const char *mapname, const char *entities, const char *spawnpoint)
+void SpawnEntities (const char *mapname, const char *entities_, const char *spawnpoint)
 {
+	char *entities = strdup(entities_);
 	edict_t		*ent;
 	int			inhibit;
 	const char	*com_token;
@@ -619,6 +620,8 @@ void SpawnEntities (const char *mapname, const char *entities, const char *spawn
 	G_FindTeams ();
 
 	PlayerTrail_Init ();
+
+	free(entities);
 }
 
 
