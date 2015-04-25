@@ -313,7 +313,8 @@ static void WriteField2(FILE *f, const field_t *field, byte *base)
 	}
 }
 
-void ReadField (FILE *f, field_t *field, byte *base)
+
+static void ReadField (FILE *f, const field_t *field, byte *base)
 {
 	void		*p;
 	int			len;
