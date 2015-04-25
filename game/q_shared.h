@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 #include <time.h>
@@ -175,7 +176,7 @@ void _Q_assert (char *expression, char *function, uint32 line);
 #endif
 
 typedef unsigned char 		byte;
-typedef enum {false, true}	qboolean;
+typedef bool qboolean;
 
 //r1: set this to 1 if you have a stupid endian thingy
 #define Q_BIGENDIAN 0
