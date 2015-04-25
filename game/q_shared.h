@@ -220,6 +220,18 @@ do { \
 	(dst)[(len)] = 0; \
 } while (0)
 
+
+#ifdef __clang__
+
+// clang doesn't understand externally_visible
+#define EXTERNALLY_VISIBLE __attribute__ ((visibility("default")))
+
+#else
+
+#define EXTERNALLY_VISIBLE __attribute__ ((visibility("default"), externally_visible))
+
+#endif
+
 // angle indexes
 #define	PITCH				0		// up / down
 #define	YAW					1		// left / right
