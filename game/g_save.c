@@ -526,14 +526,11 @@ All pointer variables (except function pointers) must be handled specially.
 */
 void WriteEdict (FILE *f, edict_t *ent)
 {
-	field_t		*field;
-	edict_t		temp;
-
 	// all of the ints, floats, and vectors stay as they are
-	temp = *ent;
+	edict_t temp = *ent;
 
 	// change the pointers to lengths or indexes
-	for (field=fields ; field->name ; field++)
+	for (field_t *field = fields ; field->name ; field++)
 	{
 		WriteField1 (f, field, (byte *)&temp);
 	}
@@ -542,7 +539,7 @@ void WriteEdict (FILE *f, edict_t *ent)
 	fwrite (&temp, sizeof(temp), 1, f);
 
 	// now write any allocated data following the edict
-	for (field=fields ; field->name ; field++)
+	for (field_t *field = fields ; field->name ; field++)
 	{
 		WriteField2 (f, field, (byte *)ent);
 	}
