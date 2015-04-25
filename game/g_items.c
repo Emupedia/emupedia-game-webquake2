@@ -1131,6 +1131,9 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 //======================================================================
 
+
+// can't be const because they will be eventually passed to SpawnItem which
+// might change them
 gitem_t	itemlist[] = 
 {
 	{
