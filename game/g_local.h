@@ -609,7 +609,7 @@ void Cmd_Score_f (edict_t *ent);
 //
 // g_items.c
 //
-void PrecacheItem (gitem_t *it);
+void PrecacheItem(const gitem_t *it);
 void InitItems (void);
 void SetItemNames (void);
 gitem_t	*FindItem (char *pickup_name);

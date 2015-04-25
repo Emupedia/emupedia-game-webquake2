@@ -990,7 +990,7 @@ This will be called for each item spawned in a level,
 and for each item in each client's inventory.
 ===============
 */
-void PrecacheItem (gitem_t *it)
+void PrecacheItem (const gitem_t *it)
 {
 	char	*s, *start;
 	char	data[MAX_QPATH];
