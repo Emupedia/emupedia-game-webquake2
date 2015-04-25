@@ -513,7 +513,6 @@ extern unsigned	r_rawpalette[256];
 void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data)
 {
 	unsigned	image32[256*256];
-	unsigned char image8[256*256];
 	int			i, j, trows;
 	byte		*source;
 	int			frac, fracstep;

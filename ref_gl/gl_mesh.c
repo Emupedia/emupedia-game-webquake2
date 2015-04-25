@@ -104,7 +104,6 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 	float	alpha;
 	vec3_t	move, delta, vectors[3];
 	vec3_t	frontv, backv;
-	int		i;
 	int		index_xyz;
 	float	*lerp;
 
