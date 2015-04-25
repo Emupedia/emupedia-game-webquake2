@@ -3207,7 +3207,7 @@ void	GL_ImageList_f (void)
 		}
 
 		ri.Con_Printf (PRINT_ALL,  " %3i x %3i: %s (%d bytes)\n",
-			image->upload_width, image->upload_height, image->name, image->upload_width * image->upload_height * sizeof(int));
+			image->upload_width, image->upload_height, image->name, (int)(image->upload_width * image->upload_height * sizeof(int)));
 	}
 
 	ri.Con_Printf (PRINT_ALL, "%d skins (M), %d sprites (S), %d world textures (W), %d pics (P), %d misc.\n", ski, spr, wal, pic, mis);
