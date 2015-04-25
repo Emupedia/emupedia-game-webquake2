@@ -316,14 +316,13 @@ static void WriteField2(FILE *f, const field_t *field, byte *base)
 
 static void ReadField (FILE *f, const field_t *field, byte *base)
 {
-	void		*p;
-	int			len;
-	int			index;
-
 	if (field->flags & FFL_SPAWNTEMP)
 		return;
 
-	p = (void *)(base + field->ofs);
+	void *p = (void *)(base + field->ofs);
+	int len;
+	int index;
+
 	switch (field->type)
 	{
 	case F_INT:
