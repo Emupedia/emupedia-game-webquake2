@@ -1893,10 +1893,7 @@ static void SVC_RemoteCommand (void)
 	}
 	else
 	{
-		qboolean	endRedir;
-
 		remaining[0] = 0;
-		endRedir = true;
 
 		//hack to allow clients to send rcon set commands properly
 		if (!Q_stricmp (Cmd_Argv(2), "set"))
@@ -1924,24 +1921,6 @@ static void SVC_RemoteCommand (void)
 
 			Com_sprintf (remaining, sizeof(remaining), "set %s \"%s\"%s", Cmd_Argv(3), setvar, serverinfo ? " s" : "");
 		}
-		//FIXME: This is a nice idea, but currently redirected output blocks until full buffer occurs, making it useless.
-		/*else if (!Q_stricmp (Cmd_Argv(2), "monitor"))
-		{
-			Sys_ConsoleOutput ("Console monitor request from ");
-			Sys_ConsoleOutput (NET_AdrToString (&net_from));
-			Sys_ConsoleOutput ("\n");
-			if (!Q_stricmp (Cmd_Argv(3), "on"))
-			{
-				Com_Printf ("Console monitor enabled.\n", LOG_SERVER);
-				return;
-			}
-			else
-			{
-				Com_Printf ("Console monitor disabled.\n", LOG_SERVER);
-				Com_EndRedirect (true);
-				return;
-			}
-		}*/
 		else
 		{
 			Q_strncpy (remaining, Cmd_Args2(2), sizeof(remaining)-1);
