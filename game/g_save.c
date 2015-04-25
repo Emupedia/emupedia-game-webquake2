@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 mmove_t mmove_reloc;
 
-field_t fields[] = {
+const field_t fields[] = {
 	{"classname", FOFS(classname), F_LSTRING, 0 },
 	{"model", FOFS(model), F_LSTRING, 0 },
 	{"spawnflags", FOFS(spawnflags), F_INT, 0 },

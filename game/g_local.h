@@ -596,7 +596,7 @@ typedef struct
 } field_t;
 
 
-extern	field_t fields[];
+extern const field_t fields[];
 extern	gitem_t	itemlist[];
 
 
