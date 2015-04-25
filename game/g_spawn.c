@@ -357,12 +357,11 @@ in an edict
 */
 void ED_ParseField (const char *key, const char *value, edict_t *ent)
 {
-	field_t	*f;
 	byte	*b;
 	float	v;
 	vec3_t	vec;
 
-	for (f=fields ; f->name ; f++)
+	for (const field_t *f = fields ; f->name ; f++)
 	{
 		if (!(f->flags & FFL_NOSPAWN) && !Q_stricmp(f->name, key))
 		{	// found it

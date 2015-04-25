@@ -583,11 +583,9 @@ All pointer variables (except function pointers) must be handled specially.
 */
 void ReadEdict (FILE *f, edict_t *ent)
 {
-	field_t		*field;
-
 	fread (ent, sizeof(*ent), 1, f);
 
-	for (field=fields ; field->name ; field++)
+	for (const field_t *field = fields ; field->name ; field++)
 	{
 		ReadField (f, field, (byte *)ent);
 	}
