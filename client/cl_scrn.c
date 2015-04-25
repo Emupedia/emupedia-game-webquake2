@@ -514,13 +514,11 @@ void SCR_DrawChatHud (void)
 
 void SCR_AddChatMessage (const char *chat)
 {
-	unsigned	i, index;
+	unsigned	i;
 	size_t		j;
 	size_t		length;
 	char		*p;
 	char		tempchat[512];
-
-	index = chathud_index % scr_chathud_lines->intvalue;
 
 	Q_strncpy (tempchat, chat, sizeof(tempchat)-1);
 
