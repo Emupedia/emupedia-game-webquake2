@@ -198,31 +198,22 @@ void AL_Shutdown (void){
 
 	if (alState.hALC)
 	{
-		if (alcMakeContextCurrent)
-		{
 			Com_Printf("...alcMakeContextCurrent( NULL ): ", LOG_CLIENT);
 			if (!alcMakeContextCurrent(NULL))
 				Com_Printf("failed\n", LOG_CLIENT);
 			else
 				Com_Printf("succeeded\n", LOG_CLIENT);
-		}
 
-		if (alcDestroyContext)
-		{
 			Com_Printf("...destroying AL context\n", LOG_CLIENT);
 			alcDestroyContext(alState.hALC);
-		}
 
 		alState.hALC = NULL;
 	}
 
 	if (alState.hDevice)
 	{
-		if (alcCloseDevice)
-		{
 			Com_Printf("...closing device\n", LOG_CLIENT);
 			alcCloseDevice(alState.hDevice);
-		}
 
 		alState.hDevice = NULL;
 	}
