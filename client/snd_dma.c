@@ -886,7 +886,6 @@ void S_OpenAL_StartSound (const vec3_t position, int entNum, int entChannel, sfx
 void S_StartSound(vec3_t origin, int entnum, int entchannel, sfx_t *sfx, float fvol, float attenuation, float timeofs)
 {
 	sfxcache_t	*sc;
-	int			vol;
 	playsound_t	*ps, *sort;
 	int			start;
 
@@ -911,8 +910,6 @@ void S_StartSound(vec3_t origin, int entnum, int entchannel, sfx_t *sfx, float f
 	sc = S_LoadSound (sfx);
 	if (!sc)
 		return;		// couldn't load the sound's data
-
-	vol = (int)(fvol*255);
 
 	// make the playsound_t
 	ps = S_AllocPlaysound ();
