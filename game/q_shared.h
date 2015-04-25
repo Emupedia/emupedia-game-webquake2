@@ -812,6 +812,18 @@ typedef struct
 } pmove_state_t;
 
 
+#define PMOVE_STATE_EMPTY \
+	{ \
+	  PM_NORMAL \
+	, { 0, 0, 0 } \
+	, { 0, 0, 0 } \
+	, 0 \
+	, 0 \
+	, 0 \
+	, { 0, 0, 0 } \
+	}
+
+
 //
 // button bits
 //
@@ -1545,6 +1557,28 @@ typedef struct
 
 	int16		stats[MAX_STATS];		// fast status bar updates
 } player_state_t;
+
+
+#define PLAYER_STATE_EMPTY \
+	{ \
+	  PMOVE_STATE_EMPTY \
+	, { 0.0f, 0.0f, 0.0f } \
+	, { 0.0f, 0.0f, 0.0f } \
+	, { 0.0f, 0.0f, 0.0f } \
+	, { 0.0f, 0.0f, 0.0f } \
+	, { 0.0f, 0.0f, 0.0f } \
+	, 0 \
+	, 0 \
+	, { 0.0f, 0.0f, 0.0f, 0.0f } \
+	, 0.0f \
+	, 0 \
+	, { 0, 0, 0, 0, 0, 0, 0, 0 \
+	  , 0, 0, 0, 0, 0, 0, 0, 0 \
+	  , 0, 0, 0, 0, 0, 0, 0, 0 \
+	  , 0, 0, 0, 0, 0, 0, 0, 0 \
+	  } \
+	}
+
 
 // ==================
 // PGM 

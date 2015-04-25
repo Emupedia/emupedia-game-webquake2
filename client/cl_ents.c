@@ -806,7 +806,7 @@ static void CL_DemoDeltaPlayerstate (const frame_t *from, frame_t *to)
 	int				pflags;
 	player_state_t			*ps;
 	const player_state_t	*ops;
-	static player_state_t	dummy = {{0}};
+	static player_state_t	dummy = PLAYER_STATE_EMPTY;
 	int				statbits;
 
 	ps = &to->playerstate;
