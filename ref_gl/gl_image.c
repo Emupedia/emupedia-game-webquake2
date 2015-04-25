@@ -2767,7 +2767,7 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 			{
 				for (i=0, image=gltextures ; i<numgltextures ; i++,image++)
 				{
-					fprintf (dump, "%i: %s[%s], %dx%d, texnum %lu, type %d, sequence %d\n", i, image->basename, image->name, image->width, image->height, image->texnum, image->type, image->registration_sequence);
+					fprintf (dump, "%i: %s[%s], %dx%d, texnum %u, type %d, sequence %d\n", i, image->basename, image->name, image->width, image->height, image->texnum, image->type, image->registration_sequence);
 				}
 				fclose (dump);
 			}
