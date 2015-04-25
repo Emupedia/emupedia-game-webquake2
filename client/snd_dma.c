@@ -1546,7 +1546,6 @@ static void S_OpenAL_IssuePlaySounds (void)
 int	EXPORT CL_PMpointcontents (vec3_t point);
 void S_Update_OpenAL (vec3_t position, const vec3_t velocity, const vec3_t at, const vec3_t up)
 {
-	unsigned			eaxEnv;
 	openal_channel_t	*ch;
 	int					i, total = 0;
 
@@ -1584,6 +1583,7 @@ void S_Update_OpenAL (vec3_t position, const vec3_t velocity, const vec3_t at, c
 #ifdef _WIN32
 	if (alConfig.eax)
 	{
+		unsigned eaxEnv;
 		if (cls.state != ca_active)
 		{
 			eaxEnv = EAX_ENVIRONMENT_GENERIC;
