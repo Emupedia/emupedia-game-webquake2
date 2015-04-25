@@ -18,6 +18,7 @@ USE_JPEG:=y
 # compiler options etc
 CC:=gcc
 CFLAGS:=-g -DNDEBUG -DLINUX -std=c99
+CFLAGS+=-Wall
 CFLAGS+=-DREF_HARD_LINKED
 CFLAGS+=$(shell sdl-config --cflags)
 CFLAGS+=$(shell pkg-config openal --cflags)
