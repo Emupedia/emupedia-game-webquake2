@@ -1535,7 +1535,7 @@ typedef struct z_memloc_s
 
 static z_memloc_t	z_game_locations;
 
-static zhead_t	z_chain = {0};
+static zhead_t	z_chain = { NULL, NULL, 0, 0, 0, NULL };
 
 static long		z_count = 0;
 static long		z_bytes = 0;

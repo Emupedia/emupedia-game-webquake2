@@ -1081,10 +1081,11 @@ static void SV_NextDownload_f (void)
 	{
 		byte		zOut[0xFFFF];
 		byte		*buff;
-		z_stream	z = {0};
+		z_stream	z;
 		int			i, j;
 		uint32		realBytes;
 		int			result;
+		memset(&z, 0, sizeof(z_stream));
 
 		z.next_out = zOut;
 		z.avail_out = sizeof(zOut);
