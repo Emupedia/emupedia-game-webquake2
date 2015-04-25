@@ -223,14 +223,13 @@ void InitGame (void)
 
 static void WriteField1(FILE *f, const field_t *field, byte *base)
 {
-	void		*p;
-	int			len;
-	int			index;
-
 	if (field->flags & FFL_SPAWNTEMP)
 		return;
 
-	p = (void *)(base + field->ofs);
+	void *p = (void *)(base + field->ofs);
+	int len;
+	int index;
+
 	switch (field->type)
 	{
 	case F_INT:
@@ -296,19 +295,16 @@ static void WriteField1(FILE *f, const field_t *field, byte *base)
 
 static void WriteField2(FILE *f, const field_t *field, byte *base)
 {
-	int			len;
-	void		*p;
-
 	if (field->flags & FFL_SPAWNTEMP)
 		return;
 
-	p = (void *)(base + field->ofs);
+	void *p = (void *)(base + field->ofs);
 	switch (field->type)
 	{
 	case F_LSTRING:
 		if ( *(char **)p )
 		{
-			len = strlen(*(char **)p) + 1;
+			size_t len = strlen(*(char **)p) + 1;
 			fwrite (*(char **)p, len, 1, f);
 		}
 		break;
