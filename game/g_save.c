@@ -221,7 +221,7 @@ void InitGame (void)
 
 //=========================================================
 
-void WriteField1 (FILE *f, field_t *field, byte *base)
+static void WriteField1(FILE *f, const field_t *field, byte *base)
 {
 	void		*p;
 	int			len;
@@ -294,7 +294,7 @@ void WriteField1 (FILE *f, field_t *field, byte *base)
 }
 
 
-void WriteField2 (FILE *f, field_t *field, byte *base)
+static void WriteField2(FILE *f, const field_t *field, byte *base)
 {
 	int			len;
 	void		*p;
