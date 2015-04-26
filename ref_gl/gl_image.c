@@ -2799,11 +2799,9 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 		if (bits == 8)
 		{
 			int		x, y;
-			int		i, j, k;
-			int		temp;
 			unsigned	int	texnum;
 
-			temp = Scrap_AllocBlock (image->width, image->height, &x, &y);
+			int temp = Scrap_AllocBlock (image->width, image->height, &x, &y);
 
 			if (temp == -1)
 				goto nonscrap;
@@ -2813,9 +2811,9 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 			scrap_dirty = true;
 
 			// copy the texels into the scrap block
-			k = 0;
-			for (i=0 ; i<image->height ; i++)
-				for (j=0 ; j<image->width ; j++, k++)
+			int k = 0;
+			for (int i = 0 ; i < image->height ; i++)
+				for (int j = 0 ; j < image->width ; j++, k++)
 					scrap_texels[texnum][(y+i)*BLOCK_WIDTH + x + j] = pic[k];
 
 			image->texnum = TEXNUM_SCRAPS + texnum;
