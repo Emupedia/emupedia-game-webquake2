@@ -18,32 +18,6 @@
 #include <SDL.h>
 
 
-typedef struct Vertex {
-	float pos[3];
-	uint32_t color;
-	float tex0[2];
-	float tex1[2];
-} Vertex;
-
-
-#define NUMMATRICES 32
-
-
-typedef struct ShaderTexState {
-	bool texEnable;
-	GLenum texMode;
-} ShaderTexState;
-
-
-typedef struct ShaderState {
-	bool alphaTest;
-	GLenum alphaFunc;
-	float alphaRef;
-
-	ShaderTexState texState[2];
-} ShaderState;
-
-
 const char *vertexShaderSrc =
 "attribute vec3 pos;\n"
 "attribute vec4 col;\n"
@@ -116,65 +90,6 @@ const char *fragmentShaderSrc =
 "	gl_FragColor = temp;\n"
 "}\n"
 ;
-
-
-struct Shader;
-
-typedef struct Shader {
-	ShaderState key;
-	GLuint program;
-
-	struct Shader *next;
-} Shader;
-
-
-typedef struct DrawCall {
-	GLenum primitive;
-	unsigned int firstVert;
-	unsigned int numVertices;
-} DrawCall;
-
-
-#define NUMVBOS 1024
-
-
-typedef struct QGLState {
-	Vertex *vertices;
-	unsigned int numVertices;
-	unsigned int usedVertices;
-
-	GLenum primitive;
-
-	Vertex currentVertex;
-
-	unsigned int clientActiveTexture;
-	unsigned int wantActiveTexture, activeTexture;
-
-	GLenum matrixMode;
-
-	float mvMatrices[NUMMATRICES][16];
-	float projMatrices[NUMMATRICES][16];
-
-	int mvMatrixTop, projMatrixTop;
-	bool mvMatrixDirty, projMatrixDirty;
-
-	float zNear, zFar;
-
-	GLuint vbos[NUMVBOS];
-
-	// this is index into the array, not a VBO id
-	unsigned int currentVBOidx;
-
-	ShaderState wantShader;
-	Shader *activeShader;
-
-	Shader *shaders;
-
-	DrawCall *drawCalls;
-	unsigned int numDrawCalls, maxDrawCalls;
-
-	unsigned int currentDrawFirstVertex;
-} QGLState;
 
 
 static QGLState *qglState = NULL;
