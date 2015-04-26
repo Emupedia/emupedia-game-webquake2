@@ -2360,16 +2360,10 @@ Proper linear filter
 */
 static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 {
-	int			i, j, k;
-	byte		*outpix;
-	int			inWidthMask, inHeightMask;
-	int			total;
-	int			outWidth, outHeight;
-	unsigned	*temp;
+	int outWidth = inWidth >> 1;
+	int outHeight = inHeight >> 1;
 
-	outWidth = inWidth >> 1;
-	outHeight = inHeight >> 1;
-
+	unsigned *temp;
 	if (r_registering)
 	{
 		if (!mipmap_buffer)
@@ -2387,17 +2381,17 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
 	}
 
-	inWidthMask = inWidth - 1;
-	inHeightMask = inHeight - 1;
+	int inWidthMask = inWidth - 1;
+	int inHeightMask = inHeight - 1;
 
-	for ( i = 0 ; i < outHeight ; i++ )
+	for (int i = 0; i < outHeight; i++)
 	{
-		for ( j = 0 ; j < outWidth ; j++ )
+		for (int j = 0; j < outWidth; j++)
 		{
-			outpix = (byte *) ( temp + i * outWidth + j );
-			for ( k = 0 ; k < 4 ; k++ )
+			byte *outpix = (byte *) ( temp + i * outWidth + j );
+			for (int k = 0; k < 4; k++)
 			{
-				total = 
+				int total =
 					1 * ((byte *)&in[ ((i*2-1)&inHeightMask)*inWidth + ((j*2-1)&inWidthMask) ])[k] +
 					2 * ((byte *)&in[ ((i*2-1)&inHeightMask)*inWidth + ((j*2)&inWidthMask) ])[k] +
 					2 * ((byte *)&in[ ((i*2-1)&inHeightMask)*inWidth + ((j*2+1)&inWidthMask) ])[k] +
@@ -2465,13 +2459,7 @@ int		upload_width, upload_height;
 
 qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, int bpp, image_t *image)
 {
-	int			samples;
-	unsigned	*scaled = NULL;
-	int			scaled_width, scaled_height;
-	int			i, c;
-	//byte		*scan;
-	int comp;
-
+	int scaled_width, scaled_height;
 	if (gl_config.r1gl_GL_ARB_texture_non_power_of_two)
 	{
 		scaled_width = width;
@@ -2512,6 +2500,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	upload_width = scaled_width;
 	upload_height = scaled_height;
 
+	unsigned *scaled = NULL;
 	//r1: why bother malloc/memcpy if its discarded?
 	if (scaled_width == width && scaled_height == height)
 	{
@@ -2539,13 +2528,13 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	}
 
 	// scan the texture for any non-255 alpha
-	samples = gl_solid_format;
+	int samples = gl_solid_format;
 	
 	if (bpp == 8)
 	{
-		c = width*height;
+		int c = width*height;
 		//scan = ((byte *)data) + 3;
-		for (i=0 ; i<c ; i+= 4)
+		for (int i = 0; i < c ; i+= 4)
 		{
 			if (*(byte *)&data[i] != 255)
 			{
@@ -2559,6 +2548,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 		samples = gl_alpha_format;
 	}
 
+	int comp;
 	if (samples == gl_solid_format)
 	    comp = gl_tex_solid_format;
 	else if (samples == gl_alpha_format)
