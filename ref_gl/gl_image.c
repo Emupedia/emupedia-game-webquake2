@@ -2373,7 +2373,7 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 	if (r_registering)
 	{
 		if (!mipmap_buffer)
-			mipmap_buffer = malloc (MAX_TEXTURE_DIMENSIONS * MAX_TEXTURE_DIMENSIONS * sizeof(int));
+			mipmap_buffer = malloc (MAX_TEXTURE_DIMENSIONS * MAX_TEXTURE_DIMENSIONS * sizeof(unsigned int));
 
 		if (!mipmap_buffer)
 			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
@@ -2382,7 +2382,7 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 	}
 	else
 	{
-		temp = malloc (outWidth * outHeight * sizeof(int));
+		temp = malloc (outWidth * outHeight * sizeof(unsigned int));
 		if (!temp)
 			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
 	}
@@ -2532,7 +2532,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 		}
 		else
 		{
-			scaled = malloc (scaled_width * scaled_height * sizeof(int));
+			scaled = malloc (scaled_width * scaled_height * sizeof(unsigned int));
 			if (!scaled)
 				ri.Sys_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
 		}
