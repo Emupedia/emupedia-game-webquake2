@@ -108,6 +108,7 @@ extern void png_default_flush(png_structp png_ptr);
 extern void png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length);
 unsigned int __stdcall png_write_thread (byte *buffer)
 {
+	/*
 	char		picname[MAX_OSPATH]; 
 	char		checkname[MAX_OSPATH];
 	int			i;
@@ -195,7 +196,7 @@ unsigned int __stdcall png_write_thread (byte *buffer)
 #ifdef USE_THREADS
 	ExitThread (0);
 #endif
-
+	*/
 	return 0;
 }
 #endif
@@ -387,7 +388,7 @@ void GL_UpdateSwapInterval( void )
 		gl_swapinterval->modified = false;
 
 		{
-#ifdef _WIN32
+#if 0 //def _WIN32
 			if ( qwglSwapIntervalEXT )
 			{
 				qwglSwapIntervalEXT( Q_ftol(gl_swapinterval->value) );

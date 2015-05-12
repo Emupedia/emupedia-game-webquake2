@@ -107,7 +107,7 @@ static openal_channel_t		s_openal_channels[MAX_CHANNELS];
 static int					s_openal_numChannels;
 static int					s_openal_frameCount;
 
-#ifdef _WIN32
+#if 0 //def _WIN32
 const GUID			DSPROPSETID_EAX20_ListenerProperties = {0x306a6a8, 0xb224, 0x11d2, {0x99, 0xe5, 0x0, 0x0, 0xe8, 0xd8, 0xc7, 0x22}};
 const GUID			DSPROPSETID_EAX20_BufferProperties = {0x306a6a7, 0xb224, 0x11d2, {0x99, 0xe5, 0x0, 0x0, 0xe8, 0xd8, 0xc7, 0x22}};
 #endif
@@ -1577,7 +1577,7 @@ void S_Update_OpenAL (vec3_t position, const vec3_t velocity, const vec3_t at, c
 	//alDopplerVelocity(s_dopplerVelocity->value);
 
 	// If EAX is enabled, apply listener environmental effects
-#ifdef _WIN32
+#if 0 //def _WIN32
 	if (alConfig.eax)
 	{
 		unsigned eaxEnv;
