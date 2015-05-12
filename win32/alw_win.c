@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 alConfig_t	alConfig;
-alwState_t	alwState;
+alState_t	alwState;
 
 
 /*
@@ -234,6 +234,6 @@ void ALW_Shutdown (void){
 	QAL_Shutdown();
 
 	memset(&alConfig, 0, sizeof(alConfig_t));
-	memset(&alwState, 0, sizeof(alwState_t));
+	memset(&alwState, 0, sizeof(alState_t));
 }
 

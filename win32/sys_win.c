@@ -68,7 +68,7 @@ cvar_t	*win_priority;
 qboolean s_win95;
 
 int			starttime;
-int			ActiveApp;
+qboolean	ActiveApp;
 qboolean	Minimized;
 
 HWND		hwnd_Server;

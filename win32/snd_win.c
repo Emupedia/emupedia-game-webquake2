@@ -390,7 +390,7 @@ SNDDMA_InitDirect
 Direct-Sound support
 ==================
 */
-sndinitstat SNDDMA_InitDirect (void)
+qboolean SNDDMA_InitDirect(void)
 {
 	DSCAPS			dscaps;
 	HRESULT			hresult;
@@ -638,7 +638,7 @@ Try to find a sound device to mix for.
 Returns false if nothing is found.
 ==================
 */
-int SNDDMA_Init (int fullInit)
+qboolean SNDDMA_Init(int fullInit)
 {
 	sndinitstat	stat;
 
