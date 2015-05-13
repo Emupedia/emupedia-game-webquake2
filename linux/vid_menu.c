@@ -1,8 +1,6 @@
 #include "../client/client.h"
 #include "../client/qmenu.h"
 
-#define REF_SOFT	0
-#define REF_SOFTX11	1
 #define REF_OPENGL	2
 
 extern cvar_t *vid_ref;
@@ -121,46 +119,8 @@ static void ApplyChanges( void *unused )
 	Cvar_SetValue( "gl_mode", s_mode_list[OPENGL_MENU].curvalue );
 	Cvar_SetValue( "_windowed_mouse", s_windowed_mouse.curvalue);
 
-	switch ( s_ref_list[s_current_menu_index].curvalue )
-	{
-	case REF_SOFT:
-		Cvar_Set( "vid_ref", "soft" );
-		break;
-	case REF_SOFTX11:
-		Cvar_Set( "vid_ref", "softx" );
-		break;
-	case REF_OPENGL:
 		Cvar_Set( "vid_ref", "gl" );
 		Cvar_Set( "gl_driver", "opengl32" );
-		break;
-	}
-
-#if 0
-	/*
-	** update appropriate stuff if we're running OpenGL and gamma
-	** has been modified
-	*/
-	if ( strstr( vid_ref->string, "gl" ))
-	{
-		if ( vid_gamma->modified )
-		{
-			vid_ref->modified = true;
-			if ( Q_stricmp( gl_driver->string, "3dfxgl" ) == 0 )
-			{
-				char envbuffer[1024];
-				float g;
-
-				vid_ref->modified = true;
-
-				g = 2.00 * ( 0.8 - ( vid_gamma->value - 0.5 ) ) + 1.0F;
-				Com_sprintf( envbuffer, sizeof(envbuffer), "SST_GAMMA=%f", g );
-				putenv( envbuffer );
-
-				vid_gamma->modified = false;
-			}
-		}
-	}
-#endif
 
 	M_ForceMenuOff();
 }
@@ -225,31 +185,8 @@ void VID_MenuInit( void )
 	s_screensize_slider[SOFTWARE_MENU].curvalue = scr_viewsize->value/10;
 	s_screensize_slider[OPENGL_MENU].curvalue = scr_viewsize->value/10;
 
-	if ( strcmp( vid_ref->string, "soft" ) == 0)
-	{
-		s_current_menu_index = SOFTWARE_MENU;
-		s_ref_list[0].curvalue = s_ref_list[1].curvalue = REF_SOFT;
-	}
-	else if (strcmp( vid_ref->string, "softx" ) == 0 ) 
-	{
-		s_current_menu_index = SOFTWARE_MENU;
-		s_ref_list[0].curvalue = s_ref_list[1].curvalue = REF_SOFTX11;
-	}
-	else if ( strstr( vid_ref->string, "gl" ))
-	{
 		s_current_menu_index = OPENGL_MENU;
 		s_ref_list[s_current_menu_index].curvalue = REF_OPENGL;
-#if 0
-		if ( strcmp( gl_driver->string, "3dfxgl" ) == 0 )
-			s_ref_list[s_current_menu_index].curvalue = REF_3DFX;
-		else if ( strcmp( gl_driver->string, "pvrgl" ) == 0 )
-			s_ref_list[s_current_menu_index].curvalue = REF_POWERVR;
-		else if ( strcmp( gl_driver->string, "opengl32" ) == 0 )
-			s_ref_list[s_current_menu_index].curvalue = REF_OPENGL;
-		else
-			s_ref_list[s_current_menu_index].curvalue = REF_VERITE;
-#endif
-	}
 
 	s_software_menu.x = viddef.width * 0.50;
 	s_software_menu.nitems = 0;
