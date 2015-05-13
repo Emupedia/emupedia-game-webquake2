@@ -138,7 +138,6 @@ cvar_t	*gl_forceheight;
 cvar_t	*vid_topmost;
 
 cvar_t	*gl_bitdepth;
-cvar_t  *gl_driver;
 //cvar_t	*gl_lightmap;
 cvar_t	*gl_shadows;
 cvar_t	*gl_mode;
@@ -1030,7 +1029,6 @@ void R_Register( void )
 	gl_flashblend = ri.Cvar_Get ("gl_flashblend", "0", 0);
 	//gl_playermip = ri.Cvar_Get ("gl_playermip", "0", 0);
 	//gl_monolightmap = ri.Cvar_Get( "gl_monolightmap", "0", 0 );
-	gl_driver = ri.Cvar_Get( "gl_driver", "opengl32", CVAR_ARCHIVE );
 	gl_texturemode = ri.Cvar_Get( "gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR", CVAR_ARCHIVE );
 	gl_texturealphamode = ri.Cvar_Get( "gl_texturealphamode", "default", CVAR_ARCHIVE );
 	gl_texturesolidmode = ri.Cvar_Get( "gl_texturesolidmode", "default", CVAR_ARCHIVE );
@@ -1222,21 +1220,12 @@ retryQGL:
 
 	// initialize our QGL dynamic bindings
 	ri.Con_Printf (PRINT_DEVELOPER, "QGL_Init()\n");
-	if ( !QGL_Init( gl_driver->string ) )
+	if ( !QGL_Init( "" ) )
 	{
 		QGL_Shutdown();
 
-		ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init() - could not load \"%s\"\n", gl_driver->string );
+		ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): QGL_Init() failed\n");
 
-#ifdef _WIN32
-		if (strcmp (gl_driver->string, "opengl32"))
-		{
-			ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init() - retrying with gl_driver opengl32\n");
-			ri.Cvar_Set ("gl_driver", "opengl32");
-			goto retryQGL;
-		}
-#endif
-        
 		return -1;
 	}
 

@@ -8,7 +8,6 @@ extern cvar_t *vid_gamma;
 extern cvar_t *scr_viewsize;
 
 static cvar_t *gl_mode;
-static cvar_t *gl_driver;
 static cvar_t *gl_picmip;
 
 static cvar_t *sw_mode;
@@ -82,7 +81,6 @@ static void ApplyChanges( void *unused )
 	Cvar_SetValue( "_windowed_mouse", s_windowed_mouse.curvalue);
 
 		Cvar_Set( "vid_ref", "gl" );
-		Cvar_Set( "gl_driver", "opengl32" );
 
 	M_ForceMenuOff();
 }
@@ -115,8 +113,6 @@ void VID_MenuInit( void )
 		0
 	};
 
-	if ( !gl_driver )
-		gl_driver = Cvar_Get( "gl_driver", "opengl32", 0 );
 	if ( !gl_picmip )
 		gl_picmip = Cvar_Get( "gl_picmip", "0", 0 );
 	if ( !gl_mode )
