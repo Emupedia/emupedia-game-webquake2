@@ -11,7 +11,6 @@ static cvar_t *gl_mode;
 static cvar_t *gl_picmip;
 
 static cvar_t *sw_mode;
-static cvar_t *sw_stipplealpha;
 
 static cvar_t *_windowed_mouse;
 
@@ -33,7 +32,6 @@ static menuslider_s		s_tq_slider;
 static menuslider_s		s_screensize_slider;
 static menuslider_s		s_brightness_slider;
 static menulist_s  		s_fs_box;
-static menulist_s  		s_stipple_box;
 static menulist_s  		s_windowed_mouse;
 static menuaction_s		s_apply_action;
 static menuaction_s		s_defaults_action;
@@ -74,7 +72,6 @@ static void ApplyChanges( void *unused )
 	gamma = ( 0.8 - ( s_brightness_slider.curvalue/10.0 - 0.5 ) ) + 0.5;
 
 	Cvar_SetValue( "vid_gamma", gamma );
-	Cvar_SetValue( "sw_stipplealpha", s_stipple_box.curvalue );
 	Cvar_SetValue( "gl_picmip", 3 - s_tq_slider.curvalue );
 	Cvar_SetValue( "vid_fullscreen", s_fs_box.curvalue );
 	Cvar_SetValue( "gl_mode", s_mode_list.curvalue );
@@ -119,9 +116,6 @@ void VID_MenuInit( void )
 		gl_mode = Cvar_Get( "gl_mode", "3", 0 );
 	if ( !sw_mode )
 		sw_mode = Cvar_Get( "sw_mode", "0", 0 );
-
-	if ( !sw_stipplealpha )
-		sw_stipplealpha = Cvar_Get( "sw_stipplealpha", "0", CVAR_ARCHIVE );
 
 	if ( !_windowed_mouse)
         _windowed_mouse = Cvar_Get( "_windowed_mouse", "0", CVAR_ARCHIVE );
@@ -177,13 +171,6 @@ void VID_MenuInit( void )
 		s_apply_action.generic.x    = 0;
 		s_apply_action.generic.y    = 100;
 		s_apply_action.generic.callback = ApplyChanges;
-
-	s_stipple_box.generic.type = MTYPE_SPINCONTROL;
-	s_stipple_box.generic.x	= 0;
-	s_stipple_box.generic.y	= 60;
-	s_stipple_box.generic.name	= "stipple alpha";
-	s_stipple_box.curvalue = sw_stipplealpha->value;
-	s_stipple_box.itemnames = yesno_names;
 
 	s_windowed_mouse.generic.type = MTYPE_SPINCONTROL;
 	s_windowed_mouse.generic.x  = 0;
