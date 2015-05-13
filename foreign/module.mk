@@ -5,7 +5,7 @@ d              := $(dir)
 
 SUBDIRS:= \
 	libjpeg-turbo-1.3.1 \
-	libpng-1.2.51 \
+	libpng \
 	zlib \
 	# empty line
 
