@@ -11,8 +11,8 @@
 #include <errno.h>
 
 #include "../client/client.h"
+#include "../client/ref.h"
 
-#include "../linux/rw_linux.h"
 
 qboolean reload_video = false;
 

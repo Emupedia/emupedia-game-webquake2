@@ -50,7 +50,7 @@
 
 #include "../qcommon/qcommon.h"
 
-#include "../linux/rw_linux.h"
+#include "../client/ref.h"
 
 #include "../game/game.h"
 

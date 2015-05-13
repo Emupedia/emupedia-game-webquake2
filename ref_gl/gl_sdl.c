@@ -47,7 +47,6 @@
 #include "../linux/glw.h"
 
 #include "../client/keys.h"
-#include "../linux/rw_linux.h"
 
 /*****************************************************************************/
 
