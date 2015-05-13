@@ -6,7 +6,7 @@ d              := $(dir)
 SUBDIRS:= \
 	libjpeg-turbo-1.3.1 \
 	libpng-1.2.51 \
-	zlib-1.2.8 \
+	zlib \
 	# empty line
 
 DIRS:=$(addprefix $(d)/,$(SUBDIRS))
