@@ -126,47 +126,47 @@ void VID_MenuInit( void )
 	s_opengl_menu.x = viddef.width * 0.50;
 	s_opengl_menu.nitems = 0;
 
-		s_mode_list.generic.type = MTYPE_SPINCONTROL;
-		s_mode_list.generic.name = "video mode";
-		s_mode_list.generic.x = 0;
-		s_mode_list.generic.y = 10;
-		s_mode_list.itemnames = resolutions;
+	s_mode_list.generic.type = MTYPE_SPINCONTROL;
+	s_mode_list.generic.name = "video mode";
+	s_mode_list.generic.x = 0;
+	s_mode_list.generic.y = 10;
+	s_mode_list.itemnames = resolutions;
 
-		s_screensize_slider.generic.type	= MTYPE_SLIDER;
-		s_screensize_slider.generic.x		= 0;
-		s_screensize_slider.generic.y		= 20;
-		s_screensize_slider.generic.name	= "screen size";
-		s_screensize_slider.minvalue = 3;
-		s_screensize_slider.maxvalue = 12;
-		s_screensize_slider.generic.callback = ScreenSizeCallback;
+	s_screensize_slider.generic.type	= MTYPE_SLIDER;
+	s_screensize_slider.generic.x		= 0;
+	s_screensize_slider.generic.y		= 20;
+	s_screensize_slider.generic.name	= "screen size";
+	s_screensize_slider.minvalue = 3;
+	s_screensize_slider.maxvalue = 12;
+	s_screensize_slider.generic.callback = ScreenSizeCallback;
 
-		s_brightness_slider.generic.type	= MTYPE_SLIDER;
-		s_brightness_slider.generic.x	= 0;
-		s_brightness_slider.generic.y	= 30;
-		s_brightness_slider.generic.name	= "brightness";
-		s_brightness_slider.generic.callback = BrightnessCallback;
-		s_brightness_slider.minvalue = 5;
-		s_brightness_slider.maxvalue = 13;
-		s_brightness_slider.curvalue = ( 1.3 - vid_gamma->value + 0.5 ) * 10;
+	s_brightness_slider.generic.type	= MTYPE_SLIDER;
+	s_brightness_slider.generic.x	= 0;
+	s_brightness_slider.generic.y	= 30;
+	s_brightness_slider.generic.name	= "brightness";
+	s_brightness_slider.generic.callback = BrightnessCallback;
+	s_brightness_slider.minvalue = 5;
+	s_brightness_slider.maxvalue = 13;
+	s_brightness_slider.curvalue = ( 1.3 - vid_gamma->value + 0.5 ) * 10;
 
-		s_fs_box.generic.type = MTYPE_SPINCONTROL;
-		s_fs_box.generic.x	= 0;
-		s_fs_box.generic.y	= 40;
-		s_fs_box.generic.name	= "fullscreen";
-		s_fs_box.itemnames = yesno_names;
-		s_fs_box.curvalue = vid_fullscreen->value;
+	s_fs_box.generic.type = MTYPE_SPINCONTROL;
+	s_fs_box.generic.x	= 0;
+	s_fs_box.generic.y	= 40;
+	s_fs_box.generic.name	= "fullscreen";
+	s_fs_box.itemnames = yesno_names;
+	s_fs_box.curvalue = vid_fullscreen->value;
 
-		s_defaults_action.generic.type = MTYPE_ACTION;
-		s_defaults_action.generic.name = "reset to default";
-		s_defaults_action.generic.x    = 0;
-		s_defaults_action.generic.y    = 90;
-		s_defaults_action.generic.callback = ResetDefaults;
+	s_defaults_action.generic.type = MTYPE_ACTION;
+	s_defaults_action.generic.name = "reset to default";
+	s_defaults_action.generic.x    = 0;
+	s_defaults_action.generic.y    = 90;
+	s_defaults_action.generic.callback = ResetDefaults;
 
-		s_apply_action.generic.type = MTYPE_ACTION;
-		s_apply_action.generic.name = "apply";
-		s_apply_action.generic.x    = 0;
-		s_apply_action.generic.y    = 100;
-		s_apply_action.generic.callback = ApplyChanges;
+	s_apply_action.generic.type = MTYPE_ACTION;
+	s_apply_action.generic.name = "apply";
+	s_apply_action.generic.x    = 0;
+	s_apply_action.generic.y    = 100;
+	s_apply_action.generic.callback = ApplyChanges;
 
 	s_windowed_mouse.generic.type = MTYPE_SPINCONTROL;
 	s_windowed_mouse.generic.x  = 0;
