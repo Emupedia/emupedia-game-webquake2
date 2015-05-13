@@ -33,6 +33,7 @@ FILES:= \
 	snd_dma.c \
 	snd_mem.c \
 	snd_mix.c \
+	vid_menu.c \
 	# empty line
 
 
