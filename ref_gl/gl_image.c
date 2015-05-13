@@ -216,7 +216,7 @@ const glmode_t modes[] =
 
 typedef struct
 {
-	char *name;
+	const char *name;
 	int mode;
 } gltmode_t;
 
@@ -250,7 +250,7 @@ const gltmode_t gl_solid_modes[] = {
 GL_TextureMode
 ===============
 */
-void GL_TextureMode( char *string )
+void GL_TextureMode(const char *string)
 {
 	int		i;
 	image_t	*glt;
@@ -288,7 +288,7 @@ void GL_TextureMode( char *string )
 GL_TextureAlphaMode
 ===============
 */
-void GL_TextureAlphaMode( char *string )
+void GL_TextureAlphaMode(const char *string)
 {
 	int		i;
 
@@ -312,7 +312,7 @@ void GL_TextureAlphaMode( char *string )
 GL_TextureSolidMode
 ===============
 */
-void GL_TextureSolidMode( char *string )
+void GL_TextureSolidMode(const char *string)
 {
 	int		i;
 

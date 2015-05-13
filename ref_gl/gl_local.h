@@ -476,7 +476,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagetype_t type, int bits);
 image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type);
 image_t	*GL_FindImageBase (const char *basename, imagetype_t type);
-void	GL_TextureMode( char *string );
+void	GL_TextureMode(const char *string);
 void	GL_ImageList_f (void);
 void	GL_Version_f (void);
 
@@ -487,8 +487,8 @@ void	GL_ShutdownImages (void);
 
 void	GL_FreeUnusedImages (void);
 
-void GL_TextureAlphaMode( char *string );
-void GL_TextureSolidMode( char *string );
+void GL_TextureAlphaMode(const char *string);
+void GL_TextureSolidMode(const char *string);
 
 /*
 ** GL extension emulation functions
