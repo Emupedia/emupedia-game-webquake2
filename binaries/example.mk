@@ -17,13 +17,18 @@ USE_JPEG:=y
 
 # compiler options etc
 CC:=gcc
-CFLAGS:=-g -DNDEBUG -DLINUX -std=c99
+CXX:=g++
+CFLAGS:=-g -DNDEBUG -DLINUX
 CFLAGS+=-Wall -Wextra
 CFLAGS+=-Wno-sign-compare -Wno-unused-parameter
 CFLAGS+=-DREF_HARD_LINKED
 CFLAGS+=$(shell sdl-config --cflags)
 CFLAGS+=$(shell pkg-config openal --cflags)
 OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
+
+
+# lazy assignment because CFLAGS is changed later
+CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
 LDFLAGS:=-g

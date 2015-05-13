@@ -20,9 +20,13 @@ BUILTIN_GAME:=baseq2
 # compiler options etc
 CC:=emcc
 CXX:=em++
-CFLAGS:=-g -DNDEBUG -DLINUX -std=c99 -D_GNU_SOURCE=1
+CFLAGS:=-g -DNDEBUG -DLINUX -D_GNU_SOURCE=1
 CFLAGS+=-DREF_HARD_LINKED
 OPTFLAGS:=-O3
+
+
+# lazy assignment because CFLAGS is changed later
+CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
 LDFLAGS:=-g --preload-file baseq2

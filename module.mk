@@ -37,6 +37,7 @@ ifeq ($(UBSAN),y)
 
 OPTFLAGS+=-fsanitize=undefined -fno-sanitize-recover
 LDFLAGS+=-fsanitize=undefined -fno-sanitize-recover
+CXXFLAGS+=-frtti
 
 endif
 
@@ -134,22 +135,40 @@ distclean: clean
 # rules here
 
 %$(OBJSUFFIX): %.c | bindirs
-	$(CC) -c -MF $*.d -MP -MMD $(CFLAGS) -o $@ $<
+	$(CC) -c -MF $*.d -MP -MMD -std=gnu99 $(CFLAGS) -o $@ $<
+
+
+%$(OBJSUFFIX): %.cpp | bindirs
+	$(CXX) -c -MF $*.d -MP -MMD $(CXXFLAGS) -o $@ $<
 
 
 %.sh$(OBJSUFFIX): %.c | bindirs
-	$(CC) -c -MF $*.d -MP -MMD $(SOCFLAGS) $(CFLAGS) -o $@ $<
+	$(CC) -c -MF $*.d -MP -MMD -std=gnu99 $(SOCFLAGS) $(CFLAGS) -o $@ $<
 
 
 # $(call program-target, progname)
 define program-target
 
 ALLSRC+=$$(filter %.c,$$($1_SRC))
+ALLSRC+=$$(filter %.cpp,$$($1_SRC))
 
 $1_SRC+=$$(foreach module, $$($1_MODULES), $$(SRC_$$(module)))
+
+# if any .cpp files, link with CXX
+ifneq (,$$(findstring .cpp,$$($1_SRC)))
+
+LINK:=$(CXX)
+
+else
+
+LINK:=$(CC)
+
+endif
+
 $1_OBJ:=$$($1_SRC:.c=$(OBJSUFFIX))
+$1_OBJ:=$$($1_OBJ:.cpp=$(OBJSUFFIX))
 $1$(EXESUFFIX): $$($1_OBJ) | bindirs
-	$(CC) $(LDFLAGS) -o $$@ $$^ $$(foreach module, $$($1_MODULES), $$(LDLIBS_$$(module))) $$($1_LIBS) $(LDLIBS)
+	$$(LINK) $(LDFLAGS) -o $$@ $$^ $$(foreach module, $$($1_MODULES), $$(LDLIBS_$$(module))) $$($1_LIBS) $(LDLIBS)
 
 endef  # program-target
 
@@ -173,4 +192,4 @@ endef  # library-target
 $(eval $(foreach LIBRARY,$(LIBRARIES), $(call library-target,$(LIBRARY)) ) )
 
 
--include $(foreach FILE,$(ALLSRC),$(patsubst %.c,%.d,$(FILE)))
+-include $(foreach FILE,$(ALLSRC),$(patsubst %.cpp,%.d,$(patsubst %.c,%.d,$(FILE))))
