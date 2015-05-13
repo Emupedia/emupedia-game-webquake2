@@ -2461,10 +2461,6 @@ void Qcommon_Frame (int msec)
 	char *s;
 #endif
 
-#ifndef DEDICATED_ONLY
-	int		time_before = 0, time_between = 0, time_after;
-#endif
-
 	if (setjmp (abortframe) )
 		return;			// an ERR_DROP was thrown
 
@@ -2543,6 +2539,8 @@ void Qcommon_Frame (int msec)
 	//Cbuf_Execute ();
 
 #ifndef DEDICATED_ONLY
+	int		time_before = 0, time_between = 0, time_after;
+
 	if (host_speeds->intvalue)
 		time_before = Sys_Milliseconds ();
 #endif
