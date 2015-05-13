@@ -286,7 +286,6 @@ extern	cvar_t	*r_lerpmodels;
 extern	cvar_t	*r_lightlevel;	// FIXME: This is a HACK to get the client's light level
 
 //extern cvar_t	*gl_ext_swapinterval;
-//extern cvar_t	*gl_ext_palettedtexture;
 extern cvar_t	*gl_ext_multitexture;
 extern cvar_t	*gl_ext_pointparameters;
 //extern cvar_t	*gl_ext_compiled_vertex_array;
