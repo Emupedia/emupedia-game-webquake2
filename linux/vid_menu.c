@@ -10,8 +10,6 @@ extern cvar_t *scr_viewsize;
 static cvar_t *gl_mode;
 static cvar_t *gl_picmip;
 
-static cvar_t *sw_mode;
-
 static cvar_t *_windowed_mouse;
 
 extern void M_ForceMenuOff( void );
@@ -114,8 +112,6 @@ void VID_MenuInit( void )
 		gl_picmip = Cvar_Get( "gl_picmip", "0", 0 );
 	if ( !gl_mode )
 		gl_mode = Cvar_Get( "gl_mode", "3", 0 );
-	if ( !sw_mode )
-		sw_mode = Cvar_Get( "sw_mode", "0", 0 );
 
 	if ( !_windowed_mouse)
         _windowed_mouse = Cvar_Get( "_windowed_mouse", "0", CVAR_ARCHIVE );

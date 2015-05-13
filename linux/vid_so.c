@@ -284,7 +284,6 @@ update the rendering DLL and/or video mode to match.
 void VID_ReloadRefresh (void)
 {
 	char name[100];
-	cvar_t *sw_mode;
 
 	if ( vid_ref->modified )
 	{
@@ -308,14 +307,6 @@ void VID_ReloadRefresh (void)
 			if ( strcmp (vid_ref->string, "soft") == 0 ||
 				strcmp (vid_ref->string, "softx") == 0 ) {
 				Com_Printf("Refresh failed\n", LOG_CLIENT);
-				sw_mode = Cvar_Get( "sw_mode", "0", 0 );
-				if (sw_mode->value != 0) {
-					Com_Printf("Trying mode 0\n", LOG_CLIENT);
-					Cvar_SetValue("sw_mode", 0);
-					if ( !VID_LoadRefresh( name ) )
-						Com_Error (ERR_FATAL, "Couldn't fall back to software refresh!");
-				} else
-					Com_Error (ERR_FATAL, "Couldn't fall back to software refresh!");
 			}
 
 			Cvar_Set( "vid_ref", "soft" );
