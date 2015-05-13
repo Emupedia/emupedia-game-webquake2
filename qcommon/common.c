@@ -2455,11 +2455,14 @@ void Qcommon_Init (int argc, char **argv)
 Qcommon_Frame
 =================
 */
-void Qcommon_Frame (int msec)
+void Qcommon_Frame (int msec_)
 {
 #ifndef NO_SERVER
 	char *s;
 #endif
+
+	// this must be volatile because setjmp/longjmp might clobber it
+	volatile int msec = msec_;
 
 	if (setjmp (abortframe) )
 		return;			// an ERR_DROP was thrown
