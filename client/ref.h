@@ -139,10 +139,10 @@ typedef struct
 	int		api_version;
 
 	// called when the library is loaded
-	int		(EXPORT *Init) ( void *hinstance, void *wndproc );
+	int		(*Init) ( void *hinstance, void *wndproc );
 
 	// called before the library is unloaded
-	void	(EXPORT *Shutdown) (void);
+	void	(*Shutdown) (void);
 
 	// All data that will be used in a level should be
 	// registered before rendering any frames to prevent disk hits,
@@ -157,34 +157,34 @@ typedef struct
 	// are flood filled to eliminate mip map edge errors, and pics have
 	// an implicit "pics/" prepended to the name. (a pic name that starts with a
 	// slash will not use the "pics/" prefix or the ".pcx" postfix)
-	void	(EXPORT *BeginRegistration) (char *map);
-	struct model_s * (EXPORT *RegisterModel) (char *name);
-	struct image_s * (EXPORT *RegisterSkin) (char *name);
-	struct image_s * (EXPORT *RegisterPic) (char *name);
-	void	(EXPORT *SetSky) (char *name, float rotate, vec3_t axis);
-	void	(EXPORT *EndRegistration) (void);
+	void	(*BeginRegistration) (char *map);
+	struct model_s * (*RegisterModel) (char *name);
+	struct image_s * (*RegisterSkin) (char *name);
+	struct image_s * (*RegisterPic) (char *name);
+	void	(*SetSky) (char *name, float rotate, vec3_t axis);
+	void	(*EndRegistration) (void);
 
-	void	(EXPORT *RenderFrame) (refdef_t *fd);
+	void	(*RenderFrame) (refdef_t *fd);
 
-	void	(EXPORT *DrawGetPicSize) (int *w, int *h, char *name);	// will return 0 0 if not found
-	void	(EXPORT *DrawPic) (int x, int y, char *name);
-	void	(EXPORT *DrawStretchPic) (int x, int y, int w, int h, char *name);
-	void	(EXPORT *DrawChar) (int x, int y, int c);
-	void	(EXPORT *DrawTileClear) (int x, int y, int w, int h, char *name);
-	void	(EXPORT *DrawFill) (int x, int y, int w, int h, int c);
-	void	(EXPORT *DrawFadeScreen) (void);
+	void	(*DrawGetPicSize) (int *w, int *h, char *name);	// will return 0 0 if not found
+	void	(*DrawPic) (int x, int y, char *name);
+	void	(*DrawStretchPic) (int x, int y, int w, int h, char *name);
+	void	(*DrawChar) (int x, int y, int c);
+	void	(*DrawTileClear) (int x, int y, int w, int h, char *name);
+	void	(*DrawFill) (int x, int y, int w, int h, int c);
+	void	(*DrawFadeScreen) (void);
 
 	// Draw images for cinematic rendering (which can have a different palette). Note that calls
-	void	(EXPORT *DrawStretchRaw) (int x, int y, int w, int h, int cols, int rows, byte *data);
+	void	(*DrawStretchRaw) (int x, int y, int w, int h, int cols, int rows, byte *data);
 
 	/*
 	** video mode and refresh state management entry points
 	*/
-	void	(EXPORT *CinematicSetPalette)( const unsigned char *palette);	// NULL = game palette
-	void	(EXPORT *BeginFrame)( float camera_separation );
-	void	(EXPORT *EndFrame) (void);
+	void	(*CinematicSetPalette)( const unsigned char *palette);	// NULL = game palette
+	void	(*BeginFrame)( float camera_separation );
+	void	(*EndFrame) (void);
 
-	void	(EXPORT *AppActivate)( qboolean activate );
+	void	(*AppActivate)( qboolean activate );
 } refexport_t;
 
 //
@@ -198,42 +198,42 @@ typedef struct
 	//**********************************************************************
 	// extended renderer API functions, check for NULL in ref before using!!
 	//**********************************************************************
-	int			(IMPORT *FS_FOpenFile) (const char *filename, FILE **file, handlestyle_t openHandle, qboolean *closeHandle);
-	void		(IMPORT *FS_FCloseFile) (FILE *file);
-	void		(IMPORT *FS_Read) (void *buffer, int len, FILE *f);
+	int			(*FS_FOpenFile) (const char *filename, FILE **file, handlestyle_t openHandle, qboolean *closeHandle);
+	void		(*FS_FCloseFile) (FILE *file);
+	void		(*FS_Read) (void *buffer, int len, FILE *f);
 } refimportnew_t;
 
 typedef struct
 {
-	void	(IMPORT *Sys_Error) (int err_level, const char *str, ...) __attribute__ ((format (printf, 2, 3)));
+	void	(*Sys_Error) (int err_level, const char *str, ...) __attribute__ ((format (printf, 2, 3)));
 
-	void	(IMPORT *Cmd_AddCommand) (const char *name, void(*cmd)(void));
-	void	(IMPORT *Cmd_RemoveCommand) (const char *name);
-	int		(IMPORT *Cmd_Argc) (void);
-	char	*(IMPORT *Cmd_Argv) (int i);
-	void	(IMPORT *Cmd_ExecuteText) (int exec_when, char *text);
+	void	(*Cmd_AddCommand) (const char *name, void(*cmd)(void));
+	void	(*Cmd_RemoveCommand) (const char *name);
+	int		(*Cmd_Argc) (void);
+	char	*(*Cmd_Argv) (int i);
+	void	(*Cmd_ExecuteText) (int exec_when, char *text);
 
-	void	(IMPORT *Con_Printf) (int print_level, const char *str, ...) __attribute__ ((format (printf, 2, 3)));
+	void	(*Con_Printf) (int print_level, const char *str, ...) __attribute__ ((format (printf, 2, 3)));
 
 	// files will be memory mapped read only
 	// the returned buffer may be part of a larger pak file,
 	// or a discrete file from anywhere in the quake search path
 	// a -1 return means the file does not exist
 	// NULL can be passed for buf to just determine existance
-	int		(IMPORT *FS_LoadFile) (const char *name, void **buf);
-	void	(IMPORT *FS_FreeFile) (void *buf);
+	int		(*FS_LoadFile) (const char *name, void **buf);
+	void	(*FS_FreeFile) (void *buf);
 
 	// gamedir will be the current directory that generated
 	// files should be stored to, ie: "f:\quake\id1"
-	char	*(IMPORT *FS_Gamedir) (void);
+	char	*(*FS_Gamedir) (void);
 
-	cvar_t	*(IMPORT *Cvar_Get) (const char *name, const char *value, int flags);
-	cvar_t	*(IMPORT *Cvar_Set)( const char *name, const char *value );
-	void	 (IMPORT *Cvar_SetValue)( const char *name, float value );
+	cvar_t	*(*Cvar_Get) (const char *name, const char *value, int flags);
+	cvar_t	*(*Cvar_Set)( const char *name, const char *value );
+	void	 (*Cvar_SetValue)( const char *name, float value );
 
-	qboolean	(IMPORT *Vid_GetModeInfo)(unsigned int *width, unsigned int *height, int mode);
-	void		(IMPORT *Vid_MenuInit)( void );
-	void		(IMPORT *Vid_NewWindow)( int width, int height );
+	qboolean	(*Vid_GetModeInfo)(unsigned int *width, unsigned int *height, int mode);
+	void		(*Vid_MenuInit)( void );
+	void		(*Vid_NewWindow)( int width, int height );
 } refimport_t;
 
 
@@ -248,21 +248,21 @@ typedef struct in_state {
 } in_state_t;
 
 
-refexport_t EXPORT GetRefAPI (refimport_t rimp );
-void EXPORT GetExtraAPI (refimportnew_t rimp );
+refexport_t GetRefAPI (refimport_t rimp );
+void GetExtraAPI (refimportnew_t rimp );
 
 
 // TODO: these should not be EXPORT
-void EXPORT RW_IN_Init(in_state_t *in_state_p);
-void EXPORT RW_IN_Shutdown(void);
-void EXPORT RW_IN_Activate(qboolean active);
-void EXPORT RW_IN_Commands(void);
-void EXPORT RW_IN_Move(usercmd_t *cmd);
-void EXPORT RW_IN_Frame(void);
+void RW_IN_Init(in_state_t *in_state_p);
+void RW_IN_Shutdown(void);
+void RW_IN_Activate(qboolean active);
+void RW_IN_Commands(void);
+void RW_IN_Move(usercmd_t *cmd);
+void RW_IN_Frame(void);
 
-void EXPORT KBD_Init(Key_Event_fp_t fp);
-void EXPORT KBD_Update(void);
-void EXPORT KBD_Close(void);
+void KBD_Init(Key_Event_fp_t fp);
+void KBD_Update(void);
+void KBD_Close(void);
 
 void * qwglGetProcAddress(const char *procname);
 

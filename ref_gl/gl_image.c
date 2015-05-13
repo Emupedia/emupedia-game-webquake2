@@ -614,7 +614,7 @@ typedef struct {
     size_t Pos;
 } TPngFileBuffer;
 
-void EXPORT PngReadFunc(png_struct *Png, png_bytep buf, png_size_t size)
+void PngReadFunc(png_struct *Png, png_bytep buf, png_size_t size)
 {
     TPngFileBuffer *PngFileBuffer=(TPngFileBuffer*)png_get_io_ptr(Png);
     memcpy(buf,PngFileBuffer->Buffer+PngFileBuffer->Pos,size);
@@ -1465,17 +1465,17 @@ NiceAss: Code from Q2Ice
 =================================================================
 */
 
-void EXPORT jpg_null(j_decompress_ptr cinfo)
+void jpg_null(j_decompress_ptr cinfo)
 {
 }
 
-boolean EXPORT jpg_fill_input_buffer(j_decompress_ptr cinfo)
+boolean jpg_fill_input_buffer(j_decompress_ptr cinfo)
 {
     ri.Con_Printf(PRINT_ALL, "Premature end of JPEG data\n");
     return 1;
 }
 
-void EXPORT jpg_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
+void jpg_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
 {
         
     cinfo->src->next_input_byte += (size_t) num_bytes;
@@ -3136,7 +3136,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 R_RegisterSkin
 ===============
 */
-struct image_s * EXPORT R_RegisterSkin (char *name)
+struct image_s * R_RegisterSkin (char *name)
 {
 	return GL_FindImage (name, name, it_skin);
 }

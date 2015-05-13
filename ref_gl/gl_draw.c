@@ -136,7 +136,7 @@ It can be clipped to the top of the screen to allow the console to be
 smoothly scrolled off.
 ================
 */
-void EXPORT Draw_Char (int x, int y, int num)
+void Draw_Char (int x, int y, int num)
 {
 	int				row, col;
 	float			frow, fcol, frowbottom, fcolbottom;
@@ -221,7 +221,7 @@ void EXPORT Draw_Char (int x, int y, int num)
 Draw_FindPic
 =============
 */
-image_t	* EXPORT Draw_FindPic (char *name)
+image_t	* Draw_FindPic (char *name)
 {
 	image_t *gl;
 	char	fullname[MAX_QPATH];
@@ -244,7 +244,7 @@ image_t	* EXPORT Draw_FindPic (char *name)
 Draw_GetPicSize
 =============
 */
-void EXPORT Draw_GetPicSize (int *w, int *h, char *pic)
+void Draw_GetPicSize (int *w, int *h, char *pic)
 {
 	image_t *gl;
 
@@ -264,7 +264,7 @@ void EXPORT Draw_GetPicSize (int *w, int *h, char *pic)
 Draw_StretchPic
 =============
 */
-void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
+void Draw_StretchPic (int x, int y, int w, int h, char *pic)
 {
 	image_t *gl;
 
@@ -326,7 +326,7 @@ void EXPORT Draw_StretchPic (int x, int y, int w, int h, char *pic)
 Draw_Pic
 =============
 */
-void EXPORT Draw_Pic (int x, int y, char *pic)
+void Draw_Pic (int x, int y, char *pic)
 {
 	image_t *gl;
 
@@ -395,7 +395,7 @@ This repeats a 64*64 tile graphic to fill the screen around a sized down
 refresh window.
 =============
 */
-void EXPORT Draw_TileClear (int x, int y, int w, int h, char *pic)
+void Draw_TileClear (int x, int y, int w, int h, char *pic)
 {
 	image_t	*image;
 
@@ -428,7 +428,7 @@ Draw_Fill
 Fills a box of pixels with a single color
 =============
 */
-void EXPORT Draw_Fill (int x, int y, int w, int h, int c)
+void Draw_Fill (int x, int y, int w, int h, int c)
 {
 	union
 	{
@@ -475,7 +475,7 @@ Draw_FadeScreen
 
 ================
 */
-void EXPORT Draw_FadeScreen (void)
+void Draw_FadeScreen (void)
 {
 	qglEnable (GL_BLEND);
 
@@ -510,7 +510,7 @@ Draw_StretchRaw
 */
 extern unsigned	r_rawpalette[256];
 
-void EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data)
+void Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data)
 {
 	unsigned	image32[256*256];
 	int			i, j, trows;

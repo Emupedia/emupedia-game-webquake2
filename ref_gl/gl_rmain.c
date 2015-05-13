@@ -980,7 +980,7 @@ R_RenderFrame
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-void EXPORT R_RenderFrame (refdef_t *fd)
+void R_RenderFrame (refdef_t *fd)
 {
 	R_RenderView( fd );
 	R_SetLightLevel ();
@@ -1187,7 +1187,7 @@ int R_SetMode (void)
 R_Init
 ===============
 */
-int EXPORT R_Init( void *hinstance, void *hWnd )
+int R_Init( void *hinstance, void *hWnd )
 {	
 	char renderer_buffer[1000];
 	char vendor_buffer[1000];
@@ -1384,7 +1384,7 @@ retryQGL:
 R_Shutdown
 ===============
 */
-void EXPORT R_Shutdown (void)
+void R_Shutdown (void)
 {
 	if (gl_state.lightmap_textures[0] != 0) {
 		glDeleteTextures(MAX_LIGHTMAPS, gl_state.lightmap_textures);
@@ -1443,7 +1443,7 @@ void GL_UpdateAnisotropy (void)
 R_BeginFrame
 @@@@@@@@@@@@@@@@@@@@@
 */
-void EXPORT R_BeginFrame( float camera_separation )
+void R_BeginFrame( float camera_separation )
 {
 
 	/*
@@ -1643,7 +1643,7 @@ R_SetPalette
 */
 unsigned r_rawpalette[256];
 
-void EXPORT R_SetPalette ( const unsigned char *palette)
+void R_SetPalette ( const unsigned char *palette)
 {
 	/*int		i;
 
@@ -1749,21 +1749,21 @@ void R_DrawBeam( entity_t *e )
 //===================================================================
 
 
-void	EXPORT R_BeginRegistration (char *map);
-struct model_s	* EXPORT R_RegisterModel (char *name);
-struct image_s	* EXPORT R_RegisterSkin (char *name);
-void EXPORT R_SetSky (char *name, float rotate, vec3_t axis);
+void	R_BeginRegistration (char *map);
+struct model_s	* R_RegisterModel (char *name);
+struct image_s	* R_RegisterSkin (char *name);
+void R_SetSky (char *name, float rotate, vec3_t axis);
 void EXPORT	R_EndRegistration (void);
 
 void EXPORT	R_RenderFrame (refdef_t *fd);
 
-struct image_s	* EXPORT Draw_FindPic (char *name);
+struct image_s	* Draw_FindPic (char *name);
 
-void	EXPORT Draw_Pic (int x, int y, char *name);
-void	EXPORT Draw_Char (int x, int y, int c);
-void	EXPORT Draw_TileClear (int x, int y, int w, int h, char *name);
-void	EXPORT Draw_Fill (int x, int y, int w, int h, int c);
-void	EXPORT Draw_FadeScreen (void);
+void	Draw_Pic (int x, int y, char *name);
+void	Draw_Char (int x, int y, int c);
+void	Draw_TileClear (int x, int y, int w, int h, char *name);
+void	Draw_Fill (int x, int y, int w, int h, int c);
+void	Draw_FadeScreen (void);
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
@@ -1771,7 +1771,7 @@ GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-void EXPORT GetExtraAPI (refimportnew_t rimp )
+void GetExtraAPI (refimportnew_t rimp )
 {
 	if (rimp.APIVersion != EXTENDED_API_VERSION)
 	{
@@ -1782,7 +1782,7 @@ void EXPORT GetExtraAPI (refimportnew_t rimp )
 	memcpy (&rx, &rimp, sizeof(rx));
 }
 
-refexport_t EXPORT GetRefAPI (refimport_t rimp )
+refexport_t GetRefAPI (refimport_t rimp )
 {
 	refexport_t	re;
 

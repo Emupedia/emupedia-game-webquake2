@@ -1501,7 +1501,7 @@ R_BeginRegistration
 Specifies the model that will be used as the world
 @@@@@@@@@@@@@@@@@@@@@
 */
-void EXPORT R_BeginRegistration (char *model)
+void R_BeginRegistration (char *model)
 {
 	char	fullname[MAX_QPATH];
 	cvar_t	*flushmap;
@@ -1534,7 +1534,7 @@ R_RegisterModel
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-struct model_s * EXPORT R_RegisterModel (char *name)
+struct model_s * R_RegisterModel (char *name)
 {
 	model_t	*mod;
 	int		i;
@@ -1593,7 +1593,7 @@ R_EndRegistration
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-void EXPORT R_EndRegistration (void)
+void R_EndRegistration (void)
 {
 	int		i;
 	model_t	*mod;

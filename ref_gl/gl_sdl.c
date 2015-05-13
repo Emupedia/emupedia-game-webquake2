@@ -152,7 +152,7 @@ static void RW_IN_MLookUp (void)
 	in_state->IN_CenterView_fp ();
 }
 
-void EXPORT RW_IN_Init(in_state_t *in_state_p)
+void RW_IN_Init(in_state_t *in_state_p)
 {
 	in_state = in_state_p;
 
@@ -185,7 +185,7 @@ void EXPORT RW_IN_Init(in_state_t *in_state_p)
 	mouse_avail = true;
 }
 
-void EXPORT RW_IN_Shutdown(void) {
+void RW_IN_Shutdown(void) {
     if (mouse_avail) {
 	mouse_avail = false;
 
@@ -208,7 +208,7 @@ void EXPORT RW_IN_Shutdown(void) {
 IN_Commands
 ===========
 */
-void EXPORT RW_IN_Commands (void)
+void RW_IN_Commands (void)
 {
     int i;
 #ifdef HAVE_JOYSTICK
@@ -259,7 +259,7 @@ void EXPORT RW_IN_Commands (void)
 IN_Move
 ===========
 */
-void EXPORT RW_IN_Move (usercmd_t *cmd)
+void RW_IN_Move (usercmd_t *cmd)
 {
   /*** FIXME 
    *   You can accelerate while in the air, this doesn't
@@ -350,11 +350,11 @@ static void IN_ActivateMouse( void )
 	}
 }
 
-void EXPORT RW_IN_Frame (void)
+void RW_IN_Frame (void)
 {
 }
 
-void EXPORT RW_IN_Activate(qboolean active)
+void RW_IN_Activate(qboolean active)
 {
     /*	if (active || vidmode_active) */
     	if (active)
@@ -1220,12 +1220,12 @@ void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 
 Key_Event_fp_t Key_Event_fp;
 
-void EXPORT KBD_Init(Key_Event_fp_t fp)
+void KBD_Init(Key_Event_fp_t fp)
 {
 	Key_Event_fp = fp;
 }
 
-void EXPORT KBD_Update(void)
+void KBD_Update(void)
 {
 	SDL_Event event;
 	static int KBD_Update_Flag;
@@ -1292,7 +1292,7 @@ void EXPORT KBD_Update(void)
 	KBD_Update_Flag = 0;
 }
 
-void EXPORT KBD_Close(void)
+void KBD_Close(void)
 {
 	keyq_head = 0;
 	keyq_tail = 0;
