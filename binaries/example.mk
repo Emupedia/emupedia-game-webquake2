@@ -21,7 +21,6 @@ CXX:=g++
 CFLAGS:=-g -DNDEBUG -DLINUX
 CFLAGS+=-Wall -Wextra
 CFLAGS+=-Wno-sign-compare -Wno-unused-parameter
-CFLAGS+=-DREF_HARD_LINKED
 CFLAGS+=$(shell sdl-config --cflags)
 CFLAGS+=$(shell pkg-config openal --cflags)
 OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
@@ -37,7 +36,7 @@ LDLIBS_ref_gl:=-lGL $(shell sdl-config --libs)
 LDLIBS_client:=$(shell pkg-config openal --libs)
 
 
-SOCFLAGS+=-fPIC -DPIC
+SOCFLAGS:=-fPIC -DPIC
 
 
 LTOCFLAGS:=-flto -fuse-linker-plugin -fno-fat-lto-objects
