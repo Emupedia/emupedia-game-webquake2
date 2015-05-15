@@ -999,9 +999,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	
 	srand(getpid());
 
-	// let the sound and input subsystems know about the new window
-	ri.Vid_NewWindow (vid.width, vid.height);
-
 #if 0
 	// for testing on desktop
 	// nvidia lets us create GLES contexts
@@ -1094,9 +1091,10 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	SDL_ShowCursor(0);
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
-	X11_active = true;
+	// let the sound and input subsystems know about the new window
+	ri.Vid_NewWindow(vid.width, vid.height);
 
-	
+	X11_active = true;
 
 	return true;
 }
