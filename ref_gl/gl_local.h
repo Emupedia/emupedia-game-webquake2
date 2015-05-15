@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <math.h>
 
 #include "../client/ref.h"
+#include "../client/vid.h"
 
 #include "qgl.h"
 
@@ -48,15 +49,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // fall over
 #define	ROLL	2
-
-
-#ifndef __VIDDEF_T
-#define __VIDDEF_T
-typedef struct
-{
-	unsigned		width, height;			// coordinates from main game
-} viddef_t;
-#endif
 
 typedef float vec4_t[4];
 
