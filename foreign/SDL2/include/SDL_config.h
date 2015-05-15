@@ -43,13 +43,11 @@
 #include "SDL_config_android.h"
 #elif defined(__PSP__)
 #include "SDL_config_psp.h"
+#elif defined(EMSCRIPTEN)
+#include "SDL_config_emscripten.h"
 #else
 /* This is a minimal configuration just to get SDL running on new platforms */
 #include "SDL_config_minimal.h"
 #endif /* platform config */
-
-#ifdef USING_GENERATED_CONFIG_H
-#error Wrong SDL_config.h, check your include path?
-#endif
 
 #endif /* _SDL_config_h */

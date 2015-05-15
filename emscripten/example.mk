@@ -21,6 +21,7 @@ BUILTIN_GAME:=baseq2
 CC:=emcc
 CXX:=em++
 CFLAGS:=-g -DNDEBUG -DLINUX -D_GNU_SOURCE=1
+CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
 OPTFLAGS:=-O3
 
 
@@ -34,7 +35,7 @@ LDFLAGS+=-s OUTLINING_LIMIT=5000
 LDFLAGS+=-s FORCE_ALIGNED_MEMORY=1
 LDLIBS:=
 LDLIBS_ref_gl:=
-LDLIBS_client:=
+LDLIBS_client:=$(TOPDIR)/foreign/SDL2/build/.libs/libSDL2.a
 
 
 LTOCFLAGS:=--llvm-lto 3
