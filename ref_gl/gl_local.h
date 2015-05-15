@@ -51,8 +51,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef float vec4_t[4];
 
-extern	viddef_t	vid;
-
 /*
 
   skins will be outline flood filled and mip mapped

@@ -985,7 +985,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	}
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
-	if ((oldW == vid.width) && (oldH == vid.height)) {
+	if ((oldW == viddef.width) && (oldH == viddef.height)) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		int isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
 		if (fullscreen != isfullscreen) {
@@ -1034,7 +1034,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	if (window) {
-		SDL_SetWindowSize(window, vid.width, vid.height);
+		SDL_SetWindowSize(window, viddef.width, viddef.height);
 	} else {
 		// TODO: SDL_WINDOW_RESIZABLE
 		// TODO: SDL_WINDOW_INPUT_GRABBED?
@@ -1045,7 +1045,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
+		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, viddef.width, viddef.height, flags);
 		if (!window) {
 			Sys_Error("(SDLGL) SDL CreateWindow failed: %s\n", SDL_GetError());
 			return false;
@@ -1089,7 +1089,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 
 	SetSDLIcon(); /* currently uses q2icon.xbm data */
 		
-	if ((surface = SDL_SetVideoMode(vid.width, vid.height, 0, flags)) == NULL) {
+	if ((surface = SDL_SetVideoMode(viddef.width, viddef.height, 0, flags)) == NULL) {
 		Sys_Error("(SDLGL) SDL SetVideoMode failed: %s\n", SDL_GetError());
 		return false;
 	}
@@ -1100,7 +1100,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	// let the sound and input subsystems know about the new window
-	ri.Vid_NewWindow(vid.width, vid.height);
+	ri.Vid_NewWindow(viddef.width, viddef.height);
 
 	X11_active = true;
 

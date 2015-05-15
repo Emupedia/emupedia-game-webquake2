@@ -239,8 +239,8 @@ void GL_ScreenShot_JPG (byte *buffer)
 	jpeg_stdio_dest(&cinfo, f);
 
 	// Setup JPEG Parameters
-	cinfo.image_width = vid.width;
-	cinfo.image_height = vid.height;
+	cinfo.image_width = viddef.width;
+	cinfo.image_height = viddef.height;
 	cinfo.in_color_space = JCS_RGB;
 	cinfo.input_components = 3;
 
@@ -289,9 +289,9 @@ void GL_ScreenShot_f (void)
 	DWORD tID;
 #endif
 
-	buffer = malloc(vid.width*vid.height*3);
+	buffer = malloc(viddef.width*viddef.height*3);
 
-	qglReadPixels (0, 0, vid.width, vid.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
+	qglReadPixels (0, 0, viddef.width, viddef.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
 #ifdef WIN32
 	if (!strcmp (ri.Cmd_Argv(1), "jpg"))
 	{

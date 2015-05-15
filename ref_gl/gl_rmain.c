@@ -28,8 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 void R_Clear (void);
 
-viddef_t	vid;
-
 refimport_t		ri;
 refimportnew_t	rx;
 
@@ -728,7 +726,7 @@ void R_SetupFrame (void)
 	{
 		qglEnable(GL_SCISSOR_TEST);
 		qglClearColor(0.3f, 0.3f, 0.3f, 1);
-		qglScissor(r_newrefdef.x, vid.height - r_newrefdef.height - r_newrefdef.y, r_newrefdef.width,
+		qglScissor(r_newrefdef.x, viddef.height - r_newrefdef.height - r_newrefdef.y, r_newrefdef.width,
 			   r_newrefdef.height);
 		qglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		qglClearColor(0, 0, 0, 1);
@@ -771,10 +769,10 @@ void R_SetupGL (void)
 	//
 	// set up viewport
 	//
-	x = (int)floor(r_newrefdef.x * vid.width / vid.width);
-	x2 = (int)ceil((r_newrefdef.x + r_newrefdef.width) * vid.width / vid.width);
-	y = (int)floor(vid.height - r_newrefdef.y * vid.height / vid.height);
-	y2 = (int)ceil(vid.height - (r_newrefdef.y + r_newrefdef.height) * vid.height / vid.height);
+	x = (int)floor(r_newrefdef.x * viddef.width / viddef.width);
+	x2 = (int)ceil((r_newrefdef.x + r_newrefdef.width) * viddef.width / viddef.width);
+	y = (int)floor(viddef.height - r_newrefdef.y * viddef.height / viddef.height);
+	y2 = (int)ceil(viddef.height - (r_newrefdef.y + r_newrefdef.height) * viddef.height / viddef.height);
 
 	w = x2 - x;
 	h = y - y2;
@@ -922,7 +920,7 @@ void R_RenderView (refdef_t *fd)
 void	R_SetGL2D (void)
 {
 	// set 2D virtual screen size
-	qglViewport (0,0, vid.width, vid.height);
+	qglViewport (0,0, viddef.width, viddef.height);
 	qglMatrixMode(GL_PROJECTION);
     qglLoadIdentity ();
 	//qglOrtho  (0, vid.width, vid.height, 0, -99999, 99999);
@@ -1142,12 +1140,12 @@ int R_SetMode (void)
 	gl_mode->modified = false;
 
 	if (FLOAT_NE_ZERO(gl_forcewidth->value))
-		vid.width = (int)gl_forcewidth->value;
+		viddef.width = (int)gl_forcewidth->value;
 
 	if (FLOAT_NE_ZERO(gl_forceheight->value))
-		vid.height = (int)gl_forceheight->value;
+		viddef.height = (int)gl_forceheight->value;
 
-	if ( ( err = GLimp_SetMode( &vid.width, &vid.height, Q_ftol(gl_mode->value), fullscreen ) ) == VID_ERR_NONE )
+	if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen ) ) == VID_ERR_NONE )
 	{
 		gl_state.prev_mode = Q_ftol(gl_mode->value);
 	}
@@ -1162,7 +1160,7 @@ int R_SetMode (void)
 			ri.Cvar_SetValue( "vid_fullscreen", 0);
 			vid_fullscreen->modified = false;
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - fullscreen unavailable in this mode\n" );
-			if ( ( err = GLimp_SetMode( &vid.width, &vid.height, Q_ftol(gl_mode->value), false ) ) == VID_ERR_NONE )
+			if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), false ) ) == VID_ERR_NONE )
 				return VID_ERR_NONE;
 		}
 		else if ( err & VID_ERR_FAIL )
@@ -1173,7 +1171,7 @@ int R_SetMode (void)
 		}
 
 		// try setting it back to something safe
-		if ( ( err = GLimp_SetMode( &vid.width, &vid.height, gl_state.prev_mode, false ) ) != VID_ERR_NONE )
+		if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, gl_state.prev_mode, false ) ) != VID_ERR_NONE )
 		{
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - could not revert to safe mode\n" );
 			return VID_ERR_FAIL;
@@ -1344,8 +1342,8 @@ retryQGL:
 	GL_SetDefaultState();
 
 	//r1: setup cached screensizes
-	vid_scaled_width = vid.width / gl_hudscale->value;
-	vid_scaled_height = vid.height / gl_hudscale->value;
+	vid_scaled_width = viddef.width / gl_hudscale->value;
+	vid_scaled_height = viddef.height / gl_hudscale->value;
 
 	/*
 	** draw our stereo patterns
@@ -1510,7 +1508,7 @@ void R_BeginFrame( float camera_separation )
 	/*
 	** go into 2D mode
 	*/
-	qglViewport (0,0, vid.width, vid.height);
+	qglViewport (0,0, viddef.width, viddef.height);
 	qglMatrixMode(GL_PROJECTION);
     qglLoadIdentity ();
 	//qglOrtho  (0, vid.width, vid.height, 0, -99999, 99999);
@@ -1578,8 +1576,8 @@ void R_BeginFrame( float camera_separation )
 		else
 		{
 			//r1: hudscaling
-			width = (int)ceilf((float)vid.width / gl_hudscale->value);
-			height = (int)ceilf((float)vid.height / gl_hudscale->value);
+			width = (int)ceilf((float)viddef.width / gl_hudscale->value);
+			height = (int)ceilf((float)viddef.height / gl_hudscale->value);
 
 			//round to powers of 8/2 to avoid blackbars
 			width = (width+7)&~7;
@@ -1587,8 +1585,8 @@ void R_BeginFrame( float camera_separation )
 
 			gl_hudscale->modified = false;
 
-			vid_scaled_width = vid.width / gl_hudscale->value;
-			vid_scaled_height = vid.height / gl_hudscale->value;
+			vid_scaled_width = viddef.width / gl_hudscale->value;
+			vid_scaled_height = viddef.height / gl_hudscale->value;
 
 			// let the sound and input subsystems know about the new window
 			ri.Vid_NewWindow (width, height);
