@@ -126,9 +126,11 @@ void VID_MenuInit( void )
 	s_opengl_menu.x = viddef.width * 0.50;
 	s_opengl_menu.nitems = 0;
 
+	int cur_y_value = 10;
+
 	s_fs_box.generic.type = MTYPE_SPINCONTROL;
 	s_fs_box.generic.x = 0;
-	s_fs_box.generic.y = 10;
+	s_fs_box.generic.y = cur_y_value = cur_y_value + 10;
 	s_fs_box.generic.name = "fullscreen";
 	s_fs_box.itemnames = yesno_names;
 	s_fs_box.curvalue = vid_fullscreen->value;
@@ -136,12 +138,12 @@ void VID_MenuInit( void )
 	s_mode_list.generic.type = MTYPE_SPINCONTROL;
 	s_mode_list.generic.name = "video mode";
 	s_mode_list.generic.x = 0;
-	s_mode_list.generic.y = 20;
+	s_mode_list.generic.y = cur_y_value = cur_y_value + 10;
 	s_mode_list.itemnames = resolutions;
 
 	s_screensize_slider.generic.type	= MTYPE_SLIDER;
 	s_screensize_slider.generic.x		= 0;
-	s_screensize_slider.generic.y		= 30;
+	s_screensize_slider.generic.y		= cur_y_value = cur_y_value + 10;
 	s_screensize_slider.generic.name	= "screen size";
 	s_screensize_slider.minvalue = 3;
 	s_screensize_slider.maxvalue = 12;
@@ -149,23 +151,31 @@ void VID_MenuInit( void )
 
 	s_brightness_slider.generic.type	= MTYPE_SLIDER;
 	s_brightness_slider.generic.x	= 0;
-	s_brightness_slider.generic.y	= 40;
+	s_brightness_slider.generic.y	= cur_y_value = cur_y_value + 10;
 	s_brightness_slider.generic.name	= "brightness";
 	s_brightness_slider.generic.callback = BrightnessCallback;
 	s_brightness_slider.minvalue = 5;
 	s_brightness_slider.maxvalue = 13;
 	s_brightness_slider.curvalue = ( 1.3 - vid_gamma->value + 0.5 ) * 10;
 
+	s_tq_slider.generic.type = MTYPE_SLIDER;
+	s_tq_slider.generic.x = 0;
+	s_tq_slider.generic.y = cur_y_value = cur_y_value + 20;
+	s_tq_slider.generic.name = "texture quality";
+	s_tq_slider.minvalue = 0;
+	s_tq_slider.maxvalue = 3;
+	s_tq_slider.curvalue = 3 - gl_picmip->value;
+
 	s_defaults_action.generic.type = MTYPE_ACTION;
 	s_defaults_action.generic.name = "reset to default";
 	s_defaults_action.generic.x    = 0;
-	s_defaults_action.generic.y    = 90;
+	s_defaults_action.generic.y		= cur_y_value = 90;
 	s_defaults_action.generic.callback = ResetDefaults;
 
 	s_apply_action.generic.type = MTYPE_ACTION;
 	s_apply_action.generic.name = "apply";
 	s_apply_action.generic.x    = 0;
-	s_apply_action.generic.y    = 100;
+	s_apply_action.generic.y	= cur_y_value = cur_y_value + 10;
 	s_apply_action.generic.callback = ApplyChanges;
 
 	s_windowed_mouse.generic.type = MTYPE_SPINCONTROL;
@@ -174,14 +184,6 @@ void VID_MenuInit( void )
 	s_windowed_mouse.generic.name   = "windowed mouse";
 	s_windowed_mouse.curvalue = _windowed_mouse->value;
 	s_windowed_mouse.itemnames = yesno_names;
-
-	s_tq_slider.generic.type	= MTYPE_SLIDER;
-	s_tq_slider.generic.x		= 0;
-	s_tq_slider.generic.y		= 60;
-	s_tq_slider.generic.name	= "texture quality";
-	s_tq_slider.minvalue = 0;
-	s_tq_slider.maxvalue = 3;
-	s_tq_slider.curvalue = 3-gl_picmip->value;
 
 	Menu_AddItem( &s_opengl_menu, (void *)&s_fs_box );
 	Menu_AddItem( &s_opengl_menu, ( void * ) &s_mode_list );
