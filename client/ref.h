@@ -270,4 +270,26 @@ extern void (*KBD_Update_fp)(void);
 extern void (*KBD_Init_fp)(Key_Event_fp_t fp);
 extern void (*KBD_Close_fp)(void);
 
+typedef struct vrect_s
+{
+	int32				x, y, width, height;
+} vrect_t;
+
+#define __VIDDEF_T
+typedef struct
+{
+	uint32		width, height;			// coordinates from main game
+} viddef_t;
+
+extern	viddef_t	viddef;				// global video state
+
+// Video module initialisation etc
+void	VID_Init(void);
+void	VID_Shutdown(void);
+void	VID_CheckChanges(void);
+
+void	EXPORT VID_MenuInit(void);
+void	VID_MenuDraw(void);
+const char *VID_MenuKey(int);
+
 #endif // __REF_H
