@@ -638,7 +638,10 @@ void GetEvent(SDL_Event *event)
 		case SDL_WINDOWEVENT_RESIZED:
 			viddef.width = event->window.data1;
 			viddef.height = event->window.data2;
+			vid_scaled_width = viddef.width / gl_hudscale->value;
+			vid_scaled_height = viddef.height / gl_hudscale->value;
 		}
+		break;
 #endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDL_QUIT:
 		ri.Cmd_ExecuteText(EXEC_NOW, "quit");
