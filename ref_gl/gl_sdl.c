@@ -632,6 +632,14 @@ void GetEvent(SDL_Event *event)
 			}
 		}
 		break;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_WINDOWEVENT:
+		switch (event->window.event) {
+		case SDL_WINDOWEVENT_RESIZED:
+			viddef.width = event->window.data1;
+			viddef.height = event->window.data2;
+		}
+#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDL_QUIT:
 		ri.Cmd_ExecuteText(EXEC_NOW, "quit");
 		break;
@@ -1031,7 +1039,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		// TODO: SDL_WINDOW_RESIZABLE
 		// TODO: SDL_WINDOW_INPUT_GRABBED?
 		// TODO: SDL_WINDOW_ALLOW_HIGHDPI?
-		uint32_t flags = SDL_WINDOW_OPENGL;
+		uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 		if (fullscreen) {
 			// TODO: SDL_WINDOW_FULLSCREEN_DESKTOP
 			flags |= SDL_WINDOW_FULLSCREEN;
