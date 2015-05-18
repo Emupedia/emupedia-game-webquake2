@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <unistd.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -764,3 +766,6 @@ void Sys_UpdateURLMenu (const char *s)
 {
 	//FIXME
 }
+
+
+#endif  // !_WIN32

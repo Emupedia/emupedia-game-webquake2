@@ -21,10 +21,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // is used for both the software and OpenGL rendering versions of the
 // Quake refresh engine.
 
+
+#ifdef _WIN32
+
+
 #define WIN32_LEAN_AND_MEAN
 #define _WIN32_WINNT 0x0400
 #include "resource.h"
-#include "..\client\client.h"
+#include "../client/client.h"
 #include "winquake.h"
 //#include "zmouse.h"
 
@@ -1231,3 +1235,4 @@ void VID_Shutdown (void)
 }
 
 
+#endif  // _WIN32

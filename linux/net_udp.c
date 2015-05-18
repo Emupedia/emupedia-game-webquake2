@@ -1,5 +1,7 @@
 // net_wins.c
 
+#ifndef _WIN32
+
 #ifndef EMSCRIPTEN
 #define SOCK_EXTENDED_ERR 1
 #endif  // EMSCRIPTEN
@@ -493,3 +495,4 @@ char *NET_ErrorString (void)
 }
 
 
+#endif  // !_WIN32

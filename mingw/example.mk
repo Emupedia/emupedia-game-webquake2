@@ -29,7 +29,7 @@ CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
 LDFLAGS:=-g
-LDLIBS:=
+LDLIBS:=-lwinmm -lkernel32
 LDLIBS_ref_gl:=
 LDLIBS_client:=
 

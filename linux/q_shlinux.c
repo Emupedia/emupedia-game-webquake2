@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
@@ -212,5 +214,4 @@ void Sys_FindClose (void)
 }
 
 
-//============================================
-
+#endif  // !_WIN32
