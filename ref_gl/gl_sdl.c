@@ -512,15 +512,24 @@ void GetEvent(SDL_Event *event)
 		mx += event->motion.xrel; my += event->motion.yrel;
 		break;
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_MOUSEWHEEL:
+		if (event->wheel.y > 0) {
+#else
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == 4) {
+#endif
 			keyq[keyq_head].key = K_MWHEELUP;
 			keyq[keyq_head].down = true;
 			keyq_head = (keyq_head + 1) & 63;
 			keyq[keyq_head].key = K_MWHEELUP;
 			keyq[keyq_head].down = false;
 			keyq_head = (keyq_head + 1) & 63;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		} else {
+#else
 		} else if (event->button.button == 5) {
+#endif
 			keyq[keyq_head].key = K_MWHEELDOWN;
 			keyq[keyq_head].down = true;
 			keyq_head = (keyq_head + 1) & 63;
