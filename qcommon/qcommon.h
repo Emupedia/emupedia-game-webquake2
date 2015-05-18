@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef NDEBUG
 	#include "../build.h"
-	#define	VERSION		"b"BUILD
+	#define	VERSION		"b" BUILD
 #else
 	#define BUILD "DEBUG BUILD"
 	#define	VERSION		BUILD
