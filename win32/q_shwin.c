@@ -424,7 +424,7 @@ size_t __cdecl fast_strlen(const char *s)
 			jz	short ret0
 			cmp	byte ptr [eax+1], cl	;string of length 1
 			jz	short ret1
-			cmp	byte ptr [eax+2], cl	;if 3rd char isn't zero, adjust?
+			cmp	byte ptr [eax+2], cl	;if 3rd char isnt zero, adjust?
 			jnz	short adjust
 			inc	eax						;3rd char is zero, so inc counter
 

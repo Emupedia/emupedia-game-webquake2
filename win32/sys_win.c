@@ -1150,7 +1150,7 @@ void *Sys_GetGameAPI (void *parms, int baseq2DLL)
 #endif
 
 #else
-#error Don't know what kind of dynamic objects to use for this architecture.
+#error "Don't know what kind of dynamic objects to use for this architecture."
 #endif
 
 	if (game_library)
