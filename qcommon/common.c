@@ -1822,7 +1822,7 @@ RESTRICT void * EXPORT Z_TagMallocRelease (int size, int tag)
 	if (size < 0)
 		Com_Error (ERR_DIE, "Z_TagMalloc: Illegal allocation size of %d bytes from %p for tag %d", size,
 #if defined _MSC_VER
-	z->allocationLocation = _ReturnAddress ();
+		_ReturnAddress(),
 #elif (defined __GNUC__) && !defined(EMSCRIPTEN)
 		__builtin_return_address (0), 
 #else
@@ -1880,7 +1880,7 @@ RESTRICT void * EXPORT Z_TagMallocGame (int size, int tag)
 	void		*retAddr;
 
 #if defined _MSC_VER
-	z->allocationLocation = _ReturnAddress ();
+	retAddr = _ReturnAddress();
 #elif (defined __GNUC__) && !defined(EMSCRIPTEN)
 	retAddr = __builtin_return_address (0);
 #else
@@ -1941,7 +1941,7 @@ void EXPORT Z_FreeGame (void *buf)
 	void		*retAddr;
 
 #if defined _MSC_VER
-	z->allocationLocation = _ReturnAddress ();
+	retAddr = _ReturnAddress();
 #elif (defined __GNUC__) && !defined(EMSCRIPTEN)
 	retAddr = __builtin_return_address (0);
 #else
