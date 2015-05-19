@@ -21,7 +21,7 @@ SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 SRC_client+=$(addprefix $(d)/,alw_win.c snd_win.c vid_dll.c)
 
-SRC_shwin:=$(addprefix $(d)/,q_shwin.c)
+SRC_shwin:=$(addprefix $(d)/,q_shwin.c sys_win.c)
 
 
 d  := $(dirstack_$(sp))

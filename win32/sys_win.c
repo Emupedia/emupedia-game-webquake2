@@ -19,6 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // sys_win.h
 
+
+#ifdef _WIN32
+
+
 #define _WINNT_VER 0x5
 
 #include "../qcommon/qcommon.h"
@@ -33,7 +37,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <conio.h>
 #include <process.h>
 #include <dbghelp.h>
-#include <Richedit.h>
+#include <richedit.h>
 
 #ifdef USE_OPENSSL
 #define OPENSSLEXPORT __cdecl
@@ -2341,7 +2345,7 @@ void Sys_Spinstats_f (void)
 	Com_Printf ("%u fast spins, %u slow spins, %.2f%% slow.\n", LOG_GENERAL, goodspins, badspins, ((float)badspins / (float)(goodspins+badspins)) * 100.0f);
 }
 
-#ifdef _M_IX86
+#if defined _M_IX86 && defined _MSC_VER
 
 __declspec(naked) unsigned short Sys_GetFPUStatus (void)
 {
@@ -2566,3 +2570,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	return 0;
 }
+
+
+#endif  // _WIN32
