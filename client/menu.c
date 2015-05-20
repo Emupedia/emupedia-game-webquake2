@@ -467,7 +467,7 @@ static const char *M_Main_Key (int key)
 
 	case K_KP_UPARROW:
 	case K_UPARROW:
-		m_main_cursor = (m_main_cursor - 1) % MAIN_ITEMS;
+		m_main_cursor = (m_main_cursor + MAIN_ITEMS - 1) % MAIN_ITEMS;
 		return sound;
 
 	case K_KP_ENTER:
