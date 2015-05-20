@@ -967,7 +967,7 @@ static int SV_WritePlayerstateToClient (const client_frame_t /*@null@*/*from, cl
 	{
 		MSG_WriteLong (statbits);
 		for (int i = 0; i < MAX_STATS; i++)
-			if (statbits & (1<<i) )
+			if (statbits & (1U << i) )
 				MSG_WriteShort (ps->stats[i]);
 	}
 #ifndef NPROFILE
