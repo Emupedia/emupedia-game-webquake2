@@ -29,7 +29,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <jpeglib.h>
 #endif  // USE_JPEG
 
+
+#ifdef USE_PNG
 #include <png.h>
+#endif  // USE_PNG
+
+
 
 /*
 ==================
@@ -103,7 +108,7 @@ void R_InitParticleTexture (void)
 
 #define USE_THREADS 1
 
-#ifdef WIN32
+#if defined(_WIN32) && defined(USE_PNG)
 extern void png_default_flush(png_structp png_ptr);
 extern void png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length);
 unsigned int __stdcall png_write_thread (byte *buffer)
@@ -292,7 +297,7 @@ void GL_ScreenShot_f (void)
 	buffer = malloc(viddef.width*viddef.height*3);
 
 	qglReadPixels (0, 0, viddef.width, viddef.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
-#ifdef WIN32
+#if defined(_WIN32) && defined(USE_PNG)
 	if (!strcmp (ri.Cmd_Argv(1), "jpg"))
 	{
 		GL_ScreenShot_JPG (buffer);

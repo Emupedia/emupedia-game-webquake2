@@ -37,7 +37,7 @@ FILES:= \
 	# empty line
 
 
-quake2_MODULES:=client libpng linux qcommon qshared ref_gl server shlinux shwin zlib
+quake2_MODULES:=client linux qcommon qshared ref_gl server shlinux shwin zlib
 quake2_SRC:=
 
 
@@ -45,6 +45,14 @@ ifeq ($(USE_JPEG),y)
 
 quake2_MODULES+=libjpeg
 CFLAGS+=-DUSE_JPEG
+
+endif
+
+
+ifeq ($(USE_PNG),y)
+
+quake2_MODULES+=libpng
+CFLAGS+=-DUSE_PNG
 
 endif
 

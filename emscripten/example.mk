@@ -13,6 +13,7 @@ UBSAN:=n
 
 
 USE_JPEG:=y
+USE_PNG:=n
 
 
 BUILTIN_GAME:=baseq2

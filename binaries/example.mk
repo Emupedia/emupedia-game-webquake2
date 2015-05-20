@@ -13,6 +13,7 @@ UBSAN:=n
 
 
 USE_JPEG:=y
+USE_PNG:=y
 
 
 # compiler options etc

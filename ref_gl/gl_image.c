@@ -19,7 +19,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "gl_local.h"
+
+
+#ifdef USE_PNG
 #include <png.h>
+#endif  // USE_PNG
+
 
 #ifdef USE_JPEG
 #include <jpeglib.h>
@@ -609,6 +614,10 @@ abortload:
 	ri.FS_FreeFile (pcx);
 }
 
+
+#ifdef USE_PNG
+
+
 typedef struct {
     byte *Buffer;
     size_t Pos;
@@ -733,6 +742,10 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 
 	ri.FS_FreeFile (PngFileBuffer.Buffer);
 }
+
+
+#endif // USE_PNG
+
 
 /*
 =========================================================
@@ -3039,6 +3052,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 		}
 		if (!pic)
 		{
+#ifdef USE_PNG
 			if (load_png_pics)
 			{
 				png_name[len-3] = 'p';
@@ -3046,6 +3060,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 				png_name[len-1] = 'g';
 				LoadPNG (png_name, &pic, &width, &height);
 			}
+#endif  // USE_PNG
 			if (!pic)
 			{
 #ifdef USE_JPEG
@@ -3080,6 +3095,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 		}
 		image = GL_LoadPic (name, pic, width, height, type, bpp);
 	}
+#ifdef USE_PNG
 	else if (!strcmp(name+len-4, ".png"))
 	{
 		LoadPNG (name, &pic, &width, &height);
@@ -3087,6 +3103,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 			return NULL; // ri.Sys_Error (ERR_DROP, "GL_FindImage: can't load %s", name);
 		image = GL_LoadPic (name, pic, width, height, type, 32);
 	}
+#endif  // USE_PNG
 	else if (!strcmp(name+len-4, ".wal"))
 	{
 		image = GL_LoadWal (name);

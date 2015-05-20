@@ -56,7 +56,12 @@ ifeq ($(USE_JPEG),y)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libjpeg-turbo
 endif
 
+
+ifeq ($(USE_PNG),y)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libpng
+endif  # USE_PNG
+
+
 CFLAGS+=-isystem$(TOPDIR)/foreign/zlib
 
 
