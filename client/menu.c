@@ -24,7 +24,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "client.h"
 #include "../client/qmenu.h"
 
-static int	m_main_cursor;
+typedef enum {
+	M_MENU_MULTIPLAYER,
+	M_MENU_OPTIONS,
+	M_MENU_VIDEO,
+#ifndef EMSCRIPTEN
+	M_MENU_QUIT
+#endif
+} main_menu_selections;
+
+static main_menu_selections	m_main_cursor;
 
 #define NUM_CURSOR_FRAMES 15
 
@@ -387,7 +396,7 @@ MAIN MENU
 #ifdef EMSCRIPTEN
 #define	MAIN_ITEMS	3
 #else
-#define	MAIN_ITEMS	5
+#define	MAIN_ITEMS	4
 #endif
 
 
@@ -402,9 +411,6 @@ static void M_Main_Draw (void)
 	char litname[80];
 	char *names[] =
 	{
-#ifndef EMSCRIPTEN
-		"m_main_game",
-#endif
 		"m_main_multiplayer",
 		"m_main_options",
 		"m_main_video",
@@ -456,14 +462,12 @@ static const char *M_Main_Key (int key)
 
 	case K_KP_DOWNARROW:
 	case K_DOWNARROW:
-		if (++m_main_cursor >= MAIN_ITEMS)
-			m_main_cursor = 0;
+		m_main_cursor = (m_main_cursor + 1) % MAIN_ITEMS;
 		return sound;
 
 	case K_KP_UPARROW:
 	case K_UPARROW:
-		if (--m_main_cursor < 0)
-			m_main_cursor = MAIN_ITEMS - 1;
+		m_main_cursor = (m_main_cursor - 1) % MAIN_ITEMS;
 		return sound;
 
 	case K_KP_ENTER:
@@ -472,36 +476,20 @@ static const char *M_Main_Key (int key)
 
 		switch (m_main_cursor)
 		{
-#ifdef EMSCRIPTEN
-		case 0:
+		case M_MENU_MULTIPLAYER:
 			M_Menu_Multiplayer_f();
 			break;
 
-		case 1:
-			M_Menu_Options_f();
-			break;
-
-		case 2:
-			M_Menu_Video_f();
-			break;
-#else
-		case 0:
-			M_Menu_Game_f ();
-			break;
-
-		case 1:
-			M_Menu_Multiplayer_f();
-			break;
-
-		case 2:
+		case M_MENU_OPTIONS:
 			M_Menu_Options_f ();
 			break;
 
-		case 3:
+		case M_MENU_VIDEO:
 			M_Menu_Video_f ();
 			break;
 
-		case 4:
+#ifndef EMSCRIPTEN
+		case M_MENU_QUIT:
 			M_Menu_Quit_f ();
 			break;
 #endif
@@ -4224,11 +4212,6 @@ M_Init
 void M_Init (void)
 {
 	Cmd_AddCommand ("menu_main", M_Menu_Main_f);
-#ifndef EMSCRIPTEN
-	Cmd_AddCommand ("menu_game", M_Menu_Game_f);
-		Cmd_AddCommand ("menu_loadgame", M_Menu_LoadGame_f);
-		Cmd_AddCommand ("menu_savegame", M_Menu_SaveGame_f);
-#endif
 		Cmd_AddCommand ("menu_joinserver", M_Menu_JoinServer_f);
 			Cmd_AddCommand ("menu_addressbook", M_Menu_AddressBook_f);
 		Cmd_AddCommand ("menu_startserver", M_Menu_StartServer_f);
