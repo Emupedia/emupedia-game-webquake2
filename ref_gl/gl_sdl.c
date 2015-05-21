@@ -574,6 +574,11 @@ void GetEvent(SDL_Event *event)
 			flags = fs ? SDL_WINDOW_FULLSCREEN : 0;
 
 			int retval = SDL_SetWindowFullscreen(window, flags);
+			if (retval != 0) {
+				ri.Con_Printf(PRINT_ALL, "SDL_SetWindowFullscreen failed: \"%s\"\n", SDL_GetError());
+				// not fatal but since fullscreen failed...
+				fs = flags ? 1 : 0;
+			}
 
 #else  // SDL_VERSION_ATLEAST(2, 0, 0)
 
