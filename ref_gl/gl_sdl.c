@@ -1055,13 +1055,6 @@ void GLimp_Shutdown( void )
 	SWimp_Shutdown();
 }
 
-/*
-** GLimp_AppActivate
-*/
-void GLimp_AppActivate( qboolean active )
-{
-}
-
 
 /*****************************************************************************/
 /* KEYBOARD                                                                  */
