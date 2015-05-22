@@ -59,16 +59,8 @@
 static qboolean                 X11_active = false;
 
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-
 static SDL_Window *window;
 static SDL_GLContext glcontext;
-
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-
-static SDL_Surface *surface;
-
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 
 struct
@@ -384,7 +376,6 @@ int XLateKey(unsigned int keysym)
 	key = 0;
 	switch(keysym) {
 
-#if SDL_VERSION_ATLEAST(1, 3, 0)
 		case SDLK_KP_0:			key = K_KP_INS; break;
 		case SDLK_KP_1:			key = K_KP_END; break;
 		case SDLK_KP_2:			key = K_KP_DOWNARROW; break;
@@ -402,24 +393,6 @@ int XLateKey(unsigned int keysym)
 		// WTF: the above should get this but doesn't
 		case 167			:	key = '`'; break;
 
-#else  // SDL_VERSION_ATLEAST(1, 3, 0)
-
-		case SDLK_KP0:			key = K_KP_INS; break;
-		case SDLK_KP1:			key = K_KP_END; break;
-		case SDLK_KP2:			key = K_KP_DOWNARROW; break;
-		case SDLK_KP3:			key = K_KP_PGDN; break;
-		case SDLK_KP4:			key = K_KP_LEFTARROW; break;
-		case SDLK_KP5:			key = K_KP_5; break;
-		case SDLK_KP6:			key = K_KP_RIGHTARROW; break;
-		case SDLK_KP7:			key = K_KP_HOME; break;
-		case SDLK_KP8:			key = K_KP_UPARROW; break;
-		case SDLK_KP9:			key = K_KP_PGUP; break;
-		
-		/* suggestions on how to handle this better would be appreciated */
-		case SDLK_WORLD_7:		key = '`'; break;
-
-#endif  // SDL_VERSION_ATLEAST(1, 3, 0)
-		
 		case SDLK_PAGEUP:		key = K_PGUP; break;
 		
 		case SDLK_PAGEDOWN:		key = K_PGDN; break;
@@ -469,10 +442,6 @@ int XLateKey(unsigned int keysym)
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:		key = K_CTRL; break;
 		
-#if !SDL_VERSION_ATLEAST(1, 3, 0)
-		case SDLK_LMETA:
-		case SDLK_RMETA:
-#endif  // !SDL_VERSION_ATLEAST(1, 3, 0)
 		case SDLK_LALT:
 		case SDLK_RALT:			key = K_ALT; break;
 
@@ -493,15 +462,7 @@ int XLateKey(unsigned int keysym)
 }
 
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-
 static unsigned char KeyStates[SDL_NUM_SCANCODES];
-
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-
-static unsigned char KeyStates[SDLK_LAST];
-
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 
 void GetEvent(SDL_Event *event)
@@ -513,24 +474,15 @@ void GetEvent(SDL_Event *event)
 		mx += event->motion.xrel; my += event->motion.yrel;
 		break;
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDL_MOUSEWHEEL:
 		if (event->wheel.y > 0) {
-#else
-	case SDL_MOUSEBUTTONDOWN:
-		if (event->button.button == 4) {
-#endif
 			keyq[keyq_head].key = K_MWHEELUP;
 			keyq[keyq_head].down = true;
 			keyq_head = (keyq_head + 1) & 63;
 			keyq[keyq_head].key = K_MWHEELUP;
 			keyq[keyq_head].down = false;
 			keyq_head = (keyq_head + 1) & 63;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		} else {
-#else
-		} else if (event->button.button == 5) {
-#endif
 			keyq[keyq_head].key = K_MWHEELDOWN;
 			keyq[keyq_head].down = true;
 			keyq_head = (keyq_head + 1) & 63;
@@ -558,15 +510,10 @@ void GetEvent(SDL_Event *event)
 	  break;
 #endif
 	case SDL_KEYDOWN:
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		if ( (KeyStates[SDL_SCANCODE_LALT] || KeyStates[SDL_SCANCODE_RALT]) &&
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-		if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			(event->key.keysym.sym == SDLK_RETURN) ) {
 			cvar_t	*fullscreen;
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 			int flags = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
 
 			// this is AFTER the change
@@ -581,12 +528,6 @@ void GetEvent(SDL_Event *event)
 				fs = flags ? 1 : 0;
 			}
 
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-
-			SDL_WM_ToggleFullScreen(surface);
-			int fs = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
-
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 			ri.Cvar_SetValue( "vid_fullscreen", fs );
 
@@ -596,18 +537,10 @@ void GetEvent(SDL_Event *event)
 			break; /* ignore this key */
 		}
 		
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		if ( (KeyStates[SDL_SCANCODE_LCTRL] || KeyStates[SDL_SCANCODE_RCTRL]) &&
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-		if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			(event->key.keysym.sym == SDLK_g) ) {
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 			int newValue = (SDL_GetWindowGrab(window) == SDL_TRUE) ? /*1*/ 0 : /*0*/ 1;
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-			int newValue = (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1;
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 			/*	
 			SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
 			gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
@@ -617,11 +550,7 @@ void GetEvent(SDL_Event *event)
 			break; /* ignore this key */
 		}
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		KeyStates[event->key.keysym.scancode] = 1;
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-		KeyStates[event->key.keysym.sym] = 1;
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 		
 		key = XLateKey(event->key.keysym.sym);
 		if (key) {
@@ -631,13 +560,8 @@ void GetEvent(SDL_Event *event)
 		}
 		break;
 	case SDL_KEYUP:
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		if (KeyStates[event->key.keysym.scancode]) {
 			KeyStates[event->key.keysym.scancode] = 0;
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-		if (KeyStates[event->key.keysym.sym]) {
-			KeyStates[event->key.keysym.sym] = 0;
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 		
 			key = XLateKey(event->key.keysym.sym);
 			if (key) {
@@ -647,7 +571,7 @@ void GetEvent(SDL_Event *event)
 			}
 		}
 		break;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
+
 	case SDL_WINDOWEVENT:
 		switch (event->window.event) {
 		case SDL_WINDOWEVENT_RESIZED:
@@ -657,7 +581,7 @@ void GetEvent(SDL_Event *event)
 			vid_scaled_height = viddef.height / gl_hudscale->value;
 		}
 		break;
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
+
 	case SDL_QUIT:
 		ri.Cmd_ExecuteText(EXEC_NOW, "quit");
 		break;
@@ -771,10 +695,6 @@ int SWimp_Init( void *hInstance, void *wndProc )
 		}
 	}
 
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
-#endif  // !SDL_VERSION_ATLEAST(2, 0, 0)
-	
 // catch signals so i can turn on auto-repeat
 #if 0
  	{
@@ -809,7 +729,6 @@ static void SetSDLIcon(void) {
     if (icon == NULL)
 	return; /* oh well... */
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
     SDL_SetColorKey(icon, SDL_TRUE, 0);
 
     color.r = 255;
@@ -821,20 +740,6 @@ static void SetSDLIcon(void) {
     color.b = 0;
 	icon->format->palette->colors[1] = color;
 
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-
-	SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
-
-    color.r = 255;
-    color.g = 255;
-    color.b = 255;
-    SDL_SetColors(icon, &color, 0, 1); /* just in case */
-    color.r = 0;
-    color.g = 16;
-    color.b = 0;
-    SDL_SetColors(icon, &color, 1, 1);
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
-
     ptr = (Uint8 *)icon->pixels;
     for (i = 0; i < sizeof(q2icon_bits); i++) {
 	for (mask = 1; mask != 0x100; mask <<= 1) {
@@ -843,11 +748,7 @@ static void SetSDLIcon(void) {
 	}               
     }
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_SetWindowIcon(window, icon);
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-    SDL_WM_SetIcon(icon, NULL);
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
     SDL_FreeSurface(icon);
 }
 
@@ -990,19 +891,11 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 {
 	/* Just toggle fullscreen if that's all that has been changed */
 	int oldW = -1, oldH = -1;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	if (window) {
 		SDL_GetWindowSize(window, &oldW, &oldH);
 	}
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-	if (surface) {
-		oldW = surface->w;
-		oldH = surface->h;
-	}
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 
 	if ((oldW == viddef.width) && (oldH == viddef.height)) {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		int isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
 		if (fullscreen != isfullscreen) {
 			// TODO: support SDL_WINDOW_FULLSCREEN_DESKTOP
@@ -1010,13 +903,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		}
 
 		isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-		int isfullscreen = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
-		if (fullscreen != isfullscreen)
-			SDL_WM_ToggleFullScreen(surface);
-
-		isfullscreen = (surface->flags & SDL_FULLSCREEN) ? 1 : 0;
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 		if (fullscreen == isfullscreen)
 			return true;
 	}
@@ -1048,7 +934,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	if (window) {
 		SDL_SetWindowSize(window, viddef.width, viddef.height);
 	} else {
@@ -1093,27 +978,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 
 	}
 
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-	// free resources in use
-	if (surface)
-		SDL_FreeSurface(surface);
-
-	int flags = SDL_OPENGL;
-	if (fullscreen)
-		flags |= SDL_FULLSCREEN;
-
-	SetSDLIcon(); /* currently uses q2icon.xbm data */
-		
-	if ((surface = SDL_SetVideoMode(viddef.width, viddef.height, 0, flags)) == NULL) {
-		Sys_Error("(SDLGL) SDL SetVideoMode failed: %s\n", SDL_GetError());
-		return false;
-	}
-
-	SDL_WM_SetCaption("Quake II", "Quake II");
-
-	SDL_ShowCursor(0);
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
-
 	// let the sound and input subsystems know about the new window
 	ri.Vid_NewWindow(viddef.width, viddef.height);
 
@@ -1136,11 +1000,7 @@ void GLimp_BeginFrame(void)
 
 void GLimp_EndFrame (void)
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_GL_SwapWindow(window);
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_GL_SwapBuffers();
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 }
 
 /*
@@ -1176,7 +1036,6 @@ int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboole
 
 void SWimp_Shutdown( void )
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	if (glcontext) {
 		SDL_GL_DeleteContext(glcontext);
 		glcontext = NULL;
@@ -1186,11 +1045,6 @@ void SWimp_Shutdown( void )
 		SDL_DestroyWindow(window);
 		window = NULL;
 	}
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-	if (surface)
-		SDL_FreeSurface(surface);
-	surface = NULL;
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 	
 	if (SDL_WasInit(SDL_INIT_EVERYTHING) == SDL_INIT_VIDEO)
 		SDL_Quit();
@@ -1268,18 +1122,8 @@ void KBD_Update(void)
 		old_windowed_mouse = _windowed_mouse->value;
 
 		// TODO: should refactor all this grab stuff to one place
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
 		SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-#else  // SDL_VERSION_ATLEAST(2, 0, 0)
-		if (!_windowed_mouse->value) {
-			/* ungrab the pointer */
-			SDL_WM_GrabInput(SDL_GRAB_OFF);
-		} else {
-			/* grab the pointer */
-			SDL_WM_GrabInput(SDL_GRAB_ON);
-		}
-#endif  // SDL_VERSION_ATLEAST(2, 0, 0)
 	}			
 		while (keyq_head != keyq_tail)
 		{
