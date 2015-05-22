@@ -33,9 +33,13 @@ endif
 
 
 
+ifeq ($(BUILD_SERVER),y)
+
 PROGRAMS+= \
 	r1q2ded \
 	#empty line
+
+endif  # BUILD_SERVER
 
 
 SRC_$(d):=$(addprefix $(d)/,$(FILES))

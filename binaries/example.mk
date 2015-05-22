@@ -15,6 +15,8 @@ UBSAN:=n
 USE_JPEG:=y
 USE_PNG:=y
 
+BUILD_SERVER:=y
+
 
 # compiler options etc
 CC:=gcc

@@ -13,7 +13,9 @@ UBSAN:=n
 
 
 USE_JPEG:=y
+USE_PNG:=y
 
+BUILD_SERVER:=y
 
 # compiler options etc
 CC:=i686-w64-mingw32-gcc
