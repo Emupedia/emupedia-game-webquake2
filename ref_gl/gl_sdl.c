@@ -71,10 +71,6 @@ struct
 int keyq_head=0;
 int keyq_tail=0;
 
-int config_notify=0;
-int config_notify_width;
-int config_notify_height;
-
 glwstate_t glw_state;
 						      
 // Console variables that we need to access from this module
