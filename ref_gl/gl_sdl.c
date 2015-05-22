@@ -105,7 +105,7 @@ static cvar_t	*_windowed_mouse;
 static cvar_t	*m_filter;
 static cvar_t	*in_mouse;
 
-static qboolean	mlooking;
+static qboolean	mlooking = true;
 
 /* stencilbuffer shadows */
 qboolean have_stencil = false;
