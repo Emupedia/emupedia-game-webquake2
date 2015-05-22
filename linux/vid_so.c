@@ -38,7 +38,6 @@ void Do_Key_Event(int key, qboolean down);
 
 void (*KBD_Update_fp)(void);
 void (*KBD_Init_fp)(Key_Event_fp_t fp);
-void (*KBD_Close_fp)(void);
 
 /** MOUSE *****************************************************************/
 
@@ -156,14 +155,12 @@ void VID_NewWindow ( int width, int height)
 
 void VID_FreeReflib (void)
 {
-		if (KBD_Close_fp)
-			KBD_Close_fp();
+	KBD_Close();
 		if (RW_IN_Shutdown_fp)
 			RW_IN_Shutdown_fp();
 
 	KBD_Init_fp = NULL;
 	KBD_Update_fp = NULL;
-	KBD_Close_fp = NULL;
 	RW_IN_Init_fp = NULL;
 	RW_IN_Shutdown_fp = NULL;
 	RW_IN_Activate_fp = NULL;
@@ -187,11 +184,9 @@ qboolean VID_LoadRefresh( char *name )
 
 	if ( reflib_active )
 	{
-		if (KBD_Close_fp)
-			KBD_Close_fp();
+		KBD_Close();
 		if (RW_IN_Shutdown_fp)
 			RW_IN_Shutdown_fp();
-		KBD_Close_fp = NULL;
 		RW_IN_Shutdown_fp = NULL;
 		re.Shutdown();
 		VID_FreeReflib ();
@@ -259,7 +254,6 @@ qboolean VID_LoadRefresh( char *name )
 	/* Init KBD */
 		KBD_Init_fp = KBD_Init;
 		KBD_Update_fp = KBD_Update;
-		KBD_Close_fp = KBD_Close;
 
 	KBD_Init_fp(Do_Key_Event);
 
@@ -359,11 +353,9 @@ void VID_Shutdown (void)
 {
 	if ( reflib_active )
 	{
-		if (KBD_Close_fp)
-			KBD_Close_fp();
+		KBD_Close();
 		if (RW_IN_Shutdown_fp)
 			RW_IN_Shutdown_fp();
-		KBD_Close_fp = NULL;
 		RW_IN_Shutdown_fp = NULL;
 		re.Shutdown ();
 		VID_FreeReflib ();
