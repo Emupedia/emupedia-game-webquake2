@@ -404,8 +404,8 @@ extern	int		registration_sequence;
 
 void V_AddBlend (float r, float g, float b, float a, float *v_blend);
 
-int 	EXPORT R_Init( void *hinstance, void *hWnd );
-void	EXPORT R_Shutdown( void );
+int 	R_Init( void *hinstance, void *hWnd );
+void	R_Shutdown( void );
 
 void R_RenderView (refdef_t *fd);
 void GL_ScreenShot_f (void);
@@ -443,23 +443,23 @@ char	*va(char *format, ...);
 
 //void COM_StripExtension (char *in, char *out);
 
-void	EXPORT Draw_GetPicSize (int *w, int *h, char *name);
-void	EXPORT Draw_Pic (int x, int y, char *name);
-void	EXPORT Draw_StretchPic (int x, int y, int w, int h, char *name);
-void	EXPORT Draw_Char (int x, int y, int c);
-void	EXPORT Draw_TileClear (int x, int y, int w, int h, char *name);
-void	EXPORT Draw_Fill (int x, int y, int w, int h, int c);
-void	EXPORT Draw_FadeScreen (void);
-void	EXPORT Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data);
+void	Draw_GetPicSize (int *w, int *h, char *name);
+void	Draw_Pic (int x, int y, char *name);
+void	Draw_StretchPic (int x, int y, int w, int h, char *name);
+void	Draw_Char (int x, int y, int c);
+void	Draw_TileClear (int x, int y, int w, int h, char *name);
+void	Draw_Fill (int x, int y, int w, int h, int c);
+void	Draw_FadeScreen (void);
+void	Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data);
 
-void	EXPORT R_BeginFrame( float camera_separation );
-void	EXPORT R_SetPalette ( const unsigned char *palette);
+void	R_BeginFrame( float camera_separation );
+void	R_SetPalette ( const unsigned char *palette);
 
 int		Draw_GetPalette (void);
 
 void GL_ResampleTexture (unsigned *in, int inwidth, int inheight, unsigned *out,  int outwidth, int outheight);
 
-struct image_s * EXPORT R_RegisterSkin (char *name);
+struct image_s * R_RegisterSkin (char *name);
 
 void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int *height);
 image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagetype_t type, int bits);
@@ -553,7 +553,7 @@ IMPLEMENTATION SPECIFIC FUNCTIONS
 */
 
 void		GLimp_BeginFrame( void );
-void	EXPORT	GLimp_EndFrame( void );
+void	GLimp_EndFrame( void );
 int 		GLimp_Init( void *hinstance, void *hWnd );
 void		GLimp_Shutdown( void );
 int    	GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboolean fullscreen );
