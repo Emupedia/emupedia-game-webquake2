@@ -988,8 +988,6 @@ void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 */
 static qboolean GLimp_InitGraphics( qboolean fullscreen )
 {
-	int flags;
-	
 	/* Just toggle fullscreen if that's all that has been changed */
 	int oldW = -1, oldH = -1;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -1100,7 +1098,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	if (surface)
 		SDL_FreeSurface(surface);
 
-	flags = SDL_OPENGL;
+	int flags = SDL_OPENGL;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
 
