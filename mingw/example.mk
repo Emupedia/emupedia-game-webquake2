@@ -23,6 +23,7 @@ CXX:=i686-w64-mingw32-g++
 CFLAGS:=-g -DNDEBUG
 CFLAGS+=-Wall -Wextra
 CFLAGS+=-Wno-sign-compare -Wno-unused-parameter
+CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
 OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
 
 
