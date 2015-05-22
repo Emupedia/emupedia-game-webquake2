@@ -62,6 +62,7 @@ static qboolean                 X11_active = false;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 
 static SDL_Window *window;
+static SDL_GLContext glcontext;
 
 #else  // SDL_VERSION_ATLEAST(2, 0, 0)
 
@@ -1068,8 +1069,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			return false;
 		}
 		SetSDLIcon();
-		// TODO: store context and do proper cleanup
-		SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+		glcontext = SDL_GL_CreateContext(window);
 
 #ifdef EPOXY
 		if (epoxy_has_gl_extension("GL_KHR_debug")) {
@@ -1179,6 +1179,11 @@ int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboole
 void SWimp_Shutdown( void )
 {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
+	if (glcontext) {
+		SDL_GL_DeleteContext(glcontext);
+		glcontext = NULL;
+	}
+
 	if (window) {
 		SDL_DestroyWindow(window);
 		window = NULL;
