@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #define WIN32_LEAN_AND_MEAN
+// before qcommon.h or mingw-w64 explodes
+#include <windows.h>
 #define _WIN32_WINNT 0x0400
 #include "resource.h"
 #include "../client/client.h"

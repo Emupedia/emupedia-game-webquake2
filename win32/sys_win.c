@@ -25,6 +25,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define _WINNT_VER 0x5
 
+#define WIN32_LEAN_AND_MEAN
+// before qcommon.h or mingw-w64 explodes
+#include <windows.h>
+
 #include "../qcommon/qcommon.h"
 #include "winquake.h"
 #include "resource.h"
@@ -38,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <process.h>
 #include <dbghelp.h>
 #include <richedit.h>
+#include <shellapi.h>
 
 #ifdef USE_OPENSSL
 #define OPENSSLEXPORT __cdecl
