@@ -672,12 +672,12 @@ void InitJoystick() {
 /*****************************************************************************/
 
 /*
-** SWimp_Init
+** GLimp_Init
 **
 ** This routine is responsible for initializing the implementation
 ** specific stuff in a software rendering subsystem.
 */
-int SWimp_Init( void *hInstance, void *wndProc )
+int GLimp_Init( void *hInstance, void *wndProc )
 {
 	if (SDL_WasInit(SDL_INIT_AUDIO | SDL_INIT_VIDEO) == 0) {
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -707,11 +707,6 @@ int SWimp_Init( void *hInstance, void *wndProc )
 	return true;
 }
 
-
-int GLimp_Init( void *hInstance, void *wndProc )
-{
-	return SWimp_Init(hInstance, wndProc);
-}
 
 static void SetSDLIcon(void) {
 #include "q2icon.xbm"
@@ -1024,13 +1019,13 @@ int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboole
 
 
 /*
-** SWimp_Shutdown
+** GLimp_Shutdown
 **
 ** System specific graphics subsystem shutdown routine.  Destroys
 ** DIBs or DDRAW surfaces as appropriate.
 */
 
-void SWimp_Shutdown( void )
+void GLimp_Shutdown( void )
 {
 	if (glcontext) {
 		SDL_GL_DeleteContext(glcontext);
@@ -1048,11 +1043,6 @@ void SWimp_Shutdown( void )
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
 		
 	X11_active = false;
-}
-
-void GLimp_Shutdown( void )
-{
-	SWimp_Shutdown();
 }
 
 
