@@ -43,7 +43,6 @@ in_state_t in_state;
 void (*RW_IN_Init_fp)(in_state_t *in_state_p);
 void (*RW_IN_Shutdown_fp)(void);
 void (*RW_IN_Commands_fp)(void);
-void (*RW_IN_Move_fp)(usercmd_t *cmd);
 
 void Real_IN_Init (void);
 
@@ -159,7 +158,6 @@ void VID_FreeReflib (void)
 	RW_IN_Init_fp = NULL;
 	RW_IN_Shutdown_fp = NULL;
 	RW_IN_Commands_fp = NULL;
-	RW_IN_Move_fp = NULL;
 
 	memset (&re, 0, sizeof(re));
 	reflib_active  = false;
@@ -231,7 +229,6 @@ qboolean VID_LoadRefresh( char *name )
 	RW_IN_Init_fp = RW_IN_Init;
 	RW_IN_Shutdown_fp = RW_IN_Shutdown;
 	RW_IN_Commands_fp = RW_IN_Commands;
-	RW_IN_Move_fp = RW_IN_Move;
 
 	Real_IN_Init();
 
@@ -388,8 +385,7 @@ void IN_Commands (void)
 
 void IN_Move (usercmd_t *cmd)
 {
-	if (RW_IN_Move_fp)
-		RW_IN_Move_fp(cmd);
+	RW_IN_Move(cmd);
 }
 
 void IN_Frame (void)
