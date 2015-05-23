@@ -31,10 +31,9 @@ qboolean	reflib_active = 0;
 
 /** KEYBOARD **************************************************************/
 
-void Do_Key_Event(int key, qboolean down);
 
 void (*KBD_Update_fp)(void);
-void (*KBD_Init_fp)(Key_Event_fp_t fp);
+void (*KBD_Init_fp)();
 
 /** MOUSE *****************************************************************/
 
@@ -212,7 +211,6 @@ qboolean VID_LoadRefresh( char *name )
 
 	/* Init IN (Mouse) */
 	in_state.IN_CenterView_fp = IN_CenterView;
-	in_state.Key_Event_fp = Do_Key_Event;
 	in_state.viewangles = cl.viewangles;
 	in_state.in_strafe_state = &in_strafe.state;
 

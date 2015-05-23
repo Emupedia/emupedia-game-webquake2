@@ -206,21 +206,21 @@ void RW_IN_Commands (void)
     if (mouse_avail) {
 	for (i = 0; i < 3; i++) {
 	    if ( (mouse_buttonstate & (1<<i)) && !(mouse_oldbuttonstate & (1<<i)) )
-		in_state->Key_Event_fp (K_MOUSE1 + i, true);
+		Do_Key_Event(K_MOUSE1 + i, true);
 	    
 	    if ( !(mouse_buttonstate & (1<<i)) && (mouse_oldbuttonstate & (1<<i)) )
-		in_state->Key_Event_fp (K_MOUSE1 + i, false);
+		Do_Key_Event(K_MOUSE1 + i, false);
 	}
 	/* can't put in loop because K_MOUSE4 doesn't come after K_MOUSE3 */
 	if ((mouse_buttonstate & (1<<3)) && !(mouse_oldbuttonstate & (1<<3)))
-	    in_state->Key_Event_fp(K_MOUSE4, true);
+	    Do_Key_Event(K_MOUSE4, true);
 	if (!(mouse_buttonstate * (1<<3)) && (mouse_oldbuttonstate & (1<<3)))
-	    in_state->Key_Event_fp(K_MOUSE4, false);
+	    Do_Key_Event(K_MOUSE4, false);
 	
 	if ((mouse_buttonstate & (1<<4)) && !(mouse_oldbuttonstate & (1<<4)))
-	    in_state->Key_Event_fp(K_MOUSE5, true);
+	    Do_Key_Event(K_MOUSE5, true);
 	if (!(mouse_buttonstate * (1<<4)) && (mouse_oldbuttonstate & (1<<4)))
-	    in_state->Key_Event_fp(K_MOUSE5, false);
+	    Do_Key_Event(K_MOUSE5, false);
 	
 	mouse_oldbuttonstate = mouse_buttonstate;
     }
@@ -229,12 +229,12 @@ void RW_IN_Commands (void)
 	for (i = 0; i < joy_numbuttons; i++) {
 	    if (SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
 		key_index = (i < 4) ? K_JOY1 : K_AUX1;
-		in_state->Key_Event_fp(key_index + i, true);
+		Do_Key_Event(key_index + i, true);
 		joy_oldbuttonstate = i;
 	    }
 	    if (!SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
 		key_index = (i < 4) ? K_JOY1 : K_AUX1;
-		in_state->Key_Event_fp(key_index + i, false);
+		Do_Key_Event(key_index + i, false);
 		joy_oldbuttonstate = i;
 	    }
 	}
@@ -1060,11 +1060,9 @@ void GLimp_Shutdown( void )
 /* KEYBOARD                                                                  */
 /*****************************************************************************/
 
-Key_Event_fp_t Key_Event_fp;
 
-void KBD_Init(Key_Event_fp_t fp)
+void KBD_Init()
 {
-	Key_Event_fp = fp;
 }
 
 void KBD_Update(void)
@@ -1116,7 +1114,7 @@ void KBD_Update(void)
 	}			
 		while (keyq_head != keyq_tail)
 		{
-			Key_Event_fp(keyq[keyq_tail].key, keyq[keyq_tail].down);
+			Do_Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down);
 			keyq_tail = (keyq_tail + 1) & 63;
 		}
 	}
