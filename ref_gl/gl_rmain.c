@@ -163,7 +163,6 @@ cvar_t	*gl_coloredlightmaps;
 
 cvar_t	*vid_fullscreen;
 cvar_t	*vid_gamma;
-cvar_t	*vid_ref;
 cvar_t	*vid_forcedrefresh;
 cvar_t	*vid_optimalrefresh;
 cvar_t	*vid_nowgl;
@@ -1088,7 +1087,6 @@ void R_Register( void )
 
 	vid_fullscreen = ri.Cvar_Get( "vid_fullscreen", "0", CVAR_ARCHIVE );
 	vid_gamma = ri.Cvar_Get( "vid_gamma", "1.0", CVAR_ARCHIVE );
-	vid_ref = ri.Cvar_Get( "vid_ref", "r1gl", CVAR_ARCHIVE );
 
 	gl_texture_formats = ri.Cvar_Get ("gl_texture_formats", "png jpg tga", 0);
 	gl_pic_formats = ri.Cvar_Get ("gl_pic_formats", "png jpg tga", 0);
@@ -1444,11 +1442,8 @@ void R_BeginFrame( float camera_separation )
 	** change modes if necessary
 	*/
 	if ( gl_mode->modified || vid_fullscreen->modified )
-	{	// FIXME: only restart if CDS is required
-		cvar_t	*ref;
-
-		ref = ri.Cvar_Get ("vid_ref", "r1gl", 0);
-		ref->modified = true;
+	{
+		// TODO: do something here
 	}
 
 	if (gl_ext_nv_multisample_filter_hint->modified)

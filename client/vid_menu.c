@@ -2,7 +2,6 @@
 #include "../client/qmenu.h"
 
 
-extern cvar_t *vid_ref;
 extern cvar_t *vid_fullscreen;
 extern cvar_t *vid_gamma;
 extern cvar_t *scr_viewsize;
@@ -44,15 +43,7 @@ static void ScreenSizeCallback( void *s )
 
 static void BrightnessCallback( void *s )
 {
-	menuslider_s *slider = ( menuslider_s * ) s;
-
-	if ( Q_stricmp( vid_ref->string, "soft" ) == 0 ||
-		 Q_stricmp( vid_ref->string, "softx" ) == 0 )
-	{
-		float gamma = ( 0.8 - ( slider->curvalue/10.0 - 0.5 ) ) + 0.5;
-
-		Cvar_SetValue( "vid_gamma", gamma );
-	}
+	// TODO: should do something here
 }
 
 static void ResetDefaults( void *unused )
@@ -74,8 +65,6 @@ static void ApplyChanges( void *unused )
 	Cvar_SetValue( "vid_fullscreen", s_fs_box.curvalue );
 	Cvar_SetValue( "gl_mode", s_mode_list.curvalue );
 	Cvar_SetValue( "_windowed_mouse", s_windowed_mouse.curvalue);
-
-		Cvar_Set( "vid_ref", "gl" );
 
 	M_ForceMenuOff();
 }

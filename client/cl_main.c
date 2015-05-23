@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 int deferred_model_index;
 
 extern cvar_t	*qport;
-extern cvar_t	*vid_ref;
 
 typedef struct incoming_s
 {
@@ -4043,12 +4042,6 @@ void CL_Synchronous_Frame (int msec)
 	// predict all unacknowledged movements
 	CL_PredictMovement ();
 
-	// allow rendering DLL change
-	if (vid_ref->modified)
-	{
-		VID_ReloadRefresh ();
-	}
-
 	if (!cl.refresh_prepped && cls.state == ca_active)
 		CL_PrepRefresh ();
 
@@ -4242,11 +4235,6 @@ void CL_Frame (int msec)
 		
 			//set the mouse on/off
 			IN_Frame();
-
-			if (vid_ref->modified)
-			{
-				VID_ReloadRefresh ();
-			}
 		}
 		
 		if (!cl.refresh_prepped && cls.state == ca_active)
