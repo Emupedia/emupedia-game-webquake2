@@ -204,40 +204,40 @@ void RW_IN_Commands (void)
 #endif
    
     if (mouse_avail) {
-	for (i = 0; i < 3; i++) {
-	    if ( (mouse_buttonstate & (1<<i)) && !(mouse_oldbuttonstate & (1<<i)) )
-		Do_Key_Event(K_MOUSE1 + i, true);
-	    
-	    if ( !(mouse_buttonstate & (1<<i)) && (mouse_oldbuttonstate & (1<<i)) )
-		Do_Key_Event(K_MOUSE1 + i, false);
-	}
-	/* can't put in loop because K_MOUSE4 doesn't come after K_MOUSE3 */
-	if ((mouse_buttonstate & (1<<3)) && !(mouse_oldbuttonstate & (1<<3)))
-	    Do_Key_Event(K_MOUSE4, true);
-	if (!(mouse_buttonstate * (1<<3)) && (mouse_oldbuttonstate & (1<<3)))
-	    Do_Key_Event(K_MOUSE4, false);
-	
-	if ((mouse_buttonstate & (1<<4)) && !(mouse_oldbuttonstate & (1<<4)))
-	    Do_Key_Event(K_MOUSE5, true);
-	if (!(mouse_buttonstate * (1<<4)) && (mouse_oldbuttonstate & (1<<4)))
-	    Do_Key_Event(K_MOUSE5, false);
-	
-	mouse_oldbuttonstate = mouse_buttonstate;
+		for (i = 0; i < 3; i++) {
+			if ( (mouse_buttonstate & (1<<i)) && !(mouse_oldbuttonstate & (1<<i)) )
+				Do_Key_Event(K_MOUSE1 + i, true);
+
+			if ( !(mouse_buttonstate & (1<<i)) && (mouse_oldbuttonstate & (1<<i)) )
+				Do_Key_Event(K_MOUSE1 + i, false);
+		}
+		/* can't put in loop because K_MOUSE4 doesn't come after K_MOUSE3 */
+		if ((mouse_buttonstate & (1<<3)) && !(mouse_oldbuttonstate & (1<<3)))
+			Do_Key_Event(K_MOUSE4, true);
+		if (!(mouse_buttonstate * (1<<3)) && (mouse_oldbuttonstate & (1<<3)))
+			Do_Key_Event(K_MOUSE4, false);
+
+		if ((mouse_buttonstate & (1<<4)) && !(mouse_oldbuttonstate & (1<<4)))
+			Do_Key_Event(K_MOUSE5, true);
+		if (!(mouse_buttonstate * (1<<4)) && (mouse_oldbuttonstate & (1<<4)))
+			Do_Key_Event(K_MOUSE5, false);
+
+		mouse_oldbuttonstate = mouse_buttonstate;
     }
 #ifdef HAVE_JOYSTICK
     if (joystick_avail && joy) {
-	for (i = 0; i < joy_numbuttons; i++) {
-	    if (SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
-		key_index = (i < 4) ? K_JOY1 : K_AUX1;
-		Do_Key_Event(key_index + i, true);
-		joy_oldbuttonstate = i;
-	    }
-	    if (!SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
-		key_index = (i < 4) ? K_JOY1 : K_AUX1;
-		Do_Key_Event(key_index + i, false);
-		joy_oldbuttonstate = i;
-	    }
-	}
+		for (i = 0; i < joy_numbuttons; i++) {
+			if (SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
+				key_index = (i < 4) ? K_JOY1 : K_AUX1;
+				Do_Key_Event(key_index + i, true);
+				joy_oldbuttonstate = i;
+			}
+			if (!SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
+				key_index = (i < 4) ? K_JOY1 : K_AUX1;
+				Do_Key_Event(key_index + i, false);
+				joy_oldbuttonstate = i;
+			}
+		}
     }
 #endif
 }
@@ -1069,56 +1069,56 @@ void KBD_Update(void)
 {
 	SDL_Event event;
 	static int KBD_Update_Flag;
-	
+
 	if (KBD_Update_Flag == 1)
 		return;
-	
+
 	KBD_Update_Flag = 1;
-	
+
 // get events from x server
 	if (X11_active)
 	{
 		mx = 0; my = 0;
 		int bstate;
-		
+
 		while (SDL_PollEvent(&event))
 			GetEvent(&event);
 
 #ifdef HAVE_JOYSTICK
-	if (joystick_avail && joy) {
-	  jx = SDL_JoystickGetAxis(joy, lr_axis);
-	  jy = SDL_JoystickGetAxis(joy, ud_axis);
-	  jt = SDL_JoystickGetAxis(joy, throttle_axis);
-	}
-#endif	
-	mouse_buttonstate = 0;
-	bstate = SDL_GetMouseState(NULL, NULL);
-	if (SDL_BUTTON(1) & bstate)
-		mouse_buttonstate |= (1 << 0);
-	if (SDL_BUTTON(3) & bstate) /* quake2 has the right button be mouse2 */
-		mouse_buttonstate |= (1 << 1);
-	if (SDL_BUTTON(2) & bstate) /* quake2 has the middle button be mouse3 */
-		mouse_buttonstate |= (1 << 2);
-	if (SDL_BUTTON(6) & bstate)
-		mouse_buttonstate |= (1 << 3);
+		if (joystick_avail && joy) {
+		  jx = SDL_JoystickGetAxis(joy, lr_axis);
+		  jy = SDL_JoystickGetAxis(joy, ud_axis);
+		  jt = SDL_JoystickGetAxis(joy, throttle_axis);
+		}
+#endif
+		mouse_buttonstate = 0;
+		bstate = SDL_GetMouseState(NULL, NULL);
+		if (SDL_BUTTON(1) & bstate)
+			mouse_buttonstate |= (1 << 0);
+		if (SDL_BUTTON(3) & bstate) /* quake2 has the right button be mouse2 */
+			mouse_buttonstate |= (1 << 1);
+		if (SDL_BUTTON(2) & bstate) /* quake2 has the middle button be mouse3 */
+			mouse_buttonstate |= (1 << 2);
+		if (SDL_BUTTON(6) & bstate)
+			mouse_buttonstate |= (1 << 3);
 
-	if (SDL_BUTTON(7) & bstate)
-		mouse_buttonstate |= (1 << 4);
-	
-	if (old_windowed_mouse != _windowed_mouse->value) {
-		old_windowed_mouse = _windowed_mouse->value;
+		if (SDL_BUTTON(7) & bstate)
+			mouse_buttonstate |= (1 << 4);
 
-		// TODO: should refactor all this grab stuff to one place
-		SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-		SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-	}			
+		if (old_windowed_mouse != _windowed_mouse->value) {
+			old_windowed_mouse = _windowed_mouse->value;
+
+			// TODO: should refactor all this grab stuff to one place
+			SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+			SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+		}
 		while (keyq_head != keyq_tail)
 		{
 			Do_Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down);
 			keyq_tail = (keyq_tail + 1) & 63;
 		}
 	}
-	
+
 	KBD_Update_Flag = 0;
 }
 
