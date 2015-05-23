@@ -225,16 +225,6 @@ typedef struct
 	int mode;
 } gltmode_t;
 
-const gltmode_t gl_alpha_modes[] = {
-	{"default", GL_RGBA},
-	{"GL_RGBA", GL_RGBA},
-	{"GL_RGBA8", GL_RGBA8},
-	{"GL_RGB5_A1", GL_RGB5_A1},
-	{"GL_RGBA4", GL_RGBA4},
-	{"GL_RGBA2", GL_RGBA2},
-};
-
-#define NUM_GL_ALPHA_MODES (sizeof(gl_alpha_modes) / sizeof (gltmode_t))
 
 const gltmode_t gl_solid_modes[] = {
 	{"default", GL_RGB},
@@ -288,29 +278,6 @@ void GL_TextureMode(const char *string)
 	}
 }
 
-/*
-===============
-GL_TextureAlphaMode
-===============
-*/
-void GL_TextureAlphaMode(const char *string)
-{
-	int		i;
-
-	for (i=0 ; i< NUM_GL_ALPHA_MODES ; i++)
-	{
-		if ( !Q_stricmp( gl_alpha_modes[i].name, string ) )
-			break;
-	}
-
-	if (i == NUM_GL_ALPHA_MODES)
-	{
-		ri.Con_Printf (PRINT_ALL, "bad alpha texture mode name\n");
-		return;
-	}
-
-	gl_tex_alpha_format = gl_alpha_modes[i].mode;
-}
 
 /*
 ===============

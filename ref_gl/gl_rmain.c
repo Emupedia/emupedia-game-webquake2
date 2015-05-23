@@ -155,7 +155,6 @@ cvar_t	*gl_flashblend;
 //cvar_t  *gl_saturatelighting;
 cvar_t	*gl_swapinterval;
 cvar_t	*gl_texturemode;
-cvar_t	*gl_texturealphamode;
 cvar_t	*gl_texturesolidmode;
 cvar_t	*gl_lockpvs;
 cvar_t	*gl_jpg_quality;
@@ -1028,7 +1027,6 @@ void R_Register( void )
 	//gl_playermip = ri.Cvar_Get ("gl_playermip", "0", 0);
 	//gl_monolightmap = ri.Cvar_Get( "gl_monolightmap", "0", 0 );
 	gl_texturemode = ri.Cvar_Get( "gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR", CVAR_ARCHIVE );
-	gl_texturealphamode = ri.Cvar_Get( "gl_texturealphamode", "default", CVAR_ARCHIVE );
 	gl_texturesolidmode = ri.Cvar_Get( "gl_texturesolidmode", "default", CVAR_ARCHIVE );
 	gl_lockpvs = ri.Cvar_Get( "gl_lockpvs", "0", 0 );
 
@@ -1594,12 +1592,6 @@ void R_BeginFrame( float camera_separation )
 	}
 
 #if 0
-	if ( gl_texturealphamode->modified )
-	{
-		GL_TextureAlphaMode( gl_texturealphamode->string );
-		gl_texturealphamode->modified = false;
-	}
-
 	if ( gl_texturesolidmode->modified )
 	{
 		GL_TextureSolidMode( gl_texturesolidmode->string );

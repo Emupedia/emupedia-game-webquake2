@@ -344,7 +344,6 @@ extern	cvar_t	*gl_drawbuffer;
 //extern	cvar_t	*gl_3dlabs_broken;
 extern	cvar_t	*gl_swapinterval;
 extern	cvar_t	*gl_texturemode;
-extern	cvar_t	*gl_texturealphamode;
 extern	cvar_t	*gl_texturesolidmode;
 //extern  cvar_t  *gl_saturatelighting;
 extern  cvar_t  *gl_lockpvs;
@@ -476,7 +475,6 @@ void	GL_ShutdownImages (void);
 
 void	GL_FreeUnusedImages (void);
 
-void GL_TextureAlphaMode(const char *string);
 void GL_TextureSolidMode(const char *string);
 
 /*
