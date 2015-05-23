@@ -280,31 +280,6 @@ void GL_TextureMode(const char *string)
 
 
 /*
-===============
-GL_TextureSolidMode
-===============
-*/
-void GL_TextureSolidMode(const char *string)
-{
-	int		i;
-
-	for (i=0 ; i< NUM_GL_SOLID_MODES ; i++)
-	{
-		if ( !Q_stricmp( gl_solid_modes[i].name, string ) )
-			break;
-	}
-
-	if (i == NUM_GL_SOLID_MODES)
-	{
-		ri.Con_Printf (PRINT_ALL, "bad solid texture mode name\n");
-		return;
-	}
-
-	gl_tex_solid_format = gl_solid_modes[i].mode;
-}
-
-
-/*
 =============================================================================
 
   scrap allocation

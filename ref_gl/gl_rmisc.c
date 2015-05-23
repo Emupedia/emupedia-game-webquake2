@@ -369,7 +369,6 @@ void GL_SetDefaultState( void )
 	qglColor4f(colorWhite[0], colorWhite[1], colorWhite[2], colorWhite[3]);
 
 	GL_TextureMode( gl_texturemode->string );
-	GL_TextureSolidMode( gl_texturesolidmode->string );
 
 	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
 	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
