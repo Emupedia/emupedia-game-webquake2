@@ -5,10 +5,7 @@
 #define SO_FILE "/etc/quake2.conf"
 
 #include <assert.h>
-#include <dlfcn.h> // ELF dl loader
-#include <sys/stat.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include "../client/client.h"
 #include "../client/ref.h"
