@@ -33,7 +33,6 @@ qboolean	reflib_active = 0;
 
 
 void (*KBD_Update_fp)(void);
-void (*KBD_Init_fp)();
 
 /** MOUSE *****************************************************************/
 
@@ -147,7 +146,6 @@ void VID_FreeReflib (void)
 	KBD_Close();
 	RW_IN_Shutdown();
 
-	KBD_Init_fp = NULL;
 	KBD_Update_fp = NULL;
 
 	memset (&re, 0, sizeof(re));
@@ -224,10 +222,7 @@ qboolean VID_LoadRefresh( char *name )
 	}
 
 	/* Init KBD */
-		KBD_Init_fp = KBD_Init;
 		KBD_Update_fp = KBD_Update;
-
-	KBD_Init_fp(Do_Key_Event);
 
 	// give up root now
 	setreuid(getuid(), getuid());

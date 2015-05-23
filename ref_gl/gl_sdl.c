@@ -1061,10 +1061,6 @@ void GLimp_Shutdown( void )
 /*****************************************************************************/
 
 
-void KBD_Init()
-{
-}
-
 void KBD_Update(void)
 {
 	SDL_Event event;
