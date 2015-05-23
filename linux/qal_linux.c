@@ -43,14 +43,6 @@ void QAL_Shutdown (void){
 
 	Com_Printf("...shutting down QAL\n", LOG_CLIENT);
 
-	if (alState.ALlib)
-	{
-		Com_Printf("...unloading OpenAL DLL\n", LOG_CLIENT);
-
-		dlclose(alState.ALlib);
-		alState.ALlib = NULL;
-	}
-
 	openal_active = false;
 
 }

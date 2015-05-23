@@ -18,8 +18,6 @@
 
 
 typedef struct {
-	void *ALlib;
-
 	ALCdevice	*hDevice;
 	ALCcontext	*hALC;
 } alState_t;
