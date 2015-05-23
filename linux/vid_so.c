@@ -41,7 +41,6 @@ void (*KBD_Init_fp)(Key_Event_fp_t fp);
 in_state_t in_state;
 
 void (*RW_IN_Init_fp)(in_state_t *in_state_p);
-void (*RW_IN_Shutdown_fp)(void);
 
 void Real_IN_Init (void);
 
@@ -149,13 +148,11 @@ void VID_NewWindow ( int width, int height)
 void VID_FreeReflib (void)
 {
 	KBD_Close();
-		if (RW_IN_Shutdown_fp)
-			RW_IN_Shutdown_fp();
+	RW_IN_Shutdown();
 
 	KBD_Init_fp = NULL;
 	KBD_Update_fp = NULL;
 	RW_IN_Init_fp = NULL;
-	RW_IN_Shutdown_fp = NULL;
 
 	memset (&re, 0, sizeof(re));
 	reflib_active  = false;
@@ -174,9 +171,7 @@ qboolean VID_LoadRefresh( char *name )
 	if ( reflib_active )
 	{
 		KBD_Close();
-		if (RW_IN_Shutdown_fp)
-			RW_IN_Shutdown_fp();
-		RW_IN_Shutdown_fp = NULL;
+		RW_IN_Shutdown();
 		re.Shutdown();
 		VID_FreeReflib ();
 	}
@@ -225,7 +220,6 @@ qboolean VID_LoadRefresh( char *name )
 	in_state.in_strafe_state = &in_strafe.state;
 
 	RW_IN_Init_fp = RW_IN_Init;
-	RW_IN_Shutdown_fp = RW_IN_Shutdown;
 
 	Real_IN_Init();
 
@@ -339,9 +333,7 @@ void VID_Shutdown (void)
 	if ( reflib_active )
 	{
 		KBD_Close();
-		if (RW_IN_Shutdown_fp)
-			RW_IN_Shutdown_fp();
-		RW_IN_Shutdown_fp = NULL;
+		RW_IN_Shutdown();
 		re.Shutdown ();
 		VID_FreeReflib ();
 	}
@@ -370,8 +362,7 @@ void Real_IN_Init (void)
 
 void IN_Shutdown (void)
 {
-	if (RW_IN_Shutdown_fp)
-		RW_IN_Shutdown_fp();
+	RW_IN_Shutdown();
 }
 
 void IN_Commands (void)
