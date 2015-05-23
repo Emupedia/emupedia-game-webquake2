@@ -40,8 +40,6 @@ void (*KBD_Init_fp)(Key_Event_fp_t fp);
 
 in_state_t in_state;
 
-void (*RW_IN_Init_fp)(in_state_t *in_state_p);
-
 void Real_IN_Init (void);
 
 /*
@@ -152,7 +150,6 @@ void VID_FreeReflib (void)
 
 	KBD_Init_fp = NULL;
 	KBD_Update_fp = NULL;
-	RW_IN_Init_fp = NULL;
 
 	memset (&re, 0, sizeof(re));
 	reflib_active  = false;
@@ -218,8 +215,6 @@ qboolean VID_LoadRefresh( char *name )
 	in_state.Key_Event_fp = Do_Key_Event;
 	in_state.viewangles = cl.viewangles;
 	in_state.in_strafe_state = &in_strafe.state;
-
-	RW_IN_Init_fp = RW_IN_Init;
 
 	Real_IN_Init();
 
@@ -356,8 +351,7 @@ void IN_Init (void)
 
 void Real_IN_Init (void)
 {
-	if (RW_IN_Init_fp)
-		RW_IN_Init_fp(&in_state);
+	RW_IN_Init(&in_state);
 }
 
 void IN_Shutdown (void)
