@@ -343,9 +343,3 @@ void IN_Activate (qboolean active)
 {
 	RW_IN_Activate(active);
 }
-
-void Do_Key_Event(int key, qboolean down)
-{
-	Key_Event(key, down, Sys_Milliseconds());
-}
-

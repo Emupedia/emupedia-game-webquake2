@@ -1966,24 +1966,26 @@ void RW_IN_Commands (void)
     int key_index;
 #endif
    
+	// TODO: move this to a message loop somewhere
+	// TODO: after that use message timestamp instead of Sys_Milliseconds
     if (mouse_avail) {
 		for (i = 0; i < 3; i++) {
 			if ( (mouse_buttonstate & (1<<i)) && !(mouse_oldbuttonstate & (1<<i)) )
-				Do_Key_Event(K_MOUSE1 + i, true);
+				Key_Event(K_MOUSE1 + i, true, Sys_Milliseconds());
 
 			if ( !(mouse_buttonstate & (1<<i)) && (mouse_oldbuttonstate & (1<<i)) )
-				Do_Key_Event(K_MOUSE1 + i, false);
+				Key_Event(K_MOUSE1 + i, false, Sys_Milliseconds());
 		}
 		/* can't put in loop because K_MOUSE4 doesn't come after K_MOUSE3 */
 		if ((mouse_buttonstate & (1<<3)) && !(mouse_oldbuttonstate & (1<<3)))
-			Do_Key_Event(K_MOUSE4, true);
+			Key_Event(K_MOUSE4, true, Sys_Milliseconds());
 		if (!(mouse_buttonstate * (1<<3)) && (mouse_oldbuttonstate & (1<<3)))
-			Do_Key_Event(K_MOUSE4, false);
+			Key_Event(K_MOUSE4, false, Sys_Milliseconds());
 
 		if ((mouse_buttonstate & (1<<4)) && !(mouse_oldbuttonstate & (1<<4)))
-			Do_Key_Event(K_MOUSE5, true);
+			Key_Event(K_MOUSE5, true, Sys_Milliseconds());
 		if (!(mouse_buttonstate * (1<<4)) && (mouse_oldbuttonstate & (1<<4)))
-			Do_Key_Event(K_MOUSE5, false);
+			Key_Event(K_MOUSE5, false, Sys_Milliseconds());
 
 		mouse_oldbuttonstate = mouse_buttonstate;
     }
@@ -1992,12 +1994,12 @@ void RW_IN_Commands (void)
 		for (i = 0; i < joy_numbuttons; i++) {
 			if (SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
 				key_index = (i < 4) ? K_JOY1 : K_AUX1;
-				Do_Key_Event(key_index + i, true);
+				Key_Event(key_index + i, true, Sys_Milliseconds());
 				joy_oldbuttonstate = i;
 			}
 			if (!SDL_JoystickGetButton(joy, i) && joy_oldbuttonstate != i) {
 				key_index = (i < 4) ? K_JOY1 : K_AUX1;
-				Do_Key_Event(key_index + i, false);
+				Key_Event(key_index + i, false, Sys_Milliseconds());
 				joy_oldbuttonstate = i;
 			}
 		}
@@ -2830,6 +2832,8 @@ void KBD_Update(void)
 		mx = 0; my = 0;
 		int bstate;
 
+		// TODO: refactor into a proper message loop
+		// TODO: after that use message timestamp instead of Sys_Milliseconds
 		while (SDL_PollEvent(&event))
 			GetEvent(&event);
 
@@ -2863,7 +2867,7 @@ void KBD_Update(void)
 		}
 		while (keyq_head != keyq_tail)
 		{
-			Do_Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down);
+			Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down, Sys_Milliseconds());
 			keyq_tail = (keyq_tail + 1) & 63;
 		}
 	}

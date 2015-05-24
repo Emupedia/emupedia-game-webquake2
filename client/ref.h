@@ -255,7 +255,6 @@ void RW_IN_Commands(void);
 void RW_IN_Move(usercmd_t *cmd);
 void RW_IN_Frame(void);
 
-void Do_Key_Event(int key, qboolean down);
 void KBD_Update(void);
 void KBD_Close(void);
 
