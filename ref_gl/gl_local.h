@@ -538,7 +538,6 @@ IMPORTED FUNCTIONS
 */
 
 extern	refimport_t		ri;
-extern	refimportnew_t	rx;
 
 /*
 ====================================================================

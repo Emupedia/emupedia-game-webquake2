@@ -150,7 +150,6 @@ VID_LoadRefresh
 qboolean VID_LoadRefresh( char *name )
 {
 	refimport_t		ri;
-	refimportnew_t  rx;
 
 	if ( reflib_active )
 	{
@@ -176,15 +175,6 @@ qboolean VID_LoadRefresh( char *name )
 	ri.Vid_GetModeInfo = VID_GetModeInfo;
 	ri.Vid_MenuInit = VID_MenuInit;
 	ri.Vid_NewWindow = VID_NewWindow;
-
-	//EXTENDED FUNCTIONS
-	
-	rx.APIVersion = EXTENDED_API_VERSION;
-	{
-		Com_DPrintf ("Initializing ExtraAPI...");
-		GetExtraAPI (rx);
-		Com_DPrintf ("done.\n");
-	}
 
 	re = GetRefAPI( ri );
 

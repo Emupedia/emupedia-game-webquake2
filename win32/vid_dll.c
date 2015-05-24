@@ -791,10 +791,8 @@ VID_LoadRefresh
 qboolean VID_LoadRefresh( char *name, char *errstr )
 {
 	refimport_t		ri;
-	refimportnew_t	rx;
 	WNDCLASS		wc;
 	GetRefAPI_t		GetRefAPI;
-	GetExtraAPI_t	GetExtraAPI;
 	
 	if ( reflib_active )
 	{
@@ -841,8 +839,6 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 
 	//EXTENDED FUNCTIONS
 
-	rx.APIVersion = EXTENDED_API_VERSION;
-
 	Com_DPrintf ("refimport_t set.\n");
 
 	__try
@@ -856,17 +852,6 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 		}
 
 		Com_DPrintf ("got RefAPI.\n");
-
-		if ( ( GetExtraAPI = (GetExtraAPI_t)GetProcAddress( reflib_library, "GetExtraAPI" ) ) == 0 )
-		{
-			Com_DPrintf ("No ExtraAPI found.\n");
-		}
-		else
-		{
-			Com_DPrintf ("Initializing ExtraAPI...");
-			GetExtraAPI (rx);
-			Com_DPrintf ("done.\n");
-		}
 
 		re = GetRefAPI( ri );
 

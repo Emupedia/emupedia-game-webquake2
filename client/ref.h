@@ -185,18 +185,6 @@ typedef struct
 	void	(*EndFrame) (void);
 } refexport_t;
 
-//
-// these are the functions imported by the refresh module
-//
-typedef struct
-{
-	//for backwards compatibility
-	int			APIVersion;
-
-	//**********************************************************************
-	// extended renderer API functions, check for NULL in ref before using!!
-	//**********************************************************************
-} refimportnew_t;
 
 typedef struct
 {
@@ -241,7 +229,6 @@ typedef struct in_state {
 
 
 refexport_t GetRefAPI (refimport_t rimp );
-void GetExtraAPI (refimportnew_t rimp );
 
 
 void RW_IN_Init(in_state_t *in_state_p);

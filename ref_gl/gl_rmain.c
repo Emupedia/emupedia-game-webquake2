@@ -43,7 +43,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void R_Clear (void);
 
 refimport_t		ri;
-refimportnew_t	rx;
 
 model_t		*r_worldmodel;
 
@@ -1836,17 +1835,6 @@ GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-void GetExtraAPI (refimportnew_t rimp )
-{
-	if (rimp.APIVersion != EXTENDED_API_VERSION)
-	{
-		ri.Con_Printf (PRINT_ALL, "R1GL: ExtraAPI version number mismatch, expected version %d, got version %d.\n", EXTENDED_API_VERSION, rimp.APIVersion);
-		return;
-	}
-
-	memcpy (&rx, &rimp, sizeof(rx));
-}
-
 refexport_t GetRefAPI (refimport_t rimp )
 {
 	refexport_t	re;
