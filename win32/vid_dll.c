@@ -897,7 +897,6 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 	}
 
 	if (re.AppActivate == NULL ||
-		re.BeginFrame == NULL ||
 		re.BeginRegistration == NULL ||
 		re.DrawChar == NULL ||
 		re.DrawFill == NULL || 
