@@ -15,8 +15,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#include <SDL.h>
-
 
 const char *vertexShaderSrc =
 "attribute vec3 pos;\n"
@@ -94,11 +92,6 @@ const char *fragmentShaderSrc =
 
 static QGLState *qglState = NULL;
 
-
-void * qwglGetProcAddress(const char *procname)
-{
-	return SDL_GL_GetProcAddress(procname);
-}
 
 void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
 void ( APIENTRY * qglClear )(GLbitfield mask);

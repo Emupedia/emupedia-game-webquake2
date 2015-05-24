@@ -114,13 +114,4 @@ extern  void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei
 void qglActiveTexture(GLenum);
 
 
-#ifdef __linux__
-
-// local function in dll
-extern void *qwglGetProcAddress(const char *symbol);
-
-
-#endif // linux
-
-
 #endif

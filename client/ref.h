@@ -259,7 +259,6 @@ void Do_Key_Event(int key, qboolean down);
 void KBD_Update(void);
 void KBD_Close(void);
 
-void * qwglGetProcAddress(const char *procname);
 
 extern void (*KBD_Update_fp)(void);
 
