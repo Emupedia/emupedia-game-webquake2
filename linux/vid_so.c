@@ -218,7 +218,7 @@ qboolean VID_LoadRefresh( char *name )
 	}
 
 	/* Init KBD */
-		KBD_Update_fp = KBD_Update;
+	KBD_Update_fp = KBD_Update;
 
 	// give up root now
 	setreuid(getuid(), getuid());
@@ -240,27 +240,27 @@ update the rendering DLL and/or video mode to match.
 */
 void VID_ReloadRefresh (void)
 {
-		S_StopAllSounds();
+	S_StopAllSounds();
 
+	/*
+	** refresh has changed
+	*/
+	//vid_fullscreen->modified = true;
+	cl.refresh_prepped = false;
+	cl.frame.valid = false;
+	cls.disable_screen = true;
+
+	if ( !VID_LoadRefresh( "" ) )
+	{
 		/*
-		** refresh has changed
+		** drop the console if we fail to load a refresh
 		*/
-		//vid_fullscreen->modified = true;
-		cl.refresh_prepped = false;
-		cl.frame.valid = false;
-		cls.disable_screen = true;
-
-		if ( !VID_LoadRefresh( "" ) )
+		if ( cls.key_dest != key_console )
 		{
-			/*
-			** drop the console if we fail to load a refresh
-			*/
-			if ( cls.key_dest != key_console )
-			{
-				Con_ToggleConsole_f();
-			}
+			Con_ToggleConsole_f();
 		}
-		cls.disable_screen = false;
+	}
+	cls.disable_screen = false;
 }
 
 /*
