@@ -2118,17 +2118,6 @@ void IN_Activate(qboolean active)
 
 /*****************************************************************************/
 
-#if 0 /* SDL parachute should catch everything... */
-// ========================================================================
-// Tragic death handler
-// ========================================================================
-
-void TragicDeath(int signal_num)
-{
-	/* SDL_Quit(); */
-	Sys_Error("This death brought to you by the number %d\n", signal_num);
-}
-#endif
 
 int XLateKey(unsigned int keysym)
 {
