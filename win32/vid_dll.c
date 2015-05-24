@@ -902,7 +902,6 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 		re.DrawChar == NULL ||
 		re.DrawFill == NULL || 
 		re.DrawPic == NULL ||
-		re.EndFrame == NULL ||
 		re.EndRegistration == NULL ||
 		re.RenderFrame == NULL ||
 		re.Shutdown == NULL)

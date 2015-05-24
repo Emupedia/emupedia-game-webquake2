@@ -916,7 +916,7 @@ void SCR_TimeRefresh_f (void)
 			cl.refdef.viewangles[1] = i/128.0f*360.0f;
 			re.RenderFrame (&cl.refdef);
 		}
-		re.EndFrame();
+		GLimp_EndFrame();
 	}
 	else
 	{
@@ -926,7 +926,7 @@ void SCR_TimeRefresh_f (void)
 
 			re.BeginFrame( 0 );
 			re.RenderFrame (&cl.refdef);
-			re.EndFrame();
+			GLimp_EndFrame();
 		}
 	}
 
@@ -1625,7 +1625,7 @@ void SCR_UpdateScreen (void)
 			if (cls.key_dest != key_menu)
 				SCR_DrawConsole ();
 			M_Draw ();
-			re.EndFrame();
+			GLimp_EndFrame();
 			return;
 		}
 
@@ -1637,7 +1637,7 @@ void SCR_UpdateScreen (void)
 			scr_draw_loading = 0;
 			re.DrawGetPicSize (&w, &h, "loading");
 			re.DrawPic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
-//			re.EndFrame();
+//			GLimp_EndFrame();
 //			return;
 		} 
 		// if a cinematic is supposed to be running, handle menus
@@ -1653,7 +1653,7 @@ void SCR_UpdateScreen (void)
 					cl.cinematicpalette_active = false;
 				}
 				M_Draw ();
-//				re.EndFrame();
+//				GLimp_EndFrame();
 //				return;
 			}
 			else if (cls.key_dest == key_console)
@@ -1664,13 +1664,13 @@ void SCR_UpdateScreen (void)
 					cl.cinematicpalette_active = false;
 				}
 				SCR_DrawConsole ();
-//				re.EndFrame();
+//				GLimp_EndFrame();
 //				return;
 			}
 			else
 			{
 				SCR_DrawCinematic();
-//				re.EndFrame();
+//				GLimp_EndFrame();
 //				return;
 			}
 		}
@@ -1720,5 +1720,5 @@ void SCR_UpdateScreen (void)
 
 			SCR_DrawLoading ();
 		}
-	re.EndFrame();
+	GLimp_EndFrame();
 }
