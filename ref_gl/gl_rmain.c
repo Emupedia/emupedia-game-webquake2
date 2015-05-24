@@ -1865,8 +1865,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 	re.Init = R_Init;
 	re.Shutdown = R_Shutdown;
 
-	re.CinematicSetPalette = R_SetPalette;
-
 	Swap_Init ();
 
 	return re;

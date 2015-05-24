@@ -1189,7 +1189,7 @@ void CL_Disconnect (qboolean skipdisconnect)
 	}
 
 	VectorClear (cl.refdef.blend);
-	re.CinematicSetPalette(NULL);
+	R_SetPalette(NULL);
 
 	//r1: why?
 	//M_ForceMenuOff ();

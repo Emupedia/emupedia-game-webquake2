@@ -176,11 +176,6 @@ typedef struct
 
 	// Draw images for cinematic rendering (which can have a different palette). Note that calls
 	void	(*DrawStretchRaw) (int x, int y, int w, int h, int cols, int rows, byte *data);
-
-	/*
-	** video mode and refresh state management entry points
-	*/
-	void	(*CinematicSetPalette)( const unsigned char *palette);	// NULL = game palette
 } refexport_t;
 
 
@@ -262,6 +257,7 @@ void	VID_MenuDraw(void);
 const char *VID_MenuKey(int);
 
 
+void	R_SetPalette ( const unsigned char *palette);
 void	R_BeginFrame( float camera_separation );
 void GLimp_EndFrame(void);
 

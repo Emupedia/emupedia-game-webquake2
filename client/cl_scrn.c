@@ -1633,7 +1633,7 @@ void SCR_UpdateScreen (void)
 		{	//  loading plaque over black screen
 			int		w, h;
 
-			re.CinematicSetPalette(NULL);
+			R_SetPalette(NULL);
 			scr_draw_loading = 0;
 			re.DrawGetPicSize (&w, &h, "loading");
 			re.DrawPic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
@@ -1649,7 +1649,7 @@ void SCR_UpdateScreen (void)
 			{
 				if (cl.cinematicpalette_active)
 				{
-					re.CinematicSetPalette(NULL);
+					R_SetPalette(NULL);
 					cl.cinematicpalette_active = false;
 				}
 				M_Draw ();
@@ -1660,7 +1660,7 @@ void SCR_UpdateScreen (void)
 			{
 				if (cl.cinematicpalette_active)
 				{
-					re.CinematicSetPalette(NULL);
+					R_SetPalette(NULL);
 					cl.cinematicpalette_active = false;
 				}
 				SCR_DrawConsole ();
@@ -1682,7 +1682,7 @@ void SCR_UpdateScreen (void)
 			// make sure the game palette is active
 			if (cl.cinematicpalette_active)
 			{
-				re.CinematicSetPalette(NULL);
+				R_SetPalette(NULL);
 				cl.cinematicpalette_active = false;
 			}
 #endif
