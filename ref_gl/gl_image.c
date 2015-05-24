@@ -376,7 +376,7 @@ qboolean GetPCXInfo (const char *filename, int *width, int *height)
 		*height = pcx.ymax + 1;
 
 		if (closeFile)
-			rx.FS_FCloseFile (fh);
+			FS_FCloseFile (fh);
 	}
 	else
 	{

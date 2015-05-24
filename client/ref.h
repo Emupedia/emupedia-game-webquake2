@@ -197,7 +197,6 @@ typedef struct
 	// extended renderer API functions, check for NULL in ref before using!!
 	//**********************************************************************
 	int			(*FS_FOpenFile) (const char *filename, FILE **file, handlestyle_t openHandle, qboolean *closeHandle);
-	void		(*FS_FCloseFile) (FILE *file);
 } refimportnew_t;
 
 typedef struct

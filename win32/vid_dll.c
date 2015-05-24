@@ -841,7 +841,6 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 
 	//EXTENDED FUNCTIONS
 	rx.FS_FOpenFile = FS_FOpenFile;
-	rx.FS_FCloseFile = FS_FCloseFile;
 
 	rx.APIVersion = EXTENDED_API_VERSION;
 

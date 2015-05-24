@@ -570,7 +570,7 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 		FS_Read (&mt, sizeof(mt), h);
 
 		if (closeFile)
-			rx.FS_FCloseFile (h);
+			FS_FCloseFile (h);
 		
 		*width = LittleLong (mt.width);
 		*height = LittleLong (mt.height);
