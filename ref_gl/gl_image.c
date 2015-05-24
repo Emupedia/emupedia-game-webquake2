@@ -360,13 +360,11 @@ PCX LOADING
 
 qboolean GetPCXInfo (const char *filename, int *width, int *height)
 {
-	if (rx.FS_FOpenFile)
-	{
 		pcx_t		pcx;
 		FILE		*fh;
 		qboolean	closeFile;
 
-		rx.FS_FOpenFile (filename, &fh, HANDLE_OPEN, &closeFile);
+		FS_FOpenFile (filename, &fh, HANDLE_OPEN, &closeFile);
 		if (!fh)
 			return false;
 
@@ -377,23 +375,7 @@ qboolean GetPCXInfo (const char *filename, int *width, int *height)
 
 		if (closeFile)
 			FS_FCloseFile (fh);
-	}
-	else
-	{
-		pcx_t	*pcx;
-		byte	*raw;
 
-		ri.FS_LoadFile (filename, (void **)&raw);
-		if (!raw)
-			return false;
-
-		pcx = (pcx_t *)raw;
-
-		*width = pcx->xmax + 1;
-		*height = pcx->ymax + 1;
-
-		ri.FS_FreeFile (raw);
-	}
 	return true;
 }
 

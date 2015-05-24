@@ -548,8 +548,6 @@ void Mod_LoadEdges (lump_t *l)
 //FIXME: this is bad, loads entire file for just 8 bytes!
 qboolean GetWalInfo (const char *name, int *width, int *height)
 {
-	if (rx.FS_FOpenFile)
-	{
 #ifdef _DEBUG
 		int		i;
 		char	grey = 8;
@@ -558,7 +556,7 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 		qboolean	closeFile;
 		FILE		*h;
 
-		rx.FS_FOpenFile (name, &h, HANDLE_OPEN, &closeFile);
+		FS_FOpenFile (name, &h, HANDLE_OPEN, &closeFile);
 		if (!h)
 			return false;
 
@@ -591,22 +589,6 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 #endif
 
 		return true;
-	}
-	else
-	{
-		miptex_t	*mt;
-
-		ri.FS_LoadFile (name, (void **)&mt);
-
-		if (!mt)
-			return false;
-
-		*width = LittleLong (mt->width);
-		*height = LittleLong (mt->height);
-
-		ri.FS_FreeFile ((void *)mt);
-		return true;
-	}
 }
 
 /*

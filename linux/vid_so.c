@@ -178,7 +178,6 @@ qboolean VID_LoadRefresh( char *name )
 	ri.Vid_NewWindow = VID_NewWindow;
 
 	//EXTENDED FUNCTIONS
-	rx.FS_FOpenFile = FS_FOpenFile;
 	
 	rx.APIVersion = EXTENDED_API_VERSION;
 	{
