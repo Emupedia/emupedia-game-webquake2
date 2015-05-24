@@ -198,7 +198,6 @@ typedef struct
 	//**********************************************************************
 	int			(*FS_FOpenFile) (const char *filename, FILE **file, handlestyle_t openHandle, qboolean *closeHandle);
 	void		(*FS_FCloseFile) (FILE *file);
-	void		(*FS_Read) (void *buffer, int len, FILE *f);
 } refimportnew_t;
 
 typedef struct

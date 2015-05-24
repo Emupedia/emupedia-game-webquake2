@@ -567,7 +567,7 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 			ri.FS_FCloseFile (h);
 			return false;
 		}*/
-		rx.FS_Read (&mt, sizeof(mt), h);
+		FS_Read (&mt, sizeof(mt), h);
 
 		if (closeFile)
 			rx.FS_FCloseFile (h);

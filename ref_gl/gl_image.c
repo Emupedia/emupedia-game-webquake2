@@ -370,7 +370,7 @@ qboolean GetPCXInfo (const char *filename, int *width, int *height)
 		if (!fh)
 			return false;
 
-		rx.FS_Read (&pcx, sizeof(pcx), fh);
+		FS_Read (&pcx, sizeof(pcx), fh);
 
 		*width = pcx.xmax + 1;
 		*height = pcx.ymax + 1;
