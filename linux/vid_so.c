@@ -28,10 +28,6 @@ qboolean	reflib_active = 0;
 
 #define VID_NUM_MODES ( sizeof( vid_modes ) / sizeof( vid_modes[0] ) )
 
-/** KEYBOARD **************************************************************/
-
-
-void (*KBD_Update_fp)(void);
 
 /** MOUSE *****************************************************************/
 
@@ -142,8 +138,6 @@ void VID_FreeReflib (void)
 	KBD_Close();
 	RW_IN_Shutdown();
 
-	KBD_Update_fp = NULL;
-
 	memset (&re, 0, sizeof(re));
 	reflib_active  = false;
 }
@@ -216,9 +210,6 @@ qboolean VID_LoadRefresh( char *name )
 		VID_FreeReflib ();
 		return false;
 	}
-
-	/* Init KBD */
-	KBD_Update_fp = KBD_Update;
 
 	// give up root now
 	setreuid(getuid(), getuid());

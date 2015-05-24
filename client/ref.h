@@ -257,8 +257,6 @@ void KBD_Update(void);
 void KBD_Close(void);
 
 
-extern void (*KBD_Update_fp)(void);
-
 typedef struct vrect_s
 {
 	int32				x, y, width, height;

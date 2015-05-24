@@ -618,8 +618,7 @@ void Sys_AppActivate (void)
 void Sys_SendKeyEvents (void)
 {
 #ifndef DEDICATED_ONLY
-	if (KBD_Update_fp)
-		KBD_Update_fp();
+	KBD_Update();
 #endif
 
 	// grab frame time 

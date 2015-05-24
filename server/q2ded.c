@@ -1,9 +1,6 @@
 #include "server.h"
 
 
-void (*KBD_Update_fp)(void) = NULL;
-
-
 qboolean send_packet_now = false;
 
 
@@ -45,6 +42,11 @@ void Cmd_ForwardToServer (void)
 
 
 void Con_Print (const char *txt)
+{
+}
+
+
+void KBD_Update(void)
 {
 }
 
