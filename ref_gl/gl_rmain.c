@@ -2107,7 +2107,7 @@ void RW_IN_Frame (void)
 {
 }
 
-void RW_IN_Activate(qboolean active)
+void IN_Activate(qboolean active)
 {
     /*	if (active || vidmode_active) */
     	if (active)

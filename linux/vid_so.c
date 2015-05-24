@@ -338,8 +338,3 @@ void IN_Frame (void)
 {
 	RW_IN_Frame();
 }
-
-void IN_Activate (qboolean active)
-{
-	RW_IN_Activate(active);
-}

@@ -247,10 +247,8 @@ refexport_t GetRefAPI (refimport_t rimp );
 void GetExtraAPI (refimportnew_t rimp );
 
 
-// TODO: these should not be EXPORT
 void RW_IN_Init(in_state_t *in_state_p);
 void RW_IN_Shutdown(void);
-void RW_IN_Activate(qboolean active);
 void RW_IN_Commands(void);
 void RW_IN_Move(usercmd_t *cmd);
 void RW_IN_Frame(void);
