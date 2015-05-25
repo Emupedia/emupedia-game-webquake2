@@ -910,7 +910,7 @@ void SCR_TimeRefresh_f (void)
 
 	if (Cmd_Argc() == 2)
 	{	// run without page flipping
-		R_BeginFrame( 0 );
+		R_BeginFrame();
 		for (i=0 ; i<128 ; i++)
 		{
 			cl.refdef.viewangles[1] = i/128.0f*360.0f;
@@ -924,7 +924,7 @@ void SCR_TimeRefresh_f (void)
 		{
 			cl.refdef.viewangles[1] = i/128.0f*360.0f;
 
-			R_BeginFrame( 0 );
+			R_BeginFrame();
 			re.RenderFrame (&cl.refdef);
 			GLimp_EndFrame();
 		}
@@ -1617,7 +1617,7 @@ void SCR_UpdateScreen (void)
 	** brain
 	*/
 
-		R_BeginFrame( 0 );
+		R_BeginFrame();
 
 		//r1: only update console during load
 		if (!cl.refresh_prepped)

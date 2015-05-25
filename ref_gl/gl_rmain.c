@@ -887,9 +887,6 @@ void R_SetupGL (void)
     qglRotatef (-r_newrefdef.viewangles[1],  0, 0, 1);
     qglTranslatef (-r_newrefdef.vieworg[0],  -r_newrefdef.vieworg[1],  -r_newrefdef.vieworg[2]);
 
-//	if ( gl_state.camera_separation != 0 && gl_state.stereo_enabled )
-//		qglTranslatef ( gl_state.camera_separation, 0, 0 );
-
 	qglGetFloatv (GL_MODELVIEW_MATRIX, r_world_matrix);
 
 	//
@@ -1524,7 +1521,7 @@ void GL_UpdateAnisotropy (void)
 R_BeginFrame
 @@@@@@@@@@@@@@@@@@@@@
 */
-void R_BeginFrame( float camera_separation )
+void R_BeginFrame(void)
 {
 
 	/*
