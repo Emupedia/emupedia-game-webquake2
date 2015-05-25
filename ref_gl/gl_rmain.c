@@ -1862,8 +1862,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 
 	re.DrawStretchRaw = Draw_StretchRaw;
 
-	re.Init = R_Init;
-
 	Swap_Init ();
 
 	return re;

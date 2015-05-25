@@ -254,6 +254,7 @@ void	VID_MenuDraw(void);
 const char *VID_MenuKey(int);
 
 
+int 	R_Init( void *hinstance, void *hWnd );
 void	R_Shutdown( void );
 void	R_SetPalette ( const unsigned char *palette);
 void	R_BeginFrame( float camera_separation );

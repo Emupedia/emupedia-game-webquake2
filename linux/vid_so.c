@@ -191,7 +191,7 @@ qboolean VID_LoadRefresh( char *name )
 
 	Real_IN_Init();
 
-	if ( re.Init( 0, 0 ) == -1 )
+	if ( R_Init( 0, 0 ) == -1 )
 	{
 		R_Shutdown();
 		VID_FreeReflib ();

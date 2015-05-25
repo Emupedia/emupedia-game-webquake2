@@ -876,13 +876,13 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 			Com_Error (ERR_FATAL, "%s has incompatible api_version", name);
 		}*/
 
-		if ( re.Init( global_hInstance, MainWndProc ) == -1 )
+		if ( R_Init( global_hInstance, MainWndProc ) == -1 )
 		{
-			Com_DPrintf ("re.Init failed :(\n");
+			Com_DPrintf ("R_Init failed :(\n");
 			Com_DPrintf ("gl_driver: %s\n", Cvar_VariableString ("gl_driver"));
 			R_Shutdown();
 			VID_FreeReflib ();
-			strcpy (errstr, "re.Init() failed");
+			strcpy (errstr, "R_Init() failed");
 
 			//may have left a stale window class after crashing, check
 			if (GetClassInfo (global_hInstance, "Quake 2", &wc))
