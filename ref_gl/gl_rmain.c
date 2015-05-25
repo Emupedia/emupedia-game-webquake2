@@ -2100,11 +2100,9 @@ void IN_Activate(qboolean active)
 /*****************************************************************************/
 
 
-int XLateKey(unsigned int keysym)
+static unsigned int XLateKey(SDL_Keycode keysym)
 {
-	int key;
-	
-	key = 0;
+	unsigned int key = 0;
 	switch(keysym) {
 
 		case SDLK_KP_0:			key = K_KP_INS; break;
