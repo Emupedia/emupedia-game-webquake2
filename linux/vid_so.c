@@ -155,7 +155,7 @@ qboolean VID_LoadRefresh( char *name )
 	{
 		KBD_Close();
 		RW_IN_Shutdown();
-		re.Shutdown();
+		R_Shutdown();
 		VID_FreeReflib ();
 	}
 
@@ -193,7 +193,7 @@ qboolean VID_LoadRefresh( char *name )
 
 	if ( re.Init( 0, 0 ) == -1 )
 	{
-		re.Shutdown();
+		R_Shutdown();
 		VID_FreeReflib ();
 		return false;
 	}
@@ -272,7 +272,7 @@ void VID_Shutdown (void)
 	{
 		KBD_Close();
 		RW_IN_Shutdown();
-		re.Shutdown ();
+		R_Shutdown ();
 		VID_FreeReflib ();
 	}
 }

@@ -798,7 +798,7 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 	{
 		closing_reflib = true;
 		Com_DPrintf ("closing old reflib.\n");
-		re.Shutdown();
+		R_Shutdown();
 		VID_FreeReflib ();
 		closing_reflib = false;
 	}
@@ -880,7 +880,7 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 		{
 			Com_DPrintf ("re.Init failed :(\n");
 			Com_DPrintf ("gl_driver: %s\n", Cvar_VariableString ("gl_driver"));
-			re.Shutdown();
+			R_Shutdown();
 			VID_FreeReflib ();
 			strcpy (errstr, "re.Init() failed");
 
@@ -902,8 +902,7 @@ qboolean VID_LoadRefresh( char *name, char *errstr )
 		re.DrawFill == NULL || 
 		re.DrawPic == NULL ||
 		re.EndRegistration == NULL ||
-		re.RenderFrame == NULL ||
-		re.Shutdown == NULL)
+		re.RenderFrame == NULL)
 	{
 		strcpy (errstr, "missing exports");
 		return false;
@@ -1205,7 +1204,7 @@ void VID_Shutdown (void)
 {
 	if ( reflib_active )
 	{
-		re.Shutdown ();
+		R_Shutdown ();
 		VID_FreeReflib ();
 	}
 

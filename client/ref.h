@@ -141,9 +141,6 @@ typedef struct
 	// called when the library is loaded
 	int		(*Init) ( void *hinstance, void *wndproc );
 
-	// called before the library is unloaded
-	void	(*Shutdown) (void);
-
 	// All data that will be used in a level should be
 	// registered before rendering any frames to prevent disk hits,
 	// but they can still be registered at a later time
@@ -257,6 +254,7 @@ void	VID_MenuDraw(void);
 const char *VID_MenuKey(int);
 
 
+void	R_Shutdown( void );
 void	R_SetPalette ( const unsigned char *palette);
 void	R_BeginFrame( float camera_separation );
 void GLimp_EndFrame(void);
