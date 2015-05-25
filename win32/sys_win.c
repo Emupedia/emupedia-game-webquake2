@@ -29,6 +29,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // before qcommon.h or mingw-w64 explodes
 #include <windows.h>
 
+#include <mmsystem.h>
+
 #include "../qcommon/qcommon.h"
 #include "winquake.h"
 #include "resource.h"
