@@ -28,7 +28,7 @@ typedef enum {
 	M_MENU_MULTIPLAYER,
 	M_MENU_OPTIONS,
 	M_MENU_VIDEO,
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
 	M_MENU_QUIT
 #endif
 } main_menu_selections;
@@ -390,10 +390,10 @@ MAIN MENU
 
 =======================================================================
 */
-#ifdef EMSCRIPTEN
-#define	MAIN_ITEMS	3
-#else
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
 #define	MAIN_ITEMS	4
+#else
+#define	MAIN_ITEMS	3
 #endif
 
 
@@ -411,7 +411,7 @@ static void M_Main_Draw (void)
 		"m_main_multiplayer",
 		"m_main_options",
 		"m_main_video",
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
 		"m_main_quit",
 #endif
 		0
@@ -485,7 +485,7 @@ static const char *M_Main_Key (int key)
 			M_Menu_Video_f ();
 			break;
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
 		case M_MENU_QUIT:
 			M_Menu_Quit_f ();
 			break;
@@ -3897,7 +3897,7 @@ void M_Init (void)
 	Cmd_AddCommand ("menu_options", M_Menu_Options_f);
 		Cmd_AddCommand ("menu_r1q2", M_Menu_R1Q2_f);
 		Cmd_AddCommand ("menu_keys", M_Menu_Keys_f);
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
 	Cmd_AddCommand ("menu_quit", M_Menu_Quit_f);
 #endif
 }
