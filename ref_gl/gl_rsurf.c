@@ -342,6 +342,9 @@ void R_BlendLightmaps (void)
 
 	qglEnable (GL_BLEND);
 	qglBlendFunc (GL_ZERO, GL_SRC_COLOR );
+	qglActiveTexture(GL_TEXTURE1);
+	qglDisable (GL_TEXTURE_2D);
+	qglActiveTexture(GL_TEXTURE0);
 
 	if ( currentmodel == r_worldmodel )
 		c_visible_lightmaps = 0;
