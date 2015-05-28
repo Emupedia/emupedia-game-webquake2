@@ -483,12 +483,15 @@ void Draw_FadeScreen (void)
 
 	qglColor4f (0, 0, 0, 0.8f);
 
-	qglBegin (GL_QUADS);
+	qglBegin (GL_TRIANGLES);
 
 	qglVertex2f(0,0);
 	qglVertex2f(viddef.width, 0);
 	qglVertex2f(viddef.width, viddef.height);
-	qglVertex2f(0, viddef.height);
+
+	qglVertex2f(viddef.width, viddef.height);
+	qglVertex2f(0,0);
+	qglVertex2f(viddef.width, 0);
 
 	qglEnd ();
 
