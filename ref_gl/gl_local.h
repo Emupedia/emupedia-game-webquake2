@@ -542,7 +542,7 @@ IMPLEMENTATION SPECIFIC FUNCTIONS
 */
 
 void		GLimp_BeginFrame( void );
-int 		GLimp_Init( void *hinstance, void *hWnd );
+int 		GLimp_Init(void);
 void		GLimp_Shutdown( void );
 int    	GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboolean fullscreen );
 void		GLimp_EnableLogging( qboolean enable );
