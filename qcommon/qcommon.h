@@ -1200,7 +1200,7 @@ void Con_Print (const char *text);
 void SCR_BeginLoadingPlaque (void);
 
 void SV_Init (void);
-void SV_Shutdown (char *finalmsg, qboolean reconnect, qboolean crashing);
+void SV_Shutdown (const char *finalmsg, qboolean reconnect, qboolean crashing);
 void SV_Frame (int msec);
 
 #define _QCOMMON_H
