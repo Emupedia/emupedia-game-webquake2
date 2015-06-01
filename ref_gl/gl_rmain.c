@@ -1070,7 +1070,7 @@ void R_RenderFrame (refdef_t *fd)
 }
 
 void Cmd_HashStats_f (void);
-void R_Register( void )
+static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 {
 	r_lefthand = ri.Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
 	r_norefresh = ri.Cvar_Get ("r_norefresh", "0", 0);
@@ -1154,8 +1154,11 @@ void R_Register( void )
 	vid_nowgl = ri.Cvar_Get ("vid_nowgl", "0", 0);
 	vid_restore_on_switch = ri.Cvar_Get ("vid_flip_on_switch", "0", 0);
 
-	gl_forcewidth = ri.Cvar_Get ("vid_forcewidth", "0", 0);
-	gl_forceheight = ri.Cvar_Get ("vid_forceheight", "0", 0);
+	char tempBuf[8];
+	Com_sprintf(tempBuf, 8, "%u", defaultWidth);
+	gl_forcewidth = ri.Cvar_Get ("vid_forcewidth", tempBuf, 0);
+	Com_sprintf(tempBuf, 8, "%u", defaultHeight);
+	gl_forceheight = ri.Cvar_Get ("vid_forceheight", tempBuf, 0);
 
 	vid_topmost = ri.Cvar_Get ("vid_topmost", "0", 0);
 
@@ -1299,6 +1302,7 @@ int R_Init( void *hinstance, void *hWnd )
 	SDL_DisplayMode mode;
 	memset(&mode, 0, sizeof(SDL_DisplayMode));
 
+	unsigned int desktopWidth = 0, desktopHeight = 0;
 	int numVideoDisplays = SDL_GetNumVideoDisplays();
 	if (numVideoDisplays < 0) {
 		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDisplays failed: \"%s\"\n", SDL_GetError());
@@ -1331,6 +1335,8 @@ int R_Init( void *hinstance, void *hWnd )
 				ri.Con_Printf( PRINT_ALL, "SDL_GetDesktopDisplayMode failed: \"%s\"\n", SDL_GetError());
 			} else {
 				ri.Con_Printf( PRINT_ALL, "Desktop display mode: %dx%d %d Hz\n", mode.w, mode.h, mode.refresh_rate);
+				desktopWidth = mode.w;
+				desktopHeight = mode.h;
 			}
 		}
 	}
@@ -1348,7 +1354,7 @@ int R_Init( void *hinstance, void *hWnd )
 	Draw_GetPalette ();
 
 	ri.Con_Printf (PRINT_DEVELOPER, "R_Register()\n");
-	R_Register();
+	R_Register(desktopWidth, desktopHeight);
 
 	gl_overbrights->modified = false;
 
