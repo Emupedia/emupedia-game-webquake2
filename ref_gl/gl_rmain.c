@@ -1292,12 +1292,14 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		SDL_SetWindowSize(window, viddef.width, viddef.height);
 	} else {
 		// TODO: SDL_WINDOW_RESIZABLE
-		// TODO: SDL_WINDOW_INPUT_GRABBED?
 		// TODO: SDL_WINDOW_ALLOW_HIGHDPI?
 		uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 		if (fullscreen) {
 			// TODO: SDL_WINDOW_FULLSCREEN_DESKTOP
 			flags |= SDL_WINDOW_FULLSCREEN;
+		}
+		if (_windowed_mouse->intvalue != 0) {
+			flags |= SDL_WINDOW_INPUT_GRABBED;
 		}
 
 		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, viddef.width, viddef.height, flags);
@@ -1306,6 +1308,14 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			return false;
 		}
 		SetSDLIcon();
+
+		if (_windowed_mouse->intvalue != 0) {
+			int retval = SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+			if (retval != 0) {
+				ri.Con_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
+			}
+		}
+
 		glcontext = SDL_GL_CreateContext(window);
 
 #ifdef EPOXY
@@ -2767,7 +2777,10 @@ void KBD_Update(void)
 
 			// TODO: should refactor all this grab stuff to one place
 			SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-			SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+			int retval = SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
+			if (retval != 0) {
+				ri.Con_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
+			}
 		}
 		while (keyq_head != keyq_tail)
 		{
