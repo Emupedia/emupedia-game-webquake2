@@ -2014,6 +2014,7 @@ void RW_IN_Commands (void)
 #endif
 }
 
+
 /*
 ===========
 IN_Move
@@ -2021,71 +2022,71 @@ IN_Move
 */
 void RW_IN_Move (usercmd_t *cmd)
 {
-  /*** FIXME 
-   *   You can accelerate while in the air, this doesn't
-   *   make physical sense.  Try falling off something and then moving
-   *   forward.
-   ***/
-  
-  if (mouse_avail) {
-    if (m_filter->value)
-      {
-	mouse_x = (mx + old_mouse_x) * 0.5;
-	mouse_y = (my + old_mouse_y) * 0.5;
-      } else {
-	mouse_x = mx;
-	mouse_y = my;
-      }
-    
-    old_mouse_x = mx;
-    old_mouse_y = my;
-    
-    if (mouse_x || mouse_y) {    
-      mouse_x *= sensitivity->value;
-      mouse_y *= sensitivity->value;
-      
-      /* add mouse X/Y movement to cmd */
-      if ( (*in_state->in_strafe_state & 1) || 
-	   (my_lookstrafe->value && mlooking ))
-	cmd->sidemove += m_side->value * mouse_x;
-      else
-	in_state->viewangles[YAW] -= m_yaw->value * mouse_x;
-      
-      
-      if ( (mlooking || my_freelook->value) && 
-	   !(*in_state->in_strafe_state & 1))
-	{
-	  in_state->viewangles[PITCH] += m_pitch->value * mouse_y;
-	}
-      else
-	{
-	  cmd->forwardmove -= m_forward->value * mouse_y;
-	}
-      mx = my = 0;
-    }
-  }
-#ifdef HAVE_JOYSTICK
-  if (joystick_avail && joy) {
-      /* add joy X/Y movement to cmd */
-    if ( (*in_state->in_strafe_state & 1) || 
-	 (my_lookstrafe->value && mlooking ))
-      cmd->sidemove += m_side->value * (jx/100);
-    else
-      in_state->viewangles[YAW] -= m_yaw->value * (jx/100);
+	/*** FIXME 
+	 *   You can accelerate while in the air, this doesn't
+	 *   make physical sense.  Try falling off something and then moving
+	 *   forward.
+	 ***/
 
-    if ((mlooking || my_freelook->value) && !(*in_state->in_strafe_state & 1)) {
-	if (j_invert_y)
-	    in_state->viewangles[PITCH] -= m_pitch->value * (jy/100);
-	else
-	    in_state->viewangles[PITCH] += m_pitch->value * (jy/100);
-	cmd->forwardmove -= m_forward->value * (jt/100);
-    } else {
-	cmd->forwardmove -= m_forward->value * (jy/100);
-    }
-    jt = jx = jy = 0;
-  }
+	if (mouse_avail) {
+		if (m_filter->value)
+		{
+			mouse_x = (mx + old_mouse_x) * 0.5;
+			mouse_y = (my + old_mouse_y) * 0.5;
+		} else {
+			mouse_x = mx;
+			mouse_y = my;
+		}
+
+		old_mouse_x = mx;
+		old_mouse_y = my;
+
+		if (mouse_x || mouse_y) {
+			mouse_x *= sensitivity->value;
+			mouse_y *= sensitivity->value;
+
+			/* add mouse X/Y movement to cmd */
+			if ( (*in_state->in_strafe_state & 1) ||
+				(my_lookstrafe->value && mlooking ))
+				cmd->sidemove += m_side->value * mouse_x;
+			else
+				in_state->viewangles[YAW] -= m_yaw->value * mouse_x;
+
+			if ( (mlooking || my_freelook->value) &&
+				!(*in_state->in_strafe_state & 1))
+			{
+				in_state->viewangles[PITCH] += m_pitch->value * mouse_y;
+			}
+			else
+			{
+				cmd->forwardmove -= m_forward->value * mouse_y;
+			}
+			mx = my = 0;
+		}
+	}
+#ifdef HAVE_JOYSTICK
+	if (joystick_avail && joy) {
+		/* add joy X/Y movement to cmd */
+		if ( (*in_state->in_strafe_state & 1) ||
+			(my_lookstrafe->value && mlooking ))
+			cmd->sidemove += m_side->value * (jx/100);
+		else
+			in_state->viewangles[YAW] -= m_yaw->value * (jx/100);
+
+		if ((mlooking || my_freelook->value) && !(*in_state->in_strafe_state & 1)) {
+			if (j_invert_y)
+				in_state->viewangles[PITCH] -= m_pitch->value * (jy/100);
+			else
+				in_state->viewangles[PITCH] += m_pitch->value * (jy/100);
+			cmd->forwardmove -= m_forward->value * (jt/100);
+		} else {
+			cmd->forwardmove -= m_forward->value * (jy/100);
+		}
+		jt = jx = jy = 0;
+	}
 #endif
 }
+
 
 void IN_DeactivateMouse( void ) 
 { 
