@@ -1278,6 +1278,12 @@ int R_Init( void *hinstance, void *hWnd )
 
 	memset(gl_state.lightmap_textures, 0, MAX_LIGHTMAPS * sizeof(GLuint));
 
+	int retval = SDL_Init(SDL_INIT_VIDEO);
+	if (retval != 0) {
+		Sys_Error("SDL Init failed: \"%s\"\n", SDL_GetError());
+		return -1;
+	}
+
 	for ( j = 0; j < 256; j++ )
 	{
 		r_turbsin[j] *= 0.5;
@@ -1306,24 +1312,6 @@ retryQGL:
 		ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): QGL_Init() failed\n");
 
 		return -1;
-	}
-
-	// initialize OS-specific parts of OpenGL
-	ri.Con_Printf (PRINT_DEVELOPER, "GLimp_Init()\n");
-	if (SDL_WasInit(SDL_INIT_AUDIO | SDL_INIT_VIDEO) == 0) {
-		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
-			ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): GLimp_Init() failed\n");
-			QGL_Shutdown();
-			return -1;
-		}
-	} else if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
-		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
-			ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): GLimp_Init() failed\n");
-			QGL_Shutdown();
-			return -1;
-		}
 	}
 
 #ifdef HAVE_JOYSTICK
