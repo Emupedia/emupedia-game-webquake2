@@ -497,8 +497,6 @@ typedef struct
 	float inverse_intensity;
 	qboolean fullscreen;
 
-	int     prev_mode;
-
 	unsigned char *d_16to8table;
 
 	GLuint lightmap_textures[MAX_LIGHTMAPS];

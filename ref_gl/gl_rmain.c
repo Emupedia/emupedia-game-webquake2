@@ -1214,7 +1214,6 @@ static int R_SetMode(unsigned int width, unsigned int height)
 	int err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen );
 	if ( err == VID_ERR_NONE )
 	{
-		gl_state.prev_mode = Q_ftol(gl_mode->value);
 	}
 	else
 	{
@@ -1232,13 +1231,12 @@ static int R_SetMode(unsigned int width, unsigned int height)
 		}
 		else if ( err & VID_ERR_FAIL )
 		{
-			ri.Cvar_SetValue( "gl_mode", (float)gl_state.prev_mode );
 			gl_mode->modified = false;
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - invalid mode\n" );
 		}
 
 		// try setting it back to something safe
-		err = GLimp_SetMode( &viddef.width, &viddef.height, gl_state.prev_mode, false );
+		err = GLimp_SetMode( &viddef.width, &viddef.height, 0, false );
 		if ( err != VID_ERR_NONE )
 		{
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - could not revert to safe mode\n" );
@@ -1358,9 +1356,6 @@ retryQGL:
 #ifdef HAVE_JOYSTICK
 	init_joystick();
 #endif
-
-	// set our "safe" modes
-	gl_state.prev_mode = 3;
 
 	// create the window and set up the context
 	ri.Con_Printf (PRINT_DEVELOPER, "R_SetMode()\n");
