@@ -1609,30 +1609,7 @@ void R_BeginFrame(void)
 		gl_contrast->modified = false;
 	}
 
-
-
-	/*
-	** update 3Dfx gamma -- it is expected that a user will do a vid_restart
-	** after tweaking this value
-	*/
-#if 0
-	if ( vid_gamma->modified )
-	{
-		vid_gamma->modified = false;
-
-		if ( gl_config.renderer & ( GL_RENDERER_VOODOO ) )
-		{
-			char envbuffer[1024];
-			float g;
-
-			g = 2.00 * ( 0.8 - ( vid_gamma->value - 0.5 ) ) + 1.0F;
-			Com_sprintf( envbuffer, sizeof(envbuffer), "SSTV2_GAMMA=%f", g );
-			putenv( envbuffer );
-			Com_sprintf( envbuffer, sizeof(envbuffer), "SST_GAMMA=%f", g );
-			putenv( envbuffer );
-		}
-	}
-#endif
+	// TODO: update gamma if necessary
 
 	/*
 	** go into 2D mode
