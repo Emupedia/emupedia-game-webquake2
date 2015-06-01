@@ -1213,7 +1213,7 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 R_SetMode
 ==================
 */
-int R_SetMode (void)
+static int R_SetMode(unsigned int width, unsigned int height)
 {
 	int err;
 	qboolean fullscreen;
@@ -1223,11 +1223,8 @@ int R_SetMode (void)
 	vid_fullscreen->modified = false;
 	gl_mode->modified = false;
 
-	if (FLOAT_NE_ZERO(vid_width->value))
-		viddef.width = (int)vid_width->value;
-
-	if (FLOAT_NE_ZERO(vid_height->value))
-		viddef.height = (int)vid_height->value;
+	viddef.width = width;
+	viddef.height = height;
 
 	if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen ) ) == VID_ERR_NONE )
 	{
@@ -1380,7 +1377,7 @@ retryQGL:
 
 	// create the window and set up the context
 	ri.Con_Printf (PRINT_DEVELOPER, "R_SetMode()\n");
-	err = R_SetMode ();
+	err = R_SetMode(vid_width->intvalue, vid_height->intvalue);
 	if (err != VID_ERR_NONE)
 	{
 		QGL_Shutdown();
