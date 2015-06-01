@@ -1720,6 +1720,9 @@ void GL_UpdateAnisotropy (void)
 }
 
 
+void GetEvent(SDL_Event *event);
+
+
 /*
 @@@@@@@@@@@@@@@@@@@@@
 R_BeginFrame
@@ -1763,6 +1766,17 @@ void R_BeginFrame(void)
 			ri.Cvar_SetValue ("gl_contrast", 1.5f);
 
 		gl_contrast->modified = false;
+	}
+
+	mx = 0; my = 0;
+
+	// TODO: inline GetEvent
+	// TODO: use events instead of SDL_GetMouseState
+	// TODO: after that use message timestamp instead of Sys_Milliseconds
+	SDL_Event event;
+	memset(&event, 0, sizeof(SDL_Event));
+	while (SDL_PollEvent(&event)) {
+		GetEvent(&event);
 	}
 
 	// TODO: update gamma if necessary
@@ -2743,14 +2757,6 @@ void KBD_Update(void)
 // get events from x server
 	if (X11_active)
 	{
-		mx = 0; my = 0;
-		int bstate;
-
-		// TODO: refactor into a proper message loop
-		// TODO: after that use message timestamp instead of Sys_Milliseconds
-		while (SDL_PollEvent(&event))
-			GetEvent(&event);
-
 #ifdef HAVE_JOYSTICK
 		if (joystick_avail && joy) {
 		  jx = SDL_JoystickGetAxis(joy, lr_axis);
@@ -2759,7 +2765,7 @@ void KBD_Update(void)
 		}
 #endif
 		mouse_buttonstate = 0;
-		bstate = SDL_GetMouseState(NULL, NULL);
+		int bstate = SDL_GetMouseState(NULL, NULL);
 		if (SDL_BUTTON(1) & bstate)
 			mouse_buttonstate |= (1 << 0);
 		if (SDL_BUTTON(3) & bstate) /* quake2 has the right button be mouse2 */
