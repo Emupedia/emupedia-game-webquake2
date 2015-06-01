@@ -2287,6 +2287,9 @@ void GetEvent(SDL_Event *event)
 		case SDL_WINDOWEVENT_RESIZED:
 			viddef.width = event->window.data1;
 			viddef.height = event->window.data2;
+			ri.Con_Printf (PRINT_ALL, "Window resized to %dx%d\n", viddef.width, viddef.height);
+			Cvar_SetValue("vid_width", viddef.width);
+			Cvar_SetValue("vid_height", viddef.height);
 		}
 		break;
 
