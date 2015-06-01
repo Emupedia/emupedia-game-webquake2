@@ -1197,7 +1197,40 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 }
 
 
-static void SetSDLIcon(void);
+static void SetSDLIcon(void) {
+#include "q2icon.xbm"
+    SDL_Surface * icon;
+    SDL_Color color;
+    Uint8 * ptr;
+    int i, mask;
+
+    icon = SDL_CreateRGBSurface(SDL_SWSURFACE, q2icon_width, q2icon_height, 8,
+				0, 0, 0, 0);
+    if (icon == NULL)
+	return; /* oh well... */
+
+    SDL_SetColorKey(icon, SDL_TRUE, 0);
+
+    color.r = 255;
+    color.g = 255;
+    color.b = 255;
+	icon->format->palette->colors[0] = color;
+    color.r = 0;
+    color.g = 16;
+    color.b = 0;
+	icon->format->palette->colors[1] = color;
+
+    ptr = (Uint8 *)icon->pixels;
+    for (i = 0; i < sizeof(q2icon_bits); i++) {
+	for (mask = 1; mask != 0x100; mask <<= 1) {
+	    *ptr = (q2icon_bits[i] & mask) ? 1 : 0;
+	    ptr++;
+	}               
+    }
+
+	SDL_SetWindowIcon(window, icon);
+    SDL_FreeSurface(icon);
+}
 
 
 /*
@@ -2517,42 +2550,6 @@ void InitJoystick() {
     joystick_avail = false;
   }
 #endif
-}
-
-
-static void SetSDLIcon(void) {
-#include "q2icon.xbm"
-    SDL_Surface * icon;
-    SDL_Color color;
-    Uint8 * ptr;
-    int i, mask;
-
-    icon = SDL_CreateRGBSurface(SDL_SWSURFACE, q2icon_width, q2icon_height, 8,
-				0, 0, 0, 0);
-    if (icon == NULL)
-	return; /* oh well... */
-
-    SDL_SetColorKey(icon, SDL_TRUE, 0);
-
-    color.r = 255;
-    color.g = 255;
-    color.b = 255;
-	icon->format->palette->colors[0] = color;
-    color.r = 0;
-    color.g = 16;
-    color.b = 0;
-	icon->format->palette->colors[1] = color;
-
-    ptr = (Uint8 *)icon->pixels;
-    for (i = 0; i < sizeof(q2icon_bits); i++) {
-	for (mask = 1; mask != 0x100; mask <<= 1) {
-	    *ptr = (q2icon_bits[i] & mask) ? 1 : 0;
-	    ptr++;
-	}               
-    }
-
-	SDL_SetWindowIcon(window, icon);
-    SDL_FreeSurface(icon);
 }
 
 
