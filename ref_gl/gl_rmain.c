@@ -1284,6 +1284,57 @@ int R_Init( void *hinstance, void *hWnd )
 		return -1;
 	}
 
+	/* List displays and display modes */
+	int numVideoDrivers = SDL_GetNumVideoDrivers();
+	if (numVideoDrivers < 0) {
+		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDrivers failed: %s\n", SDL_GetError());
+	} else {
+		ri.Con_Printf( PRINT_ALL, "%d video drivers:\n", numVideoDrivers);
+		for (int i = 0; i < numVideoDrivers; i++) {
+			ri.Con_Printf( PRINT_ALL, "%d: \"%s\"\n", i, SDL_GetVideoDriver(i));
+		}
+		ri.Con_Printf( PRINT_ALL, "Current video driver is \"%s\"\n", SDL_GetCurrentVideoDriver());
+	}
+
+	SDL_DisplayMode mode;
+	memset(&mode, 0, sizeof(SDL_DisplayMode));
+
+	int numVideoDisplays = SDL_GetNumVideoDisplays();
+	if (numVideoDisplays < 0) {
+		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDisplays failed: \"%s\"\n", SDL_GetError());
+	} else {
+		ri.Con_Printf( PRINT_ALL, "%d displays:\n", numVideoDisplays);
+
+		for (int i = 0; i < numVideoDisplays; i++) {
+			const char *displayName = SDL_GetDisplayName(i);
+			ri.Con_Printf( PRINT_ALL, "Display %d: \"%s\"\n", i, displayName);
+
+			// TODO: store modes
+
+			int numModes = SDL_GetNumDisplayModes(i);
+			if (numModes < 0) {
+				ri.Con_Printf( PRINT_ALL, "SDL_GetNumDisplayModes failed: \"%s\"\n", SDL_GetError());
+			} else {
+				for (int j = 0; j < numModes; j++) {
+					int retval = SDL_GetDisplayMode(i, j, &mode);
+					if (retval < 0) {
+						ri.Con_Printf( PRINT_ALL, "SDL_GetDisplayMode failed: \"%s\"\n", SDL_GetError());
+					} else {
+						ri.Con_Printf( PRINT_ALL, "Mode %d: %dx%d %d Hz\n", j, mode.w, mode.h, mode.refresh_rate);
+						// TODO: store
+					}
+				}
+			}
+
+			int retval = SDL_GetDesktopDisplayMode(i, &mode);
+			if (retval < 0) {
+				ri.Con_Printf( PRINT_ALL, "SDL_GetDesktopDisplayMode failed: \"%s\"\n", SDL_GetError());
+			} else {
+				ri.Con_Printf( PRINT_ALL, "Desktop display mode: %dx%d %d Hz\n", mode.w, mode.h, mode.refresh_rate);
+			}
+		}
+	}
+
 	for ( j = 0; j < 256; j++ )
 	{
 		r_turbsin[j] *= 0.5;
@@ -2571,57 +2622,6 @@ void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 */
 static qboolean GLimp_InitGraphics( qboolean fullscreen )
 {
-	/* List displays and display modes */
-	int numVideoDrivers = SDL_GetNumVideoDrivers();
-	if (numVideoDrivers < 0) {
-		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDrivers failed: %s\n", SDL_GetError());
-	} else {
-		ri.Con_Printf( PRINT_ALL, "%d video drivers:\n", numVideoDrivers);
-		for (int i = 0; i < numVideoDrivers; i++) {
-			ri.Con_Printf( PRINT_ALL, "%d: \"%s\"\n", i, SDL_GetVideoDriver(i));
-		}
-		ri.Con_Printf( PRINT_ALL, "Current video driver is \"%s\"\n", SDL_GetCurrentVideoDriver());
-	}
-
-	SDL_DisplayMode mode;
-	memset(&mode, 0, sizeof(SDL_DisplayMode));
-
-	int numVideoDisplays = SDL_GetNumVideoDisplays();
-	if (numVideoDisplays < 0) {
-		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDisplays failed: \"%s\"\n", SDL_GetError());
-	} else {
-		ri.Con_Printf( PRINT_ALL, "%d displays:\n", numVideoDisplays);
-
-		for (int i = 0; i < numVideoDisplays; i++) {
-			const char *displayName = SDL_GetDisplayName(i);
-			ri.Con_Printf( PRINT_ALL, "Display %d: \"%s\"\n", i, displayName);
-
-			// TODO: store modes
-
-			int numModes = SDL_GetNumDisplayModes(i);
-			if (numModes < 0) {
-				ri.Con_Printf( PRINT_ALL, "SDL_GetNumDisplayModes failed: \"%s\"\n", SDL_GetError());
-			} else {
-				for (int j = 0; j < numModes; j++) {
-					int retval = SDL_GetDisplayMode(i, j, &mode);
-					if (retval < 0) {
-						ri.Con_Printf( PRINT_ALL, "SDL_GetDisplayMode failed: \"%s\"\n", SDL_GetError());
-					} else {
-						ri.Con_Printf( PRINT_ALL, "Mode %d: %dx%d %d Hz\n", j, mode.w, mode.h, mode.refresh_rate);
-						// TODO: store
-					}
-				}
-			}
-
-			int retval = SDL_GetDesktopDisplayMode(i, &mode);
-			if (retval < 0) {
-				ri.Con_Printf( PRINT_ALL, "SDL_GetDesktopDisplayMode failed: \"%s\"\n", SDL_GetError());
-			} else {
-				ri.Con_Printf( PRINT_ALL, "Desktop display mode: %dx%d %d Hz\n", mode.w, mode.h, mode.refresh_rate);
-			}
-		}
-	}
-
 	/* Just toggle fullscreen if that's all that has been changed */
 	int oldW = -1, oldH = -1;
 	if (window) {
