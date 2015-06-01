@@ -1580,8 +1580,6 @@ void R_BeginFrame(void)
 	}
 #endif
 
-	GLimp_BeginFrame ();
-
 	/*
 	** go into 2D mode
 	*/
@@ -2758,9 +2756,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	return true;
 }
 
-void GLimp_BeginFrame(void)
-{
-}
 
 /*
 ** GLimp_EndFrame
