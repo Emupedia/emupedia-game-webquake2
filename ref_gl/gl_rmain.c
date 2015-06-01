@@ -2136,7 +2136,7 @@ void RW_IN_Commands (void)
 IN_Move
 ===========
 */
-void RW_IN_Move (usercmd_t *cmd)
+void IN_Move (usercmd_t *cmd)
 {
 	/*** FIXME 
 	 *   You can accelerate while in the air, this doesn't

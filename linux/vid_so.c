@@ -272,10 +272,6 @@ void IN_Commands (void)
 	RW_IN_Commands();
 }
 
-void IN_Move (usercmd_t *cmd)
-{
-	RW_IN_Move(cmd);
-}
 
 void IN_Frame (void)
 {

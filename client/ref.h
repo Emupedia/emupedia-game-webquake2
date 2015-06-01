@@ -223,7 +223,6 @@ refexport_t GetRefAPI (refimport_t rimp );
 void RW_IN_Init(in_state_t *in_state_p);
 void RW_IN_Shutdown(void);
 void RW_IN_Commands(void);
-void RW_IN_Move(usercmd_t *cmd);
 void RW_IN_Frame(void);
 
 void KBD_Update(void);
