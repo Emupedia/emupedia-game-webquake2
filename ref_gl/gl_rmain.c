@@ -143,8 +143,8 @@ cvar_t	*gl_linear_mipmaps;
 
 cvar_t	*vid_gamma_pics;
 
-cvar_t	*gl_forcewidth;
-cvar_t	*gl_forceheight;
+cvar_t	*vid_width;
+cvar_t	*vid_height;
 
 cvar_t	*vid_topmost;
 
@@ -1156,9 +1156,9 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 
 	char tempBuf[8];
 	Com_sprintf(tempBuf, 8, "%u", defaultWidth);
-	gl_forcewidth = ri.Cvar_Get ("vid_forcewidth", tempBuf, 0);
+	vid_width = ri.Cvar_Get ("vid_width", tempBuf, CVAR_ARCHIVE);
 	Com_sprintf(tempBuf, 8, "%u", defaultHeight);
-	gl_forceheight = ri.Cvar_Get ("vid_forceheight", tempBuf, 0);
+	vid_height = ri.Cvar_Get ("vid_height", tempBuf, CVAR_ARCHIVE);
 
 	vid_topmost = ri.Cvar_Get ("vid_topmost", "0", 0);
 
@@ -1223,11 +1223,11 @@ int R_SetMode (void)
 	vid_fullscreen->modified = false;
 	gl_mode->modified = false;
 
-	if (FLOAT_NE_ZERO(gl_forcewidth->value))
-		viddef.width = (int)gl_forcewidth->value;
+	if (FLOAT_NE_ZERO(vid_width->value))
+		viddef.width = (int)vid_width->value;
 
-	if (FLOAT_NE_ZERO(gl_forceheight->value))
-		viddef.height = (int)gl_forceheight->value;
+	if (FLOAT_NE_ZERO(vid_height->value))
+		viddef.height = (int)vid_height->value;
 
 	if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen ) ) == VID_ERR_NONE )
 	{

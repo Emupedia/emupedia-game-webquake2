@@ -306,9 +306,6 @@ extern cvar_t	*gl_hudscale;
 
 extern cvar_t	*vid_gamma_pics;
 
-extern cvar_t	*gl_forcewidth;
-extern cvar_t	*gl_forceheight;
-
 extern cvar_t	*vid_topmost;
 
 extern cvar_t	*gl_particle_min_size;
