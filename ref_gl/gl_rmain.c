@@ -2742,12 +2742,6 @@ int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboole
 {
 	ri.Con_Printf (PRINT_ALL, "setting mode %d:", mode );
 
-	if ( !VID_GetModeInfo( pwidth, pheight, mode ) )
-	{
-		ri.Con_Printf( PRINT_ALL, " invalid mode\n" );
-		return VID_ERR_INVALID_MODE;
-	}
-
 	ri.Con_Printf( PRINT_ALL, " %d %d\n", *pwidth, *pheight);
 
 	if ( !GLimp_InitGraphics( fullscreen ) ) {

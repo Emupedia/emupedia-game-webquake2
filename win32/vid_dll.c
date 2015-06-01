@@ -682,16 +682,6 @@ vidmode_t vid_modes[] =
 	{2560,	1920},	
 };
 
-qboolean EXPORT VID_GetModeInfo( unsigned int *width, unsigned int *height, int mode )
-{
-	if ( mode < 0 || mode >= VID_NUM_MODES )
-		return false;
-
-	*width  = vid_modes[mode].width;
-	*height = vid_modes[mode].height;
-
-	return true;
-}
 
 /*
 ** VID_UpdateWindowPosAndSize
