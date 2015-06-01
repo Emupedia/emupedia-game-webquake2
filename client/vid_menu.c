@@ -51,24 +51,6 @@ static void ResetDefaults( void *unused )
 	VID_MenuInit();
 }
 
-static void ApplyChanges( void *unused )
-{
-	float gamma;
-
-	/*
-	** invert sense so greater = brighter, and scale to a range of 0.5 to 1.3
-	*/
-	gamma = ( 0.8 - ( s_brightness_slider.curvalue/10.0 - 0.5 ) ) + 0.5;
-
-	Cvar_SetValue( "vid_gamma", gamma );
-	Cvar_SetValue( "gl_picmip", 3 - s_tq_slider.curvalue );
-	Cvar_SetValue( "vid_fullscreen", s_fs_box.curvalue );
-	Cvar_SetValue( "gl_mode", s_mode_list.curvalue );
-	Cvar_SetValue( "_windowed_mouse", s_windowed_mouse.curvalue);
-
-	M_ForceMenuOff();
-}
-
 
 /*
 ** VID_GetModeInfo
@@ -93,6 +75,25 @@ vidmode_t vid_modes[] =
 	{ "Mode 8: 1280x1024",  1280, 1024, 8 },
 	{ "Mode 9: 1600x1200", 1600, 1200, 9 }
 };
+
+
+static void ApplyChanges( void *unused )
+{
+	float gamma;
+
+	/*
+	** invert sense so greater = brighter, and scale to a range of 0.5 to 1.3
+	*/
+	gamma = ( 0.8 - ( s_brightness_slider.curvalue/10.0 - 0.5 ) ) + 0.5;
+
+	Cvar_SetValue( "vid_gamma", gamma );
+	Cvar_SetValue( "gl_picmip", 3 - s_tq_slider.curvalue );
+	Cvar_SetValue( "vid_fullscreen", s_fs_box.curvalue );
+	Cvar_SetValue( "gl_mode", s_mode_list.curvalue );
+	Cvar_SetValue( "_windowed_mouse", s_windowed_mouse.curvalue);
+
+	M_ForceMenuOff();
+}
 
 
 /*
