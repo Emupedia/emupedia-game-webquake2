@@ -1201,6 +1201,7 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 R_SetMode
 ==================
 */
+static int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, qboolean fullscreen);
 static int R_SetMode(unsigned int width, unsigned int height)
 {
 	qboolean fullscreen = FLOAT_EQ_ZERO(vid_fullscreen->value) ? false : true;
@@ -1211,7 +1212,7 @@ static int R_SetMode(unsigned int width, unsigned int height)
 	viddef.width = width;
 	viddef.height = height;
 
-	int err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen );
+	int err = GLimp_SetMode( &viddef.width, &viddef.height, fullscreen );
 	if ( err == VID_ERR_NONE )
 	{
 	}
@@ -1226,7 +1227,7 @@ static int R_SetMode(unsigned int width, unsigned int height)
 			ri.Cvar_SetValue( "vid_fullscreen", 0);
 			vid_fullscreen->modified = false;
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - fullscreen unavailable in this mode\n" );
-			if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), false ) ) == VID_ERR_NONE )
+			if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, false ) ) == VID_ERR_NONE )
 				return VID_ERR_NONE;
 		}
 		else if ( err & VID_ERR_FAIL )
@@ -1236,7 +1237,7 @@ static int R_SetMode(unsigned int width, unsigned int height)
 		}
 
 		// try setting it back to something safe
-		err = GLimp_SetMode( &viddef.width, &viddef.height, 0, false );
+		err = GLimp_SetMode( &viddef.width, &viddef.height, false );
 		if ( err != VID_ERR_NONE )
 		{
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - could not revert to safe mode\n" );
@@ -2674,11 +2675,9 @@ void GLimp_EndFrame (void)
 /*
 ** GLimp_SetMode
 */
-int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, int mode, qboolean fullscreen )
+static int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, qboolean fullscreen )
 {
-	ri.Con_Printf (PRINT_ALL, "setting mode %d:", mode );
-
-	ri.Con_Printf( PRINT_ALL, " %d %d\n", *pwidth, *pheight);
+	ri.Con_Printf (PRINT_ALL, "setting mode %ux%u\n", *pwidth, *pheight);
 
 	if ( !GLimp_InitGraphics( fullscreen ) ) {
 		// failed to set a valid mode in windowed mode
