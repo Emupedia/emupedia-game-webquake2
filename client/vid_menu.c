@@ -7,6 +7,8 @@ extern cvar_t *vid_gamma;
 extern cvar_t *scr_viewsize;
 
 static cvar_t *gl_mode;
+static cvar_t *vid_width;
+static cvar_t *vid_height;
 static cvar_t *gl_picmip;
 
 static cvar_t *_windowed_mouse;
@@ -62,6 +64,8 @@ typedef struct vidmode_s
 	int         mode;
 } vidmode_t;
 
+
+// TODO: should be in viddef and initialized by renderer init
 vidmode_t vid_modes[] =
 {
 	{ "Mode 0: 320x240",   320, 240,   0 },
@@ -89,7 +93,8 @@ static void ApplyChanges( void *unused )
 	Cvar_SetValue( "vid_gamma", gamma );
 	Cvar_SetValue( "gl_picmip", 3 - s_tq_slider.curvalue );
 	Cvar_SetValue( "vid_fullscreen", s_fs_box.curvalue );
-	Cvar_SetValue( "gl_mode", s_mode_list.curvalue );
+	Cvar_SetValue( "vid_width", vid_modes[s_mode_list.curvalue].width);
+	Cvar_SetValue( "vid_height", vid_modes[s_mode_list.curvalue].height);
 	Cvar_SetValue( "_windowed_mouse", s_windowed_mouse.curvalue);
 
 	M_ForceMenuOff();
@@ -101,6 +106,7 @@ static void ApplyChanges( void *unused )
 */
 void VID_MenuInit( void )
 {
+	// TODO: should be constructed from vid_modes
 	static const char *resolutions[] = 
 	{
 		"[320 240  ]",
@@ -128,11 +134,24 @@ void VID_MenuInit( void )
 		gl_picmip = Cvar_Get( "gl_picmip", "0", 0 );
 	if ( !gl_mode )
 		gl_mode = Cvar_Get( "gl_mode", "3", 0 );
+	if (!vid_width) {
+		vid_width = Cvar_Get("vid_width", "1280", 0);
+	}
+	if (!vid_height) {
+		vid_height = Cvar_Get("vid_height", "720", 0);
+	}
 
 	if ( !_windowed_mouse)
         _windowed_mouse = Cvar_Get( "_windowed_mouse", "0", CVAR_ARCHIVE );
 
-	s_mode_list.curvalue = gl_mode->value;
+	unsigned int currentWidth = vid_width->intvalue;
+	unsigned int currentHeight = vid_height->intvalue;
+	for (unsigned int i = 0; i < sizeof(vid_modes) / sizeof(vid_modes[0]); i++) {
+		if (vid_modes[i].width <= currentWidth
+		    && vid_modes[i].height <= currentHeight) {
+			s_mode_list.curvalue = i;
+		}
+	}
 
 	if ( !scr_viewsize )
 		scr_viewsize = Cvar_Get ("viewsize", "100", CVAR_ARCHIVE);
