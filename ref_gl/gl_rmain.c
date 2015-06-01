@@ -48,8 +48,6 @@ model_t		*r_worldmodel;
 
 double		gldepthmin, gldepthmax;
 
-double		vid_scaled_width, vid_scaled_height;
-
 glconfig_t gl_config;
 glstate_t  gl_state;
 
@@ -132,7 +130,6 @@ cvar_t	*gl_ext_multisample;
 cvar_t	*gl_ext_samples;
 
 cvar_t	*gl_zfar;
-cvar_t	*gl_hudscale;
 
 cvar_t	*cl_version;
 cvar_t	*gl_r1gl_test;
@@ -951,14 +948,6 @@ void R_RenderView (refdef_t *fd)
 
 	r_newrefdef = *fd;
 
-	if (FLOAT_NE_ZERO(gl_hudscale->value))
-	{
-		r_newrefdef.width = (int)(r_newrefdef.width * gl_hudscale->value);
-		r_newrefdef.height = (int)(r_newrefdef.height * gl_hudscale->value);
-		r_newrefdef.x = (int)(r_newrefdef.x * gl_hudscale->value);
-		r_newrefdef.y = (int)(r_newrefdef.y * gl_hudscale->value);
-	}
-
 	if (!r_worldmodel && !( r_newrefdef.rdflags & RDF_NOWORLDMODEL ) )
 		ri.Sys_Error (ERR_DROP, "R_RenderView: NULL worldmodel");
 
@@ -1008,7 +997,7 @@ void	R_SetGL2D (void)
 	qglMatrixMode(GL_PROJECTION);
     qglLoadIdentity ();
 	//qglOrtho  (0, vid.width, vid.height, 0, -99999, 99999);
-	qglOrtho(0, vid_scaled_width, vid_scaled_height, 0, -99999, 99999);
+	qglOrtho(0, viddef.width, viddef.height, 0, -99999, 99999);
 	qglMatrixMode(GL_MODELVIEW);
     qglLoadIdentity ();
 	qglDisable (GL_DEPTH_TEST);
@@ -1138,7 +1127,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	gl_ext_samples = ri.Cvar_Get ("gl_ext_samples", "2", 0);
 	
 	gl_zfar = ri.Cvar_Get ("gl_zfar", "8192", 0);
-	gl_hudscale = ri.Cvar_Get ("gl_hudscale", "1", 0);
 
 	cl_version = ri.Cvar_Get ("cl_version", REF_VERSION, CVAR_NOSET); 
 	
@@ -1475,10 +1463,6 @@ retryQGL:
 	ri.Con_Printf( PRINT_DEVELOPER, "GL_SetDefaultState()\n" );
 	GL_SetDefaultState();
 
-	//r1: setup cached screensizes
-	vid_scaled_width = viddef.width / gl_hudscale->value;
-	vid_scaled_height = viddef.height / gl_hudscale->value;
-
 	/*
 	** draw our stereo patterns
 	*/
@@ -1618,7 +1602,7 @@ void R_BeginFrame(void)
 	qglMatrixMode(GL_PROJECTION);
     qglLoadIdentity ();
 	//qglOrtho  (0, vid.width, vid.height, 0, -99999, 99999);
-	qglOrtho(0, vid_scaled_width, vid_scaled_height, 0, -99999, 99999);
+	qglOrtho(0, viddef.width, viddef.height, 0, -99999, 99999);
 	qglMatrixMode(GL_MODELVIEW);
     qglLoadIdentity ();
 	//qglDisable (GL_DEPTH_TEST);
@@ -1667,36 +1651,6 @@ void R_BeginFrame(void)
 		}
 		
 		gl_ext_texture_filter_anisotropic->modified = false;
-	}
-
-	if (gl_hudscale->modified)
-	{
-		int width, height;
-
-		gl_hudscale->modified = false;
-
-		if (gl_hudscale->value < 1.0f)
-		{
-			ri.Cvar_Set ("gl_hudscale", "1.0");
-		}
-		else
-		{
-			//r1: hudscaling
-			width = (int)ceilf((float)viddef.width / gl_hudscale->value);
-			height = (int)ceilf((float)viddef.height / gl_hudscale->value);
-
-			//round to powers of 8/2 to avoid blackbars
-			width = (width+7)&~7;
-			height = (height+1)&~1;
-
-			gl_hudscale->modified = false;
-
-			vid_scaled_width = viddef.width / gl_hudscale->value;
-			vid_scaled_height = viddef.height / gl_hudscale->value;
-
-			// let the sound and input subsystems know about the new window
-			ri.Vid_NewWindow (width, height);
-		}
 	}
 
 	if (gl_texture_formats->modified)
@@ -2333,8 +2287,6 @@ void GetEvent(SDL_Event *event)
 		case SDL_WINDOWEVENT_RESIZED:
 			viddef.width = event->window.data1;
 			viddef.height = event->window.data2;
-			vid_scaled_width = viddef.width / gl_hudscale->value;
-			vid_scaled_height = viddef.height / gl_hudscale->value;
 		}
 		break;
 
