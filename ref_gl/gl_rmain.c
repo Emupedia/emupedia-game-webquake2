@@ -1196,12 +1196,31 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 #endif
 }
 
+
+static qboolean GLimp_InitGraphics( qboolean fullscreen );
+
+
+/*
+** GLimp_SetMode
+*/
+static int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, qboolean fullscreen )
+{
+	ri.Con_Printf (PRINT_ALL, "setting mode %ux%u\n", *pwidth, *pheight);
+
+	if ( !GLimp_InitGraphics( fullscreen ) ) {
+		// failed to set a valid mode in windowed mode
+		return VID_ERR_INVALID_MODE;
+	}
+
+	return VID_ERR_NONE;
+}
+
+
 /*
 ==================
 R_SetMode
 ==================
 */
-static int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, qboolean fullscreen);
 static int R_SetMode(unsigned int width, unsigned int height)
 {
 	qboolean fullscreen = FLOAT_EQ_ZERO(vid_fullscreen->value) ? false : true;
@@ -2670,21 +2689,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 void GLimp_EndFrame (void)
 {
 	SDL_GL_SwapWindow(window);
-}
-
-/*
-** GLimp_SetMode
-*/
-static int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, qboolean fullscreen )
-{
-	ri.Con_Printf (PRINT_ALL, "setting mode %ux%u\n", *pwidth, *pheight);
-
-	if ( !GLimp_InitGraphics( fullscreen ) ) {
-		// failed to set a valid mode in windowed mode
-		return VID_ERR_INVALID_MODE;
-	}
-
-	return VID_ERR_NONE;
 }
 
 
