@@ -316,7 +316,6 @@ extern cvar_t	*gl_particle_att_c;
 
 //extern	cvar_t	*gl_nosubimage;
 extern	cvar_t	*gl_bitdepth;
-extern	cvar_t	*gl_mode;
 //extern	cvar_t	*gl_lightmap;
 extern	cvar_t	*gl_shadows;
 extern	cvar_t	*gl_dynamic;

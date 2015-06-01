@@ -148,7 +148,6 @@ cvar_t	*vid_topmost;
 cvar_t	*gl_bitdepth;
 //cvar_t	*gl_lightmap;
 cvar_t	*gl_shadows;
-cvar_t	*gl_mode;
 cvar_t	*gl_dynamic;
 //cvar_t  *gl_monolightmap;
 cvar_t	*gl_modulate;
@@ -1085,7 +1084,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 
 	gl_modulate = ri.Cvar_Get ("gl_modulate", "2", CVAR_ARCHIVE );
 	gl_bitdepth = ri.Cvar_Get( "gl_bitdepth", "0", 0 );
-	gl_mode = ri.Cvar_Get( "gl_mode", "3", CVAR_ARCHIVE );
 	//gl_lightmap = ri.Cvar_Get ("gl_lightmap", "0", 0);
 	gl_shadows = ri.Cvar_Get ("gl_shadows", "0", CVAR_ARCHIVE );
 	gl_dynamic = ri.Cvar_Get ("gl_dynamic", "1", 0);
@@ -1371,7 +1369,6 @@ static int R_SetMode(unsigned int width, unsigned int height)
 	qboolean fullscreen = FLOAT_EQ_ZERO(vid_fullscreen->value) ? false : true;
 
 	vid_fullscreen->modified = false;
-	gl_mode->modified = false;
 
 	viddef.width = width;
 	viddef.height = height;
@@ -1396,7 +1393,6 @@ static int R_SetMode(unsigned int width, unsigned int height)
 		}
 		else if ( err & VID_ERR_FAIL )
 		{
-			gl_mode->modified = false;
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - invalid mode\n" );
 		}
 

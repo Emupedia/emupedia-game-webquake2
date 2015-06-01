@@ -6,7 +6,6 @@ extern cvar_t *vid_fullscreen;
 extern cvar_t *vid_gamma;
 extern cvar_t *scr_viewsize;
 
-static cvar_t *gl_mode;
 static cvar_t *vid_width;
 static cvar_t *vid_height;
 static cvar_t *gl_picmip;
@@ -132,8 +131,6 @@ void VID_MenuInit( void )
 
 	if ( !gl_picmip )
 		gl_picmip = Cvar_Get( "gl_picmip", "0", 0 );
-	if ( !gl_mode )
-		gl_mode = Cvar_Get( "gl_mode", "3", 0 );
 	if (!vid_width) {
 		vid_width = Cvar_Get("vid_width", "1280", 0);
 	}
