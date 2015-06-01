@@ -1197,7 +1197,119 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 }
 
 
-static qboolean GLimp_InitGraphics( qboolean fullscreen );
+static void SetSDLIcon(void);
+
+
+/*
+** GLimp_InitGraphics
+**
+** This initializes the software refresh's implementation specific
+** graphics subsystem.  In the case of Windows it creates DIB or
+** DDRAW surfaces.
+**
+** The necessary width and height parameters are grabbed from
+** vid.width and vid.height.
+*/
+static qboolean GLimp_InitGraphics( qboolean fullscreen )
+{
+	/* Just toggle fullscreen if that's all that has been changed */
+	int oldW = -1, oldH = -1;
+	if (window) {
+		SDL_GetWindowSize(window, &oldW, &oldH);
+	}
+
+	if ((oldW == viddef.width) && (oldH == viddef.height)) {
+		int isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
+		if (fullscreen != isfullscreen) {
+			// TODO: support SDL_WINDOW_FULLSCREEN_DESKTOP
+			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+		}
+
+		isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
+		if (fullscreen == isfullscreen)
+			return true;
+	}
+	
+	srand(getpid());
+
+#if 0
+	// for testing on desktop
+	// nvidia lets us create GLES contexts
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
+#if 0
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
+#else
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
+
+#endif  // 0
+
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	
+	if (window) {
+		SDL_SetWindowSize(window, viddef.width, viddef.height);
+	} else {
+		// TODO: SDL_WINDOW_RESIZABLE
+		// TODO: SDL_WINDOW_INPUT_GRABBED?
+		// TODO: SDL_WINDOW_ALLOW_HIGHDPI?
+		uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+		if (fullscreen) {
+			// TODO: SDL_WINDOW_FULLSCREEN_DESKTOP
+			flags |= SDL_WINDOW_FULLSCREEN;
+		}
+
+		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, viddef.width, viddef.height, flags);
+		if (!window) {
+			Sys_Error("(SDLGL) SDL CreateWindow failed: %s\n", SDL_GetError());
+			return false;
+		}
+		SetSDLIcon();
+		glcontext = SDL_GL_CreateContext(window);
+
+#ifdef EPOXY
+		if (epoxy_has_gl_extension("GL_KHR_debug")) {
+			ri.Con_Printf( PRINT_ALL, "KHR_debug found\n" );
+
+			glDebugMessageCallback(glDebugCallback, NULL);
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+			// nvidia warning about inconsistent texture base level
+			// which fires on all glClear operations
+			// tell the driver to STFU
+			{
+				const unsigned int ids[] = { 131204 };
+				glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE, 1, ids, GL_FALSE);
+			}
+
+		} else {
+			ri.Con_Printf( PRINT_ALL, "No KHR_debug\n" );
+		}
+#endif  // EPOXY
+
+	}
+
+	// let the sound and input subsystems know about the new window
+	ri.Vid_NewWindow(viddef.width, viddef.height);
+
+	X11_active = true;
+
+	return true;
+}
+
+
 
 
 /*
@@ -2566,116 +2678,6 @@ void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 
 
 #endif  // EPOXY
-
-
-/*
-** SWimp_InitGraphics
-**
-** This initializes the software refresh's implementation specific
-** graphics subsystem.  In the case of Windows it creates DIB or
-** DDRAW surfaces.
-**
-** The necessary width and height parameters are grabbed from
-** vid.width and vid.height.
-*/
-static qboolean GLimp_InitGraphics( qboolean fullscreen )
-{
-	/* Just toggle fullscreen if that's all that has been changed */
-	int oldW = -1, oldH = -1;
-	if (window) {
-		SDL_GetWindowSize(window, &oldW, &oldH);
-	}
-
-	if ((oldW == viddef.width) && (oldH == viddef.height)) {
-		int isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
-		if (fullscreen != isfullscreen) {
-			// TODO: support SDL_WINDOW_FULLSCREEN_DESKTOP
-			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-		}
-
-		isfullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ? 1 : 0;
-		if (fullscreen == isfullscreen)
-			return true;
-	}
-	
-	srand(getpid());
-
-#if 0
-	// for testing on desktop
-	// nvidia lets us create GLES contexts
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-
-#if 0
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
-#else
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-#endif
-
-#endif  // 0
-
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	
-	if (window) {
-		SDL_SetWindowSize(window, viddef.width, viddef.height);
-	} else {
-		// TODO: SDL_WINDOW_RESIZABLE
-		// TODO: SDL_WINDOW_INPUT_GRABBED?
-		// TODO: SDL_WINDOW_ALLOW_HIGHDPI?
-		uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-		if (fullscreen) {
-			// TODO: SDL_WINDOW_FULLSCREEN_DESKTOP
-			flags |= SDL_WINDOW_FULLSCREEN;
-		}
-
-		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, viddef.width, viddef.height, flags);
-		if (!window) {
-			Sys_Error("(SDLGL) SDL CreateWindow failed: %s\n", SDL_GetError());
-			return false;
-		}
-		SetSDLIcon();
-		glcontext = SDL_GL_CreateContext(window);
-
-#ifdef EPOXY
-		if (epoxy_has_gl_extension("GL_KHR_debug")) {
-			ri.Con_Printf( PRINT_ALL, "KHR_debug found\n" );
-
-			glDebugMessageCallback(glDebugCallback, NULL);
-			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-
-			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-
-			// nvidia warning about inconsistent texture base level
-			// which fires on all glClear operations
-			// tell the driver to STFU
-			{
-				const unsigned int ids[] = { 131204 };
-				glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE, 1, ids, GL_FALSE);
-			}
-
-		} else {
-			ri.Con_Printf( PRINT_ALL, "No KHR_debug\n" );
-		}
-#endif  // EPOXY
-
-	}
-
-	// let the sound and input subsystems know about the new window
-	ri.Vid_NewWindow(viddef.width, viddef.height);
-
-	X11_active = true;
-
-	return true;
-}
 
 
 /*
