@@ -1560,9 +1560,15 @@ void R_BeginFrame(void)
 	/*
 	** change modes if necessary
 	*/
-	if ( gl_mode->modified || vid_fullscreen->modified )
+	if ( vid_width->modified || vid_height->modified || vid_fullscreen->modified )
 	{
-		// TODO: do something here
+		int err = R_SetMode(vid_width->intvalue, vid_height->intvalue);
+		if (err != VID_ERR_NONE) {
+			ri.Con_Printf(PRINT_ALL, "Error in R_SetMode\n");
+		}
+		vid_width->modified = false;
+		vid_height->modified = false;
+		vid_fullscreen->modified = false;
 	}
 
 	if (gl_ext_nv_multisample_filter_hint->modified)
@@ -2285,6 +2291,8 @@ void GetEvent(SDL_Event *event)
 			ri.Con_Printf (PRINT_ALL, "Window resized to %dx%d\n", viddef.width, viddef.height);
 			Cvar_SetValue("vid_width", viddef.width);
 			Cvar_SetValue("vid_height", viddef.height);
+			vid_width->modified = false;
+			vid_height->modified = false;
 		}
 		break;
 
