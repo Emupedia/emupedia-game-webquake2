@@ -1310,12 +1310,25 @@ retryQGL:
 
 	// initialize OS-specific parts of OpenGL
 	ri.Con_Printf (PRINT_DEVELOPER, "GLimp_Init()\n");
-	if (!GLimp_Init())
-	{
-		ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): GLimp_Init() failed\n");
-		QGL_Shutdown();
-		return -1;
+	if (SDL_WasInit(SDL_INIT_AUDIO | SDL_INIT_VIDEO) == 0) {
+		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
+			ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): GLimp_Init() failed\n");
+			QGL_Shutdown();
+			return -1;
+		}
+	} else if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
+		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
+			ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): GLimp_Init() failed\n");
+			QGL_Shutdown();
+			return -1;
+		}
 	}
+
+#ifdef HAVE_JOYSTICK
+	init_joystick();
+#endif
 
 	// set our "safe" modes
 	gl_state.prev_mode = 3;
@@ -2395,44 +2408,6 @@ void InitJoystick() {
     joystick_avail = false;
   }
 #endif
-}
-
-/*****************************************************************************/
-
-/*
-** GLimp_Init
-**
-** This routine is responsible for initializing the implementation
-** specific stuff in a software rendering subsystem.
-*/
-int GLimp_Init(void)
-{
-	if (SDL_WasInit(SDL_INIT_AUDIO | SDL_INIT_VIDEO) == 0) {
-		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
-			return false;
-		}
-	} else if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
-		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-			Sys_Error("SDL Init failed: %s\n", SDL_GetError());
-			return false;
-		}
-	}
-
-// catch signals so i can turn on auto-repeat
-#if 0
- 	{
-		struct sigaction sa;
-		sigaction(SIGINT, 0, &sa);
-		sa.sa_handler = TragicDeath;
-		sigaction(SIGINT, &sa, 0);
-		sigaction(SIGTERM, &sa, 0);
-	}
-#endif
-#ifdef HAVE_JOYSTICK
-	init_joystick();
-#endif
-	return true;
 }
 
 
