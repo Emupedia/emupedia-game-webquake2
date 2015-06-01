@@ -204,7 +204,6 @@ typedef struct
 	cvar_t	*(*Cvar_Set)( const char *name, const char *value );
 	void	 (*Cvar_SetValue)( const char *name, float value );
 
-	qboolean	(*Vid_GetModeInfo)(unsigned int *width, unsigned int *height, int mode);
 	void		(*Vid_MenuInit)( void );
 	void		(*Vid_NewWindow)( int width, int height );
 } refimport_t;
@@ -249,6 +248,7 @@ void	VID_Init(void);
 void	VID_Shutdown(void);
 void	VID_CheckChanges(void);
 
+qboolean VID_GetModeInfo(unsigned int *width, unsigned int *height, int mode);
 void	VID_MenuInit(void);
 void	VID_MenuDraw(void);
 const char *VID_MenuKey(int);
