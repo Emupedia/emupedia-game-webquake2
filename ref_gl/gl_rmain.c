@@ -1215,10 +1215,7 @@ R_SetMode
 */
 static int R_SetMode(unsigned int width, unsigned int height)
 {
-	int err;
-	qboolean fullscreen;
-
-	fullscreen = FLOAT_EQ_ZERO(vid_fullscreen->value) ? false : true;
+	qboolean fullscreen = FLOAT_EQ_ZERO(vid_fullscreen->value) ? false : true;
 
 	vid_fullscreen->modified = false;
 	gl_mode->modified = false;
@@ -1226,7 +1223,8 @@ static int R_SetMode(unsigned int width, unsigned int height)
 	viddef.width = width;
 	viddef.height = height;
 
-	if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen ) ) == VID_ERR_NONE )
+	int err = GLimp_SetMode( &viddef.width, &viddef.height, Q_ftol(gl_mode->value), fullscreen );
+	if ( err == VID_ERR_NONE )
 	{
 		gl_state.prev_mode = Q_ftol(gl_mode->value);
 	}
@@ -1252,7 +1250,8 @@ static int R_SetMode(unsigned int width, unsigned int height)
 		}
 
 		// try setting it back to something safe
-		if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, gl_state.prev_mode, false ) ) != VID_ERR_NONE )
+		err = GLimp_SetMode( &viddef.width, &viddef.height, gl_state.prev_mode, false );
+		if ( err != VID_ERR_NONE )
 		{
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - could not revert to safe mode\n" );
 			return VID_ERR_FAIL;
