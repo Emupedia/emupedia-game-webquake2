@@ -13,6 +13,7 @@ UBSAN:=n
 
 
 USE_JPEG:=y
+USE_GLEW:=y
 USE_PNG:=y
 
 BUILD_SERVER:=y
@@ -35,7 +36,7 @@ CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 LDFLAGS:=-g
 LDLIBS:=-lm -ldl
-LDLIBS_ref_gl:=-lGL $(shell sdl2-config --libs)
+LDLIBS_ref_gl:=-lGL $(shell sdl2-config --libs) $(shell pkg-config glew --libs)
 LDLIBS_client:=$(shell pkg-config openal --libs)
 
 

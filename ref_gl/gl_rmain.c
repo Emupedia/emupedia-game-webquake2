@@ -1338,6 +1338,13 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		} else {
 			ri.Con_Printf( PRINT_ALL, "No KHR_debug\n" );
 		}
+
+#elif defined(USE_GLEW)
+
+		glewInit();
+
+#else  // EPOXY
+
 #endif  // EPOXY
 
 	}

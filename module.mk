@@ -57,6 +57,11 @@ CFLAGS+=-isystem$(TOPDIR)/foreign/libjpeg-turbo
 endif
 
 
+ifeq ($(USE_GLEW),y)
+CFLAGS+=-DUSE_GLEW
+endif  # USE_GLEW
+
+
 ifeq ($(USE_PNG),y)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libpng
 endif  # USE_PNG
