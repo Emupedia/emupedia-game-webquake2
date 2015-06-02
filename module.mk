@@ -58,7 +58,8 @@ endif
 
 
 ifeq ($(USE_GLEW),y)
-CFLAGS+=-DUSE_GLEW
+CFLAGS+=-isystem$(TOPDIR)/foreign/glew/include
+CFLAGS+=-DUSE_GLEW -DGLEW_STATIC -DGLEW_NO_GLU
 endif  # USE_GLEW
 
 

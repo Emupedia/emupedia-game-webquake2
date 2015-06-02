@@ -49,6 +49,13 @@ CFLAGS+=-DUSE_JPEG
 endif
 
 
+ifeq ($(USE_GLEW),y)
+
+quake2_MODULES+=glew
+
+endif
+
+
 ifeq ($(USE_PNG),y)
 
 quake2_MODULES+=libpng
