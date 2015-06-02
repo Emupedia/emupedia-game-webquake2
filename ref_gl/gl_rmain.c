@@ -2746,7 +2746,6 @@ void GLimp_Shutdown( void )
 
 void KBD_Update(void)
 {
-	SDL_Event event;
 	static int KBD_Update_Flag;
 
 	if (KBD_Update_Flag == 1)
