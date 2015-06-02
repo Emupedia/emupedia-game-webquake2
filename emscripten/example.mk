@@ -13,6 +13,7 @@ UBSAN:=n
 
 
 USE_JPEG:=y
+USE_OPENAL:=y
 USE_PNG:=n
 
 BUILD_SERVER:=n

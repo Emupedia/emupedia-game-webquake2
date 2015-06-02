@@ -100,12 +100,20 @@ cvar_t		*s_focusfree = &uninitialized_cvar;
 int		s_rawend;
 portable_samplepair_t	s_rawsamples[MAX_RAW_SAMPLES];
 
+
+#ifdef USE_OPENAL
+
+
 cvar_t		*s_openal_volume;
 cvar_t		*s_openal_device;
 static openal_listener_t	s_openal_listener;
 static openal_channel_t		s_openal_channels[MAX_CHANNELS];
 static int					s_openal_numChannels;
 static int					s_openal_frameCount;
+
+
+#endif  // USE_OPENAL
+
 
 #if 0 //def _WIN32
 const GUID			DSPROPSETID_EAX20_ListenerProperties = {0x306a6a8, 0xb224, 0x11d2, {0x99, 0xe5, 0x0, 0x0, 0xe8, 0xd8, 0xc7, 0x22}};
@@ -136,6 +144,10 @@ void S_SoundInfo_f(void)
     Com_Printf("%p dma buffer\n", LOG_CLIENT, dma.buffer);
 }
 
+
+#ifdef USE_OPENAL
+
+
 static void S_OpenAL_AllocChannels (void)
 {
 	openal_channel_t	*ch;
@@ -151,6 +163,10 @@ static void S_OpenAL_AllocChannels (void)
 		s_openal_numChannels++;
 	}
 }
+
+
+#endif  // USE_OPENAL
+
 
 /*
 ================
@@ -178,10 +194,14 @@ void S_Init (int fullInit)
 	s_focusfree = Cvar_Get ("s_focusfree", "0", 0);
 	//s_dx8 = Cvar_Get ("s_dx8", "0", CVAR_ARCHIVE);
 
+#ifdef USE_OPENAL
+
 	s_openal_device = Cvar_Get ("s_openal_device", "", 0);
 	s_openal_extensions = Cvar_Get ("s_openal_extensions", "1", 0);
 	s_openal_eax = Cvar_Get ("s_openal_eax", "0", 0);
 	s_openal_volume = Cvar_Get ("s_openal_volume", "1", 0);
+
+#endif  // USE_OPENAL
 
 	s_volume = Cvar_Get ("s_volume", "0.5", CVAR_ARCHIVE);
 	s_show = Cvar_Get ("s_show", "0", 0);
@@ -192,6 +212,7 @@ void S_Init (int fullInit)
 		Com_Printf ("not initializing.\n", LOG_CLIENT|LOG_NOTICE);
 	else
 	{
+#ifdef USE_OPENAL
 			if (ALimp_Init ())
 			{
 				sound_started = 1;
@@ -207,6 +228,12 @@ void S_Init (int fullInit)
 			{
 				Com_Printf ("OpenAL failed to initialize; no sound available\n", LOG_CLIENT);
 			}
+
+#else  // USE_OPENAL
+
+		Com_Printf("OpenAL not compiled in; no sound available\n", LOG_CLIENT);
+
+#endif  // USE_OPENAL
 	}
 
 	if (!cl_quietstartup->intvalue || developer->intvalue)
@@ -217,6 +244,9 @@ void S_Init (int fullInit)
 // =======================================================================
 // Shutdown sound engine
 // =======================================================================
+
+
+#ifdef USE_OPENAL
 
 
 static void S_OpenAL_FreeChannels (void)
@@ -251,6 +281,9 @@ void S_OpenAL_FreeSounds (void)
 }
 
 
+#endif  // USE_OPENAL
+
+
 void S_Shutdown(void)
 {
 	int		i;
@@ -259,11 +292,13 @@ void S_Shutdown(void)
 	if (!sound_started)
 		return;
 
+#ifdef USE_OPENAL
 	if (openal_active)
 	{
 		S_OpenAL_FreeSounds ();
 		S_OpenAL_FreeChannels ();
 	}
+#endif  // USE_OPENAL
 
 	// free all sounds
 	for (i=0, sfx=known_sfx ; i < num_sfx ; i++,sfx++)
@@ -282,11 +317,13 @@ void S_Shutdown(void)
 	num_sfx = 0;
 	sound_started = 0;
 
+#ifdef USE_OPENAL
 	if (openal_active)
 	{
 		ALimp_Shutdown ();
 	}
 	else
+#endif  // USE_OPENAL
 	{
 		SNDDMA_Shutdown();
 		Cmd_RemoveCommand("soundlist");
@@ -450,11 +487,13 @@ sfx_t *S_RegisterSound (char *name)
 
 	if (!s_registering)
 	{
+#ifdef USE_OPENAL
 		if (openal_active)
 		{
 			S_OpenAL_LoadSound (sfx);
 		}
 		else
+#endif  // USE_OPENAL
 		{
 			S_LoadSound (sfx);
 		}
@@ -496,8 +535,10 @@ void S_EndRegistration (void)
 		}
 		else
 		{	// make sure it is paged in
+#ifdef USE_OPENAL
 			if (openal_active)
 				continue;
+#endif  // USE_OPENAL
 
 			if (sfx->cache)
 			{
@@ -513,9 +554,11 @@ void S_EndRegistration (void)
 		if (!sfx->name[0])
 			continue;
 
+#ifdef USE_OPENAL
 		if (openal_active)
 			S_OpenAL_LoadSound (sfx);
 		else
+#endif  // USE_OPENAL
 			S_LoadSound (sfx);
 	}
 
@@ -825,6 +868,11 @@ if pos is NULL, the sound will be dynamically sourced from the entity
 Entchannel 0 will never override a playing sound
 ====================
 */
+
+
+#ifdef USE_OPENAL
+
+
 void S_OpenAL_StartSound (const vec3_t position, int entNum, int entChannel, sfx_t *sfx, float volume, float attenuation, int timeOfs)
 {
 	playsound_t *ps, *sort;
@@ -883,17 +931,23 @@ void S_OpenAL_StartSound (const vec3_t position, int entNum, int entChannel, sfx
 	ps->prev->next = ps;
 }
 
+
+#endif  // USE_OPENAL
+
+
 void S_StartSound(vec3_t origin, int entnum, int entchannel, sfx_t *sfx, float fvol, float attenuation, float timeofs)
 {
 	sfxcache_t	*sc;
 	playsound_t	*ps, *sort;
 	int			start;
 
+#ifdef USE_OPENAL
 	if (openal_active)
 	{
 		S_OpenAL_StartSound (origin, entnum, entchannel, sfx, fvol, attenuation, (int)(timeofs * 1000.0));
 		return;
 	}
+#endif  // USE_OPENAL
 
 	if (!sound_started)
 		return;
@@ -1003,10 +1057,12 @@ void S_ClearBuffer (void)
 	if (!sound_started)
 		return;
 
+#ifdef USE_OPENAL
 	if (openal_active)
 	{
 		return;
 	}
+#endif  // USE_OPENAL
 
 	s_rawend = 0;
 
@@ -1021,6 +1077,10 @@ void S_ClearBuffer (void)
 	SNDDMA_Submit ();
 }
 
+
+#ifdef USE_OPENAL
+
+
 static void S_OpenAL_StopChannel (openal_channel_t *ch)
 {
 	ch->sfx = NULL;
@@ -1028,6 +1088,10 @@ static void S_OpenAL_StopChannel (openal_channel_t *ch)
 	alSourceStop(ch->sourceNum);
 	alSourcei(ch->sourceNum, AL_BUFFER, 0);
 }
+
+
+#endif  // USE_OPENAL
+
 
 /*
 ==================
@@ -1054,6 +1118,7 @@ void S_StopAllSounds(void)
 		s_playsounds[i].next->prev = &s_playsounds[i];
 	}
 
+#ifdef USE_OPENAL
 	if (openal_active)
 	{
 		openal_channel_t	*ch;
@@ -1070,6 +1135,7 @@ void S_StopAllSounds(void)
 		// Reset frame count
 		s_openal_frameCount = 0;
 	}
+#endif  // USE_OPENAL
 
 	// clear all the channels
 	memset(channels, 0, sizeof(channels));
@@ -1209,8 +1275,10 @@ void S_RawSamples (int samples, int rate, int width, int channels, byte *data)
 	if (!sound_started)
 		return;
 
+#ifdef USE_OPENAL
 	if (openal_active)
 		return;
+#endif  // USE_OPENAL
 
 	if (s_rawend < paintedtime)
 		s_rawend = paintedtime;
@@ -1292,6 +1360,10 @@ void S_RawSamples (int samples, int rate, int width, int channels, byte *data)
 		}
 	}
 }
+
+
+#ifdef USE_OPENAL
+
 
 /*
  =================
@@ -1653,6 +1725,10 @@ void S_Update_OpenAL (vec3_t position, const vec3_t velocity, const vec3_t at, c
 		Com_Printf("--- ( %i ) ---\n", LOG_CLIENT, total);
 }
 
+
+#endif  // USE_OPENAL
+
+
 /*
 ============
 S_Update
@@ -1679,11 +1755,13 @@ void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 		return;
 	}
 
+#ifdef USE_OPENAL
 	if (openal_active)
 	{
 		S_Update_OpenAL (origin, vec3_origin, forward, up);
 		return;
 	}
+#endif  // USE_OPENAL
 
 	FastVectorCopy (*origin, listener_origin);
 	FastVectorCopy (*forward, listener_forward);

@@ -63,6 +63,11 @@ CFLAGS+=-DUSE_GLEW -DGLEW_STATIC -DGLEW_NO_GLU
 endif  # USE_GLEW
 
 
+ifeq ($(USE_OPENAL),y)
+CFLAGS+=-DUSE_OPENAL
+endif  # USE_OPENAL
+
+
 ifeq ($(USE_PNG),y)
 CFLAGS+=-isystem$(TOPDIR)/foreign/libpng
 endif  # USE_PNG

@@ -20,7 +20,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // snd_loc.h -- private sound functions
 
 
+#ifndef SND_LOC_H
+#define SND_LOC_H
+
+
 #include "../qcommon/qcommon.h"
+
+#include "client.h"
+
+
+typedef struct sfx_s sfx_t;
+
+
+#ifdef USE_OPENAL
 
 #if defined(_WIN32)
 #include <al.h>
@@ -34,8 +46,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <AL/alext.h>
 #endif
 
-#include "client.h"
-
 
 qboolean	QAL_Init ();
 void		QAL_Shutdown (void);
@@ -48,8 +58,67 @@ typedef struct {
 
 extern alState_t	alState;
 
+extern qboolean			openal_active;
+
 qboolean	AL_Init (void);
 void		AL_Shutdown (void);
+
+
+qboolean S_OpenAL_LoadSound (sfx_t *sfx);
+extern cvar_t	*s_openal_device;
+
+//OpenAL
+/*#define	MAX_OPENAL_BUFFERS 1024
+#define MAX_OPENAL_SOURCES 128
+
+#define OPENAL_SCALE_VALUE 0.010f
+
+qboolean OpenAL_Init (void);
+
+#ifdef USE_OPENAL
+extern uint32 openAlMaxSources;
+extern uint32 openAlMaxBuffers;
+
+qboolean AL_Attenuated (int i);
+void OpenAL_Shutdown (void);
+
+void OpenAL_DestroyBuffers (void);
+ALint OpenAL_GetFreeBuffer (void);
+ALint OpenAL_GetFreeSource (void);
+
+void OpenAL_FreeAlIndexes (int index);
+int OpenAL_GetFreeAlIndex (void);
+
+void OpenAL_CheckForError (void);
+
+typedef struct OpenALBuffer_s
+{
+	ALuint buffer;
+	ALboolean inuse;
+} OpenALBuffer_t;
+
+typedef struct alindex_s
+{
+	qboolean	inuse;
+	qboolean	loopsound;
+	qboolean	fixed_origin;
+	vec3_t		origin;
+	int			entnum;
+	int			sourceIndex;
+	int			lastloopframe;
+	float		attenuation;
+	char		soundname[MAX_QPATH];
+} alindex_t;
+
+extern OpenALBuffer_t	g_Buffers[MAX_OPENAL_BUFFERS];
+extern ALuint			g_Sources[MAX_OPENAL_SOURCES];
+extern alindex_t		alindex[MAX_OPENAL_SOURCES];*/
+
+extern	cvar_t	*s_openal_extensions;
+extern	cvar_t	*s_openal_eax;
+
+
+#endif  // USE_OPENAL
 
 
 typedef struct
@@ -62,7 +131,7 @@ typedef struct
 	byte		data[1];		// variable sized
 } sfxcache_t;
 
-typedef struct sfx_s
+struct sfx_s
 {
 	char 		name[MAX_QPATH];
 	int			registration_sequence;
@@ -74,7 +143,7 @@ typedef struct sfx_s
 	int					rate;
 	unsigned			format;
 	unsigned			bufferNum;
-} sfx_t;
+};
 
 
 typedef struct
@@ -151,7 +220,6 @@ typedef struct
 	float				orientation[6];
 } openal_listener_t;
 
-extern qboolean			openal_active;
 
 extern cvar_t	*snd_openal_extensions;
 extern cvar_t	*snd_openal_eax;
@@ -313,55 +381,5 @@ void S_Spatialize(channel_t *ch);
 #define		SOUND_FULLVOLUME	80.0f
 #define		SOUND_LOOPATTENUATE	0.003f
 
-qboolean S_OpenAL_LoadSound (sfx_t *sfx);
-extern cvar_t	*s_openal_device;
 
-//OpenAL
-/*#define	MAX_OPENAL_BUFFERS 1024
-#define MAX_OPENAL_SOURCES 128
-
-#define OPENAL_SCALE_VALUE 0.010f
-
-qboolean OpenAL_Init (void);
-
-#ifdef USE_OPENAL
-extern uint32 openAlMaxSources;
-extern uint32 openAlMaxBuffers;
-
-qboolean AL_Attenuated (int i);
-void OpenAL_Shutdown (void);
-
-void OpenAL_DestroyBuffers (void);
-ALint OpenAL_GetFreeBuffer (void);
-ALint OpenAL_GetFreeSource (void);
-
-void OpenAL_FreeAlIndexes (int index);
-int OpenAL_GetFreeAlIndex (void);
-
-void OpenAL_CheckForError (void);
-
-typedef struct OpenALBuffer_s
-{
-	ALuint buffer;
-	ALboolean inuse;
-} OpenALBuffer_t;
-
-typedef struct alindex_s
-{
-	qboolean	inuse;
-	qboolean	loopsound;
-	qboolean	fixed_origin;
-	vec3_t		origin;
-	int			entnum;
-	int			sourceIndex;
-	int			lastloopframe;
-	float		attenuation;
-	char		soundname[MAX_QPATH];
-} alindex_t;
-
-extern OpenALBuffer_t	g_Buffers[MAX_OPENAL_BUFFERS];
-extern ALuint			g_Sources[MAX_OPENAL_SOURCES];
-extern alindex_t		alindex[MAX_OPENAL_SOURCES];*/
-
-extern	cvar_t	*s_openal_extensions;
-extern	cvar_t	*s_openal_eax;
+#endif  // SND_LOC_H

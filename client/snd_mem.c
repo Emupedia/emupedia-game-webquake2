@@ -106,6 +106,9 @@ void ResampleSfx (sfx_t *sfx, int inrate, int inwidth, byte *data)
 //=============================================================================
 
 
+#ifdef USE_OPENAL
+
+
 static void S_OpenAL_UploadSound (byte *data, int width, int channels, sfx_t *sfx)
 {
 	int		size;
@@ -172,6 +175,9 @@ qboolean S_OpenAL_LoadSound (sfx_t *sfx)
 
 	return true;
 }
+
+
+#endif  // USE_OPENAL
 
 
 /*
@@ -366,6 +372,10 @@ void DumpChunks(void)
 	} while (data_p < iff_end);
 }
 
+
+#ifdef USE_OPENAL
+
+
 static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info)
 {
 	byte	*buffer, *out;
@@ -454,6 +464,10 @@ static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info)
 
 	return true;
 }
+
+
+#endif  // USE_OPENAL
+
 
 /*
 ============

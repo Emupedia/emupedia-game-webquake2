@@ -20,7 +20,13 @@ FILES:= \
 SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 
-SRC_client+=$(addprefix $(d)/,al_linux.c qal_linux.c snd_linux.c vid_so.c)
+SRC_client+=$(addprefix $(d)/,snd_linux.c vid_so.c)
+
+
+ifeq ($(USE_OPENAL),y)
+SRC_client+=$(addprefix $(d)/,al_linux.c qal_linux.c)
+endif
+
 
 SRC_shlinux:=$(addprefix $(d)/,q_shlinux.c glob.c)
 

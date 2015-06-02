@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #define CINTERFACE 1
+#include <mmsystem.h>
 #include <dsound.h>
 
 #define iDirectSoundCreate(a,b,c)	pDirectSoundCreate(a,b,c)

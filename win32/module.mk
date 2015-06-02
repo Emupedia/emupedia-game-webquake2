@@ -19,7 +19,13 @@ FILES:= \
 SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 
-SRC_client+=$(addprefix $(d)/,alw_win.c snd_win.c vid_dll.c)
+SRC_client+=$(addprefix $(d)/,snd_win.c vid_dll.c)
+
+
+ifeq ($(USE_OPENAL),y)
+SRC_client+=$(addprefix $(d)/,alw_win.c)
+endif
+
 
 SRC_shwin:=$(addprefix $(d)/,q_shwin.c sys_win.c)
 
