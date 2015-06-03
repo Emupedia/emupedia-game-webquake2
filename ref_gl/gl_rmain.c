@@ -1231,6 +1231,14 @@ static void SetSDLIcon(void) {
 }
 
 
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
+
+void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
+
+
 /*
 ** GLimp_InitGraphics
 **
@@ -1318,8 +1326,11 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 
 		glcontext = SDL_GL_CreateContext(window);
 
-#ifdef EPOXY
-		if (epoxy_has_gl_extension("GL_KHR_debug")) {
+#ifdef USE_GLEW
+
+		glewInit();
+
+		if (GLEW_KHR_debug) {
 			ri.Con_Printf( PRINT_ALL, "KHR_debug found\n" );
 
 			glDebugMessageCallback(glDebugCallback, NULL);
@@ -1339,13 +1350,9 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			ri.Con_Printf( PRINT_ALL, "No KHR_debug\n" );
 		}
 
-#elif defined(USE_GLEW)
+#else  // USE_GLEW
 
-		glewInit();
-
-#else  // EPOXY
-
-#endif  // EPOXY
+#endif  // USE_GLEW
 
 	}
 
@@ -2580,7 +2587,7 @@ void InitJoystick() {
 }
 
 
-#ifdef EPOXY
+#ifdef USE_GLEW
 
 
 static const char *errorSource(GLenum source)
@@ -2673,11 +2680,6 @@ static const char *errorType(GLenum type)
 }
 
 
-#ifndef CALLBACK
-#define CALLBACK
-#endif
-
-
 void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 {
 	switch (severity)
@@ -2701,7 +2703,7 @@ void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 }
 
 
-#endif  // EPOXY
+#endif  // USE_GLEW
 
 
 /*

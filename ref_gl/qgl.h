@@ -29,15 +29,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 
-#ifdef EPOXY
-
-#include <epoxy/gl.h>
-
-#elif defined(USE_GLEW)
+#ifdef USE_GLEW
 
 #include <GL/glew.h>
 
-#else  // EPOXY
+#else  // USE_GLEW
 
 
 #define GL_GLEXT_PROTOTYPES 1
@@ -46,7 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <GL/glext.h>
 
 
-#endif  // EPOXY
+#endif  // USE_GLEW
 
 
 qboolean QGL_Init( const char *dllname );
