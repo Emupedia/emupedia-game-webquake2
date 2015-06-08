@@ -5,7 +5,6 @@
 #define SO_FILE "/etc/quake2.conf"
 
 #include <assert.h>
-#include <unistd.h>
 
 #include "../client/client.h"
 #include "../client/ref.h"
@@ -162,10 +161,6 @@ qboolean VID_LoadRefresh( char *name )
 		VID_FreeReflib ();
 		return false;
 	}
-
-	// give up root now
-	setreuid(getuid(), getuid());
-	setegid(getgid());
 
 	Com_Printf( "------------------------------------\n", LOG_CLIENT);
 	reflib_active = true;
