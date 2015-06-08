@@ -65,6 +65,8 @@ static int	snd_sent, snd_completed;
 
 //extern cvar_t *s_dx8;
 
+static HWND hwnd = NULL;
+
 /* 
  * Global variables. Must be visible to window-procedure function 
  *  so it can unlock and free the data block after it has been played. 
@@ -153,7 +155,7 @@ static qboolean DS_CreateBuffers( void )
 
 	Com_DPrintf("...setting EXCLUSIVE coop level: " );
 
-	ret = pDS->lpVtbl->SetCooperativeLevel(pDS, cl_hwnd, DSSCL_EXCLUSIVE);
+	ret = pDS->lpVtbl->SetCooperativeLevel(pDS, hwnd, DSSCL_EXCLUSIVE);
 	if (ret != DS_OK)
 	{
 		Com_Printf ("failed (%s)\n", LOG_CLIENT, DSoundError(ret));
@@ -245,7 +247,7 @@ static qboolean DS_CreateBuffers( void )
 		Com_DPrintf( "...using primary buffer\n" );
 
 		Com_DPrintf( "...setting WRITEPRIMARY coop level: " );
-		pDS->lpVtbl->SetCooperativeLevel (pDS, cl_hwnd, DSSCL_WRITEPRIMARY);
+		pDS->lpVtbl->SetCooperativeLevel (pDS, hwnd, DSSCL_WRITEPRIMARY);
 		if (DS_OK != ret)
 		{
 			Com_Printf ("failed (%s)\n", LOG_CLIENT, DSoundError(ret));
@@ -300,7 +302,7 @@ static void DS_DestroyBuffers( void )
 	if ( pDS )
 	{
 		Com_DPrintf( "...setting NORMAL coop level\n" );
-		pDS->lpVtbl->SetCooperativeLevel( pDS, cl_hwnd, DSSCL_NORMAL );
+		pDS->lpVtbl->SetCooperativeLevel( pDS, hwnd, DSSCL_NORMAL );
 	}
 
 	if ( pDSBuf )
@@ -711,6 +713,8 @@ qboolean SNDDMA_Init(int fullInit)
 
 	snd_firsttime = false;
 
+	hwnd = GetActiveWindow();
+
 	//snd_buffer_count = 1;
 
 	if (!dsound_init && !wav_init)
@@ -907,14 +911,14 @@ void S_Activate (qboolean active)
 {
 	if ( active )
 	{
-		if ( pDS && cl_hwnd && snd_isdirect )
+		if ( pDS && hwnd && snd_isdirect )
 		{
 			DS_CreateBuffers();
 		}
 	}
 	else
 	{
-		if ( pDS && cl_hwnd && snd_isdirect )
+		if ( pDS && hwnd && snd_isdirect )
 		{
 			DS_DestroyBuffers();
 		}
