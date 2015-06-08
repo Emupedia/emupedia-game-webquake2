@@ -1083,7 +1083,7 @@ static void CustomizeControlsFunc( void *unused )
 	M_Menu_Keys_f();
 }
 
-#ifdef _WIN32
+/*#ifdef _WIN32
 static void DirectInputFunc (void *unused)
 {
 	Cvar_SetValue ("m_directinput", (float)s_r1q2_dinput.curvalue);
@@ -1095,7 +1095,7 @@ static void AccelFixFunc (void *unused)
 	Cvar_SetValue ("m_fixaccel", (float)s_r1q2_winxp.curvalue);
 	IN_Restart_f();
 }
-#endif
+#endif*/
 
 static void DeferFunc (void *unused)
 {
@@ -1166,7 +1166,7 @@ static void R1Q2_MenuInit (void)
 	s_r1q2_warning2.generic.x    = 160;
 	s_r1q2_warning2.generic.y	 = 10;
 
-#ifdef _WIN32
+/*#ifdef _WIN32
 	s_r1q2_dinput.generic.type = MTYPE_SPINCONTROL;
 	s_r1q2_dinput.generic.x	= 0;
 	s_r1q2_dinput.generic.y	= 30;
@@ -1182,7 +1182,7 @@ static void R1Q2_MenuInit (void)
 	s_r1q2_winxp.generic.callback = AccelFixFunc;
 	s_r1q2_winxp.itemnames = yesno_names;
 	s_r1q2_winxp.curvalue = (int)ClampCvar (0, 1, Cvar_VariableValue ("m_fixaccel"));
-#endif
+#endif*/
 
 	s_r1q2_defer.generic.type = MTYPE_SPINCONTROL;
 	s_r1q2_defer.generic.x	= 0;

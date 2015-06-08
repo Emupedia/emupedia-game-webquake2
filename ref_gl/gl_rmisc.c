@@ -300,7 +300,7 @@ void GL_ScreenShot_f (void)
 #if defined(_WIN32) && defined(USE_PNG)
 	if (!strcmp (ri.Cmd_Argv(1), "jpg"))
 	{
-		GL_ScreenShot_JPG (buffer);
+		//GL_ScreenShot_JPG (buffer);
 	}
 	else
 	{
