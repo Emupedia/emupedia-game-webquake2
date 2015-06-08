@@ -150,11 +150,6 @@ NORETURN void Sys_Error (const char *error, ...)
 	char		text[1024];
 	int			ret;
 
-#ifndef DEDICATED_ONLY
-	if (cl_hwnd && IsWindow (cl_hwnd))
-		DestroyWindow (cl_hwnd);
-#endif
-
 	Qcommon_Shutdown ();
 
 	va_start (argptr, error);
@@ -1014,11 +1009,6 @@ Send Key_Event calls
 #ifndef DEDICATED_ONLY
 void Sys_SendKeyEvents (void)
 {
-	if (g_pKeyboard)
-	{
-		IN_ReadKeyboard ();
-	}
-	else
 	{
 		MSG        msg;
 
@@ -1084,10 +1074,6 @@ Sys_AppActivate
 */
 void Sys_AppActivate (void)
 {
-#ifndef DEDICATED_ONLY
-	ShowWindow ( cl_hwnd, SW_RESTORE);
-	SetForegroundWindow ( cl_hwnd );
-#endif
 }
 
 /*
@@ -1803,14 +1789,8 @@ DWORD R1Q2ExceptionHandler (DWORD exceptionCode, LPEXCEPTION_POINTERS exceptionI
 	else if (win_disableexceptionhandler->intvalue)
 		return EXCEPTION_CONTINUE_SEARCH;
 
-#ifndef DEDICATED_ONLY
-	ShowCursor (TRUE);
-	if (cl_hwnd)
-		DestroyWindow (cl_hwnd);
-#else
 	if (hwnd_Server)
 		EnableWindow (hwnd_Server, FALSE);
-#endif
 
 #ifdef _DEBUG
 	ret = MessageBox (NULL, "EXCEPTION_CONTINUE_SEARCH?", "Unhandled Exception", MB_ICONERROR | MB_YESNO);
@@ -2276,8 +2256,6 @@ void Sys_UpdateURLMenu (const char *s)
 	CHAR	title[80];
 	CHAR	*dots;
 
-	GetSystemMenu (cl_hwnd, TRUE);
-
 	if (strlen (s) > 64)
 		dots = "...";
 	else
@@ -2286,10 +2264,6 @@ void Sys_UpdateURLMenu (const char *s)
 	strncpy (sys_url_location, s, sizeof(sys_url_location)-1);
 
 	Com_sprintf (title, sizeof(title), "Open \"%.64s%s\"", s, dots);
-
-	menu = GetSystemMenu (cl_hwnd, FALSE);
-	InsertMenu (menu, 0,  MF_BYPOSITION | MF_SEPARATOR, 0, NULL);
-	InsertMenu (menu, 0,  MF_BYPOSITION, 1234, title);
 }
 #endif
 
