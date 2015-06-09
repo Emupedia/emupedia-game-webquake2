@@ -61,7 +61,7 @@ FILES:= \
 	# empty line
 
 
-game_MODULES:=game qshared shlinux
+game_MODULES:=game qshared
 game_SRC:=
 
 

@@ -163,7 +163,12 @@ void Com_Printf (const char *msg, int level, ...)
 	gi.dprintf ("%s", text);
 }
 
-#endif
+
+void Sys_DebugBreak (void) {
+	abort();
+}
+
+#endif  // GAME_HARD_LINKED
 
 //======================================================================
 

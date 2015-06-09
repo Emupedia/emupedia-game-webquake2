@@ -15,6 +15,10 @@ FILES:= \
 	adler32.c \
 	crc32.c \
 	deflate.c \
+	gzclose.c \
+	gzlib.c \
+	gzread.c \
+	gzwrite.c \
 	inffast.c \
 	inflate.c \
 	inftrees.c \

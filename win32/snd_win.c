@@ -26,16 +26,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // before qcommon.h or mingw-w64 explodes
 #include <windows.h>
 #include <float.h>
+#define CINTERFACE 1
+#include <mmsystem.h>
+#include <dsound.h>
 
 #include "../client/client.h"
 
 #include "winquake.h"
 #include "../client/snd_loc.h"
 
-
-#define CINTERFACE 1
-#include <mmsystem.h>
-#include <dsound.h>
 
 #define iDirectSoundCreate(a,b,c)	pDirectSoundCreate(a,b,c)
 

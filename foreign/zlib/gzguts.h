@@ -29,7 +29,9 @@
 
 #ifdef _WIN32
 #  include <stddef.h>
-#endif
+#else  // _WIN32
+#  include <unistd.h>
+#endif  // _WIN32
 
 #if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32)
 #  include <io.h>

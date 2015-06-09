@@ -1198,6 +1198,7 @@ void CL_Shutdown (void);
 void CL_Frame (int msec);
 void Con_Print (const char *text);
 void SCR_BeginLoadingPlaque (void);
+void KBD_Update(void);
 
 void SV_Init (void);
 void SV_Shutdown (const char *finalmsg, qboolean reconnect, qboolean crashing);

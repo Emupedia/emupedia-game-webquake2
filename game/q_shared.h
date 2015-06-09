@@ -82,11 +82,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #pragma warning(3 : 4905)
 #pragma warning(3 : 4906)
 #pragma warning(3 : 4245)
-#endif
 //#pragma warning(disable: 4996)		// deprecated functions
 
 #pragma intrinsic(memcmp)
 //#pragma intrinsic(memset)
+#endif  // MSC_VER
 
 #if _MSC_VER >= 1400
 	#define NORETURN __declspec(noreturn)
@@ -100,7 +100,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	#define ceilf (float)ceil
 #endif
 
+#ifdef _MSC_VER
 #define alloca _alloca
+#endif  // _MSC_VER
+
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #define	Q_strlwr _strlwr
@@ -109,11 +112,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _M_AMD64
 	#define Q_stricmp _strcmpi	//odd, amd64 libc is missing this...
 	#define Q_strncasecmp _strnicmp
-#endif
+#endif  // _M_AMD64
 #define strdup _strdup
+
 #ifndef fileno
 #define fileno _fileno
-#endif
+#endif  // fileno
+
 #define strlwr _strlwr
 #define filelength _filelength
 #define stricmp _stricmp
@@ -133,7 +138,9 @@ typedef __int64 int64;
 typedef unsigned __int32 uint32;
 typedef unsigned __int16 uint16;
 typedef unsigned __int64 uint64;
+
 #else /* NON-WIN32 */
+
 #include <stdint.h>
 #define WINAPI
 #define RESTRICT

@@ -3911,10 +3911,8 @@ void CL_RefreshInputs (void)
 	// process new key events
 	Sys_SendKeyEvents ();
 
-#if (defined JOYSTICK) || (defined LINUX)
 	// process mice & joystick events
 	IN_Commands ();
-#endif
 
 	// process console commands
 	Cbuf_Execute ();

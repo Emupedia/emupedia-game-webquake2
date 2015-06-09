@@ -19,8 +19,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN 1
 #  include <windows.h>
-#endif
+
+#ifndef _MSC_VER
+// on mingw we must include this before gl_rmain.c include SDL.h
+// or it blows up for some reason
+#include <intrin.h>
+#endif  // _MSC_VER
+
+#endif  // _WIN32
 
 #include <stdio.h>
 #include <math.h>

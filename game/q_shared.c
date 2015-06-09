@@ -96,9 +96,7 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 void _Q_assert (char *expression, char *function, uint32 line)
 {
 	Com_Printf ("Q_assert: Assertion '%s' failed on %s:%u\n", LOG_GENERAL, expression, function, line);
-#ifndef GAME_DLL
 	Sys_DebugBreak ();
-#endif
 }
 
 void AngleVectors (vec3_t angles, vec3_t /*@out@*//*@null@*/ forward, vec3_t /*@out@*//*@null@*/right, vec3_t /*@out@*//*@null@*/up)

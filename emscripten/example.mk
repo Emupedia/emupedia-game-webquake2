@@ -12,7 +12,7 @@ TSAN:=n
 UBSAN:=n
 
 
-USE_JPEG:=y
+USE_JPEG:=n
 USE_OPENAL:=y
 USE_PNG:=n
 

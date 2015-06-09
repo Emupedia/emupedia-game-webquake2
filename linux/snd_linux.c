@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -47,3 +49,5 @@ void SNDDMA_BeginPainting (void)
 {
 }
 
+
+#endif  // _WIN32

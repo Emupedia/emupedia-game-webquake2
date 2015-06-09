@@ -23,24 +23,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef _WIN32
 
 
-#define _WINNT_VER 0x5
-
-#define WIN32_LEAN_AND_MEAN
 // before qcommon.h or mingw-w64 explodes
 #include <windows.h>
 
 #include <mmsystem.h>
 
-#include "../qcommon/qcommon.h"
-#include "winquake.h"
-#include "resource.h"
 #include <errno.h>
 #include <float.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <direct.h>
 #include <io.h>
-#include <conio.h>
+#include "../qcommon/qcommon.h"
+
+#include "winquake.h"
+#include "resource.h"
+
 #include <process.h>
 #include <dbghelp.h>
 #include <richedit.h>
@@ -1009,6 +1007,8 @@ Send Key_Event calls
 #ifndef DEDICATED_ONLY
 void Sys_SendKeyEvents (void)
 {
+	KBD_Update();
+
 	{
 		MSG        msg;
 
@@ -2359,6 +2359,23 @@ void Sys_SetFPU (byte bits)
 	}
 }
 
+
+#else  // defined _M_IX86 && defined _MSC_VER
+
+
+__declspec(naked) unsigned short Sys_GetFPUStatus (void)
+{
+	return 0;
+}
+
+
+void Sys_SetFPU (byte bits)
+{
+}
+
+#endif  // defined _M_IX86 && defined _MSC_VER
+
+
 //FPU should be round to nearest, 24 bit precision.
 //3.20 = 0x007f
 qboolean Sys_CheckFPUStatus (void)
@@ -2387,7 +2404,7 @@ qboolean Sys_CheckFPUStatus (void)
 	last_word = fpu_control_word;
 	return true;
 }
-#endif
+
 
 /*
 ==================
@@ -2438,8 +2455,15 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	}
 #endif
 
+#ifdef _MSC_VER
 
 	__try
+
+#else  // _MSC_VER
+
+#warning "Exception handling on Mingw"
+
+#endif  // _MSC_VER
 	{
 		Sys_SetFPU (sys_fpu_bits->intvalue);
 		Sys_CheckFPUStatus ();
@@ -2544,10 +2568,18 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			oldtime = newtime;
 		}
 	}
+#ifdef _MSC_VER
+
 	__except (R1Q2ExceptionHandler(GetExceptionCode(), GetExceptionInformation()))
 	{
 		return 1;
 	}
+
+#else  // _MSC_VER
+
+#warning "Exception handling on Mingw"
+
+#endif  // _MSC_VER
 
 	return 0;
 }
