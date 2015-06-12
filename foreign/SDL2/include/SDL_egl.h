@@ -24,12 +24,12 @@
  *
  *  This is a simple file to encapsulate the EGL API headers.
  */
-#ifndef _MSC_VER
+#ifndef _WIN32
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#else /* _MSC_VER */
+#else /* _WIN32 */
 
 /* EGL headers for Visual Studio */
 
@@ -1394,4 +1394,4 @@ extern "C" {
 
 
 
-#endif /* _MSC_VER */
+#endif /* _WIN32 */

@@ -64,6 +64,14 @@ CFLAGS+=-DUSE_PNG
 endif
 
 
+ifeq ($(STATIC_SDL2),y)
+
+quake2_MODULES+=sdl2
+CFLAGS+=-DDECLSPEC="" -DHAVE_LIBC=1 -DSDLCALL=""
+
+endif  # STATIC_SDL2
+
+
 ifneq ($(BUILTIN_GAME),)
 quake2_MODULES+=$(BUILTIN_GAME)
 endif

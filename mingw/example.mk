@@ -17,6 +17,8 @@ USE_GLEW:=y
 USE_OPENAL:=n
 USE_PNG:=n
 
+STATIC_SDL2:=y
+
 BUILD_SERVER:=y
 
 # compiler options etc
@@ -33,10 +35,10 @@ CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
 LDFLAGS:=-g -mwindows
-LDFLAGS+=-L$(TOPDIR)/foreign/SDL2/lib
 LDLIBS:=-lwinmm -lwsock32
-LDLIBS_ref_gl:=-lopengl32 -lSDL2
 LDLIBS_client:=-ldsound
+LDLIBS_ref_gl:=-lopengl32
+LDLIBS_sdl2:=-limm32 -lole32 -loleaut32 -luuid -lversion
 
 
 SOCFLAGS:=
