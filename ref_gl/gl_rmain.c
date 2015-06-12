@@ -99,7 +99,6 @@ cvar_t	*r_lefthand;
 cvar_t	*r_lightlevel;	// FIXME: This is a HACK to get the client's light level
 
 //cvar_t	*gl_nosubimage;
-cvar_t	*gl_allow_software;
 
 cvar_t	*gl_particle_min_size;
 cvar_t	*gl_particle_max_size;
@@ -1073,7 +1072,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	r_lightlevel = ri.Cvar_Get ("r_lightlevel", "0", CVAR_NOSET);
 
 	//gl_nosubimage = ri.Cvar_Get( "gl_nosubimage", "0", 0 );
-	gl_allow_software = ri.Cvar_Get( "gl_allow_software", "0", 0 );
 
 	gl_particle_min_size = ri.Cvar_Get( "gl_particle_min_size", "2", CVAR_ARCHIVE );
 	gl_particle_max_size = ri.Cvar_Get( "gl_particle_max_size", "40", CVAR_ARCHIVE );
