@@ -349,7 +349,7 @@ void CL_PrepRefresh (void)
 	cl.model_clip[0] = NULL;
 	cl.model_draw[0] = NULL;
 
-	cl.model_draw[1] = re.RegisterModel (cl.configstrings[CS_MODELS+1]);
+	cl.model_draw[1] = R_RegisterModel (cl.configstrings[CS_MODELS+1]);
 
 	if (cl.configstrings[CS_MODELS+1][0] == '*')
 		cl.model_clip[1] = CM_InlineModel (cl.configstrings[CS_MODELS+1]);
@@ -375,7 +375,7 @@ void CL_PrepRefresh (void)
 
 			if (cl.configstrings[CS_MODELS+i][0] != '#')
 			{
-				cl.model_draw[i] = re.RegisterModel (cl.configstrings[CS_MODELS+i]);
+				cl.model_draw[i] = R_RegisterModel (cl.configstrings[CS_MODELS+i]);
 				if (cl.configstrings[CS_MODELS+i][0] == '*')
 					cl.model_clip[i] = CM_InlineModel (cl.configstrings[CS_MODELS+i]);
 				else
@@ -534,7 +534,7 @@ void V_Gun_Model_f (void)
 		return;
 	}
 	Com_sprintf (name, sizeof(name), "models/%s/tris.md2", Cmd_Argv(1));
-	gun_model = re.RegisterModel (name);
+	gun_model = R_RegisterModel (name);
 }
 
 //============================================================================

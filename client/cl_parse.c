@@ -712,9 +712,9 @@ badskin:
 		//strcpy (skin_filename, "players/male/grunt.pcx");
 		strcpy (ci->iconname, "/players/male/grunt_i.pcx");
 		strcpy (model_name, "male");
-		ci->model = re.RegisterModel ("players/male/tris.md2");
+		ci->model = R_RegisterModel ("players/male/tris.md2");
 		//memset(ci->weaponmodel, 0, sizeof(ci->weaponmodel));
-		//ci->weaponmodel[0] = re.RegisterModel (weapon_filename);
+		//ci->weaponmodel[0] = R_RegisterModel (weapon_filename);
 		ci->skin = re.RegisterSkin ("players/male/grunt.pcx");
 		ci->icon = re.RegisterPic (ci->iconname);
 	}
@@ -767,7 +767,7 @@ badskin:
 
 		// model file
 		Com_sprintf (model_filename, sizeof(model_filename), "players/%s/tris.md2", model_name);
-		ci->model = re.RegisterModel (model_filename);
+		ci->model = R_RegisterModel (model_filename);
 		if (!ci->model)
 		{
 			ci->deferred = true;
@@ -777,7 +777,7 @@ badskin:
 			strcpy(model_name, "male");
 			//Com_sprintf (model_filename, sizeof(model_filename), "players/male/tris.md2");
 			strcpy (model_filename, "players/male/tris.md2");
-			ci->model = re.RegisterModel (model_filename);
+			ci->model = R_RegisterModel (model_filename);
 		}
 
 		// skin file
@@ -798,7 +798,7 @@ badskin:
 			// change model to male
 			strcpy(model_name, "male");
 			strcpy (model_filename, "players/male/tris.md2");
-			ci->model = re.RegisterModel (model_filename);
+			ci->model = R_RegisterModel (model_filename);
 
 			// see if the skin exists for the male model
 			Com_sprintf (skin_filename, sizeof(skin_filename), "players/%s/%s.pcx", model_name, skin_name);
@@ -828,7 +828,7 @@ badskin:
 	for (i = 0; i < num_cl_weaponmodels; i++)
 	{
 		Com_sprintf (weapon_filename, sizeof(weapon_filename), "players/%s/%s", model_name, cl_weaponmodels[i]);
-		ci->weaponmodel[i] = re.RegisterModel(weapon_filename);
+		ci->weaponmodel[i] = R_RegisterModel(weapon_filename);
 
 		if (!ci->weaponmodel[i])
 		{
@@ -840,7 +840,7 @@ badskin:
 		{
 			// try male
 			Com_sprintf (weapon_filename, sizeof(weapon_filename), "players/male/%s", cl_weaponmodels[i]);
-			ci->weaponmodel[i] = re.RegisterModel(weapon_filename);
+			ci->weaponmodel[i] = R_RegisterModel(weapon_filename);
 		}
 
 		if (!cl_vwep->intvalue)
@@ -950,7 +950,7 @@ void CL_ParseConfigString (void)
 	{
 		if (cl.refresh_prepped)
 		{
-			cl.model_draw[i-CS_MODELS] = re.RegisterModel (cl.configstrings[i]);
+			cl.model_draw[i-CS_MODELS] = R_RegisterModel (cl.configstrings[i]);
 			if (cl.configstrings[i][0] == '*')
 				cl.model_clip[i-CS_MODELS] = CM_InlineModel (cl.configstrings[i]);
 			else

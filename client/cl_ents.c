@@ -1558,19 +1558,19 @@ INTERPOLATE BETWEEN FRAMES TO GET RENDERING PARMS
 		strcpy(model, "male");
 
 	Com_sprintf (buffer, sizeof(buffer), "players/%s/%s", model, base+1);
-	mdl = re.RegisterModel(buffer);
+	mdl = R_RegisterModel(buffer);
 	if (!mdl) {
 		// not found, try default weapon model
 		Com_sprintf (buffer, sizeof(buffer), "players/%s/weapon.md2", model);
-		mdl = re.RegisterModel(buffer);
+		mdl = R_RegisterModel(buffer);
 		if (!mdl) {
 			// no, revert to the male model
 			Com_sprintf (buffer, sizeof(buffer), "players/%s/%s", "male", base+1);
-			mdl = re.RegisterModel(buffer);
+			mdl = R_RegisterModel(buffer);
 			if (!mdl) {
 				// last try, default male weapon.md2
 				Com_sprintf (buffer, sizeof(buffer), "players/male/weapon.md2");
-				mdl = re.RegisterModel(buffer);
+				mdl = R_RegisterModel(buffer);
 			}
 		} 
 	}
@@ -1888,17 +1888,17 @@ lerp_time;*/
 					if(!strncmp((char *)ent.skin, "players/male", 12))
 					{
 						ent.skin = re.RegisterSkin ("players/male/disguise.pcx");
-						ent.model = re.RegisterModel ("players/male/tris.md2");
+						ent.model = R_RegisterModel ("players/male/tris.md2");
 					}
 					else if(!strncmp((char *)ent.skin, "players/female", 14))
 					{
 						ent.skin = re.RegisterSkin ("players/female/disguise.pcx");
-						ent.model = re.RegisterModel ("players/female/tris.md2");
+						ent.model = R_RegisterModel ("players/female/tris.md2");
 					}
 					else if(!strncmp((char *)ent.skin, "players/cyborg", 14))
 					{
 						ent.skin = re.RegisterSkin ("players/cyborg/disguise.pcx");
-						ent.model = re.RegisterModel ("players/cyborg/tris.md2");
+						ent.model = R_RegisterModel ("players/cyborg/tris.md2");
 					}
 				}
 //PGM

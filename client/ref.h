@@ -141,7 +141,6 @@ typedef struct
 	// called when the library is loaded
 	int		(*Init) ( void *hinstance, void *wndproc );
 
-	struct model_s * (*RegisterModel) (char *name);
 	struct image_s * (*RegisterSkin) (char *name);
 	struct image_s * (*RegisterPic) (char *name);
 	void	(*SetSky) (char *name, float rotate, vec3_t axis);
@@ -252,6 +251,7 @@ const char *VID_MenuKey(int);
 	// an implicit "pics/" prepended to the name. (a pic name that starts with a
 	// slash will not use the "pics/" prefix or the ".pcx" postfix)
 void	R_BeginRegistration (char *map);
+struct model_s	* R_RegisterModel (char *name);
 
 
 int 	R_Init( void *hinstance, void *hWnd );

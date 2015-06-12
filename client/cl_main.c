@@ -3947,7 +3947,7 @@ void CL_LoadDeferredModels (void)
 		if (cl.configstrings[CS_MODELS+deferred_model_index][0] != '#')
 		{
 			//Com_DPrintf ("CL_LoadDeferredModels: Now loading '%s'...\n", cl.configstrings[CS_MODELS+deferred_model_index]);
-			cl.model_draw[deferred_model_index] = re.RegisterModel (cl.configstrings[CS_MODELS+deferred_model_index]);
+			cl.model_draw[deferred_model_index] = R_RegisterModel (cl.configstrings[CS_MODELS+deferred_model_index]);
 			if (cl.configstrings[CS_MODELS+deferred_model_index][0] == '*')
 				cl.model_clip[deferred_model_index] = CM_InlineModel (cl.configstrings[CS_MODELS+deferred_model_index]);
 			else
