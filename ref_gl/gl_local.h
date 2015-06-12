@@ -282,6 +282,9 @@ typedef struct QGLState {
 } QGLState;
 
 
+extern QGLState *qglState;
+
+
 #define	MAX_LBM_HEIGHT		480
 
 #define BACKFACE_EPSILON	0.01

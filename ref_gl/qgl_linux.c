@@ -90,7 +90,7 @@ const char *fragmentShaderSrc =
 ;
 
 
-static QGLState *qglState = NULL;
+QGLState *qglState = NULL;
 
 
 void qglGetFloatv(GLenum pname, GLfloat *params);
