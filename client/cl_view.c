@@ -306,7 +306,7 @@ void CL_PrepRefresh (void)
 	// clear tents - dangling model pointers
 	CL_ClearTEnts ();
 
-	re.BeginRegistration (mapname);
+	R_BeginRegistration (mapname);
 
 	Com_Printf ("                                     \r", LOG_CLIENT);
 

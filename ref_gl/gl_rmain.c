@@ -1994,7 +1994,6 @@ void R_DrawBeam( entity_t *e )
 //===================================================================
 
 
-void	R_BeginRegistration (char *map);
 struct model_s	* R_RegisterModel (char *name);
 struct image_s	* R_RegisterSkin (char *name);
 void R_SetSky (char *name, float rotate, vec3_t axis);
@@ -2024,7 +2023,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 
 	re.api_version = API_VERSION;
 
-	re.BeginRegistration = R_BeginRegistration;
 	re.RegisterModel = R_RegisterModel;
 	re.RegisterSkin = R_RegisterSkin;
 	re.RegisterPic = Draw_FindPic;
