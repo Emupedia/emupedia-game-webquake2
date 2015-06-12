@@ -769,4 +769,5 @@ void qglBindTexture(GLenum target, GLuint texture) {
 void qglDepthRange(GLclampd zNear, GLclampd zFar) {
 	qglState->zNear = zNear;
 	qglState->zFar = zFar;
+	qglState->projMatrixDirty = true;
 }
