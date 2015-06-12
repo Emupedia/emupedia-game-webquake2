@@ -124,33 +124,6 @@ void QGL_Shutdown( void )
 	free(qglState); qglState = NULL;
 }
 
-/*
-** QGL_Init
-**
-** This is responsible for binding our qgl function pointers to 
-** the appropriate GL stuff.  In Windows this means doing a 
-** LoadLibrary and a bunch of calls to GetProcAddress.  On other
-** operating systems we need to do the right thing, whatever that
-** might be.
-** 
-*/
-qboolean QGL_Init( const char *dllname )
-{
-	qglState = (QGLState *) malloc(sizeof(QGLState));
-	// qglState = new QGLState;   ... oh shit, not C++. sigh ...
-	memset(qglState, 0, sizeof(QGLState));
-	qglState->numVertices = 1024;
-	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
-	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
-
-	qglState->maxDrawCalls = 128;
-	qglState->drawCalls = (DrawCall *) malloc(qglState->maxDrawCalls * sizeof(DrawCall));
-
-	qglState->zFar = 1.0f;
-
-	return true;
-}
-
 
 // add a new vertex to vertices array
 // resize if necessary

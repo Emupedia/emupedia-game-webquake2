@@ -1527,14 +1527,17 @@ retryQGL:
 
 	// initialize our QGL dynamic bindings
 	ri.Con_Printf (PRINT_DEVELOPER, "QGL_Init()\n");
-	if ( !QGL_Init( "" ) )
-	{
-		QGL_Shutdown();
+	qglState = (QGLState *) malloc(sizeof(QGLState));
+	// qglState = new QGLState;   ... oh shit, not C++. sigh ...
+	memset(qglState, 0, sizeof(QGLState));
+	qglState->numVertices = 1024;
+	qglState->vertices = (Vertex *) malloc(qglState->numVertices * sizeof(Vertex));
+	memset(qglState->vertices, 0, qglState->numVertices * sizeof(Vertex));
 
-		ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init(): QGL_Init() failed\n");
+	qglState->maxDrawCalls = 128;
+	qglState->drawCalls = (DrawCall *) malloc(qglState->maxDrawCalls * sizeof(DrawCall));
 
-		return -1;
-	}
+	qglState->zFar = 1.0f;
 
 #ifdef HAVE_JOYSTICK
 	init_joystick();
