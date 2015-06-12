@@ -271,9 +271,9 @@ void GL_TextureMode(const char *string)
 		if (glt->type != it_pic && glt->type != it_sky )
 		{
 			GL_Bind (glt->texnum);
-			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
 
-			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
 		}
 	}
 }
@@ -2501,7 +2501,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	{
 		if (!mipmap)
 		{
-			qglTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			goto done;
 		}
 		if (scaled != data)
@@ -2524,14 +2524,14 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	//0.1.5: removed due to shitty drivers breaking it, thx ati
 	/*if (gl_config.r1gl_GL_SGIS_generate_mipmap)
 	{
-		qglTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		if ((err = qglGetError()) != GL_NO_ERROR) ri.Sys_Error (ERR_FATAL, "glGetError: 0x%x", err);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		if ((err = glGetError()) != GL_NO_ERROR) ri.Sys_Error (ERR_FATAL, "glGetError: 0x%x", err);
 
-		qglTexParameteri (GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
-		if ((err = qglGetError()) != GL_NO_ERROR) ri.Sys_Error (ERR_FATAL, "glGetError: 0x%x", err);
+		glTexParameteri (GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
+		if ((err = glGetError()) != GL_NO_ERROR) ri.Sys_Error (ERR_FATAL, "glGetError: 0x%x", err);
 	}*/
 
-	qglTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
+	glTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
 
 	//if (mipmap && !(gl_config.r1gl_GL_SGIS_generate_mipmap))
 	if (mipmap)
@@ -2562,7 +2562,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 			if (scaled_height < 1)
 				scaled_height = 1;
 			miplevel++;
-			qglTexImage2D (GL_TEXTURE_2D, miplevel, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);;
+			glTexImage2D (GL_TEXTURE_2D, miplevel, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);;
 		}
 	}
 done: ;
@@ -2572,23 +2572,23 @@ done: ;
 	{
 		if (gl_config.r1gl_GL_EXT_texture_filter_anisotropic)
 		{
-			qglTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (int)gl_ext_max_anisotropy->value);
+			glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (int)gl_ext_max_anisotropy->value);
 		}
 
-		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
 
-		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
 	}
 	else
 	{
 		if (gl_config.r1gl_GL_EXT_texture_filter_anisotropic)
 		{
-			qglTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
+			glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
 		}
 
-		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
 	if (!r_registering)
@@ -3229,7 +3229,7 @@ void GL_FreeUnusedImages (void)
 		// free it
 
 		count++;
-		qglDeleteTextures (1, &image->texnum);
+		glDeleteTextures (1, &image->texnum);
 		memset (image, 0, sizeof(*image));
 	}
 
@@ -3371,7 +3371,7 @@ void	GL_ShutdownImages (void)
 		if (!image->registration_sequence)
 			continue;		// free image_t slot
 		// free it
-		qglDeleteTextures (1, &image->texnum);
+		glDeleteTextures (1, &image->texnum);
 		memset (image, 0, sizeof(*image));
 	}
 }

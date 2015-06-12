@@ -667,7 +667,7 @@ void R_DrawAliasModel (entity_t *e)
 	    MYgluPerspective( r_newrefdef.fov_y, ( float ) r_newrefdef.width / r_newrefdef.height,  4,  gl_zfar->value);
 		qglMatrixMode( GL_MODELVIEW );
 
-		qglCullFace( GL_BACK );
+		glCullFace( GL_BACK );
 	}
 
     qglPushMatrix ();
@@ -739,7 +739,7 @@ void R_DrawAliasModel (entity_t *e)
 		qglMatrixMode( GL_PROJECTION );
 		qglPopMatrix();
 		qglMatrixMode( GL_MODELVIEW );
-		qglCullFace( GL_FRONT );
+		glCullFace( GL_FRONT );
 	}
 
 	if ( currententity->flags & RF_TRANSLUCENT || (skin->has_alpha && FLOAT_NE_ZERO(gl_alphaskins->value)))

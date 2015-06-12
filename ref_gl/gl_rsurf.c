@@ -326,7 +326,7 @@ void R_BlendLightmaps (void)
 		return;
 
 	// don't bother writing Z
-	qglDepthMask( 0 );
+	glDepthMask( 0 );
 
 	if (gl_coloredlightmaps->modified)
 	{
@@ -341,7 +341,7 @@ void R_BlendLightmaps (void)
 	}
 
 	qglEnable (GL_BLEND);
-	qglBlendFunc (GL_ZERO, GL_SRC_COLOR );
+	glBlendFunc (GL_ZERO, GL_SRC_COLOR );
 	qglActiveTexture(GL_TEXTURE1);
 	qglDisable (GL_TEXTURE_2D);
 	qglActiveTexture(GL_TEXTURE0);
@@ -448,8 +448,8 @@ void R_BlendLightmaps (void)
 	** restore state
 	*/
 	qglDisable (GL_BLEND);
-	qglBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	qglDepthMask( 1 );
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask( 1 );
 }
 
 #define GL_COMBINE_ARB						0x8570
@@ -563,7 +563,7 @@ dynamic:
 
 			GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures[fa->lightmaptexturenum]);
 
-			qglTexSubImage2D( GL_TEXTURE_2D, 0,
+			glTexSubImage2D( GL_TEXTURE_2D, 0,
 							  fa->light_s, fa->light_t, 
 							  smax, tmax, 
 							  GL_LIGHTMAP_FORMAT, 
@@ -1173,8 +1173,8 @@ static void LM_UploadBlock( qboolean dynamic )
 	}
 
 	GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures[texture]);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	if ( dynamic )
 	{
@@ -1186,7 +1186,7 @@ static void LM_UploadBlock( qboolean dynamic )
 				height = gl_lms.allocated[i];
 		}
 
-		qglTexSubImage2D( GL_TEXTURE_2D, 
+		glTexSubImage2D( GL_TEXTURE_2D, 
 						  0,
 						  0, 0,
 						  BLOCK_WIDTH, height,
@@ -1196,7 +1196,7 @@ static void LM_UploadBlock( qboolean dynamic )
 	}
 	else
 	{
-		qglTexImage2D( GL_TEXTURE_2D, 
+		glTexImage2D( GL_TEXTURE_2D, 
 					   0, 
 					   gl_lms.internal_format,
 					   BLOCK_WIDTH, BLOCK_HEIGHT, 
@@ -1443,9 +1443,9 @@ void GL_BeginBuildingLightmaps (void)
 	** initialize the dynamic lightmap texture
 	*/
 	GL_MBind(GL_TEXTURE0, gl_state.lightmap_textures[0]);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	qglTexImage2D( GL_TEXTURE_2D, 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D( GL_TEXTURE_2D, 
 				   0, 
 				   gl_lms.internal_format,
 				   BLOCK_WIDTH, BLOCK_HEIGHT, 

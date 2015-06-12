@@ -93,38 +93,9 @@ const char *fragmentShaderSrc =
 static QGLState *qglState = NULL;
 
 
-void ( APIENTRY * qglBlendFunc )(GLenum sfactor, GLenum dfactor);
-void ( APIENTRY * qglClear )(GLbitfield mask);
-void ( APIENTRY * qglClearColor )(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
-void ( APIENTRY * qglClearDepth )(GLclampd depth);
-void ( APIENTRY * qglClearStencil )(GLint s);
-void ( APIENTRY * qglColorMask )(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-void ( APIENTRY * qglCullFace )(GLenum mode);
-void ( APIENTRY * qglDeleteTextures )(GLsizei n, const GLuint *textures);
-void ( APIENTRY * qglDepthFunc )(GLenum func);
-void ( APIENTRY * qglDepthMask )(GLboolean flag);
-void ( APIENTRY * qglDrawArrays )(GLenum mode, GLint first, GLsizei count);
-void ( APIENTRY * qglDrawElements )(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
-void ( APIENTRY * qglFrontFace )(GLenum mode);
-void ( APIENTRY * qglGenTextures )(GLsizei n, GLuint *textures);
-GLenum ( APIENTRY * qglGetError )(void);
 void qglGetFloatv(GLenum pname, GLfloat *params);
-const GLubyte * ( APIENTRY * qglGetString )(GLenum name);
-void ( APIENTRY * qglHint )(GLenum target, GLenum mode);
 GLboolean ( APIENTRY * qglIsEnabled )(GLenum cap);
 GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
-void ( APIENTRY * qglLineWidth )(GLfloat width);
-void ( APIENTRY * qglPolygonOffset )(GLfloat factor, GLfloat units);
-void ( APIENTRY * qglReadPixels )(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
-void ( APIENTRY * qglScissor )(GLint x, GLint y, GLsizei width, GLsizei height);
-void ( APIENTRY * qglStencilFunc )(GLenum func, GLint ref, GLuint mask);
-void ( APIENTRY * qglStencilMask )(GLuint mask);
-void ( APIENTRY * qglStencilOp )(GLenum fail, GLenum zfail, GLenum zpass);
-void ( APIENTRY * qglTexImage2D )(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
-void ( APIENTRY * qglTexParameterf )(GLenum target, GLenum pname, GLfloat param);
-void ( APIENTRY * qglTexParameteri )(GLenum target, GLenum pname, GLint param);
-void ( APIENTRY * qglTexSubImage2D )(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-void ( APIENTRY * qglViewport )(GLint x, GLint y, GLsizei width, GLsizei height);
 
 
 /*
@@ -151,38 +122,6 @@ void QGL_Shutdown( void )
 	}
 
 	free(qglState); qglState = NULL;
-
-	qglBlendFunc                 = NULL;
-	qglClear                     = NULL;
-	qglClearColor                = NULL;
-	qglClearDepth                = NULL;
-	qglClearStencil              = NULL;
-	qglColorMask                 = NULL;
-	qglCullFace                  = NULL;
-	qglDeleteTextures            = NULL;
-	qglDepthFunc                 = NULL;
-	qglDepthMask                 = NULL;
-	qglDrawArrays                = NULL;
-	qglDrawElements              = NULL;
-	qglFrontFace                 = NULL;
-	qglGenTextures               = NULL;
-	qglGetError                  = NULL;
-	qglGetString                 = NULL;
-	qglHint                      = NULL;
-	qglIsEnabled                 = NULL;
-	qglIsTexture                 = NULL;
-	qglLineWidth                 = NULL;
-	qglPolygonOffset             = NULL;
-	qglReadPixels                = NULL;
-	qglScissor                   = NULL;
-	qglStencilFunc               = NULL;
-	qglStencilMask               = NULL;
-	qglStencilOp                 = NULL;
-	qglTexImage2D                = NULL;
-	qglTexParameterf             = NULL;
-	qglTexParameteri             = NULL;
-	qglTexSubImage2D             = NULL;
-	qglViewport                  = NULL;
 }
 
 /*
@@ -208,38 +147,6 @@ qboolean QGL_Init( const char *dllname )
 	qglState->drawCalls = (DrawCall *) malloc(qglState->maxDrawCalls * sizeof(DrawCall));
 
 	qglState->zFar = 1.0f;
-
-	qglBlendFunc                 = glBlendFunc;
-	qglClear                     = glClear;
-	qglClearColor                = glClearColor;
-	qglClearDepth                = glClearDepth;
-	qglClearStencil              = glClearStencil;
-	qglColorMask                 = glColorMask;
-	qglCullFace                  = glCullFace;
-	qglDeleteTextures            = glDeleteTextures;
-	qglDepthFunc                 = glDepthFunc;
-	qglDepthMask                 = glDepthMask;
-	qglDrawArrays                = glDrawArrays;
-	qglDrawElements              = glDrawElements;
-	qglFrontFace                 = glFrontFace;
-	qglGenTextures               = glGenTextures;
-	qglGetError                  = glGetError;
-	qglGetString                 = glGetString;
-	qglHint                      = glHint;
-	qglIsEnabled                 = glIsEnabled;
-	qglIsTexture                 = glIsTexture;
-	qglLineWidth                 = glLineWidth;
-	qglPolygonOffset             = glPolygonOffset;
-	qglReadPixels                = glReadPixels;
-	qglScissor                   = glScissor;
-	qglStencilFunc               = glStencilFunc;
-	qglStencilMask               = glStencilMask;
-	qglStencilOp                 = glStencilOp;
-	qglTexImage2D                = glTexImage2D;
-	qglTexParameterf             = glTexParameterf;
-	qglTexParameteri             = glTexParameteri;
-	qglTexSubImage2D             = glTexSubImage2D;
-	qglViewport                  = glViewport;
 
 	return true;
 }

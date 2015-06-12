@@ -296,7 +296,7 @@ void GL_ScreenShot_f (void)
 
 	buffer = malloc(viddef.width*viddef.height*3);
 
-	qglReadPixels (0, 0, viddef.width, viddef.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
+	glReadPixels (0, 0, viddef.width, viddef.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
 #if defined(_WIN32) && defined(USE_PNG)
 	if (!strcmp (ri.Cmd_Argv(1), "jpg"))
 	{
@@ -355,8 +355,8 @@ void GL_Version_f (void)
 */
 void GL_SetDefaultState( void )
 {
-	qglClearColor (1.0f, 0.0f, 0.5f, 0.5f);
-	qglCullFace(GL_FRONT);
+	glClearColor (1.0f, 0.0f, 0.5f, 0.5f);
+	glCullFace(GL_FRONT);
 	qglEnable(GL_TEXTURE_2D);
 
 	qglEnable(GL_ALPHA_TEST);
@@ -370,13 +370,13 @@ void GL_SetDefaultState( void )
 
 	GL_TextureMode( gl_texturemode->string );
 
-	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
-	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
 
-	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	qglBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 

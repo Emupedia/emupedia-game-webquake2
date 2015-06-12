@@ -53,8 +53,8 @@ void Draw_InitLocal (void)
 	if (!draw_chars)
 		ri.Sys_Error (ERR_FATAL, "R1GL: Couldn't load conchars.pcx\n\nEither you aren't running Quake 2 from the correct directory or you are missing important files.");
 	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 static float conchars_texoffset[16] =
@@ -555,10 +555,10 @@ void Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data
 			}
 		}
 
-		qglTexImage2D (GL_TEXTURE_2D, 0, gl_tex_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, image32);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D (GL_TEXTURE_2D, 0, gl_tex_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, image32);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	qglBegin (GL_TRIANGLES);
 	qglMTexCoord2f(GL_TEXTURE0, 0, 0);
