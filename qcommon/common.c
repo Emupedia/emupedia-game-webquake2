@@ -261,7 +261,7 @@ void Com_Printf (const char *fmt, int level, ...)
 #endif
 
 	// also echo to debugging console
-#ifndef NO_SERVER
+#if !(defined(EMSCRIPTEN) && defined(NDEBUG))
 		Sys_ConsoleOutput (msg);
 #endif
 	}
