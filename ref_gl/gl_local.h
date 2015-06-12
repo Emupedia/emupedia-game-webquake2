@@ -30,17 +30,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #endif  // _WIN32
 
-#include <stdio.h>
-#include <math.h>
-
-#include "../client/ref.h"
-
-
-#ifdef _WIN32
-#  include <windows.h>
-#endif
-
-
 #ifdef USE_GLEW
 
 #include <GL/glew.h>
@@ -55,6 +44,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #endif  // USE_GLEW
+
+#include <stdio.h>
+#include <math.h>
+
+#include "../client/ref.h"
 
 
 qboolean QGL_Init( const char *dllname );

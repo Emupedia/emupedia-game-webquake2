@@ -22,9 +22,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef _WIN32
 
-
+#define WIN32_LEAN_AND_MEAN
 // before qcommon.h or mingw-w64 explodes
 #include <windows.h>
+
+// horrible hack for 32-bit mingw
+// for some completely inexplicable reason WinMain fails with
+// error: conflicting types for 'WinMain'
+// if it's defined after qcommon.h
+// so put it here
+static int WinMainHax (HINSTANCE hInstance, LPSTR lpCmdLine);
+
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+	return WinMainHax(hInstance, lpCmdLine);
+}
+
 
 #include <mmsystem.h>
 
@@ -2418,7 +2430,7 @@ HINSTANCE	global_hInstance;
 //#define FLOAT_GT_ZERO(f) (FLOAT2INTCAST(f) > 0)
 
 extern cvar_t	*sys_loopstyle;
-int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+static int WinMainHax (HINSTANCE hInstance, LPSTR lpCmdLine)
 {
 #ifndef NO_SERVER
 //	unsigned int	handle;
@@ -2428,10 +2440,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	int				spins;
 
 	badspins = goodspins = 0;
-
-    /* previous instances do not exist in Win32 */
-    if (hPrevInstance)
-        return 0;
 
 	if (hInstance)
 		strncpy (cmdline, lpCmdLine, sizeof(cmdline)-1);

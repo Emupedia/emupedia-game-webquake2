@@ -1117,7 +1117,7 @@ void Qcommon_Init (int argc, char **argv);
 void Qcommon_Frame (int msec);
 void Qcommon_Shutdown (void);
 
-#if defined _WIN32 && !defined _M_AMD64
+#if defined _MSC_VER && !defined _M_AMD64
 size_t __cdecl fast_strlen(const char *s);
 void __fastcall fast_strlwr(char *s);
 int __cdecl fast_tolower(int c);
