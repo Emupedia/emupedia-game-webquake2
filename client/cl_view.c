@@ -432,7 +432,7 @@ void CL_PrepRefresh (void)
 		VectorClear (axis);
 	}
 
-	re.SetSky (cl.configstrings[CS_SKY], rotate, axis);
+	R_SetSky (cl.configstrings[CS_SKY], rotate, axis);
 	Com_Printf ("   \r", LOG_CLIENT);
 
 	// the renderer can now free unneeded stuff
