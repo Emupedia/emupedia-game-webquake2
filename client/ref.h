@@ -141,8 +141,6 @@ typedef struct
 	// called when the library is loaded
 	int		(*Init) ( void *hinstance, void *wndproc );
 
-	void	(*RenderFrame) (refdef_t *fd);
-
 	void	(*DrawGetPicSize) (int *w, int *h, char *name);	// will return 0 0 if not found
 	void	(*DrawPic) (int x, int y, char *name);
 	void	(*DrawStretchPic) (int x, int y, int w, int h, char *name);
@@ -251,6 +249,9 @@ struct image_s	* R_RegisterSkin (char *name);
 struct image_s	* Draw_FindPic (char *name);
 void R_SetSky (char *name, float rotate, vec3_t axis);
 void R_EndRegistration (void);
+
+
+void R_RenderFrame (refdef_t *fd);
 
 
 int 	R_Init( void *hinstance, void *hWnd );

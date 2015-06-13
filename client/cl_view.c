@@ -673,7 +673,7 @@ void V_RenderView(void)
 	}
 
 	if (!cl.force_refdef)
-		re.RenderFrame (&cl.refdef);
+		R_RenderFrame (&cl.refdef);
 
 	if (cl_stats->intvalue)
 		Com_Printf ("ent:%i  lt:%i  part:%i\n", LOG_CLIENT, r_numentities, r_numdlights, r_numparticles);

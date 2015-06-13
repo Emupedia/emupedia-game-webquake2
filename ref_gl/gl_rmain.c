@@ -1994,8 +1994,6 @@ void R_DrawBeam( entity_t *e )
 //===================================================================
 
 
-void R_RenderFrame (refdef_t *fd);
-
 void	Draw_Pic (int x, int y, char *name);
 void	Draw_Char (int x, int y, int c);
 void	Draw_TileClear (int x, int y, int w, int h, char *name);
@@ -2015,8 +2013,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 	ri = rimp;
 
 	re.api_version = API_VERSION;
-
-	re.RenderFrame = R_RenderFrame;
 
 	re.DrawGetPicSize = Draw_GetPicSize;
 	re.DrawPic = Draw_Pic;
