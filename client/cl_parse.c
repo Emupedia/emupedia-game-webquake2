@@ -715,7 +715,7 @@ badskin:
 		ci->model = R_RegisterModel ("players/male/tris.md2");
 		//memset(ci->weaponmodel, 0, sizeof(ci->weaponmodel));
 		//ci->weaponmodel[0] = R_RegisterModel (weapon_filename);
-		ci->skin = re.RegisterSkin ("players/male/grunt.pcx");
+		ci->skin = R_RegisterSkin ("players/male/grunt.pcx");
 		ci->icon = re.RegisterPic (ci->iconname);
 	}
 	else
@@ -782,7 +782,7 @@ badskin:
 
 		// skin file
 		Com_sprintf (skin_filename, sizeof(skin_filename), "players/%s/%s.pcx", model_name, skin_name);
-		ci->skin = re.RegisterSkin (skin_filename);
+		ci->skin = R_RegisterSkin (skin_filename);
 
 		if (!ci->skin)
 		{
@@ -802,7 +802,7 @@ badskin:
 
 			// see if the skin exists for the male model
 			Com_sprintf (skin_filename, sizeof(skin_filename), "players/%s/%s.pcx", model_name, skin_name);
-			ci->skin = re.RegisterSkin (skin_filename);
+			ci->skin = R_RegisterSkin (skin_filename);
 		}
 
 		// if we still don't have a skin, it means that the male model didn't have
@@ -810,7 +810,7 @@ badskin:
 		if (!ci->skin) {
 			// see if the skin exists for the male model
 			Com_sprintf (skin_filename, sizeof(skin_filename), "players/%s/grunt.pcx", model_name);
-			ci->skin = re.RegisterSkin (skin_filename);
+			ci->skin = R_RegisterSkin (skin_filename);
 		}
 
 		// icon file

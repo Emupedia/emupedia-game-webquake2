@@ -3777,7 +3777,7 @@ static void PlayerConfig_MenuDraw( void )
 		Com_sprintf( scratch, sizeof( scratch ), "players/%s/tris.md2", s_pmi[s_player_model_box.curvalue].directory );
 		entity.model = R_RegisterModel( scratch );
 		Com_sprintf( scratch, sizeof( scratch ), "players/%s/%s.pcx", s_pmi[s_player_model_box.curvalue].directory, s_pmi[s_player_model_box.curvalue].skindisplaynames[s_player_skin_box.curvalue] );
-		entity.skin = re.RegisterSkin( scratch );
+		entity.skin = R_RegisterSkin( scratch );
 		entity.flags = RF_FULLBRIGHT;
 		entity.origin[0] = 80;
 		entity.origin[1] = 0;
