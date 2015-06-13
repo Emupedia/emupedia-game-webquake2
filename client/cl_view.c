@@ -392,7 +392,7 @@ void CL_PrepRefresh (void)
 	SCR_UpdateScreen ();
 	for (i=1 ; i<MAX_IMAGES && cl.configstrings[CS_IMAGES+i][0] ; i++)
 	{
-		re.RegisterPic (cl.configstrings[CS_IMAGES+i]);
+		Draw_FindPic (cl.configstrings[CS_IMAGES+i]);
 		Sys_SendKeyEvents ();	// pump message loop
 	}
 	

@@ -1999,8 +1999,6 @@ void R_EndRegistration (void);
 
 void R_RenderFrame (refdef_t *fd);
 
-struct image_s	* Draw_FindPic (char *name);
-
 void	Draw_Pic (int x, int y, char *name);
 void	Draw_Char (int x, int y, int c);
 void	Draw_TileClear (int x, int y, int w, int h, char *name);
@@ -2021,7 +2019,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 
 	re.api_version = API_VERSION;
 
-	re.RegisterPic = Draw_FindPic;
 	re.SetSky = R_SetSky;
 	re.EndRegistration = R_EndRegistration;
 

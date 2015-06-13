@@ -716,7 +716,7 @@ badskin:
 		//memset(ci->weaponmodel, 0, sizeof(ci->weaponmodel));
 		//ci->weaponmodel[0] = R_RegisterModel (weapon_filename);
 		ci->skin = R_RegisterSkin ("players/male/grunt.pcx");
-		ci->icon = re.RegisterPic (ci->iconname);
+		ci->icon = Draw_FindPic (ci->iconname);
 	}
 	else
 	{
@@ -815,12 +815,12 @@ badskin:
 
 		// icon file
 		Com_sprintf (ci->iconname, sizeof(ci->iconname), "/players/%s/%s_i.pcx", model_name, skin_name);
-		ci->icon = re.RegisterPic (ci->iconname);
+		ci->icon = Draw_FindPic (ci->iconname);
 
 		if (!ci->icon) {
 			//Com_sprintf (ci->iconname, sizeof(ci->iconname), "players/%s/%s_i.pcx", original_model_name, original_skin_name);
 			ci->deferred = true;
-			//ci->icon = re.RegisterPic ("/players/male/grunt_i.pcx");
+			//ci->icon = Draw_FindPic ("/players/male/grunt_i.pcx");
 		}
 	}
 
@@ -974,7 +974,7 @@ void CL_ParseConfigString (void)
 	else if (i >= CS_IMAGES && i < CS_IMAGES+MAX_MODELS)
 	{
 		if (cl.refresh_prepped)
-			re.RegisterPic (cl.configstrings[i]);
+			Draw_FindPic (cl.configstrings[i]);
 	}
 	else if (i == CS_MAXCLIENTS)
 	{

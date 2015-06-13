@@ -141,7 +141,6 @@ typedef struct
 	// called when the library is loaded
 	int		(*Init) ( void *hinstance, void *wndproc );
 
-	struct image_s * (*RegisterPic) (char *name);
 	void	(*SetSky) (char *name, float rotate, vec3_t axis);
 	void	(*EndRegistration) (void);
 
@@ -252,6 +251,7 @@ const char *VID_MenuKey(int);
 void	R_BeginRegistration (char *map);
 struct model_s	* R_RegisterModel (char *name);
 struct image_s	* R_RegisterSkin (char *name);
+struct image_s	* Draw_FindPic (char *name);
 
 
 int 	R_Init( void *hinstance, void *hWnd );

@@ -330,7 +330,7 @@ static void M_DrawCursor( int x, int y, int f )
 		{
 			Com_sprintf( cursorname, sizeof( cursorname ), "m_cursor%d", i );
 
-			re.RegisterPic( cursorname );
+			Draw_FindPic( cursorname );
 		}
 		cached = true;
 	}

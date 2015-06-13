@@ -211,10 +211,10 @@ R_RegisterModel ("models/objects/gibs/bone2/tris.md2");
 // RAFAEL
 // R_RegisterModel ("models/objects/blaser/tris.md2");
 
-re.RegisterPic ("w_machinegun");
-re.RegisterPic ("a_bullets");
-re.RegisterPic ("i_health");
-re.RegisterPic ("a_grenades");*/
+Draw_FindPic ("w_machinegun");
+Draw_FindPic ("a_bullets");
+Draw_FindPic ("i_health");
+Draw_FindPic ("a_grenades");*/
 //ROGUE
 }	
 
