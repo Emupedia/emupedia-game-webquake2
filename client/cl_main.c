@@ -3936,7 +3936,7 @@ void CL_LoadDeferredModels (void)
 
 		if (deferred_model_index == MAX_MODELS)
 		{
-			re.EndRegistration ();
+			R_EndRegistration ();
 			Com_DPrintf ("CL_LoadDeferredModels: All done.\n");
 			return;
 		}

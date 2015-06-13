@@ -1994,8 +1994,6 @@ void R_DrawBeam( entity_t *e )
 //===================================================================
 
 
-void R_EndRegistration (void);
-
 void R_RenderFrame (refdef_t *fd);
 
 void	Draw_Pic (int x, int y, char *name);
@@ -2017,8 +2015,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 	ri = rimp;
 
 	re.api_version = API_VERSION;
-
-	re.EndRegistration = R_EndRegistration;
 
 	re.RenderFrame = R_RenderFrame;
 
