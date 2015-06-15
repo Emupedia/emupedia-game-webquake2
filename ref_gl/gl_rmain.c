@@ -1515,10 +1515,10 @@ int R_Init( void *hinstance, void *hWnd )
 
 	VID_Printf (PRINT_ALL, "ref_gl version: "REF_VERSION"\n");
 
-	VID_Printf (PRINT_DEVELOPER, "Draw_GetPalette()\n");
+	Com_DPrintf("Draw_GetPalette()\n");
 	Draw_GetPalette ();
 
-	VID_Printf (PRINT_DEVELOPER, "R_Register()\n");
+	Com_DPrintf("R_Register()\n");
 	R_Register(desktopWidth, desktopHeight);
 
 	gl_overbrights->modified = false;
@@ -1526,7 +1526,7 @@ int R_Init( void *hinstance, void *hWnd )
 retryQGL:
 
 	// initialize our QGL dynamic bindings
-	VID_Printf (PRINT_DEVELOPER, "QGL_Init()\n");
+	Com_DPrintf("QGL_Init()\n");
 	qglState = (QGLState *) malloc(sizeof(QGLState));
 	// qglState = new QGLState;   ... oh shit, not C++. sigh ...
 	memset(qglState, 0, sizeof(QGLState));
@@ -1544,7 +1544,7 @@ retryQGL:
 #endif
 
 	// create the window and set up the context
-	VID_Printf (PRINT_DEVELOPER, "R_SetMode()\n");
+	Com_DPrintf("R_SetMode()\n");
 	err = R_SetMode(vid_width->intvalue, vid_height->intvalue);
 	if (err != VID_ERR_NONE)
 	{
@@ -1556,7 +1556,7 @@ retryQGL:
 		return -1;
 	}
 
-	VID_Printf (PRINT_DEVELOPER, "Vid_MenuInit()\n");
+	Com_DPrintf("Vid_MenuInit()\n");
 	ri.Vid_MenuInit();
 
 	/*
@@ -1641,7 +1641,7 @@ retryQGL:
 		VID_Printf( PRINT_ALL, "...GL_NV_multisample_filter_hint not found\n" );
 	}
 
-	VID_Printf( PRINT_DEVELOPER, "GL_SetDefaultState()\n" );
+	Com_DPrintf("GL_SetDefaultState()\n" );
 	GL_SetDefaultState();
 
 	/*
@@ -1651,16 +1651,16 @@ retryQGL:
 	GL_DrawStereoPattern();
 #endif
 
-	VID_Printf( PRINT_DEVELOPER, "GL_InitImages()\n" );
+	Com_DPrintf("GL_InitImages()\n" );
 	GL_InitImages ();
 
-	VID_Printf( PRINT_DEVELOPER, "Mod_Init()\n" );
+	Com_DPrintf("Mod_Init()\n" );
 	Mod_Init ();
 
-	VID_Printf( PRINT_DEVELOPER, "R_InitParticleTexture()\n" );
+	Com_DPrintf("R_InitParticleTexture()\n" );
 	R_InitParticleTexture ();
 
-	VID_Printf( PRINT_DEVELOPER, "Draw_InitLocal()\n" );
+	Com_DPrintf("Draw_InitLocal()\n" );
 	Draw_InitLocal ();
 
 	err = glGetError();
@@ -1672,7 +1672,7 @@ retryQGL:
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
 
-	VID_Printf( PRINT_DEVELOPER, "R_Init() complete.\n" );
+	Com_DPrintf("R_Init() complete.\n" );
 	return 0;
 }
 

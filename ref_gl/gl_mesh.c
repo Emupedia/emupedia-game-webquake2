@@ -436,14 +436,14 @@ void R_DrawAliasModel (entity_t *e)
 	//r1: always test, even for weapon models
 	if ( ( e->frame >= paliashdr->num_frames ) || ( e->frame < 0 ) )
 	{
-		VID_Printf (PRINT_DEVELOPER, "R_DrawAliasModel %s: no such frame %d\n", 
+		Com_DPrintf("R_DrawAliasModel %s: no such frame %d\n", 
 			currentmodel->name, e->frame);
 		e->frame = 0;
 	}
 
 	if ( ( e->oldframe >= paliashdr->num_frames ) || ( e->oldframe < 0 ) )
 	{
-		VID_Printf (PRINT_DEVELOPER, "R_DrawAliasModel %s: no such oldframe %d\n", 
+		Com_DPrintf("R_DrawAliasModel %s: no such oldframe %d\n", 
 			currentmodel->name, e->oldframe);
 		e->oldframe = 0;
 	}

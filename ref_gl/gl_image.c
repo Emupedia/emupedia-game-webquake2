@@ -403,7 +403,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 	len = ri.FS_LoadFile (filename, (void **)&raw);
 	if (!raw || len < sizeof(pcx_t))
 	{
-		VID_Printf (PRINT_DEVELOPER, "Bad/missing PCX file: %s\n", filename);
+		Com_DPrintf("Bad/missing PCX file: %s\n", filename);
 		return;
 	}
 
@@ -516,7 +516,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 
 	//end of data should coincide with start of palette
 	if (raw - base != len - 769)
-		VID_Printf (PRINT_DEVELOPER, "Empty space in PCX file: %s\n", filename);
+		Com_DPrintf("Empty space in PCX file: %s\n", filename);
 
 	ri.FS_FreeFile (pcx);
 	return;
@@ -1377,7 +1377,7 @@ breakOut:;
 		temp = malloc (numPixels);
 		if (!temp)
 			ri.Sys_Error (ERR_FATAL, "LoadTGA: not enough memory");
-		VID_Printf (PRINT_DEVELOPER, "LoadTGA: Bottom-to-top TGA file (slow): %s\n", name);
+		Com_DPrintf("LoadTGA: Bottom-to-top TGA file (slow): %s\n", name);
 		memcpy (temp, targa_rgba, numPixels);
 		for (row = 0; row < rows; row++)
 		{
@@ -2783,7 +2783,7 @@ nonscrap:
 		}
 		else
 		{
-			VID_Printf (PRINT_DEVELOPER, "Warning, image '%s' has hi-res replacement smaller than the original! (%d x %d) < (%d x %d)\n", name, image->width, image->height, global_hax_texture_x, global_hax_texture_y);
+			Com_DPrintf("Warning, image '%s' has hi-res replacement smaller than the original! (%d x %d) < (%d x %d)\n", name, image->width, image->height, global_hax_texture_x, global_hax_texture_y);
 		}	
 	}
 
@@ -2826,7 +2826,7 @@ image_t *GL_LoadWal (const char *name)
 	}
 	else if (len != required)
 	{
-		VID_Printf (PRINT_DEVELOPER, "Warning, texture '%s' has funny size (length %d != calculated %d)\n", name, len, required);
+		Com_DPrintf("Warning, texture '%s' has funny size (length %d != calculated %d)\n", name, len, required);
 	}
 
 	if (ofs < sizeof(*mt) || ofs >= len)
@@ -3233,7 +3233,7 @@ void GL_FreeUnusedImages (void)
 		memset (image, 0, sizeof(*image));
 	}
 
-	VID_Printf (PRINT_DEVELOPER, "GL_FreeUnusedImages: freed %d images\n", count);
+	Com_DPrintf("GL_FreeUnusedImages: freed %d images\n", count);
 }
 
 

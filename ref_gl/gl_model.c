@@ -1257,7 +1257,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 #endif
 
 	if (pheader->skinheight > MAX_LBM_HEIGHT)
-		VID_Printf (PRINT_DEVELOPER, "model %s has a skin taller than traditional maximum of %d", mod->name,
+		Com_DPrintf("model %s has a skin taller than traditional maximum of %d", mod->name,
 				   MAX_LBM_HEIGHT);
 
 	if (pheader->num_xyz <= 0)
