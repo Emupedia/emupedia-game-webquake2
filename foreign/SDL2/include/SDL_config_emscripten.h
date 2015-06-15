@@ -185,18 +185,18 @@
 
 /* Allow disabling of core subsystems */
 /* #undef SDL_ATOMIC_DISABLED */
-/* #undef SDL_AUDIO_DISABLED */
+#define SDL_AUDIO_DISABLED 1
 #define SDL_CPUINFO_DISABLED 1
 /* #undef SDL_EVENTS_DISABLED */
 /* #undef SDL_FILE_DISABLED */
-/* #undef SDL_JOYSTICK_DISABLED */
+#define SDL_JOYSTICK_DISABLED 1
 #define SDL_HAPTIC_DISABLED 1
-/* #undef SDL_LOADSO_DISABLED */
-/* #undef SDL_RENDER_DISABLED */
+#define SDL_LOADSO_DISABLED 1
+#define SDL_RENDER_DISABLED 1
 #define SDL_THREADS_DISABLED 1
 /* #undef SDL_TIMERS_DISABLED */
 /* #undef SDL_VIDEO_DISABLED */
-/* #undef SDL_POWER_DISABLED */
+#define SDL_POWER_DISABLED 1
 /* #undef SDL_FILESYSTEM_DISABLED */
 
 /* Enable various audio drivers */
@@ -209,8 +209,8 @@
 /* #undef SDL_AUDIO_DRIVER_HAIKU */
 /* #undef SDL_AUDIO_DRIVER_BSD */
 /* #undef SDL_AUDIO_DRIVER_COREAUDIO */
-#define SDL_AUDIO_DRIVER_DISK 1
-#define SDL_AUDIO_DRIVER_DUMMY 1
+/* #undef SDL_AUDIO_DRIVER_DISK */
+/* #undef SDL_AUDIO_DRIVER_DUMMY */
 /* #undef SDL_AUDIO_DRIVER_ANDROID */
 /* #undef SDL_AUDIO_DRIVER_XAUDIO2 */
 /* #undef SDL_AUDIO_DRIVER_DSOUND */
@@ -229,7 +229,7 @@
 /* #undef SDL_AUDIO_DRIVER_WINMM */
 /* #undef SDL_AUDIO_DRIVER_FUSIONSOUND */
 /* #undef SDL_AUDIO_DRIVER_FUSIONSOUND_DYNAMIC */
-#define SDL_AUDIO_DRIVER_EMSCRIPTEN 1
+/* #undef SDL_AUDIO_DRIVER_EMSCRIPTEN */
 
 /* Enable various input drivers */
 /* #undef SDL_INPUT_LINUXEV */
@@ -245,7 +245,7 @@
 /* #undef SDL_JOYSTICK_WINMM */
 /* #undef SDL_JOYSTICK_USBHID */
 /* #undef SDL_JOYSTICK_USBHID_MACHINE_JOYSTICK_H */
-#define SDL_JOYSTICK_EMSCRIPTEN 1
+/* #undef SDL_JOYSTICK_EMSCRIPTEN */
 /* #undef SDL_HAPTIC_DUMMY */
 /* #undef SDL_HAPTIC_LINUX */
 /* #undef SDL_HAPTIC_IOKIT */
@@ -340,7 +340,7 @@
 /* #undef SDL_POWER_MACOSX */
 /* #undef SDL_POWER_HAIKU */
 /* #undef SDL_POWER_ANDROID */
-#define SDL_POWER_EMSCRIPTEN 1
+/* #undef SDL_POWER_EMSCRIPTEN */
 /* #undef SDL_POWER_HARDWIRED */
 
 /* Enable system filesystem support */
