@@ -1263,6 +1263,10 @@ int Q_vsnprintf (char *buff, size_t len, const char *fmt, va_list va)
 	return -1;
 }
 
+
+#endif  // _WIN32
+
+
 /*int Q_snprintf (char *buff, size_t len, const char *fmt, ...)
 {
 	int ret;
@@ -1285,7 +1289,7 @@ void Q_strlwr (char *str)
 		str++;
 	}
 }
-#endif
+
 
 /*
   Copyright (C) 1996, 1997, 1998, 1999, 2000 Florian Schintke

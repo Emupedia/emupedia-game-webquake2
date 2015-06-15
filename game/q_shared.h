@@ -106,7 +106,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
-#define	Q_strlwr _strlwr
 //#define Q_snprintf _snprintf
 #define Q_vsnprintf _vsnprintf
 #ifndef _M_AMD64

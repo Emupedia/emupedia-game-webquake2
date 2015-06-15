@@ -24,7 +24,7 @@ BUILD_SERVER:=y
 # compiler options etc
 CC:=i686-w64-mingw32-gcc
 CXX:=i686-w64-mingw32-g++
-CFLAGS:=-g -DNDEBUG -D__CRT__NO_INLINE=1 -mwindows
+CFLAGS:=-gstabs -DNDEBUG -D__CRT__NO_INLINE=1 -mwindows
 CFLAGS+=-w
 CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
 OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
@@ -34,7 +34,7 @@ OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
 CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
-LDFLAGS:=-g -mwindows
+LDFLAGS:=-gstabs -mwindows
 LDLIBS:=-lwinmm -lwsock32
 LDLIBS_client:=-ldsound
 LDLIBS_ref_gl:=-lopengl32
