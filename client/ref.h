@@ -164,8 +164,6 @@ typedef struct
 	char	*(*Cmd_Argv) (int i);
 	void	(*Cmd_ExecuteText) (int exec_when, char *text);
 
-	void	(*Con_Printf) (int print_level, const char *str, ...) __attribute__ ((format (printf, 2, 3)));
-
 	// files will be memory mapped read only
 	// the returned buffer may be part of a larger pak file,
 	// or a discrete file from anywhere in the quake search path
@@ -228,6 +226,7 @@ void	VID_CheckChanges(void);
 void	VID_MenuInit(void);
 void	VID_MenuDraw(void);
 const char *VID_MenuKey(int);
+void VID_Printf (int print_level, const char *fmt, ...);
 
 
 	// All data that will be used in a level should be

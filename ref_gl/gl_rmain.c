@@ -336,7 +336,7 @@ void R_DrawSpriteModel (entity_t *e)
 #if 0
 	if (e->frame < 0 || e->frame >= psprite->numframes)
 	{
-		ri.Con_Printf (PRINT_ALL, "no such sprite frame %i\n", e->frame);
+		VID_Printf (PRINT_ALL, "no such sprite frame %i\n", e->frame);
 		e->frame = 0;
 	}
 #endif
@@ -979,7 +979,7 @@ void R_RenderView (refdef_t *fd)
 	
 	if (FLOAT_NE_ZERO(r_speeds->value))
 	{
-		ri.Con_Printf (PRINT_ALL, "%4i wpoly %4i epoly %i tex %i lmaps\n",
+		VID_Printf (PRINT_ALL, "%4i wpoly %4i epoly %i tex %i lmaps\n",
 			c_brush_polys, 
 			c_alias_polys, 
 			c_visible_textures, 
@@ -1318,7 +1318,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		if (_windowed_mouse->intvalue != 0) {
 			int retval = SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
 			if (retval != 0) {
-				ri.Con_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
+				VID_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
 			}
 		}
 
@@ -1329,7 +1329,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		glewInit();
 
 		if (GLEW_KHR_debug) {
-			ri.Con_Printf( PRINT_ALL, "KHR_debug found\n" );
+			VID_Printf( PRINT_ALL, "KHR_debug found\n" );
 
 			glDebugMessageCallback(glDebugCallback, NULL);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
@@ -1345,7 +1345,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			}
 
 		} else {
-			ri.Con_Printf( PRINT_ALL, "No KHR_debug\n" );
+			VID_Printf( PRINT_ALL, "No KHR_debug\n" );
 		}
 
 #else  // USE_GLEW
@@ -1370,7 +1370,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 */
 static int GLimp_SetMode( unsigned int *pwidth, unsigned int *pheight, qboolean fullscreen )
 {
-	ri.Con_Printf (PRINT_ALL, "setting mode %ux%u\n", *pwidth, *pheight);
+	VID_Printf (PRINT_ALL, "setting mode %ux%u\n", *pwidth, *pheight);
 
 	if ( !GLimp_InitGraphics( fullscreen ) ) {
 		// failed to set a valid mode in windowed mode
@@ -1409,20 +1409,20 @@ static int R_SetMode(unsigned int width, unsigned int height)
 		{
 			ri.Cvar_SetValue( "vid_fullscreen", 0);
 			vid_fullscreen->modified = false;
-			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - fullscreen unavailable in this mode\n" );
+			VID_Printf( PRINT_ALL, "ref_gl::R_SetMode() - fullscreen unavailable in this mode\n" );
 			if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, false ) ) == VID_ERR_NONE )
 				return VID_ERR_NONE;
 		}
 		else if ( err & VID_ERR_FAIL )
 		{
-			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - invalid mode\n" );
+			VID_Printf( PRINT_ALL, "ref_gl::R_SetMode() - invalid mode\n" );
 		}
 
 		// try setting it back to something safe
 		err = GLimp_SetMode( &viddef.width, &viddef.height, false );
 		if ( err != VID_ERR_NONE )
 		{
-			ri.Con_Printf( PRINT_ALL, "ref_gl::R_SetMode() - could not revert to safe mode\n" );
+			VID_Printf( PRINT_ALL, "ref_gl::R_SetMode() - could not revert to safe mode\n" );
 			return VID_ERR_FAIL;
 		}
 	}
@@ -1455,13 +1455,13 @@ int R_Init( void *hinstance, void *hWnd )
 	/* List displays and display modes */
 	int numVideoDrivers = SDL_GetNumVideoDrivers();
 	if (numVideoDrivers < 0) {
-		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDrivers failed: %s\n", SDL_GetError());
+		VID_Printf( PRINT_ALL, "SDL_GetNumVideoDrivers failed: %s\n", SDL_GetError());
 	} else {
-		ri.Con_Printf( PRINT_ALL, "%d video drivers:\n", numVideoDrivers);
+		VID_Printf( PRINT_ALL, "%d video drivers:\n", numVideoDrivers);
 		for (int i = 0; i < numVideoDrivers; i++) {
-			ri.Con_Printf( PRINT_ALL, "%d: \"%s\"\n", i, SDL_GetVideoDriver(i));
+			VID_Printf( PRINT_ALL, "%d: \"%s\"\n", i, SDL_GetVideoDriver(i));
 		}
-		ri.Con_Printf( PRINT_ALL, "Current video driver is \"%s\"\n", SDL_GetCurrentVideoDriver());
+		VID_Printf( PRINT_ALL, "Current video driver is \"%s\"\n", SDL_GetCurrentVideoDriver());
 	}
 
 	SDL_DisplayMode mode;
@@ -1470,26 +1470,26 @@ int R_Init( void *hinstance, void *hWnd )
 	unsigned int desktopWidth = 0, desktopHeight = 0;
 	int numVideoDisplays = SDL_GetNumVideoDisplays();
 	if (numVideoDisplays < 0) {
-		ri.Con_Printf( PRINT_ALL, "SDL_GetNumVideoDisplays failed: \"%s\"\n", SDL_GetError());
+		VID_Printf( PRINT_ALL, "SDL_GetNumVideoDisplays failed: \"%s\"\n", SDL_GetError());
 	} else {
-		ri.Con_Printf( PRINT_ALL, "%d displays:\n", numVideoDisplays);
+		VID_Printf( PRINT_ALL, "%d displays:\n", numVideoDisplays);
 
 		for (int i = 0; i < numVideoDisplays; i++) {
 			const char *displayName = SDL_GetDisplayName(i);
-			ri.Con_Printf( PRINT_ALL, "Display %d: \"%s\"\n", i, displayName);
+			VID_Printf( PRINT_ALL, "Display %d: \"%s\"\n", i, displayName);
 
 			// TODO: store modes
 
 			int numModes = SDL_GetNumDisplayModes(i);
 			if (numModes < 0) {
-				ri.Con_Printf( PRINT_ALL, "SDL_GetNumDisplayModes failed: \"%s\"\n", SDL_GetError());
+				VID_Printf( PRINT_ALL, "SDL_GetNumDisplayModes failed: \"%s\"\n", SDL_GetError());
 			} else {
 				for (int j = 0; j < numModes; j++) {
 					int retval = SDL_GetDisplayMode(i, j, &mode);
 					if (retval < 0) {
-						ri.Con_Printf( PRINT_ALL, "SDL_GetDisplayMode failed: \"%s\"\n", SDL_GetError());
+						VID_Printf( PRINT_ALL, "SDL_GetDisplayMode failed: \"%s\"\n", SDL_GetError());
 					} else {
-						ri.Con_Printf( PRINT_ALL, "Mode %d: %dx%d %d Hz\n", j, mode.w, mode.h, mode.refresh_rate);
+						VID_Printf( PRINT_ALL, "Mode %d: %dx%d %d Hz\n", j, mode.w, mode.h, mode.refresh_rate);
 						// TODO: store
 					}
 				}
@@ -1497,9 +1497,9 @@ int R_Init( void *hinstance, void *hWnd )
 
 			int retval = SDL_GetDesktopDisplayMode(i, &mode);
 			if (retval < 0) {
-				ri.Con_Printf( PRINT_ALL, "SDL_GetDesktopDisplayMode failed: \"%s\"\n", SDL_GetError());
+				VID_Printf( PRINT_ALL, "SDL_GetDesktopDisplayMode failed: \"%s\"\n", SDL_GetError());
 			} else {
-				ri.Con_Printf( PRINT_ALL, "Desktop display mode: %dx%d %d Hz\n", mode.w, mode.h, mode.refresh_rate);
+				VID_Printf( PRINT_ALL, "Desktop display mode: %dx%d %d Hz\n", mode.w, mode.h, mode.refresh_rate);
 				desktopWidth = mode.w;
 				desktopHeight = mode.h;
 			}
@@ -1513,12 +1513,12 @@ int R_Init( void *hinstance, void *hWnd )
 
 	ri.Cmd_ExecuteText (EXEC_NOW, "exec r1gl.cfg\n");
 
-	ri.Con_Printf (PRINT_ALL, "ref_gl version: "REF_VERSION"\n");
+	VID_Printf (PRINT_ALL, "ref_gl version: "REF_VERSION"\n");
 
-	ri.Con_Printf (PRINT_DEVELOPER, "Draw_GetPalette()\n");
+	VID_Printf (PRINT_DEVELOPER, "Draw_GetPalette()\n");
 	Draw_GetPalette ();
 
-	ri.Con_Printf (PRINT_DEVELOPER, "R_Register()\n");
+	VID_Printf (PRINT_DEVELOPER, "R_Register()\n");
 	R_Register(desktopWidth, desktopHeight);
 
 	gl_overbrights->modified = false;
@@ -1526,7 +1526,7 @@ int R_Init( void *hinstance, void *hWnd )
 retryQGL:
 
 	// initialize our QGL dynamic bindings
-	ri.Con_Printf (PRINT_DEVELOPER, "QGL_Init()\n");
+	VID_Printf (PRINT_DEVELOPER, "QGL_Init()\n");
 	qglState = (QGLState *) malloc(sizeof(QGLState));
 	// qglState = new QGLState;   ... oh shit, not C++. sigh ...
 	memset(qglState, 0, sizeof(QGLState));
@@ -1544,7 +1544,7 @@ retryQGL:
 #endif
 
 	// create the window and set up the context
-	ri.Con_Printf (PRINT_DEVELOPER, "R_SetMode()\n");
+	VID_Printf (PRINT_DEVELOPER, "R_SetMode()\n");
 	err = R_SetMode(vid_width->intvalue, vid_height->intvalue);
 	if (err != VID_ERR_NONE)
 	{
@@ -1552,24 +1552,24 @@ retryQGL:
 		if (err & VID_ERR_RETRY_QGL)
 			goto retryQGL;
 
-        ri.Con_Printf (PRINT_ALL, "ref_gl::R_Init() - could not R_SetMode()\n" );
+        VID_Printf (PRINT_ALL, "ref_gl::R_Init() - could not R_SetMode()\n" );
 		return -1;
 	}
 
-	ri.Con_Printf (PRINT_DEVELOPER, "Vid_MenuInit()\n");
+	VID_Printf (PRINT_DEVELOPER, "Vid_MenuInit()\n");
 	ri.Vid_MenuInit();
 
 	/*
 	** get our various GL strings
 	*/
 	gl_config.vendor_string = (const char *) glGetString (GL_VENDOR);
-	ri.Con_Printf (PRINT_ALL, "GL_VENDOR: %s\n", gl_config.vendor_string );
+	VID_Printf (PRINT_ALL, "GL_VENDOR: %s\n", gl_config.vendor_string );
 	gl_config.renderer_string = (const char *) glGetString (GL_RENDERER);
-	ri.Con_Printf (PRINT_ALL, "GL_RENDERER: %s\n", gl_config.renderer_string );
+	VID_Printf (PRINT_ALL, "GL_RENDERER: %s\n", gl_config.renderer_string );
 	gl_config.version_string = (const char *) glGetString (GL_VERSION);
-	ri.Con_Printf (PRINT_ALL, "GL_VERSION: %s\n", gl_config.version_string );
+	VID_Printf (PRINT_ALL, "GL_VERSION: %s\n", gl_config.version_string );
 	gl_config.extensions_string = (const char *) glGetString (GL_EXTENSIONS);
-	//ri.Con_Printf (PRINT_ALL, "GL_EXTENSIONS: %s\n", gl_config.extensions_string );
+	//VID_Printf (PRINT_ALL, "GL_EXTENSIONS: %s\n", gl_config.extensions_string );
 
 	Q_strncpy( renderer_buffer, gl_config.renderer_string, sizeof(renderer_buffer)-1);
 	Q_strlwr( renderer_buffer );
@@ -1584,64 +1584,64 @@ retryQGL:
 #ifdef _WIN32
 	if ( strstr( gl_config.extensions_string, "WGL_EXT_swap_control" ) )
 	{
-		ri.Con_Printf( PRINT_ALL, "...enabling WGL_EXT_swap_control\n" );
+		VID_Printf( PRINT_ALL, "...enabling WGL_EXT_swap_control\n" );
 	}
 	else
 	{
-		ri.Con_Printf( PRINT_ALL, "...WGL_EXT_swap_control not found\n" );
+		VID_Printf( PRINT_ALL, "...WGL_EXT_swap_control not found\n" );
 	}
 #endif
 
-	ri.Con_Printf( PRINT_ALL, "Initializing r1gl extensions:\n" );
+	VID_Printf( PRINT_ALL, "Initializing r1gl extensions:\n" );
 
 	/*gl_config.r1gl_GL_SGIS_generate_mipmap = false;
 	if ( strstr( gl_config.extensions_string, "GL_SGIS_generate_mipmap" ) ) {
 		if ( gl_ext_generate_mipmap->value ) {
-			ri.Con_Printf( PRINT_ALL, "...using GL_SGIS_generate_mipmap\n" );
+			VID_Printf( PRINT_ALL, "...using GL_SGIS_generate_mipmap\n" );
 			gl_config.r1gl_GL_SGIS_generate_mipmap = true;
 		} else {
-			ri.Con_Printf( PRINT_ALL, "...ignoring GL_SGIS_generate_mipmap\n" );		
+			VID_Printf( PRINT_ALL, "...ignoring GL_SGIS_generate_mipmap\n" );		
 		}
 	} else {
-		ri.Con_Printf( PRINT_ALL, "...GL_SGIS_generate_mipmap not found\n" );
+		VID_Printf( PRINT_ALL, "...GL_SGIS_generate_mipmap not found\n" );
 	}*/
 
 	gl_config.r1gl_GL_EXT_texture_filter_anisotropic = false;
 	if ( strstr( gl_config.extensions_string, "GL_EXT_texture_filter_anisotropic" ) )
 	{
 		if ( gl_ext_texture_filter_anisotropic->value ) {
-			ri.Con_Printf( PRINT_ALL, "...using GL_EXT_texture_filter_anisotropic\n" );
+			VID_Printf( PRINT_ALL, "...using GL_EXT_texture_filter_anisotropic\n" );
 			gl_config.r1gl_GL_EXT_texture_filter_anisotropic = true;
 		} else {
-			ri.Con_Printf( PRINT_ALL, "...ignoring GL_EXT_texture_filter_anisotropic\n" );		
+			VID_Printf( PRINT_ALL, "...ignoring GL_EXT_texture_filter_anisotropic\n" );		
 		}
 	} else {
-		ri.Con_Printf( PRINT_ALL, "...GL_EXT_texture_filter_anisotropic not found\n" );
+		VID_Printf( PRINT_ALL, "...GL_EXT_texture_filter_anisotropic not found\n" );
 	}
 	gl_ext_texture_filter_anisotropic->modified = false;
 
 	gl_config.r1gl_GL_ARB_texture_non_power_of_two = false;
 	if ( strstr( gl_config.extensions_string, "GL_ARB_texture_non_power_of_two" ) ) {
 		if (FLOAT_NE_ZERO (gl_ext_texture_non_power_of_two->value) ) {
-			ri.Con_Printf( PRINT_ALL, "...using GL_ARB_texture_non_power_of_two\n" );
+			VID_Printf( PRINT_ALL, "...using GL_ARB_texture_non_power_of_two\n" );
 			gl_config.r1gl_GL_ARB_texture_non_power_of_two = true;
 		} else {
-			ri.Con_Printf( PRINT_ALL, "...ignoring GL_ARB_texture_non_power_of_two\n" );		
+			VID_Printf( PRINT_ALL, "...ignoring GL_ARB_texture_non_power_of_two\n" );		
 		}
 	} else {
-		ri.Con_Printf( PRINT_ALL, "...GL_ARB_texture_non_power_of_two not found\n" );
+		VID_Printf( PRINT_ALL, "...GL_ARB_texture_non_power_of_two not found\n" );
 	}
 
-	ri.Con_Printf( PRINT_ALL, "Initializing r1gl NVIDIA-only extensions:\n" );
+	VID_Printf( PRINT_ALL, "Initializing r1gl NVIDIA-only extensions:\n" );
 	gl_config.r1gl_GL_EXT_nv_multisample_filter_hint = false;
 	if ( strstr( gl_config.extensions_string, "GL_NV_multisample_filter_hint" ) ) {
 		gl_config.r1gl_GL_EXT_nv_multisample_filter_hint = true;	
-		ri.Con_Printf( PRINT_ALL, "...allowing GL_NV_multisample_filter_hint\n" );
+		VID_Printf( PRINT_ALL, "...allowing GL_NV_multisample_filter_hint\n" );
 	} else {
-		ri.Con_Printf( PRINT_ALL, "...GL_NV_multisample_filter_hint not found\n" );
+		VID_Printf( PRINT_ALL, "...GL_NV_multisample_filter_hint not found\n" );
 	}
 
-	ri.Con_Printf( PRINT_DEVELOPER, "GL_SetDefaultState()\n" );
+	VID_Printf( PRINT_DEVELOPER, "GL_SetDefaultState()\n" );
 	GL_SetDefaultState();
 
 	/*
@@ -1651,28 +1651,28 @@ retryQGL:
 	GL_DrawStereoPattern();
 #endif
 
-	ri.Con_Printf( PRINT_DEVELOPER, "GL_InitImages()\n" );
+	VID_Printf( PRINT_DEVELOPER, "GL_InitImages()\n" );
 	GL_InitImages ();
 
-	ri.Con_Printf( PRINT_DEVELOPER, "Mod_Init()\n" );
+	VID_Printf( PRINT_DEVELOPER, "Mod_Init()\n" );
 	Mod_Init ();
 
-	ri.Con_Printf( PRINT_DEVELOPER, "R_InitParticleTexture()\n" );
+	VID_Printf( PRINT_DEVELOPER, "R_InitParticleTexture()\n" );
 	R_InitParticleTexture ();
 
-	ri.Con_Printf( PRINT_DEVELOPER, "Draw_InitLocal()\n" );
+	VID_Printf( PRINT_DEVELOPER, "Draw_InitLocal()\n" );
 	Draw_InitLocal ();
 
 	err = glGetError();
 	if ( err != GL_NO_ERROR )
-		ri.Con_Printf (PRINT_ALL, "glGetError() = 0x%x\n", err);
+		VID_Printf (PRINT_ALL, "glGetError() = 0x%x\n", err);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
 
-	ri.Con_Printf( PRINT_DEVELOPER, "R_Init() complete.\n" );
+	VID_Printf( PRINT_DEVELOPER, "R_Init() complete.\n" );
 	return 0;
 }
 
@@ -1753,7 +1753,7 @@ void R_BeginFrame(void)
 	{
 		int err = R_SetMode(vid_width->intvalue, vid_height->intvalue);
 		if (err != VID_ERR_NONE) {
-			ri.Con_Printf(PRINT_ALL, "Error in R_SetMode\n");
+			VID_Printf(PRINT_ALL, "Error in R_SetMode\n");
 		}
 		vid_width->modified = false;
 		vid_height->modified = false;
@@ -1836,19 +1836,19 @@ void R_BeginFrame(void)
 		{
 			if ( gl_ext_texture_filter_anisotropic->value )
 			{
-				ri.Con_Printf( PRINT_ALL, "...using GL_EXT_texture_filter_anisotropic\n" );
+				VID_Printf( PRINT_ALL, "...using GL_EXT_texture_filter_anisotropic\n" );
 				gl_config.r1gl_GL_EXT_texture_filter_anisotropic = true;
 				GL_UpdateAnisotropy ();
 			}
 			else
 			{
-				ri.Con_Printf( PRINT_ALL, "...ignoring GL_EXT_texture_filter_anisotropic\n" );
+				VID_Printf( PRINT_ALL, "...ignoring GL_EXT_texture_filter_anisotropic\n" );
 				GL_UpdateAnisotropy ();
 			}
 		}
 		else
 		{
-			ri.Con_Printf( PRINT_ALL, "...GL_EXT_texture_filter_anisotropic not found\n" );
+			VID_Printf( PRINT_ALL, "...GL_EXT_texture_filter_anisotropic not found\n" );
 		}
 		
 		gl_ext_texture_filter_anisotropic->modified = false;
@@ -2415,7 +2415,7 @@ void GetEvent(SDL_Event *event)
 
 			int retval = SDL_SetWindowFullscreen(window, flags);
 			if (retval != 0) {
-				ri.Con_Printf(PRINT_ALL, "SDL_SetWindowFullscreen failed: \"%s\"\n", SDL_GetError());
+				VID_Printf(PRINT_ALL, "SDL_SetWindowFullscreen failed: \"%s\"\n", SDL_GetError());
 				// not fatal but since fullscreen failed...
 				fs = flags ? 1 : 0;
 			}
@@ -2469,7 +2469,7 @@ void GetEvent(SDL_Event *event)
 		case SDL_WINDOWEVENT_RESIZED:
 			viddef.width = event->window.data1;
 			viddef.height = event->window.data2;
-			ri.Con_Printf (PRINT_ALL, "Window resized to %dx%d\n", viddef.width, viddef.height);
+			VID_Printf (PRINT_ALL, "Window resized to %dx%d\n", viddef.width, viddef.height);
 			Cvar_SetValue("vid_width", viddef.width);
 			Cvar_SetValue("vid_height", viddef.height);
 			vid_width->modified = false;
@@ -2490,19 +2490,19 @@ void init_joystick() {
     joy = NULL;
 
     if (!(SDL_INIT_JOYSTICK&SDL_WasInit(SDL_INIT_JOYSTICK))) {
-	ri.Con_Printf(PRINT_ALL, "SDL Joystick not initialized, trying to init...\n");
+	VID_Printf(PRINT_ALL, "SDL Joystick not initialized, trying to init...\n");
 	SDL_Init(SDL_INIT_JOYSTICK);
     }
     if (in_joystick) {
-	ri.Con_Printf(PRINT_ALL, "Trying to start-up joystick...\n");
+	VID_Printf(PRINT_ALL, "Trying to start-up joystick...\n");
 	if ((num_joysticks=SDL_NumJoysticks())) {
 	    for(i=0;i<num_joysticks;i++) {
-		ri.Con_Printf(PRINT_ALL, "Trying joystick [%s]\n", 
+		VID_Printf(PRINT_ALL, "Trying joystick [%s]\n", 
 			      SDL_JoystickName(i));
 		if (!SDL_JoystickOpened(i)) {
 		    joy = SDL_JoystickOpen(i);
 		    if (joy) {
-			ri.Con_Printf(PRINT_ALL, "Joytick activated.\n");
+			VID_Printf(PRINT_ALL, "Joytick activated.\n");
 			joystick_avail = true;
 			joy_numbuttons = SDL_JoystickNumButtons(joy);
 			break;
@@ -2510,17 +2510,17 @@ void init_joystick() {
 		}
 	    }
 	    if (!joy) {
-		ri.Con_Printf(PRINT_ALL, "Failed to open any joysticks\n");
+		VID_Printf(PRINT_ALL, "Failed to open any joysticks\n");
 		joystick_avail = false;
 	    }
 	}
 	else {
-	    ri.Con_Printf(PRINT_ALL, "No joysticks available\n");
+	    VID_Printf(PRINT_ALL, "No joysticks available\n");
 	    joystick_avail = false;
 	}
     }
     else {
-	ri.Con_Printf(PRINT_ALL, "Joystick Inactive\n");
+	VID_Printf(PRINT_ALL, "Joystick Inactive\n");
 	joystick_avail = false;
     }
 #endif
@@ -2532,19 +2532,19 @@ void InitJoystick() {
   joy = NULL;
 
   if (!(SDL_INIT_JOYSTICK&SDL_WasInit(SDL_INIT_JOYSTICK))) {
-    ri.Con_Printf(PRINT_ALL, "SDL Joystick not initialized, trying to init...\n");
+    VID_Printf(PRINT_ALL, "SDL Joystick not initialized, trying to init...\n");
     SDL_Init(SDL_INIT_JOYSTICK);
   }
   if (in_joystick) {
-    ri.Con_Printf(PRINT_ALL, "Trying to start-up joystick...\n");
+    VID_Printf(PRINT_ALL, "Trying to start-up joystick...\n");
     if ((num_joysticks=SDL_NumJoysticks())) {
       for(i=0;i<num_joysticks;i++) {
-	ri.Con_Printf(PRINT_ALL, "Trying joystick [%s]\n", 
+	VID_Printf(PRINT_ALL, "Trying joystick [%s]\n", 
 		      SDL_JoystickName(i));
 	if (!SDL_JoystickOpened(i)) {
 	  joy = SDL_JoystickOpen(0);
 	  if (joy) {
-	    ri.Con_Printf(PRINT_ALL, "Joytick activated.\n");
+	    VID_Printf(PRINT_ALL, "Joytick activated.\n");
 	    joystick_avail = true;
 	    joy_numbuttons = SDL_JoystickNumButtons(joy);
 	    break;
@@ -2552,17 +2552,17 @@ void InitJoystick() {
 	}
       }
       if (!joy) {
-	ri.Con_Printf(PRINT_ALL, "Failed to open any joysticks\n");
+	VID_Printf(PRINT_ALL, "Failed to open any joysticks\n");
 	joystick_avail = false;
       }
     }
     else {
-      ri.Con_Printf(PRINT_ALL, "No joysticks available\n");
+      VID_Printf(PRINT_ALL, "No joysticks available\n");
       joystick_avail = false;
     }
   }
   else {
-    ri.Con_Printf(PRINT_ALL, "Joystick Inactive\n");
+    VID_Printf(PRINT_ALL, "Joystick Inactive\n");
     joystick_avail = false;
   }
 #endif
@@ -2667,19 +2667,19 @@ void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 	switch (severity)
 	{
 	case GL_DEBUG_SEVERITY_HIGH_ARB:
-		ri.Con_Printf( PRINT_ALL, "GL error from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
+		VID_Printf( PRINT_ALL, "GL error from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
 		break;
 
 	case GL_DEBUG_SEVERITY_MEDIUM_ARB:
-		ri.Con_Printf( PRINT_ALL, "GL warning from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
+		VID_Printf( PRINT_ALL, "GL warning from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
 		break;
 
 	case GL_DEBUG_SEVERITY_LOW_ARB:
-		ri.Con_Printf( PRINT_ALL, "GL debug from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
+		VID_Printf( PRINT_ALL, "GL debug from %s type %s: (%d) %s\n", errorSource(source), errorType(type), id, message);
 		break;
 
 	default:
-		ri.Con_Printf( PRINT_ALL, "GL error of unknown severity %x from %s type %s: (%d) %s\n", severity, errorSource(source), errorType(type), id, message);
+		VID_Printf( PRINT_ALL, "GL error of unknown severity %x from %s type %s: (%d) %s\n", severity, errorSource(source), errorType(type), id, message);
 		break;
 	}
 }
@@ -2775,7 +2775,7 @@ void KBD_Update(void)
 			SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
 			int retval = SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
 			if (retval != 0) {
-				ri.Con_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
+				VID_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
 			}
 		}
 		while (keyq_head != keyq_tail)

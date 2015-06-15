@@ -271,7 +271,7 @@ void Draw_StretchPic (int x, int y, int w, int h, char *pic)
 	gl = Draw_FindPic (pic);
 	if (!gl)
 	{
-		ri.Con_Printf (PRINT_DEVELOPER, "Can't find pic: %s\n", pic);
+		VID_Printf (PRINT_DEVELOPER, "Can't find pic: %s\n", pic);
 		gl = r_notexture;
 	}
 
@@ -334,7 +334,7 @@ void Draw_Pic (int x, int y, char *pic)
 
 	if (!gl)
 	{
-		ri.Con_Printf (PRINT_DEVELOPER, "Can't find pic: %s\n", pic);
+		VID_Printf (PRINT_DEVELOPER, "Can't find pic: %s\n", pic);
 		gl = r_notexture;
 	}
 
@@ -403,7 +403,7 @@ void Draw_TileClear (int x, int y, int w, int h, char *pic)
 
 	if (!image)
 	{
-		ri.Con_Printf (PRINT_DEVELOPER, "Can't find pic: %s\n", pic);
+		VID_Printf (PRINT_DEVELOPER, "Can't find pic: %s\n", pic);
 		image = r_notexture;
 	}
 

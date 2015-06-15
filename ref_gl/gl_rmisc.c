@@ -138,7 +138,7 @@ unsigned int __stdcall png_write_thread (byte *buffer)
 	f = fopen (picname, "wb");
 	if (!f)
 	{
-		ri.Con_Printf (PRINT_ALL, "Couldn't open %s for writing.\n", picname);
+		VID_Printf (PRINT_ALL, "Couldn't open %s for writing.\n", picname);
 #ifdef USE_THREADS
 		ExitThread (1);
 #else
@@ -149,7 +149,7 @@ unsigned int __stdcall png_write_thread (byte *buffer)
     png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
 	if (!png_ptr) {
-		ri.Con_Printf (PRINT_ALL, "libpng error\n", picname);
+		VID_Printf (PRINT_ALL, "libpng error\n", picname);
 #ifdef USE_THREADS
 		ExitThread (1);
 #else
@@ -161,7 +161,7 @@ unsigned int __stdcall png_write_thread (byte *buffer)
     if (!info_ptr)
     {
        png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-       ri.Con_Printf (PRINT_ALL, "libpng error\n", picname);
+       VID_Printf (PRINT_ALL, "libpng error\n", picname);
 #ifdef USE_THREADS
 		ExitThread (1);
 #else
@@ -197,7 +197,7 @@ unsigned int __stdcall png_write_thread (byte *buffer)
 	free (buffer);
 	free (row_pointers);
 
-	ri.Con_Printf (PRINT_ALL, "Finished, wrote %s\n", picname);
+	VID_Printf (PRINT_ALL, "Finished, wrote %s\n", picname);
 #ifdef USE_THREADS
 	ExitThread (0);
 #endif
@@ -234,7 +234,7 @@ void GL_ScreenShot_JPG (byte *buffer)
 	f = fopen (picname, "wb");
 	if (!f)
 	{
-		ri.Con_Printf (PRINT_ALL, "Couldn't open %s for writing.\n", picname);
+		VID_Printf (PRINT_ALL, "Couldn't open %s for writing.\n", picname);
 		return;
 	}
 
@@ -275,7 +275,7 @@ void GL_ScreenShot_JPG (byte *buffer)
 	fclose(f);
 	free(buffer);
 
-	ri.Con_Printf (PRINT_ALL, "Wrote %s\n", picname);
+	VID_Printf (PRINT_ALL, "Wrote %s\n", picname);
 }
 
 
@@ -307,7 +307,7 @@ void GL_ScreenShot_f (void)
 #ifdef USE_THREADS
 		//_beginthreadex (NULL, 0, (unsigned int (__stdcall *)(void *))png_write_thread, (void *)buffer, 0, &tID);
 		CreateThread (NULL, 0, (LPTHREAD_START_ROUTINE)png_write_thread, (LPVOID)buffer, 0, &tID);
-		ri.Con_Printf (PRINT_ALL, "Taking PNG screenshot...\n");
+		VID_Printf (PRINT_ALL, "Taking PNG screenshot...\n");
 #else  // USE_THREADS
 		png_write_thread (buffer);
 #endif  // USE_THREADS
@@ -320,7 +320,7 @@ void GL_ScreenShot_f (void)
 
 #else  // USE_JPEG
 
-	ri.Con_Printf (PRINT_ALL, "No JPEG support, no screenshot...\n");
+	VID_Printf (PRINT_ALL, "No JPEG support, no screenshot...\n");
 
 #endif  // USE_JPEG
 
@@ -333,10 +333,10 @@ void GL_ScreenShot_f (void)
 */
 void GL_Strings_f( void )
 {
-	ri.Con_Printf (PRINT_ALL, "GL_VENDOR: %s\n", gl_config.vendor_string );
-	ri.Con_Printf (PRINT_ALL, "GL_RENDERER: %s\n", gl_config.renderer_string );
-	ri.Con_Printf (PRINT_ALL, "GL_VERSION: %s\n", gl_config.version_string );
-	ri.Con_Printf (PRINT_ALL, "GL_EXTENSIONS: %s\n", gl_config.extensions_string );
+	VID_Printf (PRINT_ALL, "GL_VENDOR: %s\n", gl_config.vendor_string );
+	VID_Printf (PRINT_ALL, "GL_RENDERER: %s\n", gl_config.renderer_string );
+	VID_Printf (PRINT_ALL, "GL_VERSION: %s\n", gl_config.version_string );
+	VID_Printf (PRINT_ALL, "GL_EXTENSIONS: %s\n", gl_config.extensions_string );
 }
 
 #ifdef R1GL_RELEASE

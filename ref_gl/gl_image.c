@@ -258,7 +258,7 @@ void GL_TextureMode(const char *string)
 
 	if (i == NUM_GL_MODES)
 	{
-		ri.Con_Printf (PRINT_ALL, "bad filter name\n");
+		VID_Printf (PRINT_ALL, "bad filter name\n");
 		return;
 	}
 
@@ -403,7 +403,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 	len = ri.FS_LoadFile (filename, (void **)&raw);
 	if (!raw || len < sizeof(pcx_t))
 	{
-		ri.Con_Printf (PRINT_DEVELOPER, "Bad/missing PCX file: %s\n", filename);
+		VID_Printf (PRINT_DEVELOPER, "Bad/missing PCX file: %s\n", filename);
 		return;
 	}
 
@@ -432,7 +432,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 		|| pcx->ymax >= 480
 		|| pcx->data >= len)
 	{
-		ri.Con_Printf (PRINT_ALL, "Bad PCX file: %s\n", filename);
+		VID_Printf (PRINT_ALL, "Bad PCX file: %s\n", filename);
 		ri.FS_FreeFile (pcx);
 		return;
 	}
@@ -442,7 +442,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 	out = malloc ( picSize );
 	if (!out)
 	{
-		ri.Con_Printf (PRINT_ALL, "Not enough memory for PCX data: %s (%d bytes)\n", filename, picSize);
+		VID_Printf (PRINT_ALL, "Not enough memory for PCX data: %s (%d bytes)\n", filename, picSize);
 		goto abortload;
 	}
 
@@ -454,14 +454,14 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 	{
 		if (len < 768)
 		{
-			ri.Con_Printf (PRINT_ALL, "Bad PCX file (not enough data for palette): %s\n", filename);
+			VID_Printf (PRINT_ALL, "Bad PCX file (not enough data for palette): %s\n", filename);
 			goto abortload;
 		}
 
 		*palette = malloc(768);
 		if (!*palette)
 		{
-			ri.Con_Printf (PRINT_ALL, "Not enough memory for PCX palette: %s\n", filename);
+			VID_Printf (PRINT_ALL, "Not enough memory for PCX palette: %s\n", filename);
 			goto abortload;
 		}
 
@@ -483,7 +483,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 		{
 			if (raw - base >= len)
 			{
-				ri.Con_Printf (PRINT_ALL, "Malformed PCX file (not enough data): %s\n", filename);
+				VID_Printf (PRINT_ALL, "Malformed PCX file (not enough data): %s\n", filename);
 				goto abortload;
 			}
 
@@ -494,7 +494,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 				runLength = dataByte & 0x3F;
 				if (raw - base >= len)
 				{
-					ri.Con_Printf (PRINT_ALL, "Malformed PCX file (not enough data): %s\n", filename);
+					VID_Printf (PRINT_ALL, "Malformed PCX file (not enough data): %s\n", filename);
 					goto abortload;
 				}
 				dataByte = *raw++;
@@ -506,7 +506,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 			{
 				if (x >= pcx->xmax + 1)
 				{
-					ri.Con_Printf (PRINT_ALL, "Malformed PCX file (bad runlength encoding): %s\n", filename);
+					VID_Printf (PRINT_ALL, "Malformed PCX file (bad runlength encoding): %s\n", filename);
 					goto abortload;
 				}
 				pix[x++] = dataByte;
@@ -516,7 +516,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 
 	//end of data should coincide with start of palette
 	if (raw - base != len - 769)
-		ri.Con_Printf (PRINT_DEVELOPER, "Empty space in PCX file: %s\n", filename);
+		VID_Printf (PRINT_DEVELOPER, "Empty space in PCX file: %s\n", filename);
 
 	ri.FS_FreeFile (pcx);
 	return;
@@ -575,7 +575,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 	if ((png_check_sig(PngFileBuffer.Buffer, 8)) == 0)
 	{
 		ri.FS_FreeFile (PngFileBuffer.Buffer); 
-		ri.Con_Printf (PRINT_ALL, "Not a PNG file: %s\n", name);
+		VID_Printf (PRINT_ALL, "Not a PNG file: %s\n", name);
 		return;
     }
 
@@ -586,7 +586,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
     if (!png_ptr)
 	{
 		ri.FS_FreeFile (PngFileBuffer.Buffer);
-		ri.Con_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
+		VID_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
 		return;
 	}
 
@@ -595,7 +595,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 	{
         png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
 		ri.FS_FreeFile (PngFileBuffer.Buffer);
-		ri.Con_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
+		VID_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
 		return;
     }
     
@@ -604,7 +604,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 	{
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 		ri.FS_FreeFile (PngFileBuffer.Buffer);
-		ri.Con_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
+		VID_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
 		return;
     }
 
@@ -616,7 +616,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 	{
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 		ri.FS_FreeFile (PngFileBuffer.Buffer);
-		ri.Con_Printf (PRINT_ALL, "Oversized PNG file: %s\n", name);
+		VID_Printf (PRINT_ALL, "Oversized PNG file: %s\n", name);
 		return;
 	}
 
@@ -1377,7 +1377,7 @@ breakOut:;
 		temp = malloc (numPixels);
 		if (!temp)
 			ri.Sys_Error (ERR_FATAL, "LoadTGA: not enough memory");
-		ri.Con_Printf (PRINT_DEVELOPER, "LoadTGA: Bottom-to-top TGA file (slow): %s\n", name);
+		VID_Printf (PRINT_DEVELOPER, "LoadTGA: Bottom-to-top TGA file (slow): %s\n", name);
 		memcpy (temp, targa_rgba, numPixels);
 		for (row = 0; row < rows; row++)
 		{
@@ -1408,7 +1408,7 @@ void jpg_null(j_decompress_ptr cinfo)
 
 boolean jpg_fill_input_buffer(j_decompress_ptr cinfo)
 {
-    ri.Con_Printf(PRINT_ALL, "Premature end of JPEG data\n");
+    VID_Printf(PRINT_ALL, "Premature end of JPEG data\n");
     return 1;
 }
 
@@ -1453,7 +1453,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 
 	if (rawsize < 10 || rawdata[6] != 'J' || rawdata[7] != 'F' || rawdata[8] != 'I' || rawdata[9] != 'F')
 	{ 
-		ri.Con_Printf (PRINT_ALL, "Invalid JPEG header: %s\n", filename); 
+		VID_Printf (PRINT_ALL, "Invalid JPEG header: %s\n", filename); 
 		ri.FS_FreeFile(rawdata); 
 		return; 
 	} 
@@ -1466,7 +1466,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 
 	if(cinfo.output_components != 3 && cinfo.output_components != 4)
 	{
-		ri.Con_Printf(PRINT_ALL, "Invalid JPEG colour components\n");
+		VID_Printf(PRINT_ALL, "Invalid JPEG colour components\n");
 		jpeg_destroy_decompress(&cinfo);
 		ri.FS_FreeFile(rawdata);
 		return;
@@ -1476,7 +1476,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	rgbadata = malloc(cinfo.output_width * cinfo.output_height * 4);
 	if(!rgbadata)
 	{
-		ri.Con_Printf(PRINT_ALL, "Insufficient memory for JPEG buffer\n");
+		VID_Printf(PRINT_ALL, "Insufficient memory for JPEG buffer\n");
 		jpeg_destroy_decompress(&cinfo);
 		ri.FS_FreeFile(rawdata);
 		return;
@@ -1490,7 +1490,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	scanline = malloc (cinfo.output_width * 3);
 	if (!scanline)
 	{
-		ri.Con_Printf (PRINT_ALL, "Insufficient memory for JPEG scanline buffer\n");
+		VID_Printf (PRINT_ALL, "Insufficient memory for JPEG scanline buffer\n");
 		free (rgbadata);
 		jpeg_destroy_decompress (&cinfo);
 		ri.FS_FreeFile (rawdata);
@@ -2491,7 +2491,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	else if (samples == gl_alpha_format)
 	    comp = gl_tex_alpha_format;
 	else {
-	    ri.Con_Printf (PRINT_ALL,
+	    VID_Printf (PRINT_ALL,
 			"GL_Upload32: %s: Unknown number of texture components %i\n",
 			   current_texture_filename, samples);
 	    comp = samples;
@@ -2783,7 +2783,7 @@ nonscrap:
 		}
 		else
 		{
-			ri.Con_Printf (PRINT_DEVELOPER, "Warning, image '%s' has hi-res replacement smaller than the original! (%d x %d) < (%d x %d)\n", name, image->width, image->height, global_hax_texture_x, global_hax_texture_y);
+			VID_Printf (PRINT_DEVELOPER, "Warning, image '%s' has hi-res replacement smaller than the original! (%d x %d) < (%d x %d)\n", name, image->width, image->height, global_hax_texture_x, global_hax_texture_y);
 		}	
 	}
 
@@ -2809,7 +2809,7 @@ image_t *GL_LoadWal (const char *name)
 	len = ri.FS_LoadFile (name, (void **)&mt);
 	if (!mt)
 	{
-		ri.Con_Printf (PRINT_ALL, "GL_FindImage: can't load %s\n", name);
+		VID_Printf (PRINT_ALL, "GL_FindImage: can't load %s\n", name);
 		return r_notexture;
 	}
 
@@ -2821,12 +2821,12 @@ image_t *GL_LoadWal (const char *name)
 
 	if (len < required)
 	{
-		ri.Con_Printf (PRINT_HIGH, "Bad texture '%s', %d bytes is less than %d required\n", name, len, required);
+		VID_Printf (PRINT_HIGH, "Bad texture '%s', %d bytes is less than %d required\n", name, len, required);
 		return NULL;
 	}
 	else if (len != required)
 	{
-		ri.Con_Printf (PRINT_DEVELOPER, "Warning, texture '%s' has funny size (length %d != calculated %d)\n", name, len, required);
+		VID_Printf (PRINT_DEVELOPER, "Warning, texture '%s' has funny size (length %d != calculated %d)\n", name, len, required);
 	}
 
 	if (ofs < sizeof(*mt) || ofs >= len)
@@ -2869,12 +2869,12 @@ void Cmd_HashStats_f (void)
 
 	for (hash = 0; hash < IMAGES_HASH_SIZE; hash++)
 	{
-		ri.Con_Printf (PRINT_ALL, "%d: ", hash);
+		VID_Printf (PRINT_ALL, "%d: ", hash);
 		for(imghash = images_hash[hash]; imghash; imghash = imghash->hash_next)
 		{
-			ri.Con_Printf (PRINT_ALL, "*");
+			VID_Printf (PRINT_ALL, "*");
 		}
-		ri.Con_Printf (PRINT_ALL, "\n");
+		VID_Printf (PRINT_ALL, "\n");
 	}
 }
 
@@ -2962,7 +2962,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 			if (!GetPCXInfo (name, &global_hax_texture_x, &global_hax_texture_y))
 			{
 				global_hax_texture_x = global_hax_texture_y = 0;
-				//ri.Con_Printf (PRINT_ALL, "Missing PCX file: %s\n", name);
+				//VID_Printf (PRINT_ALL, "Missing PCX file: %s\n", name);
 			}
 		}
 
@@ -3103,7 +3103,7 @@ void	GL_ImageList_f (void)
 		"PAL"
 	};*/
 
-	ri.Con_Printf (PRINT_ALL, "------------------\n");
+	VID_Printf (PRINT_ALL, "------------------\n");
 	texels = 0;
 
 	for (i=0, image=gltextures ; i<numgltextures ; i++, image++)
@@ -3115,41 +3115,41 @@ void	GL_ImageList_f (void)
 		{
 		case it_skin:
 			ski++;
-			ri.Con_Printf (PRINT_ALL, "M");
+			VID_Printf (PRINT_ALL, "M");
 			break;
 		case it_sprite:
 			spr++;
-			ri.Con_Printf (PRINT_ALL, "S");
+			VID_Printf (PRINT_ALL, "S");
 			break;
 		case it_wall:
 			wal++;
-			ri.Con_Printf (PRINT_ALL, "W");
+			VID_Printf (PRINT_ALL, "W");
 			break;
 		case it_pic:
 			pic++;
-			ri.Con_Printf (PRINT_ALL, "P");
+			VID_Printf (PRINT_ALL, "P");
 			break;
 		default:
 			mis++;
-			ri.Con_Printf (PRINT_ALL, " ");
+			VID_Printf (PRINT_ALL, " ");
 			break;
 		}
 
-		ri.Con_Printf (PRINT_ALL,  " %3i x %3i: %s (%d bytes)\n",
+		VID_Printf (PRINT_ALL,  " %3i x %3i: %s (%d bytes)\n",
 			image->upload_width, image->upload_height, image->name, (int)(image->upload_width * image->upload_height * sizeof(int)));
 	}
 
-	ri.Con_Printf (PRINT_ALL, "%d skins (M), %d sprites (S), %d world textures (W), %d pics (P), %d misc.\n", ski, spr, wal, pic, mis);
+	VID_Printf (PRINT_ALL, "%d skins (M), %d sprites (S), %d world textures (W), %d pics (P), %d misc.\n", ski, spr, wal, pic, mis);
 
 	/*
-	ri.Con_Printf (PRINT_ALL, "ImageCache: %d level 1 hits, %d level 2 hits, %d cache misses. Efficiency = %.2f%%\n",
+	VID_Printf (PRINT_ALL, "ImageCache: %d level 1 hits, %d level 2 hits, %d cache misses. Efficiency = %.2f%%\n",
 		l1cachehits,
 		l2cachehits,
 		cachemisses,
 		((float)(l1cachehits+(l2cachehits/4)) / (float)(l1cachehits+l2cachehits+cachemisses) * 100.0));
 	*/
 
-	ri.Con_Printf (PRINT_ALL, "Total texel count (not counting mipmaps): %i (%.2f MB)\n", texels, (texels * sizeof(int)) / 1024.0f / 1024.0f);
+	VID_Printf (PRINT_ALL, "Total texel count (not counting mipmaps): %i (%.2f MB)\n", texels, (texels * sizeof(int)) / 1024.0f / 1024.0f);
 }
 
 /*
@@ -3233,7 +3233,7 @@ void GL_FreeUnusedImages (void)
 		memset (image, 0, sizeof(*image));
 	}
 
-	ri.Con_Printf (PRINT_DEVELOPER, "GL_FreeUnusedImages: freed %d images\n", count);
+	VID_Printf (PRINT_DEVELOPER, "GL_FreeUnusedImages: freed %d images\n", count);
 }
 
 

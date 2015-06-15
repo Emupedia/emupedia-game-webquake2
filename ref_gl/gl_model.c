@@ -150,7 +150,7 @@ void Mod_Modellist_f (void)
 	total = num = 0;
 	numbrush = numalias = numsprites = numsub = 0;
 
-	ri.Con_Printf (PRINT_ALL,"Loaded models:\n");
+	VID_Printf (PRINT_ALL,"Loaded models:\n");
 	for (i=0, mod=mod_known ; i < mod_numknown ; i++, mod++)
 	{
 		if (!mod->name[0])
@@ -159,28 +159,28 @@ void Mod_Modellist_f (void)
 		switch (mod->type)
 		{
 			case mod_brush:
-				ri.Con_Printf (PRINT_ALL, "B ");
+				VID_Printf (PRINT_ALL, "B ");
 				numsub += mod->numsubmodels;
 				numbrush++;
 				break;
 			case mod_sprite:
-				ri.Con_Printf (PRINT_ALL, "S ");
+				VID_Printf (PRINT_ALL, "S ");
 				numsprites++;
 				break;
 			case mod_alias:
-				ri.Con_Printf (PRINT_ALL, "A ");
+				VID_Printf (PRINT_ALL, "A ");
 				numalias++;
 				break;
 			default:
-				ri.Con_Printf (PRINT_ALL, "! ");
+				VID_Printf (PRINT_ALL, "! ");
 				break;
 		}
-		ri.Con_Printf (PRINT_ALL, "%8i : %s\n", mod->extradatasize, mod->name);
+		VID_Printf (PRINT_ALL, "%8i : %s\n", mod->extradatasize, mod->name);
 		total += mod->extradatasize;
 	}
 
-	ri.Con_Printf (PRINT_ALL, "%d brush models (B) with %d submodels, %d alias models (A), %d sprites (S)\n", numbrush, numsub, numalias, numsprites);
-	ri.Con_Printf (PRINT_ALL, "Total resident: %i bytes (%.2f MB) in %d models (%d with submodels)\n", total, (float)total / 1024 / 1024, num, num + numsub);
+	VID_Printf (PRINT_ALL, "%d brush models (B) with %d submodels, %d alias models (A), %d sprites (S)\n", numbrush, numsub, numalias, numsprites);
+	VID_Printf (PRINT_ALL, "Total resident: %i bytes (%.2f MB) in %d models (%d with submodels)\n", total, (float)total / 1024 / 1024, num, num + numsub);
 }
 
 /*
@@ -652,7 +652,7 @@ void Mod_LoadTexinfo (lump_t *l)
 		
 		if (!GetWalInfo (name, &global_hax_texture_x, &global_hax_texture_y))
 		{
-			ri.Con_Printf (PRINT_ALL, "Couldn't load %s\n", name);
+			VID_Printf (PRINT_ALL, "Couldn't load %s\n", name);
 			out->image = r_notexture;
 			continue;
 		}
@@ -696,7 +696,7 @@ void Mod_LoadTexinfo (lump_t *l)
 					
 					if (!out->image)
 					{
-						ri.Con_Printf (PRINT_ALL, "Couldn't load %s\n", name);
+						VID_Printf (PRINT_ALL, "Couldn't load %s\n", name);
 						out->image = r_notexture;
 					}
 				}
@@ -1257,7 +1257,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 #endif
 
 	if (pheader->skinheight > MAX_LBM_HEIGHT)
-		ri.Con_Printf (PRINT_DEVELOPER, "model %s has a skin taller than traditional maximum of %d", mod->name,
+		VID_Printf (PRINT_DEVELOPER, "model %s has a skin taller than traditional maximum of %d", mod->name,
 				   MAX_LBM_HEIGHT);
 
 	if (pheader->num_xyz <= 0)
@@ -1468,7 +1468,7 @@ void Mod_LoadSpriteModel (model_t *mod, void *buffer)
 
 		//r1: sprites crash if they don't have valid skins for framenum so be noisy
 		if (!mod->skins[i])
-			ri.Con_Printf (PRINT_ALL, "GL_FindImage: Couldn't find skin '%s' for sprite '%s'\n", sprout->frames[i].name, mod->name);
+			VID_Printf (PRINT_ALL, "GL_FindImage: Couldn't find skin '%s' for sprite '%s'\n", sprout->frames[i].name, mod->name);
 	}
 
 	mod->type = mod_sprite;
