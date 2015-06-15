@@ -18,6 +18,7 @@ USE_PNG:=n
 
 BUILD_SERVER:=n
 
+STATIC_SDL2:=n
 
 BUILTIN_GAME:=baseq2
 
@@ -39,7 +40,16 @@ LDFLAGS+=-s OUTLINING_LIMIT=5000
 LDFLAGS+=-s FORCE_ALIGNED_MEMORY=1
 LDLIBS:=
 LDLIBS_ref_gl:=
+
+ifeq ($(STATIC_SDL2),y)
+
+LDLIBS_client:=
+
+else  # STATIC_SDL2
+
 LDLIBS_client:=$(TOPDIR)/foreign/SDL2/build/.libs/libSDL2.a
+
+endif  # STATIC_SDL2
 
 
 LTOCFLAGS:=--llvm-lto 3

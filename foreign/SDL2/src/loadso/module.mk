@@ -4,6 +4,7 @@ d              := $(dir)
 
 
 SUBDIRS:= \
+	dummy \
 	windows \
 	# empty line
 

@@ -23,6 +23,9 @@
 #include "../SDL_thread_c.h"
 
 
+#if !SDL_THREAD_WINDOWS
+
+
 SDL_TLSData *
 SDL_SYS_GetTLSData()
 {
@@ -34,5 +37,9 @@ SDL_SYS_SetTLSData(SDL_TLSData *data)
 {
     return SDL_Generic_SetTLSData(data);
 }
+
+
+#endif  /* !SDL_THREAD_WINDOWS */
+
 
 /* vi: set ts=4 sw=4 expandtab: */

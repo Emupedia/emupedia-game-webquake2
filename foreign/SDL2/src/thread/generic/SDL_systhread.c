@@ -25,6 +25,10 @@
 #include "SDL_thread.h"
 #include "../SDL_systhread.h"
 
+
+#if !SDL_THREAD_WINDOWS
+
+
 #ifdef SDL_PASSED_BEGINTHREAD_ENDTHREAD
 int
 SDL_SYS_CreateThread(SDL_Thread * thread, void *args,
@@ -67,5 +71,9 @@ SDL_SYS_DetachThread(SDL_Thread * thread)
 {
     return;
 }
+
+
+#endif  /* !SDL_THREAD_WINDOWS */
+
 
 /* vi: set ts=4 sw=4 expandtab: */

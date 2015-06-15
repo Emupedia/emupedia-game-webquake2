@@ -71,7 +71,7 @@ SDL_SemPost(SDL_sem * sem)
     return SDL_SetError("SDL not built with thread support");
 }
 
-#else
+#elif !SDL_THREAD_WINDOWS
 
 struct SDL_semaphore
 {

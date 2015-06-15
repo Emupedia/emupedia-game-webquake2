@@ -4,6 +4,7 @@ d              := $(dir)
 
 
 SUBDIRS:= \
+	generic \
 	windows \
 	# empty line
 
