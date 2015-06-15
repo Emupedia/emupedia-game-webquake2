@@ -27,7 +27,7 @@ CXX:=i686-w64-mingw32-g++
 CFLAGS:=-gstabs -DNDEBUG -D__CRT__NO_INLINE=1 -mwindows
 CFLAGS+=-w
 CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
-OPTFLAGS:=-O2 -march=native -fno-strict-aliasing -ffloat-store
+OPTFLAGS:=-O2 -mtune=generic -fno-strict-aliasing -ffloat-store
 
 
 # lazy assignment because CFLAGS is changed later
