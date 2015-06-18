@@ -101,6 +101,7 @@ endef  # directory-module
 
 DIRS:= \
 	client \
+	ctf \
 	foreign \
 	game \
 	linux \

@@ -492,7 +492,7 @@ void Weapon_Generic(edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST, 
 		return;
 		
 	if((CTFApplyHaste(ent) ||
-			(Q_strcasecmp(ent->client->pers.weapon->pickup_name, "Grapple") == 0 &&
+			(Q_stricmp(ent->client->pers.weapon->pickup_name, "Grapple") == 0 &&
 			 ent->client->weaponstate != WEAPON_FIRING))
 			&& oldstate == ent->client->weaponstate){
 		Weapon_Generic2(ent, FRAME_ACTIVATE_LAST, FRAME_FIRE_LAST,
