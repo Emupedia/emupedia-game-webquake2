@@ -269,6 +269,7 @@ typedef struct QGLState {
 	// this is index into the array, not a VBO id
 	unsigned int currentVBOidx;
 
+	bool shaderDirty;
 	ShaderState wantShader;
 	Shader *activeShader;
 
