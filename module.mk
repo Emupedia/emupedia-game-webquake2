@@ -9,7 +9,7 @@ PROGRAMS:=
 ALLSRC:=
 # directories which might contain object files
 # used for both clean and bindirs
-ALLDIRS:=
+ALLDIRS:=baseq2
 
 default: all
 
@@ -113,7 +113,7 @@ $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))
 
 
 TARGETS:=$(foreach PROG,$(PROGRAMS),$(PROG)$(EXESUFFIX))
-TARGETS+=$(foreach LIB,$(LIBRARIES),$(LIB)$(SOSUFFIX))
+TARGETS+=$(foreach LIB,$(LIBRARIES),$(LIB)/game$(SOSUFFIX))
 
 all: $(TARGETS)
 
@@ -200,7 +200,7 @@ ALLSRC+=$$(filter %.c,$$($1_SRC))
 
 $1_SRC+=$$(foreach module, $$($1_MODULES), $$(SRC_$$(module)))
 $1_OBJ:=$$($1_SRC:.c=.sh$(OBJSUFFIX))
-$1$(SOSUFFIX): $$($1_OBJ) | bindirs
+$1/game$(SOSUFFIX): $$($1_OBJ) | bindirs
 	$(CC) $(LDFLAGS) -shared -o $$@ $$^ $$(foreach module, $$($1_MODULES), $$(LDLIBS_$$(module))) $$($1_LIBS) $(LDLIBS)
 
 endef  # library-target

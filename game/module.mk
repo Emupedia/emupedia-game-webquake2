@@ -61,13 +61,13 @@ FILES:= \
 	# empty line
 
 
-game_MODULES:=game qshared
-game_SRC:=
+baseq2_MODULES:=baseq2 qshared
+baseq2_SRC:=
 
 
 ifeq ($(BUILTIN_GAME),)
 LIBRARIES+= \
-	game \
+	baseq2 \
 	#empty line
 endif
 
