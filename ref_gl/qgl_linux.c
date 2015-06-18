@@ -433,12 +433,12 @@ static void multMatrices(float *target, const float *left, const float *right) {
 static void commitShaderState() {
 	bool shaderChanged = false;
 	if (qglState->shaderDirty) {
-	Shader *newShader = findShader(&qglState->wantShader);
-	if (qglState->activeShader != newShader) {
-		qglState->activeShader = newShader;
-		glUseProgram(qglState->activeShader->program);
-		shaderChanged = true;
-	}
+		Shader *newShader = findShader(&qglState->wantShader);
+		if (qglState->activeShader != newShader) {
+			qglState->activeShader = newShader;
+			glUseProgram(qglState->activeShader->program);
+			shaderChanged = true;
+		}
 	}
 
 	if (shaderChanged || qglState->mvMatrixDirty || qglState->projMatrixDirty) {
@@ -674,9 +674,9 @@ void qglActiveTexture(GLenum tex) {
 
 void qglAlphaFunc(GLenum func, GLclampf ref) {
 	if (qglState->wantShader.alphaFunc != func) {
-	flushDraws();
+		flushDraws();
 
-	qglState->wantShader.alphaFunc = func;
+		qglState->wantShader.alphaFunc = func;
 		qglState->shaderDirty = true;
 	}
 	qglState->wantShader.alphaRef = ref;
@@ -688,12 +688,12 @@ void qglDisable(GLenum cap) {
 
 	if (cap == GL_ALPHA_TEST) {
 		if (qglState->wantShader.alphaTest) {
-		qglState->wantShader.alphaTest = false;
+			qglState->wantShader.alphaTest = false;
 			qglState->shaderDirty = true;
 		}
 	} else if (cap == GL_TEXTURE_2D) {
 		if (qglState->wantShader.texState[qglState->wantActiveTexture].texEnable) {
-		qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = false;
+			qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = false;
 			qglState->shaderDirty = true;
 		}
 	} else {
@@ -707,12 +707,12 @@ void qglEnable(GLenum cap) {
 
 	if (cap == GL_ALPHA_TEST) {
 		if (!qglState->wantShader.alphaTest) {
-		qglState->wantShader.alphaTest = true;
+			qglState->wantShader.alphaTest = true;
 			qglState->shaderDirty = true;
 		}
 	} else if (cap == GL_TEXTURE_2D) {
 		if (!qglState->wantShader.texState[qglState->wantActiveTexture].texEnable) {
-		qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = true;
+			qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = true;
 			qglState->shaderDirty = true;
 		}
 	} else {
@@ -733,7 +733,7 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 			  || param == GL_REPLACE);
 		if (qglState->wantShader.texState[qglState->wantActiveTexture].texMode != param) {
 			qglState->shaderDirty = true;
-		qglState->wantShader.texState[qglState->wantActiveTexture].texMode = param;
+			qglState->wantShader.texState[qglState->wantActiveTexture].texMode = param;
 		}
 	} else if (pname == GL_COMBINE_RGB_ARB) {
 		assert(param == GL_MODULATE);
