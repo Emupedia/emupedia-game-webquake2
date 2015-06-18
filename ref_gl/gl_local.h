@@ -256,15 +256,10 @@ typedef struct QGLState {
 
 	GLenum matrixMode;
 
-	float mvMatrices[NUMMATRICES][16];
-	float projMatrices[NUMMATRICES][16];
-
 	int mvMatrixTop, projMatrixTop;
 	bool mvMatrixDirty, projMatrixDirty;
 
 	float zNear, zFar;
-
-	GLuint vbos[NUMVBOS];
 
 	// this is index into the array, not a VBO id
 	unsigned int currentVBOidx;
@@ -279,6 +274,11 @@ typedef struct QGLState {
 	unsigned int numDrawCalls, maxDrawCalls;
 
 	unsigned int currentDrawFirstVertex;
+
+	float mvMatrices[NUMMATRICES][16];
+	float projMatrices[NUMMATRICES][16];
+
+	GLuint vbos[NUMVBOS];
 } QGLState;
 
 
