@@ -425,7 +425,7 @@ A single player death will automatically restore from the
 last save position.
 ============
 */
-void WriteGame(char *filename, qboolean autosave){
+void WriteGame(const char *filename, qboolean autosave){
 	FILE	*f;
 	int	i;
 	char	str[16];
@@ -451,7 +451,7 @@ void WriteGame(char *filename, qboolean autosave){
 	fclose(f);
 }
 
-void ReadGame(char *filename){
+void ReadGame(const char *filename){
 	FILE	*f;
 	int	i;
 	char	str[16];
@@ -580,7 +580,7 @@ WriteLevel
  
 =================
 */
-void WriteLevel(char *filename){
+void WriteLevel(const char *filename){
 	int	i;
 	edict_t	*ent;
 	FILE	*f;
@@ -632,7 +632,7 @@ calling ReadLevel.
 No clients are connected yet.
 =================
 */
-void ReadLevel(char *filename){
+void ReadLevel(const char *filename){
 	int	entnum;
 	FILE	*f;
 	int	i;
