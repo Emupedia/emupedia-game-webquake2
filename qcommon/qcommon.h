@@ -1014,7 +1014,7 @@ void		Com_BeginRedirect (int target, char *buffer, int buffersize, void (*flush)
 void		Com_EndRedirect (qboolean flush);
 void 		_Com_DPrintf (const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void 		Com_Printf (const char *fmt, int level, ...) __attribute__ ((format (printf, 1, 3)));
-void 		Com_Error (int code, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
+void 		Com_Error (int code, const char *fmt, ...) __attribute__ ((format (printf, 2, 3), noreturn));
 void 		Com_Quit (void);
 
 //extern __inline int			Com_ServerState (void);		// this should have just been a cvar...

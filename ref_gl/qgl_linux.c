@@ -535,7 +535,7 @@ void qglLoadMatrixf(const GLfloat *m) {
 		targetMat = qglState->projMatrices[qglState->projMatrixTop];
 		qglState->projMatrixDirty = true;
 	} else {
-		assert(false);
+		__builtin_unreachable();
 	}
 
 	memcpy(targetMat, m, sizeof(float) * 16);

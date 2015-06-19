@@ -102,6 +102,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef _MSC_VER
 #define alloca _alloca
+
+#define __builtin_unreachable() assert(false)
 #endif  // _MSC_VER
 
 #define snprintf _snprintf
@@ -579,7 +581,7 @@ void Sys_Sleep (int msec);
 #define LOG_ANTICHEAT	0x10000
 
 // this is only here so the functions in q_shared.c and q_shwin.c can link
-NORETURN void Sys_Error (const char *error, ...) __attribute__ ((format (printf, 1, 2)));
+NORETURN void Sys_Error (const char *error, ...) __attribute__ ((format (printf, 1, 2), noreturn));
 void Com_Printf (const char *fmt, int level, ...) __attribute__ ((format (printf, 1, 3)));
 
 

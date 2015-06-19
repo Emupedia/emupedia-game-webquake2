@@ -134,6 +134,7 @@ void Sys_Error (const char *error, ...)
 	va_end (argptr);
 
 	gi.error ("%s", text);
+	__builtin_unreachable();
 }
 
 void Com_Printf (const char *msg, int level, ...)
