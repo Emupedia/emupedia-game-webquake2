@@ -1727,13 +1727,13 @@ gotnewcl:
 	newcl->protocol = protocol;
 	newcl->state = cs_connected;
 
-	newcl->messageListData = Z_TagMalloc (sizeof(messagelist_t) * MAX_MESSAGES_PER_LIST, TAGMALLOC_CL_MESSAGES);
+	newcl->messageListData = (messagelist_t *) Z_TagMalloc (sizeof(messagelist_t) * MAX_MESSAGES_PER_LIST, TAGMALLOC_CL_MESSAGES);
 	memset (newcl->messageListData, 0, sizeof(messagelist_t) * MAX_MESSAGES_PER_LIST);
 
 	newcl->msgListEnd = newcl->msgListStart = newcl->messageListData;
 	newcl->msgListStart->data = NULL;
 
-	newcl->lastlines = Z_TagMalloc (sizeof(entity_state_t) * MAX_EDICTS, TAGMALLOC_CL_BASELINES);
+	newcl->lastlines = (entity_state_t *) Z_TagMalloc (sizeof(entity_state_t) * MAX_EDICTS, TAGMALLOC_CL_BASELINES);
 	//memset (newcl->lastlines, 0, sizeof(entity_state_t) * MAX_EDICTS);
 
 	//r1: per client baselines are now used
@@ -1780,7 +1780,7 @@ void Blackhole (netadr_t *from, qboolean isAutomatic, int mask, int method, cons
 	while (temp->next)
 		temp = temp->next;
 
-	temp->next = Z_TagMalloc(sizeof(blackhole_t), TAGMALLOC_BLACKHOLE);
+	temp->next = (blackhole_t *) Z_TagMalloc(sizeof(blackhole_t), TAGMALLOC_BLACKHOLE);
 	temp = temp->next;
 
 	temp->next = NULL;

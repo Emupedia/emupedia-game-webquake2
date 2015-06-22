@@ -1491,7 +1491,7 @@ void ClientThink(edict_t *ent, usercmd_t *ucmd){
 	
 	//ZOID
 	if(client->ctf_grapple)
-		CTFGrapplePull(client->ctf_grapple);
+		CTFGrapplePull((edict_t *) client->ctf_grapple);
 	//ZOID
 	
 	gi.linkentity(ent);

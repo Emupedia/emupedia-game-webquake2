@@ -294,7 +294,7 @@ void GL_ScreenShot_f (void)
 	DWORD tID;
 #endif
 
-	buffer = malloc(viddef.width*viddef.height*3);
+	buffer = (byte *) malloc(viddef.width*viddef.height*3);
 
 	glReadPixels (0, 0, viddef.width, viddef.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
 #if defined(_WIN32) && defined(USE_PNG)

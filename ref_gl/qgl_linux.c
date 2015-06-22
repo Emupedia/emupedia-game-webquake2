@@ -203,7 +203,7 @@ static void pushDraw(GLenum primitive, unsigned int firstVert, unsigned int numV
 	if (qglState->numDrawCalls == qglState->maxDrawCalls) {
 		// add more space
 		qglState->maxDrawCalls *= 2;
-		qglState->drawCalls = realloc(qglState->drawCalls, qglState->maxDrawCalls * sizeof(DrawCall));
+		qglState->drawCalls = (DrawCall *) realloc(qglState->drawCalls, qglState->maxDrawCalls * sizeof(DrawCall));
 	}
 
 	qglState->drawCalls[qglState->numDrawCalls].primitive = primitive;

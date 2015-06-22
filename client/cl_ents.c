@@ -1017,7 +1017,7 @@ static void CL_ParsePlayerstate (const frame_t *oldframe, frame_t *newframe, int
 	// parse the pmove_state_t
 	//
 	if (flags & PS_M_TYPE)
-		state->pmove.pm_type = MSG_ReadByte (&net_message);
+		state->pmove.pm_type = (pmtype_t) MSG_ReadByte (&net_message);
 
 	if (flags & PS_M_ORIGIN)
 	{

@@ -35,7 +35,7 @@ void *Hunk_Begin (int maxsize, int precommit)
 	// reserve a huge chunk of memory, but don't commit any yet
 	maxhunksize = maxsize + sizeof(intptr_t);
 	curhunksize = 0;
-	membase = mmap(0, maxhunksize, PROT_READ|PROT_WRITE, 
+	membase = (byte *) mmap(0, maxhunksize, PROT_READ|PROT_WRITE,
 		MAP_PRIVATE|MMAP_ANON, -1, 0);
 	if (membase == NULL || membase == (byte *)-1)
 		Sys_Error("unable to virtual allocate %d bytes", maxsize);
@@ -63,7 +63,7 @@ int Hunk_End (void)
 #if !(defined(__FreeBSD__) || defined(EMSCRIPTEN))
 	byte *n;
 
-	n = mremap(membase, maxhunksize, curhunksize + sizeof(intptr_t), 0);
+	n = (byte *) mremap(membase, maxhunksize, curhunksize + sizeof(intptr_t), 0);
 	if (n != membase)
 		Sys_Error("Hunk_End:  Could not remap virtual block (%d)", errno);
 	*((intptr_t *)membase) = curhunksize + sizeof(intptr_t);

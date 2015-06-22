@@ -418,7 +418,7 @@ void CL_Ignore_f (void)
 
 	last = list->next;
 
-	newentry = Z_TagMalloc (sizeof(*list), TAGMALLOC_CLIENT_IGNORE);
+	newentry = (ignore_t *) Z_TagMalloc (sizeof(*list), TAGMALLOC_CLIENT_IGNORE);
 	newentry->text = CopyString (Cmd_Args(), TAGMALLOC_CLIENT_IGNORE);
 	newentry->next = last;
 	list->next = newentry;
@@ -2279,7 +2279,7 @@ qboolean CL_LoadLoc (const char *filename)
 		return false;
 	}
 
-	locBuffer = Z_TagMalloc (len+2, TAGMALLOC_CLIENT_LOC);
+	locBuffer = (char *) Z_TagMalloc (len+2, TAGMALLOC_CLIENT_LOC);
 	//locBuffer = alloca (len+2);
 	FS_Read (locBuffer, len, handle);
 
@@ -2377,7 +2377,7 @@ qboolean CL_LoadLoc (const char *filename)
 			break;
 		}
 
-		loc->next = Z_TagMalloc (sizeof(cl_location_t), TAGMALLOC_CLIENT_LOC);
+		loc->next = (cl_location_t *) Z_TagMalloc (sizeof(cl_location_t), TAGMALLOC_CLIENT_LOC);
 		loc = loc->next;
 
 		loc->next = NULL;
@@ -2443,7 +2443,7 @@ void CL_AddLoc_f (void)
 
 	last = loc->next;
 
-	newentry = Z_TagMalloc (sizeof(*loc), TAGMALLOC_CLIENT_LOC);
+	newentry = (cl_location_t *) Z_TagMalloc (sizeof(*loc), TAGMALLOC_CLIENT_LOC);
 	newentry->name = CopyString (Cmd_Args(), TAGMALLOC_CLIENT_LOC);
 	FastVectorCopy (cl.refdef.vieworg, newentry->location);
 	newentry->next = last;

@@ -209,13 +209,13 @@ void InitGame (void)
 
 	// initialize all entities for this game
 	game.maxentities = maxentities->value;
-	g_edicts =  gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME);
+	g_edicts = (edict_t *) gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME);
 	globals.edicts = g_edicts;
 	globals.max_edicts = game.maxentities;
 
 	// initialize all clients for this game
 	game.maxclients = maxclients->value;
-	game.clients = gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
+	game.clients = (gclient_t *) gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
 	globals.num_edicts = game.maxclients+1;
 }
 
@@ -338,7 +338,7 @@ static void ReadField (FILE *f, const field_t *field, byte *base)
 			*(char **)p = NULL;
 		else
 		{
-			*(char **)p = gi.TagMalloc (len, TAG_LEVEL);
+			*(char **)p = (char *) gi.TagMalloc (len, TAG_LEVEL);
 			fread (*(char **)p, len, 1, f);
 		}
 		break;
@@ -499,11 +499,11 @@ void ReadGame (const char *filename)
 		gi.error ("Savegame from an older version.\n");
 	}
 
-	g_edicts =  gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME);
+	g_edicts = (edict_t *) gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME);
 	globals.edicts = g_edicts;
 
 	fread (&game, sizeof(game), 1, f);
-	game.clients = gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
+	game.clients = (gclient_t *) gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
 	for (i=0 ; i<game.maxclients ; i++)
 		ReadClient (f, &game.clients[i]);
 

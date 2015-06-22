@@ -439,7 +439,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 
 	picSize = (pcx->ymax+1) * (pcx->xmax+1);
 
-	out = malloc ( picSize );
+	out = (byte *) malloc ( picSize );
 	if (!out)
 	{
 		VID_Printf (PRINT_ALL, "Not enough memory for PCX data: %s (%d bytes)\n", filename, picSize);
@@ -458,7 +458,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 			goto abortload;
 		}
 
-		*palette = malloc(768);
+		*palette = (byte *) malloc(768);
 		if (!*palette)
 		{
 			VID_Printf (PRINT_ALL, "Not enough memory for PCX palette: %s\n", filename);
@@ -1154,7 +1154,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 		ri.Sys_Error (ERR_DROP, "LoadTGA (%s): Invalid image size", name);
 	}
 
-	targa_rgba = malloc (numPixels);
+	targa_rgba = (byte *) malloc (numPixels);
 	*pic = targa_rgba;
 
 	if (targa_header.id_length != 0)
@@ -1374,7 +1374,7 @@ breakOut:;
 	if (targa_header.attributes & 0x20)
 	{
 		byte *temp;
-		temp = malloc (numPixels);
+		temp = (byte *) malloc (numPixels);
 		if (!temp)
 			ri.Sys_Error (ERR_FATAL, "LoadTGA: not enough memory");
 		Com_DPrintf("LoadTGA: Bottom-to-top TGA file (slow): %s\n", name);
@@ -2086,8 +2086,8 @@ void GL_ResampleTexture24(unsigned *in, int inwidth, int inheight, unsigned *out
 	byte *b1,*b2;
 	unsigned *tmp,*tmp2;
 
-	tmp=malloc(inheight*inwidth*4);
-	tmp2=malloc(outwidth*outheight*4);
+	tmp = (unsigned *) malloc(inheight*inwidth*4);
+	tmp2 = (unsigned *) malloc(outwidth*outheight*4);
 
 	if (!tmp || !tmp2)
 		ri.Sys_Error (ERR_FATAL, "GL_ResampleTexture24: out of memory");
@@ -2304,7 +2304,7 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 	if (r_registering)
 	{
 		if (!mipmap_buffer)
-			mipmap_buffer = malloc (MAX_TEXTURE_DIMENSIONS * MAX_TEXTURE_DIMENSIONS * sizeof(unsigned int));
+			mipmap_buffer = (unsigned *) malloc (MAX_TEXTURE_DIMENSIONS * MAX_TEXTURE_DIMENSIONS * sizeof(unsigned int));
 
 		if (!mipmap_buffer)
 			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
@@ -2313,7 +2313,7 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 	}
 	else
 	{
-		temp = malloc (outWidth * outHeight * sizeof(unsigned int));
+		temp = (unsigned *) malloc (outWidth * outHeight * sizeof(unsigned int));
 		if (!temp)
 			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
 	}
@@ -2454,11 +2454,11 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 					ri.Sys_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
 			}
 
-			scaled = scaled_buffer;
+			scaled = (unsigned *) scaled_buffer;
 		}
 		else
 		{
-			scaled = malloc (scaled_width * scaled_height * sizeof(unsigned int));
+			scaled = (unsigned *) malloc (scaled_width * scaled_height * sizeof(unsigned int));
 			if (!scaled)
 				ri.Sys_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
 		}

@@ -285,7 +285,7 @@ model_t *Mod_ForName (char *name, qboolean crash)
 	//
 	// load the file
 	//
-	modfilelen = ri.FS_LoadFile (name, (void *)&buf);
+	modfilelen = ri.FS_LoadFile (name, (void **)&buf);
 	if (!buf)
 	{
 		if (crash)
@@ -342,7 +342,7 @@ model_t *Mod_ForName (char *name, qboolean crash)
 	{
 		loadmodel->extradatasize = Hunk_End ();
 
-		model_size = malloc (sizeof(*model_size));
+		model_size = (mscache_t	*) malloc (sizeof(*model_size));
 		if (!model_size)
 			ri.Sys_Error (ERR_FATAL, "Mod_ForName: out of memory");
 		strcpy (model_size->name, mod->name);
@@ -383,7 +383,7 @@ void Mod_LoadLighting (lump_t *l)
 		loadmodel->lightdata = NULL;
 		return;
 	}
-	loadmodel->lightdata = Hunk_Alloc ( l->filelen);	
+	loadmodel->lightdata = (byte *) Hunk_Alloc ( l->filelen);
 	memcpy (loadmodel->lightdata, mod_base + l->fileofs, l->filelen);
 }
 
@@ -405,7 +405,7 @@ void Mod_LoadVisibility (lump_t *l)
 		return;
 	}
 
-	loadmodel->vis = Hunk_Alloc ( l->filelen);	
+	loadmodel->vis = (dvis_t *) Hunk_Alloc ( l->filelen);
 	memcpy (loadmodel->vis, mod_base + l->fileofs, l->filelen);
 
 #if Q_BIGENDIAN
@@ -435,12 +435,12 @@ void Mod_LoadVertexes (lump_t *l)
 	int			i;
 #endif
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (dvertex_t *) (mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadVertexes: funny lump size in %s",loadmodel->name);
 
 	count = l->filelen / sizeof(*in);
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (mvertex_t *) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->vertexes = out;
 	loadmodel->numvertexes = count;
@@ -485,11 +485,11 @@ void Mod_LoadSubmodels (lump_t *l)
 	mmodel_t	*out;
 	int			i, count;
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (dmodel_t *)(mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "MOD_LoadBmodel: funny lump size in %s",loadmodel->name);
 	count = l->filelen / sizeof(*in);
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (mmodel_t *) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->submodels = out;
 	loadmodel->numsubmodels = count;
@@ -525,7 +525,7 @@ void Mod_LoadEdges (lump_t *l)
 	medge_t *out;
 	int 	i, count;
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (dedge_t *)(mod_base + l->fileofs);
 
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadEdges: funny lump size in %s",loadmodel->name);
@@ -533,7 +533,7 @@ void Mod_LoadEdges (lump_t *l)
 	count = l->filelen / sizeof(*in);
 
 	//r1: was count+1
-	out = Hunk_Alloc (count * sizeof(*out));	
+	out = (medge_t *) Hunk_Alloc (count * sizeof(*out));
 
 	loadmodel->edges = out;
 	loadmodel->numedges = count;
@@ -606,13 +606,13 @@ void Mod_LoadTexinfo (lump_t *l)
 	int		next;
 	size_t	length;
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (texinfo_t *)(mod_base + l->fileofs);
 	
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadTexinfo: funny lump size in %s",loadmodel->name);
 
 	count = l->filelen / sizeof(*in);
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (mtexinfo_t *) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->texinfo = out;
 	loadmodel->numtexinfo = count;
@@ -791,14 +791,14 @@ void Mod_LoadFaces (lump_t *l)
 	int			planenum, side;
 	int			ti;
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (dface_t *)(mod_base + l->fileofs);
 
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadFaces: funny lump size in %s",loadmodel->name);
 
 	count = l->filelen / sizeof(*in);
 
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (msurface_t *) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->surfaces = out;
 	loadmodel->numsurfaces = count;
@@ -912,13 +912,13 @@ void Mod_LoadNodes (lump_t *l)
 	dnode_t		*in;
 	mnode_t 	*out;
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (dnode_t *)(mod_base + l->fileofs);
 
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadNodes: funny lump size in %s",loadmodel->name);
 
 	count = l->filelen / sizeof(*in);
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (mnode_t *) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->nodes = out;
 	loadmodel->numnodes = count;
@@ -968,14 +968,14 @@ void Mod_LoadLeafs (lump_t *l)
 	int			i, count;
 //	glpoly_t	*poly;
 
-	in = (void *)(mod_base + l->fileofs);
+	in = (dleaf_t *)(mod_base + l->fileofs);
 
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadLeafs: funny lump size in %s",loadmodel->name);
 	
 	count = l->filelen / sizeof(*in);
 
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (mleaf_t *) Hunk_Alloc ( count*sizeof(*out));	
 
 	//memset (out, 0, count*sizeof(*out));
 
@@ -1029,11 +1029,11 @@ void Mod_LoadMarksurfaces (lump_t *l)
 	short		*in;
 	msurface_t **out;
 	
-	in = (void *)(mod_base + l->fileofs);
+	in = (short *)(mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "MOD_LoadBmodel: funny lump size in %s",loadmodel->name);
 	count = l->filelen / sizeof(*in);
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (msurface_t **) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->marksurfaces = out;
 	loadmodel->nummarksurfaces = count;
@@ -1061,7 +1061,7 @@ void Mod_LoadSurfedges (lump_t *l)
 	int		i;
 #endif
 	
-	in = (void *)(mod_base + l->fileofs);
+	in = (int *)(mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "MOD_LoadBmodel: funny lump size in %s",loadmodel->name);
 	count = l->filelen / sizeof(*in);
@@ -1069,7 +1069,7 @@ void Mod_LoadSurfedges (lump_t *l)
 		ri.Sys_Error (ERR_DROP, "MOD_LoadBmodel: bad surfedges count in %s: %i",
 		loadmodel->name, count);
 
-	out = Hunk_Alloc ( count*sizeof(*out));	
+	out = (int *) Hunk_Alloc ( count*sizeof(*out));
 
 	loadmodel->surfedges = out;
 	loadmodel->numsurfedges = count;
@@ -1096,13 +1096,13 @@ void Mod_LoadPlanes (lump_t *l)
 	int			count;
 	int			bits;
 	
-	in = (void *)(mod_base + l->fileofs);
+	in = (dplane_t *)(mod_base + l->fileofs);
 
 	if (l->filelen % sizeof(*in))
 		ri.Sys_Error (ERR_DROP, "Mod_LoadPlanes: funny lump size in %s",loadmodel->name);
 
 	count = l->filelen / sizeof(*in);
-	out = Hunk_Alloc ( count*2*sizeof(*out));	
+	out = (cplane_t *) Hunk_Alloc ( count*2*sizeof(*out));
 	
 	loadmodel->planes = out;
 	loadmodel->numplanes = count;
@@ -1317,7 +1317,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	if (pheader->framesize * pheader->num_frames != pheader->num_frames * (int)((sizeof(daliasframe_t)-4) + pheader->num_xyz*sizeof(dtrivertx_t)))
 		ri.Sys_Error (ERR_DROP, "model %s has invalid frame size", mod->name);
 
-	pheader = Hunk_Alloc (required);
+	pheader = (dmdl_t *) Hunk_Alloc (required);
 	memcpy (pheader, &header, sizeof(dmdl_t));
 	//
 // load base s and t vertices (not used in gl version)
@@ -1438,7 +1438,7 @@ void Mod_LoadSpriteModel (model_t *mod, void *buffer)
 	int			i;
 
 	sprin = (dsprite_t *)buffer;
-	sprout = Hunk_Alloc (modfilelen);
+	sprout = (dsprite_t *) Hunk_Alloc (modfilelen);
 
 	sprout->ident = LittleLong (sprin->ident);
 	sprout->version = LittleLong (sprin->version);
