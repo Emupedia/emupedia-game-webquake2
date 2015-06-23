@@ -573,7 +573,7 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 		*width = LittleLong (mt.width);
 		*height = LittleLong (mt.height);
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && !defined(EMSCRIPTEN)
 		FS_CreatePath (va("wals/%s", name));
 		h = fopen (va("wals/%s", name), "wb");
 		fwrite (&mt, 1, sizeof(mt), h);
