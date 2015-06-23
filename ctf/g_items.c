@@ -1070,6 +1070,30 @@ gitem_t	itemlist[] =
 	{
 		{
 			NULL
+
+		, NULL
+		, NULL
+		, NULL
+		, NULL
+
+		, NULL
+		, NULL
+		, 0
+		, NULL
+
+		, NULL
+		, NULL
+		, 0
+
+		, 0
+		, NULL
+		, 0
+
+		, 0
+
+		, NULL
+		, 0
+		, NULL
 		}, 	// leave index 0 alone
         
 		//
@@ -2236,7 +2260,32 @@ gitem_t	itemlist[] =
 		//ZOID
         
 		// end of list marker
-		{NULL}
+	{
+		  NULL
+		, NULL
+		, NULL
+		, NULL
+		, NULL
+
+		, NULL
+		, NULL
+		, 0
+		, NULL
+
+		, NULL
+		, NULL
+		, 0
+
+		, 0
+		, NULL
+		, 0
+
+		, 0
+
+		, NULL
+		, 0
+		, NULL
+	}
 	};
     
     
