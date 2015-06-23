@@ -547,7 +547,7 @@ void SV_Physics_Pusher(edict_t *ent){
 		}
 	}
 	if(pushed_p > &pushed[MAX_EDICTS])
-		gi.error(ERR_FATAL, "pushed_p > &pushed[MAX_EDICTS], memory corrupted");
+		gi.error("pushed_p > &pushed[MAX_EDICTS], memory corrupted");
 		
 	if(part){
 		// the move failed, bump all nextthink times and back out moves
