@@ -472,7 +472,7 @@ void R_DrawEntitiesOnList (void)
 {
 	int		i;
 
-	if (FLOAT_EQ_ZERO(r_drawentities->value))
+	if (!r_drawentities->intvalue)
 		return;
 
 	// draw non-transparent first
@@ -637,7 +637,7 @@ R_PolyBlend
 */
 void R_PolyBlend (void)
 {
-	if (FLOAT_EQ_ZERO(gl_polyblend->value))
+	if (!gl_polyblend->intvalue)
 		return;
 
 	if (FLOAT_EQ_ZERO(v_blend[3]))
@@ -1388,7 +1388,7 @@ R_SetMode
 */
 static int R_SetMode(unsigned int width, unsigned int height)
 {
-	qboolean fullscreen = FLOAT_EQ_ZERO(vid_fullscreen->value) ? false : true;
+	qboolean fullscreen = !vid_fullscreen->intvalue ? false : true;
 
 	vid_fullscreen->modified = false;
 

@@ -725,7 +725,7 @@ void R_DrawAliasModel (entity_t *e)
 		currententity->oldframe = 0;
 	}*/
 
-	if ( FLOAT_EQ_ZERO(r_lerpmodels->value) )
+	if ( !r_lerpmodels->intvalue )
 		currententity->backlerp = 0;
 
 	GL_DrawAliasFrameLerp (paliashdr, currententity->backlerp);

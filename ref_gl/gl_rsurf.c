@@ -231,7 +231,7 @@ void R_DrawTriangleOutlines (void)
 	int			i, j;
 	glpoly_t	*p;
 
-	if (FLOAT_EQ_ZERO (gl_showtris->value))
+	if (!gl_showtris->intvalue)
 		return;
 
 	qglDisable (GL_TEXTURE_2D);
@@ -705,7 +705,7 @@ void R_DrawInlineBModel (void)
 	dlight_t	*lt;
 
 	// calculate dynamic lighting for bmodel
-	if ( FLOAT_EQ_ZERO (gl_flashblend->value) )
+	if ( !gl_flashblend->intvalue )
 	{
 		lt = r_newrefdef.dlights;
 		for (k=0 ; k<r_newrefdef.num_dlights ; k++, lt++)
@@ -826,7 +826,7 @@ e->angles[2] = -e->angles[2];	// stupid quake bug
 	GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
 	
 	//GL_TexEnv( GL_MODULATE );
-	if (FLOAT_EQ_ZERO(gl_overbrights->value) || gl_overbrights->modified)
+	if (!gl_overbrights->intvalue || gl_overbrights->modified)
 	{
 		GL_TexEnv(GL_TEXTURE1, GL_MODULATE);
 	}
@@ -879,7 +879,7 @@ static void R_RecursiveWorldNode (mnode_t *node, int planebits)
 	if (R_CullBox (node->minmaxs, node->minmaxs+3))
 		return;
 #else
-	if (FLOAT_EQ_ZERO(r_nocull->value))
+	if (!r_nocull->intvalue)
 	{
 		int	ret;
 
@@ -1025,7 +1025,7 @@ void R_DrawWorld (void)
 {
 	entity_t	ent;
 
-	if (FLOAT_EQ_ZERO (r_drawworld->value))
+	if (!r_drawworld->intvalue)
 		return;
 
 	if ( r_newrefdef.rdflags & RDF_NOWORLDMODEL )
@@ -1078,7 +1078,7 @@ void R_MarkLeaves (void)
 	mleaf_t	*leaf;
 	int		cluster;
 
-	if (r_oldviewcluster == r_viewcluster && r_oldviewcluster2 == r_viewcluster2 && FLOAT_EQ_ZERO(r_novis->value) && r_viewcluster != -1)
+	if (r_oldviewcluster == r_viewcluster && r_oldviewcluster2 == r_viewcluster2 && !r_novis->intvalue && r_viewcluster != -1)
 		return;
 
 	// development aid to let you run around and see exactly where

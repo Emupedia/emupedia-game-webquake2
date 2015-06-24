@@ -2514,7 +2514,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 
 	if (image && (image->type != it_pic || FLOAT_NE_ZERO(vid_gamma_pics->value)))
 	{
-		if (FLOAT_EQ_ZERO(gl_texture_lighting_mode->value))
+		if (!gl_texture_lighting_mode->intvalue)
 			GL_LightScaleTexture (scaled, scaled_width, scaled_height, !mipmap);
 		else
 			R_FilterTexture (scaled, scaled_width, scaled_height, image->type);
@@ -2719,7 +2719,7 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 		R_FloodFillSkin(pic, width, height);
 
 	// load little pics into the scrap
-	if (image->type == it_pic && image->width < 64 && image->height < 64 && FLOAT_EQ_ZERO(gl_noscrap->value))
+	if (image->type == it_pic && image->width < 64 && image->height < 64 && !gl_noscrap->intvalue)
 	{
 		//image->scrap = true;
 

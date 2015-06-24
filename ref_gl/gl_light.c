@@ -79,7 +79,7 @@ void R_RenderDlights (void)
 	int		i;
 	dlight_t	*l;
 
-	if (FLOAT_EQ_ZERO(gl_flashblend->value))
+	if (!gl_flashblend->intvalue)
 		return;
 
 	r_dlightframecount = r_framecount + 1;	// because the count hasn't
@@ -370,7 +370,7 @@ void R_LightPoint (vec3_t p, vec3_t color)
 
 		max = r + g + b;
 		max /= 3;
-		if (FLOAT_EQ_ZERO (gl_coloredlightmaps->value))
+		if (!gl_coloredlightmaps->intvalue)
 		{
 			color[0] = color[1] = color[2] = max;
 		}
@@ -507,7 +507,7 @@ void R_AddDynamicLights (msurface_t *surf)
 
 				if ( fdist < fminlight)
 				{
-					if (FLOAT_EQ_ZERO (gl_dlight_falloff->value))
+					if (!gl_dlight_falloff->intvalue)
 					{
 						s_blocklights[i++] += ( frad - fdist ) * dl->color[0];
 						s_blocklights[i++] += ( frad - fdist ) * dl->color[1];
@@ -750,7 +750,7 @@ store:
 					max = (int)(0.289f * colors[0] + 0.587f * colors[1] + 0.114f * colors[2]);
 				else
 					max = (colors[0] + colors[1] + colors[2]) / 3;
-				if (FLOAT_EQ_ZERO (gl_coloredlightmaps->value))
+				if (!gl_coloredlightmaps->intvalue)
 				{
 					dest[0] = dest[1] = dest[2] = max;
 				}
