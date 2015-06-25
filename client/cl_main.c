@@ -2112,7 +2112,10 @@ void CL_ReadPackets (void)
 	if (cls.state >= ca_connected
 	 && cls.realtime - cls.netchan.last_received > cl_timeout->intvalue*1000)
 	{
-		if (++cl.timeoutcount > 5)	// timeoutcount saves debugger
+		// don't disconnect from localhost
+		// apparent timeouts with local server are caused by too-slow computer
+		// can happen easily on emscripten
+		if (++cl.timeoutcount > 5 && (Q_strncasecmp(cls.servername, "localhost", 9) != 0))	// timeoutcount saves debugger
 		{
 			Com_Printf ("\nServer connection timed out.\n", LOG_CLIENT);
 #ifdef _DEBUG
