@@ -228,6 +228,9 @@ typedef struct Shader {
 	ShaderState key;
 	GLuint program;
 
+	GLint mvpUniform;
+	GLint alphaRefUniform;
+
 	struct Shader *next;
 } Shader;
 

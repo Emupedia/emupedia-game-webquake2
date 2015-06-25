@@ -369,6 +369,14 @@ static Shader *createShader(const ShaderState *state) {
 	memcpy(&shader->key, state, sizeof(ShaderState));
 	shader->next = NULL;
 
+
+	shader->mvpUniform = glGetUniformLocation(program, "mvp");
+	if (state->alphaTest) {
+		shader->alphaRefUniform = glGetUniformLocation(program, "alphaRef");
+	} else {
+		shader->alphaRefUniform = -1;
+	}
+
 	return shader;
 }
 
@@ -453,13 +461,14 @@ static void commitShaderState() {
 		multMatrices(temp, depthAdjust, qglState->projMatrices[qglState->projMatrixTop]);
 		multMatrices(mvp, temp, qglState->mvMatrices[qglState->mvMatrixTop]);
 
-		glUniformMatrix4fv(glGetUniformLocation(qglState->activeShader->program, "mvp"), 1, GL_FALSE, &mvp[0]);
+		glUniformMatrix4fv(qglState->activeShader->mvpUniform, 1, GL_FALSE, &mvp[0]);
 		qglState->mvMatrixDirty = false;
 		qglState->projMatrixDirty = false;
 	}
 
 	if (qglState->wantShader.alphaTest) {
-		glUniform1f(glGetUniformLocation(qglState->activeShader->program, "alphaRef"), qglState->wantShader.alphaRef);
+		assert(qglState->activeShader->alphaRefUniform != -1);
+		glUniform1f(qglState->activeShader->alphaRefUniform, qglState->wantShader.alphaRef);
 	}
 }
 
