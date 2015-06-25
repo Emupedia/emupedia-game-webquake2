@@ -159,7 +159,7 @@ static void GL_Bind (unsigned int texnum)
 #ifdef _DEBUG
 	extern	image_t	*draw_chars;
 
-	if (FLOAT_NE_ZERO(gl_nobind->value))
+	if (gl_nobind->intvalue)
 	{
 		if (gl_nobind->value == 2)
 		{
@@ -2371,7 +2371,7 @@ void GL_MipMap (byte *in, int width, int height)
 	int		i, j;
 	byte	*out;
 
-	if (FLOAT_NE_ZERO(gl_linear_mipmaps->value))
+	if (gl_linear_mipmaps->intvalue)
 	{
 		GL_MipMapLinear ((unsigned int *)in, width, height);
 		return;
@@ -2406,11 +2406,11 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	{
 		for (scaled_width = 1 ; scaled_width < width ; scaled_width<<=1)
 			;
-		if (FLOAT_NE_ZERO(gl_round_down->value) && scaled_width > width && mipmap)
+		if (gl_round_down->intvalue && scaled_width > width && mipmap)
 			scaled_width >>= 1;
 		for (scaled_height = 1 ; scaled_height < height ; scaled_height<<=1)
 			;
-		if (FLOAT_NE_ZERO(gl_round_down->value) && scaled_height > height && mipmap)
+		if (gl_round_down->intvalue && scaled_height > height && mipmap)
 			scaled_height >>= 1;
 	}
 
@@ -2512,7 +2512,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 		GL_ResampleTexture (data, width, height, scaled, scaled_width, scaled_height);
 	}
 
-	if (image && (image->type != it_pic || FLOAT_NE_ZERO(vid_gamma_pics->value)))
+	if (image && (image->type != it_pic || vid_gamma_pics->intvalue))
 	{
 		if (!gl_texture_lighting_mode->intvalue)
 			GL_LightScaleTexture (scaled, scaled_width, scaled_height, !mipmap);
@@ -2957,7 +2957,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 
 		memcpy (png_name, name, len+1);
 
-		if (type == it_pic && FLOAT_NE_ZERO(gl_pic_scale->value))
+		if (type == it_pic && gl_pic_scale->intvalue)
 		{
 			if (!GetPCXInfo (name, &global_hax_texture_x, &global_hax_texture_y))
 			{
@@ -3311,7 +3311,7 @@ void	GL_InitImages (void)
 	else if (gl_contrast->value > 1.5f)
 		ri.Cvar_SetValue ("gl_contrast", 1.5f);
 
-	if (FLOAT_NE_ZERO(gl_overbrights->value))
+	if (gl_overbrights->intvalue)
 		g = 1.0;
 
 	gl_state.inverse_intensity = 1 / intensity->value;

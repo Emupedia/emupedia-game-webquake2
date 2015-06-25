@@ -319,7 +319,7 @@ void R_BlendLightmaps (void)
 	msurface_t	*surf, *newdrawsurf = 0;
 
 	// don't bother if we're set to fullbright
-	if (FLOAT_NE_ZERO(r_fullbright->value))
+	if (r_fullbright->intvalue)
 		return;
 
 	if (!r_worldmodel->lightdata)
@@ -371,7 +371,7 @@ void R_BlendLightmaps (void)
 	/*
 	** render dynamic lightmaps
 	*/
-	if ( FLOAT_NE_ZERO(gl_dynamic->value) )
+	if ( gl_dynamic->intvalue )
 	{
 		memset( gl_lms.allocated, 0, sizeof(gl_lms.allocated));
 
@@ -539,7 +539,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 	if (fa->dlightframe == r_framecount)
 	{
 dynamic:
-		if ( FLOAT_NE_ZERO (gl_dynamic->value) )
+		if ( gl_dynamic->intvalue )
 		{
 			if (!( fa->texinfo->flags & (SURF_SKY|SURF_TRANS33|SURF_TRANS66|SURF_WARP ) ) )
 			{
@@ -1083,14 +1083,14 @@ void R_MarkLeaves (void)
 
 	// development aid to let you run around and see exactly where
 	// the pvs ends
-	if (FLOAT_NE_ZERO(gl_lockpvs->value))
+	if (gl_lockpvs->intvalue)
 		return;
 
 	r_visframecount++;
 	r_oldviewcluster = r_viewcluster;
 	r_oldviewcluster2 = r_viewcluster2;
 
-	if (FLOAT_NE_ZERO(r_novis->value) || r_viewcluster == -1 || !r_worldmodel->vis)
+	if (r_novis->intvalue || r_viewcluster == -1 || !r_worldmodel->vis)
 	{
 		// mark everything
 		for (i=0 ; i<r_worldmodel->numleafs ; i++)

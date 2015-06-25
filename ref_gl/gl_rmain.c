@@ -287,7 +287,7 @@ qboolean R_CullBox (vec3_t mins, vec3_t maxs)
 {
 	int		i;
 
-	if (FLOAT_NE_ZERO(r_nocull->value))
+	if (r_nocull->intvalue)
 		return false;
 
 	for (i=0 ; i<4 ; i++)
@@ -480,7 +480,7 @@ void R_DrawEntitiesOnList (void)
 	{
 		currententity = &r_newrefdef.entities[i];
 
-		if (currententity->flags & RF_TRANSLUCENT || (FLOAT_NE_ZERO(gl_alphaskins->value) && currententity->skin && currententity->skin->has_alpha))
+		if (currententity->flags & RF_TRANSLUCENT || (gl_alphaskins->intvalue && currententity->skin && currententity->skin->has_alpha))
 			continue;	// solid
 
 		if ( currententity->flags & RF_BEAM )
@@ -520,7 +520,7 @@ void R_DrawEntitiesOnList (void)
 	for (i=0 ; i<r_newrefdef.num_entities ; i++)
 	{
 		currententity = &r_newrefdef.entities[i];
-		if (!(currententity->flags & RF_TRANSLUCENT || (FLOAT_NE_ZERO(gl_alphaskins->value) && currententity->skin && currententity->skin->has_alpha)))
+		if (!(currententity->flags & RF_TRANSLUCENT || (gl_alphaskins->intvalue && currententity->skin && currententity->skin->has_alpha)))
 			continue;	// solid
 
 		if ( currententity->flags & RF_BEAM )
@@ -887,7 +887,7 @@ void R_SetupGL (void)
 	//
 	// set drawing parms
 	//
-	if (FLOAT_NE_ZERO(gl_cull->value))
+	if (gl_cull->intvalue)
 		qglEnable(GL_CULL_FACE);
 	else
 		qglDisable(GL_CULL_FACE);
@@ -917,7 +917,7 @@ void R_Clear (void)
 
 	qglDepthRange (gldepthmin, gldepthmax);
 
-	if (FLOAT_NE_ZERO(gl_clear->value) && gl_clear->value == 2)
+	if (gl_clear->intvalue && gl_clear->value == 2)
 	{
 		glClearColor (ref_frand(), ref_frand(), ref_frand(), 1.0);
 	} else {
@@ -941,7 +941,7 @@ r_newrefdef must be set before the first call
 */
 void R_RenderView (refdef_t *fd)
 {
-	if (FLOAT_NE_ZERO(r_norefresh->value))
+	if (r_norefresh->intvalue)
 		return;
 
 	r_newrefdef = *fd;
@@ -949,7 +949,7 @@ void R_RenderView (refdef_t *fd)
 	if (!r_worldmodel && !( r_newrefdef.rdflags & RDF_NOWORLDMODEL ) )
 		ri.Sys_Error (ERR_DROP, "R_RenderView: NULL worldmodel");
 
-	//if (FLOAT_NE_ZERO(r_speeds->value))
+	//if (r_speeds->intvalue)
 	//{
 	c_brush_polys = 0;
 	c_alias_polys = 0;
@@ -977,7 +977,7 @@ void R_RenderView (refdef_t *fd)
 
 	R_PolyBlend();
 	
-	if (FLOAT_NE_ZERO(r_speeds->value))
+	if (r_speeds->intvalue)
 	{
 		VID_Printf (PRINT_ALL, "%4i wpoly %4i epoly %i tex %i lmaps\n",
 			c_brush_polys, 
@@ -1622,7 +1622,7 @@ retryQGL:
 
 	gl_config.r1gl_GL_ARB_texture_non_power_of_two = false;
 	if ( strstr( gl_config.extensions_string, "GL_ARB_texture_non_power_of_two" ) ) {
-		if (FLOAT_NE_ZERO (gl_ext_texture_non_power_of_two->value) ) {
+		if (gl_ext_texture_non_power_of_two->intvalue ) {
 			VID_Printf( PRINT_ALL, "...using GL_ARB_texture_non_power_of_two\n" );
 			gl_config.r1gl_GL_ARB_texture_non_power_of_two = true;
 		} else {

@@ -174,7 +174,7 @@ void R_PushDlights (void)
 	int		i;
 	dlight_t	*l;
 
-	if (FLOAT_NE_ZERO(gl_flashblend->value))
+	if (gl_flashblend->intvalue)
 		return;
 
 	r_dlightframecount = r_framecount + 1;	// because the count hasn't
@@ -340,7 +340,7 @@ void R_LightPoint (vec3_t p, vec3_t color)
 	// add dynamic lights
 	//
 	//light = 0;
-	if (FLOAT_NE_ZERO (gl_dynamic->value))
+	if (gl_dynamic->intvalue)
 	{
 		dl = r_newrefdef.dlights;
 		for (lnum=0 ; lnum<r_newrefdef.num_dlights ; lnum++, dl++)
@@ -357,7 +357,7 @@ void R_LightPoint (vec3_t p, vec3_t color)
 		}
 	}
 
-	if (FLOAT_NE_ZERO(gl_doublelight_entities->value))
+	if (gl_doublelight_entities->intvalue)
 		VectorScale (color, gl_modulate->value, color);
 
 	if (usingmodifiedlightmaps)
@@ -437,13 +437,13 @@ void R_AddDynamicLights (msurface_t *surf)
 		dl = &r_newrefdef.dlights[lnum];
 
 #ifdef INTEGER_DLIGHTS
-		if (FLOAT_NE_ZERO (gl_dlight_falloff->value))
+		if (gl_dlight_falloff->intvalue)
 			frad = Q_ftol(dl->intensity * 1.10f);
 		else
 			frad = Q_ftol(dl->intensity);
 
 #else
-		if (FLOAT_NE_ZERO (gl_dlight_falloff->value))
+		if (gl_dlight_falloff->intvalue)
 			frad = dl->intensity * 1.10f;
 		else
 			frad = dl->intensity;

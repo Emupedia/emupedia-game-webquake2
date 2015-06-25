@@ -701,7 +701,7 @@ void R_DrawAliasModel (entity_t *e)
 
 
 	GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
-	if ( currententity->flags & RF_TRANSLUCENT || (skin->has_alpha && FLOAT_NE_ZERO(gl_alphaskins->value)))
+	if ( currententity->flags & RF_TRANSLUCENT || (skin->has_alpha && gl_alphaskins->intvalue))
 	{
 		qglEnable (GL_BLEND);
 	}
@@ -742,7 +742,7 @@ void R_DrawAliasModel (entity_t *e)
 		glCullFace( GL_FRONT );
 	}
 
-	if ( currententity->flags & RF_TRANSLUCENT || (skin->has_alpha && FLOAT_NE_ZERO(gl_alphaskins->value)))
+	if ( currententity->flags & RF_TRANSLUCENT || (skin->has_alpha && gl_alphaskins->intvalue))
 	{
 		qglDisable (GL_BLEND);
 	}
@@ -751,7 +751,7 @@ void R_DrawAliasModel (entity_t *e)
 		qglDepthRange (gldepthmin, gldepthmax);
 
 #if 1
-	if (FLOAT_NE_ZERO(gl_shadows->value) && !(currententity->flags & (RF_TRANSLUCENT | RF_WEAPONMODEL | RF_NOSHADOW)))
+	if (gl_shadows->intvalue && !(currententity->flags & (RF_TRANSLUCENT | RF_WEAPONMODEL | RF_NOSHADOW)))
 	{
 		qglPushMatrix ();
 		R_RotateForEntity (e);
