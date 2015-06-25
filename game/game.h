@@ -151,7 +151,7 @@ typedef struct
 	void	(EXPORT *configstring) (int num, char *string);
 
 #if __GNUC__ > 2
-	void	(EXPORT *error) (const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+	void	(EXPORT *error) (const char *fmt, ...) __attribute__ ((format (printf, 1, 2), noreturn ));
 #else
 	void	(EXPORT *error) (const char *fmt, ...);
 #endif

@@ -252,6 +252,7 @@ PF_error
 Abort the server with a game error
 ===============
 */
+void EXPORT PF_error (const char *fmt, ...) __attribute__((noreturn));
 void EXPORT PF_error (const char *fmt, ...)
 {
 	char		msg[1024];

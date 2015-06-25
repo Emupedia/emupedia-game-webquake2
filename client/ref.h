@@ -156,7 +156,7 @@ typedef struct
 
 typedef struct
 {
-	void	(*Sys_Error) (int err_level, const char *str, ...) __attribute__ ((format (printf, 2, 3)));
+	void	(*Sys_Error) (int err_level, const char *str, ...) __attribute__ ((format (printf, 2, 3), noreturn));
 
 	void	(*Cmd_AddCommand) (const char *name, void(*cmd)(void));
 	void	(*Cmd_RemoveCommand) (const char *name);

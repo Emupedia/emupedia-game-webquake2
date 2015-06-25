@@ -536,7 +536,7 @@ extern	unsigned int	curtime;		// time returned by last Sys_Milliseconds
 
 unsigned int		Sys_Milliseconds (void);
 void	Sys_Mkdir (char *path);
-void	Sys_DebugBreak (void);
+void	Sys_DebugBreak (void) __attribute__((noreturn));
 
 // large block stack allocation routines
 void	*Hunk_Begin (int maxsize, int precommit);

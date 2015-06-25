@@ -658,7 +658,7 @@ void CL_AddLightStyles (void);
 void CL_PrepRefresh (void);
 void CL_RegisterSounds (void);
 
-NORETURN void CL_Quit_f (void);
+NORETURN void CL_Quit_f (void) __attribute__((noreturn));
 
 void IN_Accumulate (void);
 
