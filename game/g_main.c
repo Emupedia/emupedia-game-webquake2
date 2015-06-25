@@ -151,7 +151,11 @@ void Com_Printf (const char *msg, int level, ...)
 
 
 void Sys_DebugBreak (void) {
+#ifdef __GNUC__
+	__builtin_trap();
+#else  // _GNUCC
 	abort();
+#endif  // _GNUCC
 }
 
 #endif  // GAME_HARD_LINKED
