@@ -695,18 +695,24 @@ void qglAlphaFunc(GLenum func, GLclampf ref) {
 void qglDisable(GLenum cap) {
 	flushDraws();
 
-	if (cap == GL_ALPHA_TEST) {
+	switch (cap) {
+	case GL_ALPHA_TEST:
 		if (qglState->wantShader.alphaTest) {
 			qglState->wantShader.alphaTest = false;
 			qglState->shaderDirty = true;
 		}
-	} else if (cap == GL_TEXTURE_2D) {
+		break;
+
+	case GL_TEXTURE_2D:
 		if (qglState->wantShader.texState[qglState->wantActiveTexture].texEnable) {
 			qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = false;
 			qglState->shaderDirty = true;
 		}
-	} else {
+		break;
+
+	default:
 		glDisable(cap);
+		break;
 	}
 }
 
@@ -714,18 +720,24 @@ void qglDisable(GLenum cap) {
 void qglEnable(GLenum cap) {
 	flushDraws();
 
-	if (cap == GL_ALPHA_TEST) {
+	switch (cap) {
+	case GL_ALPHA_TEST:
 		if (!qglState->wantShader.alphaTest) {
 			qglState->wantShader.alphaTest = true;
 			qglState->shaderDirty = true;
 		}
-	} else if (cap == GL_TEXTURE_2D) {
+		break;
+
+	case GL_TEXTURE_2D:
 		if (!qglState->wantShader.texState[qglState->wantActiveTexture].texEnable) {
 			qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = true;
 			qglState->shaderDirty = true;
 		}
-	} else {
+		break;
+
+	default:
 		glEnable(cap);
+		break;
 	}
 }
 
