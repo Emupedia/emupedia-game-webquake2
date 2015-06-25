@@ -1328,6 +1328,10 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 
 		glewInit();
 
+		// swap once for better traces
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		SDL_GL_SwapWindow(window);
+
 		if (GLEW_KHR_debug) {
 			VID_Printf( PRINT_ALL, "KHR_debug found\n" );
 
