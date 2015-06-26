@@ -2017,7 +2017,7 @@ void EXPORT Z_FreeTagsGame (int tag)
 			Z_FreeGame ((void *)(z+1));
 	}
 
-	Z_Verify (va("Z_FreeTags %d (GAME): END", tag));
+	Z_Verify("Z_FreeTags %d (GAME): END", tag);
 }
 
 
