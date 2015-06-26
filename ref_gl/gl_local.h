@@ -91,6 +91,9 @@ void qglVertex3f(GLfloat x, GLfloat y, GLfloat z);
 void qglActiveTexture(GLenum);
 
 
+void flushDraws(const char *reason);
+
+
 //please keep this undefined on modified versions.
 #define R1GL_RELEASE 1
 

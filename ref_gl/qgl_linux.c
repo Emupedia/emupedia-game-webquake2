@@ -229,7 +229,7 @@ static void bindVBO() {
 }
 
 
-static void flushDraws(const char *reason) {
+void flushDraws(const char *reason) {
 	if (qglState->numDrawCalls == 0) {
 		// nothing to do
 		return;

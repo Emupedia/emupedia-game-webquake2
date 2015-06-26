@@ -2702,6 +2702,7 @@ void CALLBACK glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 
 void GLimp_EndFrame (void)
 {
+	flushDraws("swapWindow");
 	SDL_GL_SwapWindow(window);
 }
 
