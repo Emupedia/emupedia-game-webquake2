@@ -229,11 +229,20 @@ static void bindVBO() {
 }
 
 
-static void flushDraws() {
+static void flushDraws(const char *reason) {
 	if (qglState->numDrawCalls == 0) {
 		// nothing to do
 		return;
 	}
+
+#ifndef NDEBUG
+	if (GLEW_GREMEDY_string_marker) {
+		char temp[512];
+		Com_sprintf(temp, 5126, "flushDraws due to %s", reason);
+		glStringMarkerGREMEDY(0, temp);
+	}
+
+#endif  // NDEBUG
 
 	commitShaderState();
 
@@ -534,7 +543,7 @@ void qglOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdo
 
 
 void qglLoadMatrixf(const GLfloat *m) {
-	flushDraws();
+	flushDraws("qglLoadMatrixf");
 
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
@@ -552,7 +561,7 @@ void qglLoadMatrixf(const GLfloat *m) {
 
 
 void qglMultMatrixf(const GLfloat *m) {
-	flushDraws();
+	flushDraws("qglMultMatrixf");
 
 	float *targetMat = NULL;
 	if (qglState->matrixMode == GL_MODELVIEW) {
@@ -632,7 +641,7 @@ void qglTranslatef(GLfloat x, GLfloat y, GLfloat z) {
 
 
 void qglPopMatrix(void) {
-	flushDraws();
+	flushDraws("qglPopMatrix");
 
 	if (qglState->matrixMode == GL_MODELVIEW) {
 		qglState->mvMatrixTop--;
@@ -683,7 +692,7 @@ void qglActiveTexture(GLenum tex) {
 
 void qglAlphaFunc(GLenum func, GLclampf ref) {
 	if (qglState->wantShader.alphaFunc != func) {
-		flushDraws();
+		flushDraws("qglAlphaFunc");
 
 		qglState->wantShader.alphaFunc = func;
 		qglState->shaderDirty = true;
@@ -693,7 +702,7 @@ void qglAlphaFunc(GLenum func, GLclampf ref) {
 
 
 void qglDisable(GLenum cap) {
-	flushDraws();
+	flushDraws("qglDisable");
 
 	switch (cap) {
 	case GL_ALPHA_TEST:
@@ -718,7 +727,7 @@ void qglDisable(GLenum cap) {
 
 
 void qglEnable(GLenum cap) {
-	flushDraws();
+	flushDraws("qglEnable");
 
 	switch (cap) {
 	case GL_ALPHA_TEST:
@@ -747,7 +756,7 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 	// we only use one combine mode
 	if (pname == GL_TEXTURE_ENV_MODE) {
-		flushDraws();
+		flushDraws("qglTexEnvi");
 
 		assert(param == GL_COMBINE_ARB
 			  || param == GL_MODULATE
@@ -769,7 +778,7 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 
 void qglBindTexture(GLenum target, GLuint texture) {
-	flushDraws();
+	flushDraws("qglBindTexture");
 
 	if (qglState->activeTexture != qglState->wantActiveTexture) {
 		glActiveTexture(GL_TEXTURE0);

@@ -41,6 +41,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include <stdbool.h>
+
+
+static const bool GLEW_GREMEDY_string_marker = false;
 
 
 #endif  // USE_GLEW
