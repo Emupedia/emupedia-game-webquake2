@@ -61,7 +61,7 @@ void VID_Printf (int print_level, const char *fmt, ...)
 }
 
 
-void VID_Error (int err_level, const char *fmt, ...) __attribute__((noreturn));
+void VID_Error (int err_level, const char *fmt, ...) __attribute__((format (printf, 2, 3), noreturn));
 void VID_Error (int err_level, const char *fmt, ...)
 {
 	va_list		argptr;

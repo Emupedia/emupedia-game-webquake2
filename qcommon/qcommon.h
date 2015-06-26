@@ -1110,7 +1110,7 @@ extern void *(EXPORT *Z_TagMalloc)(int size, int tag);
 void EXPORT Z_FreeGame (void *buf);
 void RESTRICT * EXPORT Z_TagMallocGame (int size, int tag);
 void EXPORT Z_FreeTagsGame (int tag);
-void Z_Verify (const char *format, ...);
+void Z_Verify (const char *format, ...) __attribute__((format (printf, 1, 2)));
 void Z_CheckGameLeaks (void);
 
 void Qcommon_Init (int argc, char **argv);
