@@ -133,30 +133,6 @@ void Sys_SetWindowText (char *dummy)
 {
 }
 
-void Sys_Printf (char *fmt, ...)
-{
-	va_list		argptr;
-	char		text[1024];
-	unsigned char		*p;
-
-    if (nostdout && nostdout->intvalue)
-        return;
-
-	va_start (argptr,fmt);
-	vsprintf (text,fmt,argptr);
-	va_end (argptr);
-
-	if (strlen(text) > sizeof(text))
-		Sys_Error("memory overwrite in Sys_Printf");
-
-	for (p = (unsigned char *)text; *p; p++) {
-		*p &= 0x7f;
-		if ((*p > 128 || *p < 32) && *p != 10 && *p != 13 && *p != 9)
-			printf("[%02x]", *p);
-		else
-			putc(*p, stdout);
-	}
-}
 
 void Sys_Quit (void)
 {
@@ -421,16 +397,6 @@ void Sys_Error (const char *error, ...)
 
 } 
 
-void Sys_Warn (char *warning, ...)
-{ 
-    va_list     argptr;
-    char        string[1024];
-    
-    va_start (argptr,warning);
-    vsprintf (string,warning,argptr);
-    va_end (argptr);
-	fprintf(stderr, "Warning: %s", string);
-} 
 
 /*
 ============
@@ -451,7 +417,6 @@ int	Sys_FileTime (char *path)
 
 void floating_point_exception_handler(int whatever)
 {
-//	Sys_Warn("floating point exception\n");
 	signal(SIGFPE, floating_point_exception_handler);
 }
 
