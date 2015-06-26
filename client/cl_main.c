@@ -1292,7 +1292,7 @@ void CL_Spam_f (void)
 	MSG_WriteString (cmdBuff);
 	MSG_EndWriting (&cls.netchan.message);
 
-	Com_Printf ("Wrote %d bytes stringcmd.\n", LOG_CLIENT, count * strlen(what));
+	Com_Printf ("Wrote %u bytes stringcmd.\n", LOG_CLIENT, (unsigned int) (count * strlen(what)));
 }
 #endif
 
