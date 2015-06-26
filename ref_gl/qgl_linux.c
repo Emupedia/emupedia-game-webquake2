@@ -229,6 +229,22 @@ static void bindVBO() {
 }
 
 
+static void commitPipelineState() {
+	commitShaderState();
+
+	if (qglState->activePipeline.blend != qglState->wantPipeline.blend) {
+		qglState->activePipeline.blend = qglState->wantPipeline.blend;
+		if (qglState->activePipeline.blend) {
+			glEnable(GL_BLEND);
+		} else {
+			glDisable(GL_BLEND);
+		}
+	}
+
+	qglState->pipelineDirty = false;
+}
+
+
 void flushDraws(const char *reason) {
 	if (qglState->numDrawCalls == 0) {
 		// nothing to do
@@ -244,7 +260,7 @@ void flushDraws(const char *reason) {
 
 #endif  // NDEBUG
 
-	commitShaderState();
+	commitPipelineState();
 
 	bindVBO();
 
@@ -266,6 +282,10 @@ void flushDraws(const char *reason) {
 
 
 void qglBegin(GLenum mode) {
+	if (qglState->pipelineDirty) {
+		flushDraws("qglBegin");
+	}
+
 	qglState->currentDrawFirstVertex = qglState->usedVertices;
 	qglState->primitive = mode;
 }
@@ -719,6 +739,11 @@ void qglDisable(GLenum cap) {
 		}
 		break;
 
+	case GL_BLEND:
+		qglState->wantPipeline.blend = false;
+		qglState->pipelineDirty = true;
+		break;
+
 	default:
 		glDisable(cap);
 		break;
@@ -742,6 +767,11 @@ void qglEnable(GLenum cap) {
 			qglState->wantShader.texState[qglState->wantActiveTexture].texEnable = true;
 			qglState->shaderDirty = true;
 		}
+		break;
+
+	case GL_BLEND:
+		qglState->wantPipeline.blend = true;
+		qglState->pipelineDirty = true;
 		break;
 
 	default:

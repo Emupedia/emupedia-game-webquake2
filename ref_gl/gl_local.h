@@ -242,6 +242,16 @@ typedef struct Shader {
 } Shader;
 
 
+typedef struct PipelineState {
+	bool blend;
+	// TODO: blend func
+	// TODO: depth test, depth write
+	// TODO: cull
+	// TODO: scissor
+	// TODO: stencil
+} PipelineState;
+
+
 typedef struct DrawCall {
 	GLenum primitive;
 	unsigned int firstVert;
@@ -253,6 +263,10 @@ typedef struct DrawCall {
 
 
 typedef struct QGLState {
+	PipelineState wantPipeline;
+	PipelineState activePipeline;
+	bool pipelineDirty;
+
 	Vertex *vertices;
 	unsigned int numVertices;
 	unsigned int usedVertices;
