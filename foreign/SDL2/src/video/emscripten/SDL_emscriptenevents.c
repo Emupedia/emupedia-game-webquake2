@@ -440,7 +440,9 @@ Emscripten_HandleKey(int eventType, const EmscriptenKeyboardEvent *keyEvent, voi
     /* if we prevent keydown, we won't get keypress
      * also we need to ALWAYS prevent backspace and tab otherwise chrome takes action and does bad navigation UX
      */
+    /* turol: ignore F1-F24 so Chrome doesn't open help or other stupid stuff like that*/
     return SDL_GetEventState(SDL_TEXTINPUT) != SDL_ENABLE || eventType != EMSCRIPTEN_EVENT_KEYDOWN
+            || (keyEvent->keyCode >= 112 /* F1 */ && keyEvent->keyCode <= 135 /* F24 */)
             || keyEvent->keyCode == 8 /* backspace */ || keyEvent->keyCode == 9 /* tab */;
 }
 
