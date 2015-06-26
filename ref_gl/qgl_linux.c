@@ -756,12 +756,12 @@ void qglTexEnvi(GLenum target, GLenum pname, GLint param) {
 
 	// we only use one combine mode
 	if (pname == GL_TEXTURE_ENV_MODE) {
-		flushDraws("qglTexEnvi");
-
 		assert(param == GL_COMBINE_ARB
 			  || param == GL_MODULATE
 			  || param == GL_REPLACE);
 		if (qglState->wantShader.texState[qglState->wantActiveTexture].texMode != param) {
+			flushDraws("qglTexEnvi");
+
 			qglState->shaderDirty = true;
 			qglState->wantShader.texState[qglState->wantActiveTexture].texMode = param;
 		}
