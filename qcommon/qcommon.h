@@ -1000,7 +1000,7 @@ MISC
 
 
 //r1: use variadic macros where possible to avoid overhead of evaluations and va
-#if __STDC_VERSION__ == 199901L || _MSC_VER >= 1400 && !defined _M_AMD64
+#if (__STDC_VERSION__ == 199901L || _MSC_VER >= 1400 && !defined _M_AMD64) || defined(__GNUC__)
 #define		Com_DPrintf(...)	\
 do { \
 	if (developer->intvalue) \

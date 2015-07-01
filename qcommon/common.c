@@ -380,7 +380,7 @@ A Com_Printf that only shows up if the "developer" cvar is set
 */
 void _Com_DPrintf (char const *fmt, ...)
 {
-#if !(__STDC_VERSION__ == 199901L || _MSC_VER >= 1400 && !defined _M_AMD64)
+#if !((__STDC_VERSION__ == 199901L || _MSC_VER >= 1400 && !defined _M_AMD64) || defined(__GNUC__))
 	if (!developer->intvalue)
 	{
 		return;
