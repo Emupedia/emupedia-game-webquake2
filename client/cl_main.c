@@ -3437,7 +3437,7 @@ void CL_IndexStats_f (void)
 	Com_Printf ("CS_GENERAL    : %d\n", LOG_GENERAL, count);
 }
 
-void _cl_http_max_connections_changed (cvar_t *c, char *old, char *new)
+void _cl_http_max_connections_changed (cvar_t *c, char *old, char *newValue)
 {
 	if (c->intvalue > 8)
 		Cvar_Set (c->name, "8");
@@ -3449,7 +3449,7 @@ void _cl_http_max_connections_changed (cvar_t *c, char *old, char *new)
 	//	Com_Printf ("WARNING: Changing the maximum connections higher than 2 violates the HTTP specification recommendations. Doing so may result in you being blocked from the remote system and offers no performance benefits unless you are on a very high latency link (ie, satellite)\n", LOG_GENERAL);
 }
 
-void _gun_changed (cvar_t *c, char *old, char *new)
+void _gun_changed (cvar_t *c, char *old, char *newValue)
 {
 	if (cls.state >= ca_connected && cls.serverProtocol == PROTOCOL_R1Q2)
 	{
@@ -3460,7 +3460,7 @@ void _gun_changed (cvar_t *c, char *old, char *new)
 	}
 }
 
-void _player_updates_changed (cvar_t *c, char *old, char *new)
+void _player_updates_changed (cvar_t *c, char *old, char *newValue)
 {
 	if (c->intvalue > 10)
 		Cvar_Set (c->name, "10");
@@ -3479,7 +3479,7 @@ void _player_updates_changed (cvar_t *c, char *old, char *new)
 		cl.player_update_time = 0;
 }
 
-void _updaterate_changed (cvar_t *c, char *old, char *new)
+void _updaterate_changed (cvar_t *c, char *old, char *newValue)
 {
 	if (c->intvalue < 0)
 		Cvar_Set (c->name, "0");
