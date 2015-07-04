@@ -581,7 +581,7 @@ void MSG_WriteChar (int c)
 #endif*/
 	Q_assert (!(c < -128 || c > 127));
 
-	buf = SZ_GetSpace (&msgbuff, 1);
+	buf = (byte *) SZ_GetSpace (&msgbuff, 1);
 	buf[0] = c;
 }
 
@@ -600,7 +600,7 @@ void MSG_BeginWriting (int c)
 	memset (message_buff, 0xcc, sizeof(message_buff));
 #endif
 
-	buf = SZ_GetSpace (&msgbuff, 1);
+	buf = (byte *) SZ_GetSpace (&msgbuff, 1);
 	buf[0] = c;
 }
 
@@ -614,7 +614,7 @@ void MSG_WriteByte (int c)
 #endif*/
 	Q_assert (!(c < 0 || c > 255));
 
-	buf = SZ_GetSpace (&msgbuff, 1);
+	buf = (byte *) SZ_GetSpace (&msgbuff, 1);
 	buf[0] = c;
 }
 
@@ -629,7 +629,7 @@ void MSG_WriteShort (int c)
 	//XXX: unsigned shorts are written here too...
 	//Q_assert (!(c < ((int16)0x8000) || c > (int16)0x7fff));
 
-	buf = SZ_GetSpace (&msgbuff, 2);
+	buf = (byte *) SZ_GetSpace (&msgbuff, 2);
 	buf[0] = c&0xff;
 	buf[1] = (c>>8) &0xff;
 }
@@ -638,7 +638,7 @@ void SZ_WriteShort (sizebuf_t *sbuf, int c)
 {
 	byte	*buf;
 
-	buf = SZ_GetSpace (sbuf, 2);
+	buf = (byte *) SZ_GetSpace (sbuf, 2);
 	buf[0] = c&0xff;
 	buf[1] = (c>>8) &0xff;
 }
@@ -647,7 +647,7 @@ void SZ_WriteLong (sizebuf_t *sbuf, int c)
 {
 	byte	*buf;
 	
-	buf = SZ_GetSpace (sbuf, 4);
+	buf = (byte *) SZ_GetSpace (sbuf, 4);
 	buf[0] = c&0xff;
 	buf[1] = (c>>8)&0xff;
 	buf[2] = (c>>16)&0xff;
@@ -660,7 +660,7 @@ void SZ_WriteByte (sizebuf_t *sbuf, int c)
 
 	Q_assert (!(c < 0 || c > 255));
 
-	buf = SZ_GetSpace (sbuf, 1);
+	buf = (byte *) SZ_GetSpace (sbuf, 1);
 	buf[0] = c;
 }
 
@@ -668,7 +668,7 @@ void MSG_WriteLong (int c)
 {
 	byte	*buf;
 	
-	buf = SZ_GetSpace (&msgbuff, 4);
+	buf = (byte *) SZ_GetSpace (&msgbuff, 4);
 	buf[0] = c&0xff;
 	buf[1] = (c>>8)&0xff;
 	buf[2] = (c>>16)&0xff;
@@ -794,7 +794,7 @@ void MSG_EndWrite (messagelist_t *out)
 #ifndef NPROFILE
 		msg_malloc_hits++;
 #endif
-		out->data = malloc (msgbuff.cursize);
+		out->data = (byte *) malloc (msgbuff.cursize);
 	}
 	else
 	{
@@ -1454,7 +1454,7 @@ char *CopyString (const char *in, int tag)
 {
 	char	*out;
 	
-	out = Z_TagMalloc ((int)strlen(in)+1, tag);
+	out = (char *) Z_TagMalloc ((int)strlen(in)+1, tag);
 	strcpy (out, in);
 	return out;
 }
@@ -1770,7 +1770,7 @@ RESTRICT void * EXPORT Z_TagMallocDebug (int size, int tag)
 
 	size++;
 
-	z = malloc(size);
+	z = (zhead_t *) malloc(size);
 
 	if (!z)
 		Com_Error (ERR_DIE, "Z_TagMalloc: Out of memory. Couldn't allocate %i bytes for %s (already %li bytes in %li blocks)", size, tagmalloc_tags[tag].name, z_bytes, z_count);
@@ -1831,7 +1831,7 @@ RESTRICT void * EXPORT Z_TagMallocRelease (int size, int tag)
 		tag);
 
 	size = size + sizeof(zhead_t);
-	z = malloc(size);
+	z = (zhead_t *) malloc(size);
 
 	if (!z)
 		Com_Error (ERR_DIE, "Z_TagMalloc: Out of memory. Couldn't allocate %i bytes for tag %d from %p (already %li bytes in %li blocks)", size, tag,
@@ -1905,7 +1905,7 @@ RESTRICT void * EXPORT Z_TagMallocGame (int size, int tag)
 		}
 	}
 
-	b = Z_TagMalloc (size+4, tag);
+	b = (byte *) Z_TagMalloc (size+4, tag);
 
 	memset (b, 0, size);
 	b[size + 0] = 0xFE;
@@ -1920,7 +1920,7 @@ RESTRICT void * EXPORT Z_TagMallocGame (int size, int tag)
 
 	loc = &z_game_locations;
 	last = loc->next;
-	newentry = malloc (sizeof(*loc));
+	newentry = (z_memloc_t *) malloc (sizeof(*loc));
 	if (!newentry)
 		Com_Error (ERR_DIE, "Z_TagMallocGame: Out of memory.");
 

@@ -157,7 +157,7 @@ static const char *Default_MenuKey( menuframework_s *m, int key )
 
 	if ( m )
 	{
-		if ( ( item = Menu_ItemAtCursor( m ) ) != 0 )
+		if ( ( item = (menucommon_s *) Menu_ItemAtCursor( m ) ) != 0 )
 		{
 			if ( item->type == MTYPE_FIELD )
 			{
@@ -459,12 +459,12 @@ static const char *M_Main_Key (int key)
 
 	case K_KP_DOWNARROW:
 	case K_DOWNARROW:
-		m_main_cursor = (m_main_cursor + 1) % MAIN_ITEMS;
+		m_main_cursor = (main_menu_selections) ((m_main_cursor + 1) % MAIN_ITEMS);
 		return sound;
 
 	case K_KP_UPARROW:
 	case K_UPARROW:
-		m_main_cursor = (m_main_cursor + MAIN_ITEMS - 1) % MAIN_ITEMS;
+		m_main_cursor = (main_menu_selections) ((m_main_cursor + MAIN_ITEMS - 1) % MAIN_ITEMS);
 		return sound;
 
 	case K_KP_ENTER:
@@ -2524,7 +2524,7 @@ static void StartServer_MenuInit( void )
 		length = ftell(fp);
 		fseek(fp, 0, SEEK_SET);
 #endif
-		buffer = malloc( length );
+		buffer = (char *) malloc( length );
 		fread( buffer, length, 1, fp );
 	}
 
@@ -2541,7 +2541,7 @@ static void StartServer_MenuInit( void )
 	if ( nummaps == 0 )
 		Com_Error( ERR_DROP, "no maps in maps.lst\n" );
 
-	mapnames = malloc( sizeof( char * ) * ( nummaps + 1 ) );
+	mapnames = (char **) malloc( sizeof( char * ) * ( nummaps + 1 ) );
 	memset( mapnames, 0, sizeof( char * ) * ( nummaps + 1 ) );
 
 	s = buffer;
@@ -2560,7 +2560,7 @@ static void StartServer_MenuInit( void )
 		strcpy( longname, COM_Parse( &s ) );
 		Com_sprintf( scratch, sizeof( scratch ), "%s\n%s", longname, shortname );
 
-		mapnames[i] = malloc( strlen( scratch ) + 1 );
+		mapnames[i] = (char *) malloc( strlen( scratch ) + 1 );
 		strcpy( mapnames[i], scratch );
 	}
 	mapnames[nummaps] = 0;
@@ -3502,7 +3502,7 @@ static qboolean PlayerConfig_ScanDirectories( void )
 		if ( !nskins )
 			continue;
 
-		skinnames = malloc( sizeof( char * ) * ( nskins + 1 ) );
+		skinnames = (char **) malloc( sizeof( char * ) * ( nskins + 1 ) );
 		memset( skinnames, 0, sizeof( char * ) * ( nskins + 1 ) );
 
 		// copy the valid skins

@@ -567,7 +567,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 
 	*pic = NULL;
 
-	ri.FS_LoadFile (name, (void *)&PngFileBuffer.Buffer);
+	ri.FS_LoadFile (name, (void **)&PngFileBuffer.Buffer);
 
     if (!PngFileBuffer.Buffer)
 		return;
@@ -651,7 +651,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 
 	rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 
-	*pic = malloc (info_ptr->height * rowbytes);
+	*pic = (byte *) malloc (info_ptr->height * rowbytes);
 
 	for (i = 0; i < info_ptr->height; i++)
 		row_pointers[i] = *pic + i*rowbytes;
@@ -1473,7 +1473,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	}
 
 	// Allocate Memory for decompressed image
-	rgbadata = malloc(cinfo.output_width * cinfo.output_height * 4);
+	rgbadata = (byte *) malloc(cinfo.output_width * cinfo.output_height * 4);
 	if(!rgbadata)
 	{
 		VID_Printf(PRINT_ALL, "Insufficient memory for JPEG buffer\n");
@@ -1487,7 +1487,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	*height = cinfo.output_height;
 
 	// Allocate Scanline buffer
-	scanline = malloc (cinfo.output_width * 3);
+	scanline = (byte *) malloc (cinfo.output_width * 3);
 	if (!scanline)
 	{
 		VID_Printf (PRINT_ALL, "Insufficient memory for JPEG scanline buffer\n");

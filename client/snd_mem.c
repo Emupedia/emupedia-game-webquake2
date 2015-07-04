@@ -249,7 +249,7 @@ sfxcache_t *S_LoadSound (sfx_t *s)
 		}
 
 		len = len * info.width * info.channels;
-		sc = s->cache = Z_TagMalloc (len + sizeof(sfxcache_t), TAGMALLOC_CLIENT_SOUNDCACHE);
+		sc = s->cache = (sfxcache_t *) Z_TagMalloc (len + sizeof(sfxcache_t), TAGMALLOC_CLIENT_SOUNDCACHE);
 	}
 	//else
 	//{
@@ -457,7 +457,7 @@ static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info)
 	}
 
 	// Load the data
-	*wav = out = Z_TagMalloc(info->samples * info->width, TAGMALLOC_CLIENT_SOUNDCACHE);
+	*wav = out = (byte *) Z_TagMalloc(info->samples * info->width, TAGMALLOC_CLIENT_SOUNDCACHE);
 	memcpy(out, buffer + (data_p - buffer), info->samples * info->width);
 
 	FS_FreeFile(buffer);

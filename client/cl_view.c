@@ -831,8 +831,8 @@ void _particlecount_changed (cvar_t *self, char *old, char *newValue)
 
 	count = self->intvalue;
 
-	particles = Z_TagMalloc (count * sizeof(*particles), TAGMALLOC_CL_PARTICLES);
-	r_particles = Z_TagMalloc (count * sizeof(*r_particles), TAGMALLOC_CL_PARTICLES);
+	particles = (cparticle_t *) Z_TagMalloc (count * sizeof(*particles), TAGMALLOC_CL_PARTICLES);
+	r_particles = (particle_t *) Z_TagMalloc (count * sizeof(*r_particles), TAGMALLOC_CL_PARTICLES);
 
 	//allocated uninit
 	CL_ClearParticles (count);

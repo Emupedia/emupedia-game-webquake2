@@ -360,7 +360,7 @@ sfx_t *S_FindName (char *name, qboolean create)
 			return &known_sfx[i];
 		}*/
 
-	data = rbfind (name, knownsounds);
+	data = (void **) rbfind (name, knownsounds);
 	if (data)
 	{
 		sfx = *(sfx_t **)data;
@@ -402,7 +402,7 @@ sfx_t *S_FindName (char *name, qboolean create)
 	sfx->format = 0;
 	sfx->bufferNum = 0;
 
-	data = rbsearch (sfx->name, knownsounds);
+	data = (void **) rbsearch (sfx->name, knownsounds);
 	*data = sfx;
 	
 	return sfx;
@@ -450,7 +450,7 @@ sfx_t *S_AliasName (char *aliasname, char *truename)
 	sfx->registration_sequence = s_registration_sequence;
 	sfx->truename = CopyString (truename, TAGMALLOC_CLIENT_SFX);
 
-	data = rbsearch (sfx->name, knownsounds);
+	data = (void **) rbsearch (sfx->name, knownsounds);
 	*data = sfx;
 
 	return sfx;
