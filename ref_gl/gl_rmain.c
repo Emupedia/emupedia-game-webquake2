@@ -1740,7 +1740,11 @@ void GL_UpdateAnisotropy (void)
 
 
 void GetEvent(SDL_Event *event);
-
+#ifdef EMSCRIPTEN
+#include "emscripten/html5.h"
+EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEvent *pointerlockChangeEvent, void *userData);
+int FilterEvents(void* userdata, SDL_Event* event);
+#endif
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
@@ -2081,6 +2085,11 @@ void RW_IN_Init(in_state_t *in_state_p)
 
 	mouse_x = mouse_y = 0.0;
 	mouse_avail = true;
+
+#if EMSCRIPTEN
+	SDL_SetEventFilter(&FilterEvents, NULL);
+	emscripten_set_pointerlockchange_callback(NULL, NULL, true, &q2_pointerlockchange);
+#endif
 }
 
 void RW_IN_Shutdown(void) {
@@ -2360,6 +2369,35 @@ static unsigned int XLateKey(SDL_Keycode keysym)
 
 static unsigned char KeyStates[SDL_NUM_SCANCODES];
 
+#ifdef EMSCRIPTEN
+EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEvent *pointerlockChangeEvent, void *userData)
+{
+	if (pointerlockChangeEvent->isActive) {
+		SDL_Log("Pointer lock grabbed");
+	} else {
+		SDL_Log("Pointer lock lost");
+		SDL_SetRelativeMouseMode(SDL_FALSE);
+		ri.Cvar_SetValue( "_windowed_mouse", 0 );
+	}
+	return 1;
+}
+
+int FilterEvents(void* userdata, SDL_Event* event)
+{
+	switch (event->type) {
+		case SDL_MOUSEBUTTONDOWN:
+			if (SDL_GetRelativeMouseMode() != SDL_TRUE) {
+				SDL_Log("Setting Relative + Grab");
+				SDL_SetRelativeMouseMode(SDL_TRUE);
+				ri.Cvar_SetValue( "_windowed_mouse", 1 );
+			}
+			break;
+		default:
+			break;
+	}
+	return 1;
+}
+#endif
 
 void GetEvent(SDL_Event *event)
 {
