@@ -2382,6 +2382,21 @@ EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEve
 		SDL_Log("Pointer lock lost");
 		SDL_SetRelativeMouseMode(SDL_FALSE);
 		ri.Cvar_SetValue( "_windowed_mouse", 0 );
+
+		// release all keys so Alt etc. don't get stuck on
+		for (unsigned int i = 0; i < SDL_NUM_SCANCODES; i++) {
+			if (KeyStates[i]) {
+				KeyStates[i] = 0;
+
+				unsigned int key = XLateKey(SDL_SCANCODE_TO_KEYCODE(i));
+				if (key) {
+					keyq[keyq_head].key = key;
+					keyq[keyq_head].down = false;
+					keyq_head = (keyq_head + 1) & 63;
+				}
+			}
+		}
+
 	}
 	return 1;
 }
@@ -2520,9 +2535,10 @@ void GetEvent(SDL_Event *event)
 			Cvar_SetValue("vid_height", viddef.height);
 			vid_width->modified = false;
 			vid_height->modified = false;
+			break;
+
 		}
 		break;
-
 	case SDL_QUIT:
 		ri.Cmd_ExecuteText(EXEC_NOW, "quit");
 		break;
