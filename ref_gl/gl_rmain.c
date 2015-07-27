@@ -34,6 +34,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <SDL.h>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#include <html5.h>
+#endif  // EMSCRIPTEN
+
 #ifndef WIN32
 #define __stdcall
 #endif
@@ -1741,7 +1746,6 @@ void GL_UpdateAnisotropy (void)
 
 void GetEvent(SDL_Event *event);
 #ifdef EMSCRIPTEN
-#include "emscripten/html5.h"
 EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEvent *pointerlockChangeEvent, void *userData);
 int FilterEvents(void* userdata, SDL_Event* event);
 #endif
