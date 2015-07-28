@@ -14,6 +14,13 @@ ALLDIRS:=baseq2
 default: all
 
 
+ifeq ($(AFL),y)
+
+CFLAGS+=-DUSE_AFL
+
+endif
+
+
 ifeq ($(ASAN),y)
 
 OPTFLAGS+=-fsanitize=address

@@ -12,9 +12,27 @@ $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))
 
 
 FILES:= \
-	net_udp.c \
 	sys_linux.c \
 	# empty line
+
+
+ifeq ($(AFL),y)
+
+
+FILES+= \
+	net_afl.cpp \
+	# empty line
+
+
+else  # USE_AFL
+
+
+FILES+= \
+	net_udp.c \
+	# empty line
+
+
+endif  # USE_AFL
 
 
 SRC_$(d):=$(addprefix $(d)/,$(FILES))

@@ -10,6 +10,7 @@ LTO:=n
 ASAN:=n
 TSAN:=n
 UBSAN:=n
+AFL:=n
 
 
 USE_JPEG:=y
