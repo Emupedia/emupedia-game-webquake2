@@ -742,8 +742,16 @@ cmodel_t *CM_LoadMap (const char *name, qboolean clientload, uint32 *checksum)
 		}
 	}
 
+#ifdef USE_AFL
+	// don't compute checksum when fuzzing, it slows us down
+	last_checksum = 0;
+
+#else  // USE_AFL
+
 	if (!(override_bits & 2))
 		last_checksum = LittleLong (Com_BlockChecksum (buf, length));
+
+#endif  // USE_AFL
 
 	*checksum = last_checksum;
 
