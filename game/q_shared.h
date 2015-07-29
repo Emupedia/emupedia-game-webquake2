@@ -190,6 +190,17 @@ typedef bool qboolean;
 //r1: set this to 1 if you have a stupid endian thingy
 #define Q_BIGENDIAN 0
 
+
+#ifdef USE_AFL
+
+
+#define crand crandom
+float frand();
+
+
+#else  //  USE_AFL
+
+
 //#define random()	(randomMT() / ((float)0xFFFFFFFFU))
 
 //32 bit float precision caps this to 0.00000000023283064f which gives max result of .99999998407391880
@@ -198,6 +209,10 @@ typedef bool qboolean;
 
 #define	frand()		(random())
 #define	crand()		(((int)randomMT() - 0x7FFFFFFF) * 0.000000000465661287307739257812f)
+
+
+#endif  //  USE_AFL
+
 
 #ifndef NULL
 #define NULL ((void *)0)

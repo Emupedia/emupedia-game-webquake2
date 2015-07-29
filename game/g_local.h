@@ -514,8 +514,24 @@ extern	edict_t			*g_edicts;
 #undef random
 #endif
 
+
+#ifdef USE_AFL
+
+
+#define random random_afl
+float random_afl();
+float crandom();
+
+
+#else  //  USE_AFL
+
+
 #define random()	((rand () & 0x7fff) / ((float)0x7fff))
 #define crandom()	(2.0f * (random() - 0.5f))
+
+
+#endif  //  USE_AFL
+
 
 extern	cvar_t	*maxentities;
 extern	cvar_t	*deathmatch;

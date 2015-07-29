@@ -174,6 +174,23 @@ void Net_Stats_f (void)
 #include "../qcommon/net_common.c"
 
 
+// [-1,1]
+float crandom() {
+	return 0.0f;
+}
+
+
+// [0,1]
+float random_afl() {
+	return 0.0f;
+}
+
+
+float frand() {
+    return random_afl();
+}
+
+
 int NET_GetPacket(netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 {
 #ifndef DEDICATED_ONLY
