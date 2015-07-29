@@ -97,6 +97,14 @@ static uint16_t fuzzReadUint16() {
 }
 
 
+static uint32_t fuzzReadUint32() {
+	uint32_t value = 0;
+	fuzzRead(reinterpret_cast<char *>(&value), sizeof(value));
+
+	return value;
+}
+
+
 static void fuzzWrite(const char *src, size_t size) {
 	if (!fuzzOut) {
 		return;
@@ -257,10 +265,17 @@ int NET_GetPacket(netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	// TODO: failed packets?
 
 	uint16_t packetSize = fuzzReadUint16();
+	uint16_t port = fuzzReadUint16();
+	uint32_t ip4 = fuzzReadUint32();
 
 	packetSize = std::min(packetSize, static_cast<uint16_t>(net_message->maxsize));
 
-	fuzzRead(reinterpret_cast<char *>(net_from), sizeof(*net_from));
+	net_from->type = NA_IP;
+	net_from->port = port;
+	net_from->ip[0] = ((ip4      ) & 0xFF);
+	net_from->ip[1] = ((ip4 >>  8) & 0xFF);
+	net_from->ip[2] = ((ip4 >> 16) & 0xFF);
+	net_from->ip[3] = ((ip4 >> 24) & 0xFF);
 	fuzzRead(reinterpret_cast<char *>(net_message->data), packetSize);
 	net_message->cursize = packetSize;
 
