@@ -2275,7 +2275,16 @@ void Qcommon_Init (int argc, char **argv)
 	if (setjmp (abortframe) )
 		Sys_Error ("Error during initialization");
 
+#ifdef USE_AFL
+
+	// deterministic fuzzing
+	seedMT(0x12345678);
+
+#else  // USE_AFL
+
 	seedMT((uint32)time(0));
+
+#endif   // USE_AFL
 
 	SZ_Init (&msgbuff, message_buff, sizeof(message_buff));
 
