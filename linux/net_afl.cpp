@@ -81,6 +81,14 @@ static void fuzzRead(char *dest, size_t size) {
 }
 
 
+static uint8_t fuzzReadUint8() {
+	uint8_t value = 0;
+	fuzzRead(reinterpret_cast<char *>(&value), sizeof(value));
+
+	return value;
+}
+
+
 static uint16_t fuzzReadUint16() {
 	uint16_t value = 0;
 	fuzzRead(reinterpret_cast<char *>(&value), sizeof(value));
@@ -200,13 +208,32 @@ void Net_Stats_f (void)
 
 // [-1,1]
 float crandom() {
-	return 0.0f;
+	uint32_t a = fuzzReadUint8();
+	uint32_t b = fuzzReadUint8();
+	uint32_t c = fuzzReadUint8();
+
+	uint32_t v = a | (b << 8) | (c << 16);
+	const uint32_t mask = ((1 << 23) - 1);
+	float f = static_cast<float>(v & mask) / static_cast<float>(mask);
+
+	// sign bit
+	f *= (v & (1 << 23)) ? 1.0f : -1.0f;
+
+	return f;
 }
 
 
 // [0,1]
 float random_afl() {
-	return 0.0f;
+	uint32_t a = fuzzReadUint8();
+	uint32_t b = fuzzReadUint8();
+	uint32_t c = fuzzReadUint8();
+
+	uint32_t v = a | (b << 8) | (c << 16);
+	const uint32_t mask = ((1 << 23) - 1);
+	float f = static_cast<float>(v & mask) / static_cast<float>(mask);
+
+	return f;
 }
 
 
