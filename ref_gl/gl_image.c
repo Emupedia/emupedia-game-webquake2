@@ -2725,7 +2725,7 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 
 		if (bits == 8)
 		{
-			int		x, y;
+			int x = 0, y = 0;
 			unsigned	int	texnum;
 
 			int temp = Scrap_AllocBlock (image->width, image->height, &x, &y);
