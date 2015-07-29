@@ -48,13 +48,28 @@ static off_t fuzzSize = 0;
 static off_t fuzzOffs = 0;
 static char *fuzzBuf = NULL;
 
+static FILE *fuzzOut = NULL;
+
+
+static void fuzzQuit() {
+	if (fuzzOut) {
+		fclose(fuzzOut);
+		fuzzOut = NULL;
+	}
+
+	delete[] fuzzBuf;
+	fuzzBuf = NULL;
+
+	Com_Quit();
+}
+
 
 static void fuzzExpectLeft(off_t numBytes) {
 	off_t bytesLeft = (fuzzSize - fuzzOffs);
 
 	if (bytesLeft < numBytes) {
 		// end of input
-		Com_Quit();
+		fuzzQuit();
 	}
 }
 
@@ -71,6 +86,15 @@ static uint16_t fuzzReadUint16() {
 	fuzzRead(reinterpret_cast<char *>(&value), sizeof(value));
 
 	return value;
+}
+
+
+static void fuzzWrite(const char *src, size_t size) {
+	if (!fuzzOut) {
+		return;
+	}
+
+	fwrite(src, 1, size, fuzzOut);
 }
 
 
@@ -256,6 +280,17 @@ void NET_Init (void)
 	fread(fuzzBuf, 1, fuzzSize, f);
 
 	fclose(f);
+
+	cvar_t *afl_fuzz_out_file = Cvar_Get("afl_fuzz_out_file", NULL, 0);
+	if (afl_fuzz_out_file) {
+		fuzzOut = fopen(afl_fuzz_out_file->string, "wb");
+		if (!fuzzOut) {
+			Com_Printf("Failed to open afl_fuzz_out_file \"%s\" %d \"%s\" \n", LOG_NET, afl_fuzz_out_file->string, errno, strerror(errno));
+			fclose(f);
+			// so we stop uselessly running the fuzzer
+			__builtin_trap();
+		}
+	}
 }
 
 
@@ -269,7 +304,43 @@ int NET_IPSocket (char *net_interface, int port)
 
 int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 {
-	STUBBED("NET_SendPacket");
+	int		net_socket;
+
+	if (to->type == NA_IP)
+	{
+		net_socket = ip_sockets[sock];
+		if (!net_socket)
+			return 0;
+	}
+#ifndef DEDICATED_ONLY
+	else if ( to->type == NA_LOOPBACK )
+	{
+		NET_SendLoopPacket (sock, length, data);
+		return 1;
+	}
+#endif
+	else if (to->type == NA_BROADCAST)
+	{
+		net_socket = ip_sockets[sock];
+		if (!net_socket)
+			return 0;
+	}
+	else
+	{
+		Com_Error (ERR_FATAL, "NET_SendPacket: bad address type");
+		return 0;
+	}
+
+	struct sockaddr_in	addr;
+	NetadrToSockadr (to, &addr);
+
+	assert(length > 0);
+	assert(length < 0x10000);
+
+	uint16_t size = length;
+	fuzzWrite(reinterpret_cast<const char *>(&size), sizeof(size));
+	fuzzWrite(reinterpret_cast<const char *>(to),    sizeof(*to));
+	fuzzWrite(reinterpret_cast<const char *>(data),  size);
 
 	return 0;
 }
