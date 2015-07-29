@@ -195,6 +195,7 @@ typedef bool qboolean;
 
 
 #define crand crandom
+float crandom();
 float frand();
 
 
