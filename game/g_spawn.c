@@ -552,6 +552,8 @@ void SpawnEntities (const char *mapname, const char *entities_, const char *spaw
 	ent = NULL;
 	inhibit = 0;
 
+	bool isCommandLevel = (Q_stricmp(level.mapname, "command") != 0);
+
 // parse ents
 	while (1)
 	{
@@ -569,7 +571,7 @@ void SpawnEntities (const char *mapname, const char *entities_, const char *spaw
 		entities = ED_ParseEdict (entities, ent);
 
 		// yet another map hack
-		if (!Q_stricmp(level.mapname, "command") && !Q_stricmp(ent->classname, "trigger_once") && !Q_stricmp(ent->model, "*27"))
+		if (isCommandLevel && !Q_stricmp(ent->classname, "trigger_once") && !Q_stricmp(ent->model, "*27"))
 			ent->spawnflags &= ~SPAWNFLAG_NOT_HARD;
 
 		// remove things (except the world) from different skill levels or deathmatch

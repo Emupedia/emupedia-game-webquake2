@@ -552,6 +552,8 @@ void SpawnEntities(const char *mapname, const char *entities_, const char *spawn
 	ent = NULL;
 	inhibit = 0;
 	
+	bool isCommandLevel = (strcasecmp(level.mapname, "command") != 0);
+
 	// parse ents
 	while(1){
 		// parse the opening brace
@@ -568,7 +570,7 @@ void SpawnEntities(const char *mapname, const char *entities_, const char *spawn
 		entities = ED_ParseEdict(entities, ent);
 		
 		// yet another map hack
-		if(!strcasecmp(level.mapname, "command") && !strcasecmp(ent->classname, "trigger_once") && !strcasecmp(ent->model, "*27"))
+		if(isCommandLevel && !strcasecmp(ent->classname, "trigger_once") && !strcasecmp(ent->model, "*27"))
 			ent->spawnflags &= ~SPAWNFLAG_NOT_HARD;
 			
 		// remove things(except the world) from different skill levels or deathmatch
