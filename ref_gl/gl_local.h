@@ -371,7 +371,6 @@ extern cvar_t	*gl_ext_point_sprite;
 extern cvar_t	*gl_ext_texture_filter_anisotropic;
 extern cvar_t	*gl_ext_texture_non_power_of_two;
 extern cvar_t	*gl_ext_max_anisotropy;
-extern cvar_t	*gl_ext_nv_multisample_filter_hint;
 extern cvar_t	*gl_ext_occlusion_query;
 
 extern cvar_t	*gl_colorbits;
@@ -570,7 +569,6 @@ typedef struct
 
 	//qboolean	r1gl_GL_SGIS_generate_mipmap;
 	qboolean	r1gl_GL_EXT_texture_filter_anisotropic;
-	qboolean	r1gl_GL_EXT_nv_multisample_filter_hint;
 	qboolean	r1gl_GL_ARB_texture_non_power_of_two;
 	qboolean	wglPFD;
 

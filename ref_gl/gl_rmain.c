@@ -123,7 +123,6 @@ cvar_t	*gl_ext_point_sprite;
 cvar_t	*gl_ext_texture_filter_anisotropic;
 cvar_t	*gl_ext_texture_non_power_of_two;
 cvar_t	*gl_ext_max_anisotropy;
-cvar_t	*gl_ext_nv_multisample_filter_hint;
 
 cvar_t	*gl_colorbits;
 cvar_t	*gl_alphabits;
@@ -1117,8 +1116,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	gl_ext_texture_non_power_of_two = ri.Cvar_Get ("gl_ext_texture_non_power_of_two", "0", 0);
 	gl_ext_max_anisotropy = ri.Cvar_Get ("gl_ext_max_anisotropy", "2", 0);
 	
-	gl_ext_nv_multisample_filter_hint = ri.Cvar_Get ("gl_ext_nv_multisample_filter_hint", "fastest", 0);
-
 	gl_colorbits = ri.Cvar_Get ("gl_colorbits", "0", 0);
 	gl_stencilbits = ri.Cvar_Get ("gl_stencilbits", "", 0);
 	gl_alphabits = ri.Cvar_Get ("gl_alphabits", "", 0);
@@ -1641,15 +1638,6 @@ retryQGL:
 		VID_Printf( PRINT_ALL, "...GL_ARB_texture_non_power_of_two not found\n" );
 	}
 
-	VID_Printf( PRINT_ALL, "Initializing r1gl NVIDIA-only extensions:\n" );
-	gl_config.r1gl_GL_EXT_nv_multisample_filter_hint = false;
-	if ( strstr( gl_config.extensions_string, "GL_NV_multisample_filter_hint" ) ) {
-		gl_config.r1gl_GL_EXT_nv_multisample_filter_hint = true;	
-		VID_Printf( PRINT_ALL, "...allowing GL_NV_multisample_filter_hint\n" );
-	} else {
-		VID_Printf( PRINT_ALL, "...GL_NV_multisample_filter_hint not found\n" );
-	}
-
 	Com_DPrintf("GL_SetDefaultState()\n" );
 	GL_SetDefaultState();
 
@@ -1770,19 +1758,6 @@ void R_BeginFrame(void)
 		vid_width->modified = false;
 		vid_height->modified = false;
 		vid_fullscreen->modified = false;
-	}
-
-	if (gl_ext_nv_multisample_filter_hint->modified)
-	{
-		gl_ext_nv_multisample_filter_hint->modified = false;
-
-		if (gl_config.r1gl_GL_EXT_nv_multisample_filter_hint)
-		{
-			if (!strcmp (gl_ext_nv_multisample_filter_hint->string, "nicest"))
-				glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
-			else
-				glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
-		}
 	}
 
 	if (gl_contrast->modified)
