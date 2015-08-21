@@ -55,6 +55,16 @@ static const float conchars_texlimits[16] =
 };
 
 
+void R_DrawString(int x, int y, const char *s, int xorVal) {
+	while (*s)
+	{
+		R_DrawChar (x, y, (*s) ^ xorVal);
+		x+=8;
+		s++;
+	}
+}
+
+
 /*
 ================
 R_DrawChar

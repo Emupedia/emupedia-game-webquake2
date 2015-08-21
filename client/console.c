@@ -37,12 +37,7 @@ void DrawString (int x, int y, const char *s)
 	if (viddef.height * scr_conlines > y)
 		return;
 
-	while (*s)
-	{
-		R_DrawChar (x, y, *s);
-		x+=8;
-		s++;
-	}
+	R_DrawString(x, y, s, 0);
 }
 
 void DrawAltString (int x, int y, const char *s)
@@ -51,12 +46,7 @@ void DrawAltString (int x, int y, const char *s)
 	if (viddef.height * scr_conlines > y)
 		return;
 
-	while (*s)
-	{
-		R_DrawChar (x, y, *s ^ 0x80);
-		x+=8;
-		s++;
-	}
+	R_DrawString(x, y, s, 0x80);
 }
 
 
@@ -673,12 +663,7 @@ void Con_DrawNotify (void)
 			cursorpos = chat_cursorpos + skip;
 		}
 
-		x = 0;
-		while(s[x])
-		{
-			R_DrawChar ( (x+skip)<<3, v, s[x]);
-			x++;
-		}
+		R_DrawString(skip, v, s, 0);
 
 		if (((cls.realtime>>8)&1))
 			R_DrawChar ( (cursorpos)<<3, v+1, '_');
