@@ -129,14 +129,14 @@ void Draw_AddText (void)
 
 /*
 ================
-Draw_Char
+R_DrawChar
 
 Draws one 8*8 graphics character with 0 being transparent.
 It can be clipped to the top of the screen to allow the console to be
 smoothly scrolled off.
 ================
 */
-void Draw_Char (int x, int y, int num)
+void R_DrawChar (int x, int y, int num)
 {
 	int				row, col;
 	float			frow, fcol, frowbottom, fcolbottom;
