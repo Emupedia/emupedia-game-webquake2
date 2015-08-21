@@ -58,7 +58,70 @@ static const float conchars_texlimits[16] =
 void R_DrawString(int x, int y, const char *s, int xorVal) {
 	while (*s)
 	{
-		R_DrawChar (x, y, (*s) ^ xorVal);
+		int num = ((*s) ^ xorVal);
+
+	num &= 0xFF;
+
+	if ( (num&127) == 32 ) {
+		x+=8;
+		s++;
+		continue;		// space
+	}
+
+	//if (y <= -8)
+	//	return;			// totally off screen
+
+	int row = num>>4;
+	int col = num&15;
+
+	float frow = conchars_texoffset[row];
+	float fcol = conchars_texoffset[col];
+
+	float frowbottom = conchars_texlimits[row];
+	float fcolbottom = conchars_texlimits[col];
+
+	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
+
+	if (draw_chars->has_alpha)
+	{
+		qglDisable(GL_ALPHA_TEST);
+
+		qglEnable(GL_BLEND);
+
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
+	}
+
+	qglBegin (GL_TRIANGLES);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
+	qglVertex2f(x, y);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frow);
+	qglVertex2f(x + 8, y);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
+	qglVertex2f(x + 8, y + 8);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
+	qglVertex2f(x + 8, y + 8);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
+	qglVertex2f(x, y);
+
+	qglMTexCoord2f (GL_TEXTURE0, fcol, frowbottom);
+	qglVertex2f(x, y + 8);
+
+	qglEnd ();
+
+	if (draw_chars->has_alpha)
+	{
+		GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
+		
+		qglEnable(GL_ALPHA_TEST);
+
+		qglDisable(GL_BLEND);
+	}
+
 		x+=8;
 		s++;
 	}
