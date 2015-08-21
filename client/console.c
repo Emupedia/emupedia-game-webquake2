@@ -601,7 +601,7 @@ Draws the last few lines of output transparently over the game top
 */
 void Con_DrawNotify (void)
 {
-	int		x, v;
+	int		v;
 	const char	*text;
 	int		i;
 	int		time;
@@ -620,9 +620,7 @@ void Con_DrawNotify (void)
 			continue;
 		text = con.text + (i % con.totallines)*con.linewidth;
 		
-		for (x = 0 ; x < con.linewidth ; x++)
-			R_DrawChar ( (x+1) * 8, v, text[x]);
-
+		R_DrawString(8, v, text, 0, con.linewidth);
 		v += 8;
 	}
 
@@ -719,15 +717,13 @@ void Con_DrawConsole (float frac)
 	else
 		offset = 0;
 
-	for (x=i-1; x>=0 ; x--)
-		R_DrawChar (viddef.width-2-(i*8)+x*8, lines-12-offset, 128 + version[x] );
+	R_DrawString(viddef.width - 2 - (i * 8), lines-12-offset, version, 128, i);
 
 	t = time (NULL);
 	today = localtime(&t);
 
 	i = (int)strftime (version, sizeof(version), "%H:%M:%S", today);
-	for (x=0 ; x<i ; x++)
-		R_DrawChar (viddef.width-66+x*8, lines-22-offset, 128 + version[x] );
+	R_DrawString(viddef.width - 66, lines - 22 - offset, version, 128, i);
 
 // draw the text
 	con.vislines = lines;
@@ -763,8 +759,7 @@ void Con_DrawConsole (float frac)
 			
 		text = con.text + (row % con.totallines)*con.linewidth;
 
-		for (x=0 ; x<con.linewidth ; x++)
-			R_DrawChar ( (x+1) * 8, y, text[x]);
+		R_DrawString(8, y, text, 0, con.linewidth);
 	}
 
 //ZOID
