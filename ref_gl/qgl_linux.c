@@ -200,6 +200,17 @@ void qglMTexCoord2f(GLenum tex, GLfloat s, GLfloat t) {
 
 
 static void pushDraw(GLenum primitive, unsigned int firstVert, unsigned int numVertices) {
+	if (qglState->numDrawCalls > 0 && primitive == GL_TRIANGLES) {
+		unsigned int prevCall = qglState->numDrawCalls - 1;
+		if (qglState->drawCalls[prevCall].primitive == GL_TRIANGLES
+			&& (qglState->drawCalls[prevCall].firstVert
+				+ qglState->drawCalls[prevCall].numVertices) == firstVert) {
+			// append to the previous draw call
+			qglState->drawCalls[prevCall].numVertices += numVertices;
+			return;
+		}
+	}
+
 	if (qglState->numDrawCalls == qglState->maxDrawCalls) {
 		// add more space
 		qglState->maxDrawCalls *= 2;
