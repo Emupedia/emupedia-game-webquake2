@@ -27,19 +27,6 @@ image_t		*draw_chars;
 extern	qboolean	scrap_dirty;
 void Scrap_Upload (void);
 
-#define	MAX_DRAWCHARS	16384
-
-typedef struct drawchars_s
-{
-	int		x;
-	int		y;
-	int		num;
-	int		pad;
-} drawchars_t;
-
-int			defer_drawing;
-int			drawcharsindex;
-drawchars_t	drawchars[MAX_DRAWCHARS];
 
 /*
 ===============
@@ -67,65 +54,6 @@ static float conchars_texlimits[16] =
 	0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375, 1
 };
 
-void Draw_AddText (void)
-{
-	int		i, x, y, num;
-	int		row, col;
-	float	frow, fcol, frowbottom, fcolbottom;
-
-	if (!drawcharsindex)
-		return;
-
-	if (draw_chars->has_alpha)
-	{
-		qglDisable(GL_ALPHA_TEST);
-
-		qglEnable(GL_BLEND);
-
-		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
-	}
-
-	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
-	qglBegin (GL_QUADS);
-
-	for (i = 0; i < drawcharsindex; i++)
-	{
-		num = drawchars[i].num;
-		x = drawchars[i].x;
-		y = drawchars[i].y;
-
-		row = num>>4;
-		col = num&15;
-
-		frow = conchars_texoffset[row];
-		fcol = conchars_texoffset[col];
-
-		frowbottom = conchars_texlimits[row];
-		fcolbottom = conchars_texlimits[col];
-
-		qglMTexCoord2f(GL_TEXTURE0, fcol, frow);
-		qglVertex2f(x, y);
-		qglMTexCoord2f(GL_TEXTURE0, fcolbottom, frow);
-		qglVertex2f(x+8, y);
-		qglMTexCoord2f(GL_TEXTURE0, fcolbottom, frowbottom);
-		qglVertex2f(x+8, y+8);
-		qglMTexCoord2f(GL_TEXTURE0, fcol, frowbottom);
-		qglVertex2f(x, y+8);
-	}
-
-	qglEnd ();
-
-	if (draw_chars->has_alpha)
-	{
-		GL_TexEnv(GL_TEXTURE0, GL_REPLACE);
-		
-		qglEnable(GL_ALPHA_TEST);
-
-		qglDisable(GL_BLEND);
-	}
-
-	drawcharsindex = 0;
-}
 
 /*
 ================
@@ -142,20 +70,6 @@ void R_DrawChar (int x, int y, int num)
 
 	if ( (num&127) == 32 )
 		return;		// space
-
-	//r1: dump all draw chars to a buffer so we can do them all at once later
-	if (defer_drawing)
-	{
-		drawchars[drawcharsindex].x = x;
-		drawchars[drawcharsindex].y = y;
-		drawchars[drawcharsindex].num = num;
-
-		if (++drawcharsindex == MAX_DRAWCHARS)
-			ri.Sys_Error (ERR_FATAL, "drawcharsindex == MAX_DRAWCHARS");
-
-		return;
-	}
-
 
 	//if (y <= -8)
 	//	return;			// totally off screen

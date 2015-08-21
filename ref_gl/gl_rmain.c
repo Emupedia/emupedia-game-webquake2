@@ -185,7 +185,6 @@ cvar_t	*gl_pic_formats;
 
 cvar_t	*gl_dlight_falloff;
 cvar_t	*gl_alphaskins;
-cvar_t	*gl_defertext;
 
 cvar_t	*gl_pic_scale;
 
@@ -1177,8 +1176,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 
 	gl_dlight_falloff = ri.Cvar_Get ("gl_dlight_falloff", "0", 0);
 	gl_alphaskins = ri.Cvar_Get ("gl_alphaskins", "0", 0);
-	gl_defertext = ri.Cvar_Get ("gl_defertext", "0", 0);
-	defer_drawing = (int)gl_defertext->value;
 
 	//con_alpha = ri.Cvar_Get ("con_alpha", "1.0", 0);
 

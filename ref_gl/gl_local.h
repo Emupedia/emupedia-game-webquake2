@@ -437,15 +437,12 @@ extern	cvar_t	*intensity;
 
 extern	cvar_t	*gl_dlight_falloff;
 extern	cvar_t	*gl_alphaskins;
-extern	cvar_t	*gl_defertext;
 
 extern	cvar_t	*gl_pic_scale;
 
 extern	cvar_t	*vid_restore_on_switch;
 
 extern int		usingmodifiedlightmaps;
-
-extern	int		defer_drawing;
 
 extern	const int		gl_solid_format;
 extern	const int		gl_alpha_format;
