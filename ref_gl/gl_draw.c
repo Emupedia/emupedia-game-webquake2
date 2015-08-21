@@ -44,12 +44,12 @@ void Draw_InitLocal (void)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-static float conchars_texoffset[16] =
+static const float conchars_texoffset[16] =
 {
 	0, 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375
 };
 
-static float conchars_texlimits[16] =
+static const float conchars_texlimits[16] =
 {
 	0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375, 1
 };
