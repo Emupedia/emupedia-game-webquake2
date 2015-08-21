@@ -350,7 +350,7 @@ void SCR_DrawCenterString (void)
 		SCR_AddDirtyPoint (x, y);
 		for (j=0 ; j<l ; j++, x+=8)
 		{
-			re.DrawChar (x, y, start[j]);	
+			R_DrawChar (x, y, start[j]);	
 			if (!remaining--)
 				return;
 		}
@@ -506,7 +506,7 @@ void SCR_DrawChatHud (void)
 	for (i = chathud_index, j = 0; j <  scr_chathud_lines->intvalue; i++, j++)
 	{
 		for (x = 0; chathud_messages[i % scr_chathud_lines->intvalue][x] ; x++)
-			re.DrawChar ( (x+scr_chathud_x->intvalue)<<3, v, chathud_messages[i % scr_chathud_lines->intvalue][x]);
+			R_DrawChar ( (x+scr_chathud_x->intvalue)<<3, v, chathud_messages[i % scr_chathud_lines->intvalue][x]);
 
 		v += 8;
 	}
@@ -1141,7 +1141,7 @@ void DrawHUDString (const char *string, int x, int y, int centerwidth, int xorVa
 			x = margin;
 		for (i=0 ; i<width ; i++)
 		{
-			re.DrawChar (x, y, line[i]^xorValue);
+			R_DrawChar (x, y, line[i]^xorValue);
 			x += 8;
 		}
 		if (*string)

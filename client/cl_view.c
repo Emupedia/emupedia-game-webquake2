@@ -695,7 +695,7 @@ void V_RenderView(void)
 		int x;
 		Com_sprintf (buff, sizeof(buff), "%d", spc);
 		for (x = 0; x < strlen(buff); x++) {
-			re.DrawChar (viddef.width-26+x*8, viddef.height / 2, 128 + buff[x]);
+			R_DrawChar (viddef.width-26+x*8, viddef.height / 2, 128 + buff[x]);
 		}
 	}
 
@@ -715,7 +715,7 @@ void V_RenderView(void)
 		len = Com_sprintf (buff, sizeof(buff), "%d", fps);
 		for (x = 0; x < len; x++)
 		{
-			re.DrawChar (viddef.width-26+x*8+cl_drawfps_x->intvalue, viddef.height - 16 + cl_drawfps_y->intvalue, 128 + buff[x]);
+			R_DrawChar (viddef.width-26+x*8+cl_drawfps_x->intvalue, viddef.height - 16 + cl_drawfps_y->intvalue, 128 + buff[x]);
 		}
 	}
 
@@ -730,7 +730,7 @@ void V_RenderView(void)
 		len = Com_sprintf (buff, sizeof(buff), "%d:%.2d", mins, secs);
 		for (x = 0; x < len; x++)
 		{
-			re.DrawChar (x * 8 + cl_drawmaptime_x->intvalue, viddef.height - 8 + cl_drawmaptime_y->intvalue, 128 + buff[x]);
+			R_DrawChar (x * 8 + cl_drawmaptime_x->intvalue, viddef.height - 8 + cl_drawmaptime_y->intvalue, 128 + buff[x]);
 		}
 	}
 
@@ -743,7 +743,7 @@ void V_RenderView(void)
 		{
 			int x;
 			for (x=0 ; x<sizeof(rateMsg)-1; x++)
-				re.DrawChar (1+(x*8), 250, 128 + rateMsg[x] );
+				R_DrawChar (1+(x*8), 250, 128 + rateMsg[x] );
 		}
 
 		old = &cl.frames[cl.frame.deltaframe & UPDATE_MASK];
@@ -753,21 +753,21 @@ void V_RenderView(void)
 			// is too old, so we can't reconstruct it properly.
 			int x;
 			for (x=0 ; x<sizeof(frameMsg)-1; x++)
-				re.DrawChar (1+(x*8), 266, 128 + frameMsg[x] );
+				R_DrawChar (1+(x*8), 266, 128 + frameMsg[x] );
 		}
 		
 		if (cl.parse_entities - old->parse_entities > MAX_PARSE_ENTITIES-128)
 		{
 			int x;
 			for (x=0 ; x<sizeof(parseMsg)-1; x++)
-				re.DrawChar (1+(x*8), 282, 128 + parseMsg[x] );
+				R_DrawChar (1+(x*8), 282, 128 + parseMsg[x] );
 		}
 
 		if (noFrameFromServerPacket > 2)
 		{
 			int x;
 			for (x=0 ; x<sizeof(overflowMsg)-1; x++)
-				re.DrawChar (1+(x*8), 298, 128 + overflowMsg[x] );
+				R_DrawChar (1+(x*8), 298, 128 + overflowMsg[x] );
 		}
 	}
 
