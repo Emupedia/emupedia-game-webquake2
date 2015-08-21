@@ -252,7 +252,7 @@ void R_EndRegistration (void);
 void R_RenderFrame (refdef_t *fd);
 
 
-void	R_DrawString(int x, int y, const char *s, int xorVal);
+void	R_DrawString(int x, int y, const char *s, int xorVal, unsigned int maxLen);
 void	R_DrawChar (int x, int y, int c);
 
 

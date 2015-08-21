@@ -55,7 +55,7 @@ static const float conchars_texlimits[16] =
 };
 
 
-void R_DrawString(int x, int y, const char *s, int xorVal) {
+void R_DrawString(int x, int y, const char *s, int xorVal, unsigned int len) {
 	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
 
 	if (draw_chars->has_alpha)
@@ -69,15 +69,14 @@ void R_DrawString(int x, int y, const char *s, int xorVal) {
 
 	qglBegin (GL_TRIANGLES);
 
-	while (*s)
+	for (unsigned int i = 0; i < len; i++)
 	{
-		int num = ((*s) ^ xorVal);
+		int num = (s[i] ^ xorVal);
 
 	num &= 0xFF;
 
 	if ( (num&127) == 32 ) {
 		x+=8;
-		s++;
 		continue;		// space
 	}
 
@@ -112,7 +111,6 @@ void R_DrawString(int x, int y, const char *s, int xorVal) {
 	qglVertex2f(x, y + 8);
 
 		x+=8;
-		s++;
 	}
 
 	qglEnd ();
