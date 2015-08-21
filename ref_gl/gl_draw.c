@@ -138,9 +138,6 @@ smoothly scrolled off.
 */
 void R_DrawChar (int x, int y, int num)
 {
-	int				row, col;
-	float			frow, fcol, frowbottom, fcolbottom;
-
 	num &= 0xFF;
 
 	if ( (num&127) == 32 )
@@ -163,14 +160,14 @@ void R_DrawChar (int x, int y, int num)
 	//if (y <= -8)
 	//	return;			// totally off screen
 
-	row = num>>4;
-	col = num&15;
+	int row = num>>4;
+	int col = num&15;
 
-	frow = conchars_texoffset[row];
-	fcol = conchars_texoffset[col];
+	float frow = conchars_texoffset[row];
+	float fcol = conchars_texoffset[col];
 
-	frowbottom = conchars_texlimits[row];
-	fcolbottom = conchars_texlimits[col];
+	float frowbottom = conchars_texlimits[row];
+	float fcolbottom = conchars_texlimits[col];
 
 	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
 
