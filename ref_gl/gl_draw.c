@@ -56,6 +56,19 @@ static const float conchars_texlimits[16] =
 
 
 void R_DrawString(int x, int y, const char *s, int xorVal) {
+	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
+
+	if (draw_chars->has_alpha)
+	{
+		qglDisable(GL_ALPHA_TEST);
+
+		qglEnable(GL_BLEND);
+
+		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
+	}
+
+	qglBegin (GL_TRIANGLES);
+
 	while (*s)
 	{
 		int num = ((*s) ^ xorVal);
@@ -80,19 +93,6 @@ void R_DrawString(int x, int y, const char *s, int xorVal) {
 	float frowbottom = conchars_texlimits[row];
 	float fcolbottom = conchars_texlimits[col];
 
-	GL_MBind(GL_TEXTURE0, draw_chars->texnum);
-
-	if (draw_chars->has_alpha)
-	{
-		qglDisable(GL_ALPHA_TEST);
-
-		qglEnable(GL_BLEND);
-
-		GL_TexEnv(GL_TEXTURE0, GL_MODULATE);
-	}
-
-	qglBegin (GL_TRIANGLES);
-
 	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
 	qglVertex2f(x, y);
 
@@ -111,6 +111,10 @@ void R_DrawString(int x, int y, const char *s, int xorVal) {
 	qglMTexCoord2f (GL_TEXTURE0, fcol, frowbottom);
 	qglVertex2f(x, y + 8);
 
+		x+=8;
+		s++;
+	}
+
 	qglEnd ();
 
 	if (draw_chars->has_alpha)
@@ -120,10 +124,6 @@ void R_DrawString(int x, int y, const char *s, int xorVal) {
 		qglEnable(GL_ALPHA_TEST);
 
 		qglDisable(GL_BLEND);
-	}
-
-		x+=8;
-		s++;
 	}
 }
 
