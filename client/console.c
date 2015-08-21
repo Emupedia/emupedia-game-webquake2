@@ -582,10 +582,10 @@ static void Con_DrawInput (void)
 	length = (int)strlen (text);
 
 	for (i=0 ; i<length; i++)
-		R_DrawChar ( (i+1)<<3, con.vislines - 22, text[i]);
+		R_DrawChar ( (i+1) * 8, con.vislines - 22, text[i]);
 
 	if (((int)(cls.realtime>>8)&1))
-		R_DrawChar ( (linepos)<<3, con.vislines - 21, '_');
+		R_DrawChar ( (linepos) * 8, con.vislines - 21, '_');
 
 // remove cursor
 	//key_lines[edit_line][key_linepos] = 0;
@@ -621,7 +621,7 @@ void Con_DrawNotify (void)
 		text = con.text + (i % con.totallines)*con.linewidth;
 		
 		for (x = 0 ; x < con.linewidth ; x++)
-			R_DrawChar ( (x+1)<<3, v, text[x]);
+			R_DrawChar ( (x+1) * 8, v, text[x]);
 
 		v += 8;
 	}
@@ -666,7 +666,7 @@ void Con_DrawNotify (void)
 		R_DrawString(skip, v, s, 0);
 
 		if (((cls.realtime>>8)&1))
-			R_DrawChar ( (cursorpos)<<3, v+1, '_');
+			R_DrawChar ( (cursorpos) * 8, v+1, '_');
 		v += 8;
 	}
 	
@@ -747,7 +747,7 @@ void Con_DrawConsole (float frac)
 	{
 	// draw arrows to show the buffer is backscrolled
 		for (x=0 ; x<con.linewidth ; x+=4)
-			R_DrawChar ( (x+1)<<3, y, '^');
+			R_DrawChar ( (x+1) * 8, y, '^');
 	
 		y -= 8;
 		rows--;
@@ -764,7 +764,7 @@ void Con_DrawConsole (float frac)
 		text = con.text + (row % con.totallines)*con.linewidth;
 
 		for (x=0 ; x<con.linewidth ; x++)
-			R_DrawChar ( (x+1)<<3, y, text[x]);
+			R_DrawChar ( (x+1) * 8, y, text[x]);
 	}
 
 //ZOID
@@ -812,7 +812,7 @@ void Con_DrawConsole (float frac)
 		// draw it
 		y = con.vislines-12;
 		for (i = 0; i < j; i++)
-			R_DrawChar ( (i+1)<<3, y, dlbar[i]);
+			R_DrawChar ( (i+1) * 8, y, dlbar[i]);
 	}
 //ZOID
 
