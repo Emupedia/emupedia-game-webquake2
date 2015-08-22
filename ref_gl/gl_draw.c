@@ -73,42 +73,42 @@ void R_DrawString(int x, int y, const char *s, int xorVal, unsigned int len) {
 	{
 		int num = (s[i] ^ xorVal);
 
-	num &= 0xFF;
+		num &= 0xFF;
 
-	if ( (num&127) == 32 ) {
-		x+=8;
-		continue;		// space
-	}
+		if ( (num&127) == 32 ) {
+			x+=8;
+			continue;		// space
+		}
 
-	//if (y <= -8)
-	//	return;			// totally off screen
+		//if (y <= -8)
+		//	return;			// totally off screen
 
-	int row = num>>4;
-	int col = num&15;
+		int row = num>>4;
+		int col = num&15;
 
-	float frow = conchars_texoffset[row];
-	float fcol = conchars_texoffset[col];
+		float frow = conchars_texoffset[row];
+		float fcol = conchars_texoffset[col];
 
-	float frowbottom = conchars_texlimits[row];
-	float fcolbottom = conchars_texlimits[col];
+		float frowbottom = conchars_texlimits[row];
+		float fcolbottom = conchars_texlimits[col];
 
-	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
-	qglVertex2f(x, y);
+		qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
+		qglVertex2f(x, y);
 
-	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frow);
-	qglVertex2f(x + 8, y);
+		qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frow);
+		qglVertex2f(x + 8, y);
 
-	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
-	qglVertex2f(x + 8, y + 8);
+		qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
+		qglVertex2f(x + 8, y + 8);
 
-	qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
-	qglVertex2f(x + 8, y + 8);
+		qglMTexCoord2f (GL_TEXTURE0, fcolbottom, frowbottom);
+		qglVertex2f(x + 8, y + 8);
 
-	qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
-	qglVertex2f(x, y);
+		qglMTexCoord2f (GL_TEXTURE0, fcol, frow);
+		qglVertex2f(x, y);
 
-	qglMTexCoord2f (GL_TEXTURE0, fcol, frowbottom);
-	qglVertex2f(x, y + 8);
+		qglMTexCoord2f (GL_TEXTURE0, fcol, frowbottom);
+		qglVertex2f(x, y + 8);
 
 		x+=8;
 	}
