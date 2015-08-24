@@ -259,7 +259,7 @@ typedef struct DrawCall {
 } DrawCall;
 
 
-#define NUMVBOS 4096
+#define NUMVBOS 256
 
 
 typedef struct QGLState {
