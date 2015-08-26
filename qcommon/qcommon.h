@@ -833,10 +833,10 @@ void Netchan_Setup (netsrc_t sock, netchan_t *chan, netadr_t *adr, int protocol,
 
 qboolean Netchan_NeedReliable (netchan_t *chan);
 int	 Netchan_Transmit (netchan_t *chan, int length, const byte /*@null@*/*data);
-void Netchan_OutOfBand (int net_socket, netadr_t *adr, int length, const byte *data);
-void Netchan_OutOfBandPrint (int net_socket, netadr_t *adr, const char *format, ...);
-void Netchan_OutOfBandProxy (int net_socket, netadr_t *adr, int length, const byte *data);
-void Netchan_OutOfBandProxyPrint (int net_socket, netadr_t *adr, const char *format, ...);
+void Netchan_OutOfBand (netsrc_t net_socket, netadr_t *adr, int length, const byte *data);
+void Netchan_OutOfBandPrint (netsrc_t net_socket, netadr_t *adr, const char *format, ...);
+void Netchan_OutOfBandProxy (netsrc_t net_socket, netadr_t *adr, int length, const byte *data);
+void Netchan_OutOfBandProxyPrint (netsrc_t net_socket, netadr_t *adr, const char *format, ...);
 qboolean Netchan_Process (netchan_t *chan, sizebuf_t *msg);
 
 //qboolean Netchan_CanReliable (netchan_t *chan);

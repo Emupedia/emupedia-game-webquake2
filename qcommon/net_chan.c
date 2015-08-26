@@ -107,7 +107,7 @@ Netchan_OutOfBand
 Sends an out-of-band datagram
 ================
 */
-void Netchan_OutOfBand (int net_socket, netadr_t *adr, int length, const byte *data)
+void Netchan_OutOfBand (netsrc_t net_socket, netadr_t *adr, int length, const byte *data)
 {
 	sizebuf_t	send;
 	byte		send_buf[MAX_MSGLEN];
@@ -130,7 +130,7 @@ Netchan_OutOfBandPrint
 Sends a text message in an out-of-band datagram
 ================
 */
-void Netchan_OutOfBandPrint (int net_socket, netadr_t *adr, const char *format, ...)
+void Netchan_OutOfBandPrint (netsrc_t net_socket, netadr_t *adr, const char *format, ...)
 {
 	va_list		argptr;
 	static char		string[MAX_MSGLEN - 4];
@@ -150,7 +150,7 @@ Netchan_OutOfBandProxy
 Sends an out-of-band datagram
 ================
 */
-void Netchan_OutOfBandProxy (int net_socket, netadr_t *adr, int length, const byte *data)
+void Netchan_OutOfBandProxy (netsrc_t net_socket, netadr_t *adr, int length, const byte *data)
 {
 	sizebuf_t	send;
 	byte		send_buf[MAX_MSGLEN];
@@ -173,7 +173,7 @@ Netchan_OutOfBandProxyPrint
 Sends a text message in an out-of-band datagram
 ================
 */
-void Netchan_OutOfBandProxyPrint (int net_socket, netadr_t *adr, const char *format, ...)
+void Netchan_OutOfBandProxyPrint (netsrc_t net_socket, netadr_t *adr, const char *format, ...)
 {
 	va_list		argptr;
 	static char		string[MAX_MSGLEN - 4];
