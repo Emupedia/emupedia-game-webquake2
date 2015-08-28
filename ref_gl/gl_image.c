@@ -3297,11 +3297,11 @@ void	GL_InitImages (void)
 #endif
 
 	// init intensity conversions
-	intensity = ri.Cvar_Get ("intensity", "2", CVAR_ARCHIVE);
+	intensity = Cvar_Get ("intensity", "2", CVAR_ARCHIVE);
 
-	gl_contrast = ri.Cvar_Get ("gl_contrast", "0.8", 0);
-	gl_saturation = ri.Cvar_Get ("gl_saturation", "1", 0);
-	gl_texture_lighting_mode = ri.Cvar_Get ("gl_texture_lighting_mode", "0", 0);
+	gl_contrast = Cvar_Get ("gl_contrast", "0.8", 0);
+	gl_saturation = Cvar_Get ("gl_saturation", "1", 0);
+	gl_texture_lighting_mode = Cvar_Get ("gl_texture_lighting_mode", "0", 0);
 
 	if ( intensity->value <= 1 )
 		ri.Cvar_Set( "intensity", "1" );

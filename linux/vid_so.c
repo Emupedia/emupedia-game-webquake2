@@ -135,7 +135,6 @@ qboolean VID_LoadRefresh( char *name )
 	ri.FS_LoadFile = FS_LoadFile;
 	ri.FS_FreeFile = FS_FreeFile;
 	ri.FS_Gamedir = FS_Gamedir;
-	ri.Cvar_Get = Cvar_Get;
 	ri.Cvar_Set = Cvar_Set;
 	ri.Cvar_SetValue = Cvar_SetValue;
 	ri.Vid_MenuInit = VID_MenuInit;

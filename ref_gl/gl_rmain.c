@@ -1062,109 +1062,109 @@ void R_RenderFrame (refdef_t *fd)
 void Cmd_HashStats_f (void);
 static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 {
-	r_lefthand = ri.Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
-	r_norefresh = ri.Cvar_Get ("r_norefresh", "0", 0);
-	r_fullbright = ri.Cvar_Get ("r_fullbright", "0", 0);
-	r_drawentities = ri.Cvar_Get ("r_drawentities", "1", 0);
-	r_drawworld = ri.Cvar_Get ("r_drawworld", "1", 0);
-	r_novis = ri.Cvar_Get ("r_novis", "0", 0);
-	r_nocull = ri.Cvar_Get ("r_nocull", "0", 0);
-	r_lerpmodels = ri.Cvar_Get ("r_lerpmodels", "1", 0);
-	r_speeds = ri.Cvar_Get ("r_speeds", "0", 0);
+	r_lefthand = Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
+	r_norefresh = Cvar_Get ("r_norefresh", "0", 0);
+	r_fullbright = Cvar_Get ("r_fullbright", "0", 0);
+	r_drawentities = Cvar_Get ("r_drawentities", "1", 0);
+	r_drawworld = Cvar_Get ("r_drawworld", "1", 0);
+	r_novis = Cvar_Get ("r_novis", "0", 0);
+	r_nocull = Cvar_Get ("r_nocull", "0", 0);
+	r_lerpmodels = Cvar_Get ("r_lerpmodels", "1", 0);
+	r_speeds = Cvar_Get ("r_speeds", "0", 0);
 
-	r_lightlevel = ri.Cvar_Get ("r_lightlevel", "0", CVAR_NOSET);
+	r_lightlevel = Cvar_Get ("r_lightlevel", "0", CVAR_NOSET);
 
-	//gl_nosubimage = ri.Cvar_Get( "gl_nosubimage", "0", 0 );
+	//gl_nosubimage = Cvar_Get( "gl_nosubimage", "0", 0 );
 
-	gl_particle_min_size = ri.Cvar_Get( "gl_particle_min_size", "2", CVAR_ARCHIVE );
-	gl_particle_max_size = ri.Cvar_Get( "gl_particle_max_size", "40", CVAR_ARCHIVE );
-	gl_particle_size = ri.Cvar_Get( "gl_particle_size", "40", CVAR_ARCHIVE );
-	gl_particle_att_a = ri.Cvar_Get( "gl_particle_att_a", "0.01", CVAR_ARCHIVE );
-	gl_particle_att_b = ri.Cvar_Get( "gl_particle_att_b", "0.0", CVAR_ARCHIVE );
-	gl_particle_att_c = ri.Cvar_Get( "gl_particle_att_c", "0.01", CVAR_ARCHIVE );
+	gl_particle_min_size = Cvar_Get( "gl_particle_min_size", "2", CVAR_ARCHIVE );
+	gl_particle_max_size = Cvar_Get( "gl_particle_max_size", "40", CVAR_ARCHIVE );
+	gl_particle_size = Cvar_Get( "gl_particle_size", "40", CVAR_ARCHIVE );
+	gl_particle_att_a = Cvar_Get( "gl_particle_att_a", "0.01", CVAR_ARCHIVE );
+	gl_particle_att_b = Cvar_Get( "gl_particle_att_b", "0.0", CVAR_ARCHIVE );
+	gl_particle_att_c = Cvar_Get( "gl_particle_att_c", "0.01", CVAR_ARCHIVE );
 
-	gl_modulate = ri.Cvar_Get ("gl_modulate", "2", CVAR_ARCHIVE );
-	gl_bitdepth = ri.Cvar_Get( "gl_bitdepth", "0", 0 );
-	//gl_lightmap = ri.Cvar_Get ("gl_lightmap", "0", 0);
-	gl_shadows = ri.Cvar_Get ("gl_shadows", "0", CVAR_ARCHIVE );
-	gl_dynamic = ri.Cvar_Get ("gl_dynamic", "1", 0);
-	gl_nobind = ri.Cvar_Get ("gl_nobind", "0", 0);
-	gl_round_down = ri.Cvar_Get ("gl_round_down", "0", 0);
-	gl_picmip = ri.Cvar_Get ("gl_picmip", "0", 0);
-	gl_skymip = ri.Cvar_Get ("gl_skymip", "0", 0);
-	gl_showtris = ri.Cvar_Get ("gl_showtris", "0", 0);
-	gl_clear = ri.Cvar_Get ("gl_clear", "0", 0);
-	gl_cull = ri.Cvar_Get ("gl_cull", "1", 0);
-	gl_polyblend = ri.Cvar_Get ("gl_polyblend", "1", 0);
-	gl_flashblend = ri.Cvar_Get ("gl_flashblend", "0", 0);
-	//gl_playermip = ri.Cvar_Get ("gl_playermip", "0", 0);
-	//gl_monolightmap = ri.Cvar_Get( "gl_monolightmap", "0", 0 );
-	gl_texturemode = ri.Cvar_Get( "gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR", CVAR_ARCHIVE );
-	gl_lockpvs = ri.Cvar_Get( "gl_lockpvs", "0", 0 );
+	gl_modulate = Cvar_Get ("gl_modulate", "2", CVAR_ARCHIVE );
+	gl_bitdepth = Cvar_Get( "gl_bitdepth", "0", 0 );
+	//gl_lightmap = Cvar_Get ("gl_lightmap", "0", 0);
+	gl_shadows = Cvar_Get ("gl_shadows", "0", CVAR_ARCHIVE );
+	gl_dynamic = Cvar_Get ("gl_dynamic", "1", 0);
+	gl_nobind = Cvar_Get ("gl_nobind", "0", 0);
+	gl_round_down = Cvar_Get ("gl_round_down", "0", 0);
+	gl_picmip = Cvar_Get ("gl_picmip", "0", 0);
+	gl_skymip = Cvar_Get ("gl_skymip", "0", 0);
+	gl_showtris = Cvar_Get ("gl_showtris", "0", 0);
+	gl_clear = Cvar_Get ("gl_clear", "0", 0);
+	gl_cull = Cvar_Get ("gl_cull", "1", 0);
+	gl_polyblend = Cvar_Get ("gl_polyblend", "1", 0);
+	gl_flashblend = Cvar_Get ("gl_flashblend", "0", 0);
+	//gl_playermip = Cvar_Get ("gl_playermip", "0", 0);
+	//gl_monolightmap = Cvar_Get( "gl_monolightmap", "0", 0 );
+	gl_texturemode = Cvar_Get( "gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR", CVAR_ARCHIVE );
+	gl_lockpvs = Cvar_Get( "gl_lockpvs", "0", 0 );
 
-	//gl_ext_swapinterval = ri.Cvar_Get( "gl_ext_swapinterval", "1", CVAR_ARCHIVE );
-	gl_ext_multitexture = ri.Cvar_Get( "gl_ext_multitexture", "1", CVAR_ARCHIVE );
+	//gl_ext_swapinterval = Cvar_Get( "gl_ext_swapinterval", "1", CVAR_ARCHIVE );
+	gl_ext_multitexture = Cvar_Get( "gl_ext_multitexture", "1", CVAR_ARCHIVE );
 	
 	//note, pointparams moved to init to handle defaults
-	//gl_ext_compiled_vertex_array = ri.Cvar_Get( "gl_ext_compiled_vertex_array", "1", CVAR_ARCHIVE );
+	//gl_ext_compiled_vertex_array = Cvar_Get( "gl_ext_compiled_vertex_array", "1", CVAR_ARCHIVE );
 
 	//r1ch: my extensions
-	//gl_ext_generate_mipmap = ri.Cvar_Get ("gl_ext_generate_mipmap", "0", 0);
-	gl_ext_point_sprite = ri.Cvar_Get ("gl_ext_point_sprite", "0", 0);
-	gl_ext_texture_filter_anisotropic = ri.Cvar_Get ("gl_ext_texture_filter_anisotropic", "0", 0);
-	gl_ext_texture_non_power_of_two = ri.Cvar_Get ("gl_ext_texture_non_power_of_two", "0", 0);
-	gl_ext_max_anisotropy = ri.Cvar_Get ("gl_ext_max_anisotropy", "2", 0);
+	//gl_ext_generate_mipmap = Cvar_Get ("gl_ext_generate_mipmap", "0", 0);
+	gl_ext_point_sprite = Cvar_Get ("gl_ext_point_sprite", "0", 0);
+	gl_ext_texture_filter_anisotropic = Cvar_Get ("gl_ext_texture_filter_anisotropic", "0", 0);
+	gl_ext_texture_non_power_of_two = Cvar_Get ("gl_ext_texture_non_power_of_two", "0", 0);
+	gl_ext_max_anisotropy = Cvar_Get ("gl_ext_max_anisotropy", "2", 0);
 	
-	gl_colorbits = ri.Cvar_Get ("gl_colorbits", "0", 0);
-	gl_stencilbits = ri.Cvar_Get ("gl_stencilbits", "", 0);
-	gl_alphabits = ri.Cvar_Get ("gl_alphabits", "", 0);
-	gl_depthbits = ri.Cvar_Get ("gl_depthbits", "", 0);
+	gl_colorbits = Cvar_Get ("gl_colorbits", "0", 0);
+	gl_stencilbits = Cvar_Get ("gl_stencilbits", "", 0);
+	gl_alphabits = Cvar_Get ("gl_alphabits", "", 0);
+	gl_depthbits = Cvar_Get ("gl_depthbits", "", 0);
 
-	gl_ext_multisample = ri.Cvar_Get ("gl_ext_multisample", "0", 0);
-	gl_ext_samples = ri.Cvar_Get ("gl_ext_samples", "2", 0);
+	gl_ext_multisample = Cvar_Get ("gl_ext_multisample", "0", 0);
+	gl_ext_samples = Cvar_Get ("gl_ext_samples", "2", 0);
 	
-	gl_zfar = ri.Cvar_Get ("gl_zfar", "8192", 0);
+	gl_zfar = Cvar_Get ("gl_zfar", "8192", 0);
 
-	cl_version = ri.Cvar_Get ("cl_version", REF_VERSION, CVAR_NOSET); 
+	cl_version = Cvar_Get ("cl_version", REF_VERSION, CVAR_NOSET); 
 	
-	gl_r1gl_test = ri.Cvar_Get ("gl_r1gl_test", "0", 0);
-	gl_doublelight_entities = ri.Cvar_Get ("gl_doublelight_entities", "1", 0);
-	gl_noscrap = ri.Cvar_Get ("gl_noscrap", "1", 0);
-	gl_overbrights = ri.Cvar_Get ("gl_overbrights", "0", 0);
-	gl_linear_mipmaps = ri.Cvar_Get ("gl_linear_mipmaps", "0", 0);
+	gl_r1gl_test = Cvar_Get ("gl_r1gl_test", "0", 0);
+	gl_doublelight_entities = Cvar_Get ("gl_doublelight_entities", "1", 0);
+	gl_noscrap = Cvar_Get ("gl_noscrap", "1", 0);
+	gl_overbrights = Cvar_Get ("gl_overbrights", "0", 0);
+	gl_linear_mipmaps = Cvar_Get ("gl_linear_mipmaps", "0", 0);
 
-	vid_forcedrefresh = ri.Cvar_Get ("vid_forcedrefresh", "0", 0);
-	vid_optimalrefresh = ri.Cvar_Get ("vid_optimalrefresh", "0", 0);
-	vid_gamma_pics = ri.Cvar_Get ("vid_gamma_pics", "0", 0);
-	vid_nowgl = ri.Cvar_Get ("vid_nowgl", "0", 0);
-	vid_restore_on_switch = ri.Cvar_Get ("vid_flip_on_switch", "0", 0);
+	vid_forcedrefresh = Cvar_Get ("vid_forcedrefresh", "0", 0);
+	vid_optimalrefresh = Cvar_Get ("vid_optimalrefresh", "0", 0);
+	vid_gamma_pics = Cvar_Get ("vid_gamma_pics", "0", 0);
+	vid_nowgl = Cvar_Get ("vid_nowgl", "0", 0);
+	vid_restore_on_switch = Cvar_Get ("vid_flip_on_switch", "0", 0);
 
 	char tempBuf[8];
 	Com_sprintf(tempBuf, 8, "%u", defaultWidth);
-	vid_width = ri.Cvar_Get ("vid_width", tempBuf, CVAR_ARCHIVE);
+	vid_width = Cvar_Get ("vid_width", tempBuf, CVAR_ARCHIVE);
 	Com_sprintf(tempBuf, 8, "%u", defaultHeight);
-	vid_height = ri.Cvar_Get ("vid_height", tempBuf, CVAR_ARCHIVE);
+	vid_height = Cvar_Get ("vid_height", tempBuf, CVAR_ARCHIVE);
 
-	vid_topmost = ri.Cvar_Get ("vid_topmost", "0", 0);
+	vid_topmost = Cvar_Get ("vid_topmost", "0", 0);
 
-	gl_pic_scale = ri.Cvar_Get ("gl_pic_scale", "1", 0);
+	gl_pic_scale = Cvar_Get ("gl_pic_scale", "1", 0);
 	//r1ch end my shit
 
-	gl_swapinterval = ri.Cvar_Get( "gl_swapinterval", "1", CVAR_ARCHIVE );
+	gl_swapinterval = Cvar_Get( "gl_swapinterval", "1", CVAR_ARCHIVE );
 
-	//gl_saturatelighting = ri.Cvar_Get( "gl_saturatelighting", "0", 0 );
+	//gl_saturatelighting = Cvar_Get( "gl_saturatelighting", "0", 0 );
 
-	gl_jpg_quality = ri.Cvar_Get ("gl_jpg_quality", "90", 0);
-	gl_coloredlightmaps = ri.Cvar_Get ("gl_coloredlightmaps", "1", 0);
+	gl_jpg_quality = Cvar_Get ("gl_jpg_quality", "90", 0);
+	gl_coloredlightmaps = Cvar_Get ("gl_coloredlightmaps", "1", 0);
 	usingmodifiedlightmaps = (gl_coloredlightmaps->value != 1.0f);
 
-	//gl_3dlabs_broken = ri.Cvar_Get( "gl_3dlabs_broken", "1", CVAR_ARCHIVE );
+	//gl_3dlabs_broken = Cvar_Get( "gl_3dlabs_broken", "1", CVAR_ARCHIVE );
 
-	vid_fullscreen = ri.Cvar_Get( "vid_fullscreen", "0", CVAR_ARCHIVE );
-	vid_gamma = ri.Cvar_Get( "vid_gamma", "1.0", CVAR_ARCHIVE );
+	vid_fullscreen = Cvar_Get( "vid_fullscreen", "0", CVAR_ARCHIVE );
+	vid_gamma = Cvar_Get( "vid_gamma", "1.0", CVAR_ARCHIVE );
 
-	gl_texture_formats = ri.Cvar_Get ("gl_texture_formats", "png jpg tga", 0);
-	gl_pic_formats = ri.Cvar_Get ("gl_pic_formats", "png jpg tga", 0);
+	gl_texture_formats = Cvar_Get ("gl_texture_formats", "png jpg tga", 0);
+	gl_pic_formats = Cvar_Get ("gl_pic_formats", "png jpg tga", 0);
 
 	load_png_wals = strstr (gl_texture_formats->string, "png") ? true : false;
 	load_jpg_wals = strstr (gl_texture_formats->string, "jpg") ? true : false;
@@ -1174,10 +1174,10 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	load_jpg_pics = strstr (gl_pic_formats->string, "jpg") ? true : false;
 	load_tga_pics = strstr (gl_pic_formats->string, "tga") ? true : false;
 
-	gl_dlight_falloff = ri.Cvar_Get ("gl_dlight_falloff", "0", 0);
-	gl_alphaskins = ri.Cvar_Get ("gl_alphaskins", "0", 0);
+	gl_dlight_falloff = Cvar_Get ("gl_dlight_falloff", "0", 0);
+	gl_alphaskins = Cvar_Get ("gl_alphaskins", "0", 0);
 
-	//con_alpha = ri.Cvar_Get ("con_alpha", "1.0", 0);
+	//con_alpha = Cvar_Get ("con_alpha", "1.0", 0);
 
 	ri.Cmd_AddCommand( "imagelist", GL_ImageList_f );
 	ri.Cmd_AddCommand( "screenshot", GL_ScreenShot_f );
@@ -2034,24 +2034,24 @@ void RW_IN_Init(in_state_t *in_state_p)
 	in_state = in_state_p;
 
 	// mouse variables
-	_windowed_mouse = ri.Cvar_Get ("_windowed_mouse", "0", CVAR_ARCHIVE);
-	m_filter = ri.Cvar_Get ("m_filter", "0", 0);
-	in_mouse = ri.Cvar_Get ("in_mouse", "1", CVAR_ARCHIVE);
+	_windowed_mouse = Cvar_Get ("_windowed_mouse", "0", CVAR_ARCHIVE);
+	m_filter = Cvar_Get ("m_filter", "0", 0);
+	in_mouse = Cvar_Get ("in_mouse", "1", CVAR_ARCHIVE);
 #ifdef HAVE_JOYSTICK
-	in_joystick = ri.Cvar_Get("in_joystick", "0", CVAR_ARCHIVE);
-	j_invert_y = ri.Cvar_Get("j_invert_y", "1", 0);
-	lr_axis = (int) ri.Cvar_Get("j_lr_axis", "0", CVAR_ARCHIVE)->value;
-	ud_axis = (int) ri.Cvar_Get("j_ud_axis", "1", CVAR_ARCHIVE)->value;
-	throttle_axis = (int) ri.Cvar_Get("j_throttle", "3", CVAR_ARCHIVE)->value;
+	in_joystick = Cvar_Get("in_joystick", "0", CVAR_ARCHIVE);
+	j_invert_y = Cvar_Get("j_invert_y", "1", 0);
+	lr_axis = (int) Cvar_Get("j_lr_axis", "0", CVAR_ARCHIVE)->value;
+	ud_axis = (int) Cvar_Get("j_ud_axis", "1", CVAR_ARCHIVE)->value;
+	throttle_axis = (int) Cvar_Get("j_throttle", "3", CVAR_ARCHIVE)->value;
 #endif
-	my_freelook = ri.Cvar_Get( "freelook", "0", 0);
-	my_lookstrafe = ri.Cvar_Get ("lookstrafe", "0", 0);
+	my_freelook = Cvar_Get( "freelook", "0", 0);
+	my_lookstrafe = Cvar_Get ("lookstrafe", "0", 0);
 	
-	sensitivity = ri.Cvar_Get ("sensitivity", "3", 0);
-	m_pitch = ri.Cvar_Get ("m_pitch", "0.022", 0);
-	m_yaw = ri.Cvar_Get ("m_yaw", "0.022", 0);
-	m_forward = ri.Cvar_Get ("m_forward", "1", 0);
-	m_side = ri.Cvar_Get ("m_side", "0.8", 0);
+	sensitivity = Cvar_Get ("sensitivity", "3", 0);
+	m_pitch = Cvar_Get ("m_pitch", "0.022", 0);
+	m_yaw = Cvar_Get ("m_yaw", "0.022", 0);
+	m_forward = Cvar_Get ("m_forward", "1", 0);
+	m_side = Cvar_Get ("m_side", "0.8", 0);
 
 	ri.Cmd_AddCommand ("+mlook", RW_IN_MLookDown);
 	ri.Cmd_AddCommand ("-mlook", RW_IN_MLookUp);
@@ -2455,7 +2455,7 @@ void GetEvent(SDL_Event *event)
 
 			ri.Cvar_SetValue( "vid_fullscreen", fs );
 
-			fullscreen = ri.Cvar_Get( "vid_fullscreen", "0", 0 );
+			fullscreen = Cvar_Get( "vid_fullscreen", "0", 0 );
 			fullscreen->modified = false;	// we just changed it with SDL.
 
 			break; /* ignore this key */
