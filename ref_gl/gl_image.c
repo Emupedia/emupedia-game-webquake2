@@ -2253,39 +2253,6 @@ void GL_LightScaleTexture (unsigned *in, int inwidth, int inheight, qboolean onl
 	}
 }
 
-void GL_LightScaleTexture24 (unsigned *in, int inwidth, int inheight, qboolean only_gamma)
-{
-	if ( only_gamma )
-	{
-		int		i, c;
-		byte	*p;
-
-		p = (byte *)in;
-
-		c = inwidth*inheight;
-		for (i=0 ; i<c ; i++, p+=3)
-		{
-			p[0] = gammatable[p[0]];
-			p[1] = gammatable[p[1]];
-			p[2] = gammatable[p[2]];
-		}
-	}
-	else
-	{
-		int		i, c;
-		byte	*p;
-
-		p = (byte *)in;
-
-		c = inwidth*inheight;
-		for (i=0 ; i<c ; i++, p+=3)
-		{
-			p[0] = gammaintensitytable[p[0]];
-			p[1] = gammaintensitytable[p[1]];
-			p[2] = gammaintensitytable[p[2]];
-		}
-	}
-}
 
 /*
 ================
