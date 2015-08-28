@@ -2080,43 +2080,6 @@ void GL_ResampleTexture (unsigned *in, int inwidth, int inheight, unsigned *out,
 	}
 }
 
-void GL_ResampleTexture24(unsigned *in, int inwidth, int inheight, unsigned *out,  int outwidth, int outheight)
-{
-	int i;
-	byte *b1,*b2;
-	unsigned *tmp,*tmp2;
-
-	tmp = (unsigned *) malloc(inheight*inwidth*4);
-	tmp2 = (unsigned *) malloc(outwidth*outheight*4);
-
-	if (!tmp || !tmp2)
-		ri.Sys_Error (ERR_FATAL, "GL_ResampleTexture24: out of memory");
-
-	b2=(byte*)tmp;
-	b1=(byte*)in;
-
-	for(i=0;i<inheight*inwidth;i++){    
-		*b2++ = *b1++;
-		*b2++ = *b1++;
-		*b2++ = *b1++;
-		*b2++ = 255;
-	}
-
-	GL_ResampleTexture(tmp,inwidth,inheight,tmp2,outwidth,outheight);
-
-	b2=(byte*)out;
-	b1=(byte*)tmp2;
-
-	for(i=0;i<outheight*outwidth;i++){    
-		*b2++ = *b1++;
-		*b2++ = *b1++;
-		*b2++ = *b1++;
-		b1++;
-	}
-
-	free(tmp);
-	free(tmp2);
-}
 
 /*
 VectorMix
