@@ -57,7 +57,7 @@ const float	r_avertexnormal_dots[SHADEDOT_QUANT][256] =
 
 const float	*shadedots = r_avertexnormal_dots[0];
 
-void GL_LerpVerts( int nverts, dtrivertx_t *v, dtrivertx_t *ov, dtrivertx_t *verts, float *lerp, float move[3], float frontv[3], float backv[3] )
+static void GL_LerpVerts( int nverts, const dtrivertx_t *v, const dtrivertx_t *ov, const dtrivertx_t *verts, float *lerp, const float move[3], const float frontv[3], const float backv[3] )
 {
 	int i;
 
@@ -93,18 +93,18 @@ interpolates between two frames and origins
 FIXME: batch lerp all vertexes
 =============
 */
-void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
+static void GL_DrawAliasFrameLerp (const dmdl_t *paliashdr, float backlerp)
 {
 	daliasframe_t *frame = (daliasframe_t *)((byte *)paliashdr + paliashdr->ofs_frames
 		+ currententity->frame * paliashdr->framesize);
-	dtrivertx_t	*verts = frame->verts;
-	dtrivertx_t	*v = verts;
+	const dtrivertx_t *verts = frame->verts;
+	const dtrivertx_t *v = verts;
 
 	daliasframe_t *oldframe = (daliasframe_t *)((byte *)paliashdr + paliashdr->ofs_frames
 		+ currententity->oldframe * paliashdr->framesize);
-	dtrivertx_t	*ov = oldframe->verts;
+	const dtrivertx_t *ov = oldframe->verts;
 
-	int *order = (int *)((byte *)paliashdr + paliashdr->ofs_glcmds);
+	const int *order = (int *)((byte *)paliashdr + paliashdr->ofs_glcmds);
 
 //	glTranslatef (frame->translate[0], frame->translate[1], frame->translate[2]);
 //	glScalef (frame->scale[0], frame->scale[1], frame->scale[2]);
@@ -146,7 +146,7 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 	frontv[2] = frontlerp*frame->scale[2];
 	backv[2] = backlerp*oldframe->scale[2];
 
-	float	*lerp = s_lerped[0];
+	float *lerp = s_lerped[0];
 
 	GL_LerpVerts( paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv );
 
