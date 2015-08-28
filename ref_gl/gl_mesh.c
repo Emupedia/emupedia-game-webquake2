@@ -150,53 +150,53 @@ void GL_DrawAliasFrameLerp (dmdl_t *paliashdr, float backlerp)
 
 	GL_LerpVerts( paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv );
 
-		for (;;)
+	for (;;)
+	{
+		// get the vertex count and primitive type
+		int count = *order++;
+		if (!count)
+			break;		// done
+		if (count < 0)
 		{
-			// get the vertex count and primitive type
-			int count = *order++;
-			if (!count)
-				break;		// done
-			if (count < 0)
-			{
-				count = -count;
-				qglBegin (GL_TRIANGLE_FAN);
-			}
-			else
-			{
-				qglBegin (GL_TRIANGLE_STRIP);
-			}
-
-			if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
-			{
-				do
-				{
-					int index_xyz = order[2];
-					order += 3;
-
-					qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha);
-					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
-
-				} while (--count);
-			}
-			else
-			{
-				do
-				{
-					// texture coordinates come from the draw list
-					qglMTexCoord2f(GL_TEXTURE0, ((float *)order)[0], ((float *)order)[1]);
-					int index_xyz = order[2];
-					order += 3;
-
-					// normals and vertexes come from the frame list
-					float l = shadedots[verts[index_xyz].lightnormalindex];
-
-					qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
-					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
-				} while (--count);
-			}
-
-			qglEnd ();
+			count = -count;
+			qglBegin (GL_TRIANGLE_FAN);
 		}
+		else
+		{
+			qglBegin (GL_TRIANGLE_STRIP);
+		}
+
+		if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
+		{
+			do
+			{
+				int index_xyz = order[2];
+				order += 3;
+
+				qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha);
+				qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
+
+			} while (--count);
+		}
+		else
+		{
+			do
+			{
+				// texture coordinates come from the draw list
+				qglMTexCoord2f(GL_TEXTURE0, ((float *)order)[0], ((float *)order)[1]);
+				int index_xyz = order[2];
+				order += 3;
+
+				// normals and vertexes come from the frame list
+				float l = shadedots[verts[index_xyz].lightnormalindex];
+
+				qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
+				qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
+			} while (--count);
+		}
+
+		qglEnd ();
+	}
 
 	// PMM - added double damage shell
 	if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE | RF_SHELL_DOUBLE | RF_SHELL_HALF_DAM) )
