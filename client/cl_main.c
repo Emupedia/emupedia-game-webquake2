@@ -1245,6 +1245,11 @@ void CL_Disconnect (qboolean skipdisconnect)
 
 	NET_SetProxy (NULL);
 	MSG_Clear();
+
+	if (cl_quit_on_disconnect->intvalue) {
+		Com_Printf("cl_quit_on_disconnect, quitting\n", LOG_CLIENT);
+		Com_Quit();
+	}
 }
 
 void CL_Disconnect_f (void)

@@ -490,6 +490,9 @@ extern	cvar_t	*vid_fullscreen;
 
 extern	cvar_t	*cl_quietstartup;
 
+extern	cvar_t	*cl_quit_on_connect;
+extern	cvar_t	*cl_quit_on_disconnect;
+
 #ifndef DEDICATED_ONLY
 extern	qboolean send_packet_now;
 #endif

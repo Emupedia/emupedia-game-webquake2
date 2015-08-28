@@ -473,6 +473,11 @@ void CL_PrepRefresh (void)
 #ifdef CD_AUDIO
 	CDAudio_Play (atoi(cl.configstrings[CS_CDTRACK]), true);
 #endif
+
+	if (cl_quit_on_connect->intvalue) {
+		Com_Printf("cl_quit_on_connect, quitting\n", LOG_CLIENT);
+		Com_Quit();
+	}
 }
 
 /*

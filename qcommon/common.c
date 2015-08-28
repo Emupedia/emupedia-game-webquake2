@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // common.c -- misc functions used in client and server
 #include "qcommon.h"
+#include "../client/client.h"
 
 #ifdef _WIN32
 #define OPENSSLEXPORT __cdecl
@@ -44,6 +45,9 @@ cvar_t			*z_buggygame;
 cvar_t			*z_allowcorruption;
 
 cvar_t			*cl_quietstartup;
+
+cvar_t			*cl_quit_on_connect;
+cvar_t			*cl_quit_on_disconnect;
 
 static int		com_argc;
 static char	*com_argv[MAX_NUM_ARGVS+1];
@@ -2310,6 +2314,9 @@ void Qcommon_Init (int argc, char **argv)
 	z_allowcorruption = Cvar_Get ("z_allowcorruption", "0", 0);
 
 	cl_quietstartup = Cvar_Get ("cl_quietstartup", "1", 0);
+
+	cl_quit_on_connect = Cvar_Get ("cl_quit_on_connect", "0", 0);
+	cl_quit_on_disconnect = Cvar_Get ("cl_quit_on_disconnect", "0", 0);
 
 	z_debug->changed = _z_debug_changed;
 	if (z_debug->intvalue)
