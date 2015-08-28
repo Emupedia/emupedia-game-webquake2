@@ -205,7 +205,7 @@ int Hunk_End (void)
 #else
 	/**base = realloc (membase, cursize);
 	if (!*base)
-		ri.Sys_Error (ERR_FATAL, "realloc (%p, %d) failed", membase, cursize);*/
+		VID_Error (ERR_FATAL, "realloc (%p, %d) failed", membase, cursize);*/
 #endif
 
 	//hunkcount++;

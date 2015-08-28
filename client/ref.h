@@ -155,8 +155,6 @@ typedef struct
 
 typedef struct
 {
-	void	(*Sys_Error) (int err_level, const char *str, ...) __attribute__ ((format (printf, 2, 3), noreturn));
-
 	void	(*Cmd_AddCommand) (const char *name, void(*cmd)(void));
 	void	(*Cmd_RemoveCommand) (const char *name);
 	int		(*Cmd_Argc) (void);
@@ -220,6 +218,7 @@ extern	viddef_t	viddef;				// global video state
 void	VID_Init(void);
 void	VID_Shutdown(void);
 void	VID_CheckChanges(void);
+void VID_Error (int err_level, const char *fmt, ...) __attribute__((format (printf, 2, 3), noreturn));
 
 void	VID_MenuInit(void);
 void	VID_MenuDraw(void);

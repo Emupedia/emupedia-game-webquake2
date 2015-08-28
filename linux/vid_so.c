@@ -61,7 +61,6 @@ void VID_Printf (int print_level, const char *fmt, ...)
 }
 
 
-void VID_Error (int err_level, const char *fmt, ...) __attribute__((format (printf, 2, 3), noreturn));
 void VID_Error (int err_level, const char *fmt, ...)
 {
 	va_list		argptr;
@@ -131,7 +130,6 @@ qboolean VID_LoadRefresh( char *name )
 	ri.Cmd_Argc = Cmd_Argc;
 	ri.Cmd_Argv = Cmd_Argv;
 	ri.Cmd_ExecuteText = Cbuf_ExecuteText;
-	ri.Sys_Error = VID_Error;
 	ri.FS_LoadFile = FS_LoadFile;
 	ri.FS_FreeFile = FS_FreeFile;
 	ri.FS_Gamedir = FS_Gamedir;

@@ -738,7 +738,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 		return;
 
 	if (length < sizeof(TargaHeader))
-		ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Not enough header bytes - invalid TGA file", filename);
+		VID_Error (ERR_DROP, "LoadTGA: (%s): Not enough header bytes - invalid TGA file", filename);
 
 	pdata = data;
 
@@ -770,7 +770,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 		pdata += header.id_length;
 
 	if (pdata - data >= length)
-		ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - invalid TGA file", filename);
+		VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - invalid TGA file", filename);
 
 	// validate TGA type
 	switch( header.image_type )
@@ -783,7 +783,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 		case TGA_RLEMono:
 			break;
 		default:
-			ri.Sys_Error ( ERR_DROP, "LoadTGA: (%s): Only type 1 (map), 2 (RGB), 3 (mono), 9 (RLEmap), 10 (RLERGB), 11 (RLEmono) TGA images supported", filename);
+			VID_Error ( ERR_DROP, "LoadTGA: (%s): Only type 1 (map), 2 (RGB), 3 (mono), 9 (RLEmap), 10 (RLERGB), 11 (RLEmono) TGA images supported", filename);
 			return;
 	}
 
@@ -796,7 +796,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 		case 32:
 			break;
 		default:
-			ri.Sys_Error ( ERR_DROP, "LoadTGA: (%s): Only 8, 15, 16, 24 and 32 bit images (with colormaps) supported", filename);
+			VID_Error ( ERR_DROP, "LoadTGA: (%s): Only 8, 15, 16, 24 and 32 bit images (with colormaps) supported", filename);
 			return;
 	}
 
@@ -813,7 +813,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 			case 24:
 				break;
 			default:
-				ri.Sys_Error ( ERR_DROP, "LoadTGA: (%s): Only 8, 16, 24 and 32 bit colormaps supported", filename);
+				VID_Error ( ERR_DROP, "LoadTGA: (%s): Only 8, 16, 24 and 32 bit colormaps supported", filename);
 				return;
 		}
 
@@ -908,20 +908,20 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 		{
 			case 8:
 				if (pdata - data + (1 * w * h) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
 				break;
 			case 15:
 			case 16:
 				if (pdata - data + (2 * w * h) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
 				break;
 			case 24:
 				if (pdata - data + (3 * w * h) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
 				break;
 			case 32:
 				if (pdata - data + (4 * w * h) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", filename);
 				break;
 		}
 	}
@@ -947,7 +947,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 					i = *pdata++;
 
 					if (pdata - data > length)
-						ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - invalid TGA file", filename);
+						VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - invalid TGA file", filename);
 
 					RLE_flag = (i & 0x80);
 					if (!RLE_flag)
@@ -1013,7 +1013,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 					rgba[3] = 255;
 					break;
 				default:
-					ri.Sys_Error( ERR_DROP, "LoadTGA: (%s): Illegal pixel_size '%d'", filename, pixel_size );
+					VID_Error( ERR_DROP, "LoadTGA: (%s): Illegal pixel_size '%d'", filename, pixel_size );
 					return;
 			}
 
@@ -1095,7 +1095,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 		return;
 
 	if (length < 18)
-		ri.Sys_Error (ERR_DROP, "LoadTGA: %s has an invalid file size", name);
+		VID_Error (ERR_DROP, "LoadTGA: %s has an invalid file size", name);
 
 	buf_p = buffer;
 
@@ -1126,17 +1126,17 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 		&& targa_header.image_type!=10
 		&& targa_header.image_type != 3 ) 
 	{
-		ri.Sys_Error (ERR_DROP, "LoadTGA (%s): Only type 2 (RGB), 3 (gray), and 10 (RGB) TGA images supported", name);
+		VID_Error (ERR_DROP, "LoadTGA (%s): Only type 2 (RGB), 3 (gray), and 10 (RGB) TGA images supported", name);
 	}
 
 	if ( targa_header.colormap_type != 0 )
 	{
-		ri.Sys_Error (ERR_DROP, "LoadTGA (%s): colormaps not supported", name);
+		VID_Error (ERR_DROP, "LoadTGA (%s): colormaps not supported", name);
 	}
 
 	if ( ( targa_header.pixel_size != 32 && targa_header.pixel_size != 24 ) && targa_header.image_type != 3 )
 	{
-		ri.Sys_Error (ERR_DROP, "LoadTGA (%s): Only 32 or 24 bit images supported (no colormaps)", name);
+		VID_Error (ERR_DROP, "LoadTGA (%s): Only 32 or 24 bit images supported (no colormaps)", name);
 	}
 
 	columns = targa_header.width;
@@ -1151,7 +1151,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 
 	if (!columns || !rows || numPixels > 0x7FFFFFFF || numPixels / columns / 4 != rows)
 	{
-		ri.Sys_Error (ERR_DROP, "LoadTGA (%s): Invalid image size", name);
+		VID_Error (ERR_DROP, "LoadTGA (%s): Invalid image size", name);
 	}
 
 	targa_rgba = (byte *) malloc (numPixels);
@@ -1170,7 +1170,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 		{
 			case 24:
 				if (buf_p - buffer + (3 * columns * rows) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 
 				for(row=rows-1; row>=0; row--) 
 				{
@@ -1192,7 +1192,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 
 			case 32:
 				if (buf_p - buffer + (4 * columns * rows) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 
 				for(row=rows-1; row>=0; row--) 
 				{
@@ -1215,7 +1215,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 
 			case 8:
 				if (buf_p - buffer + (1 * columns * rows) > length)
-					ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+					VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 
 				for(row=rows-1; row>=0; row--) 
 				{
@@ -1261,7 +1261,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 					{
 						case 24:
 							if (buf_p - buffer + (3) > length)
-								ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+								VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 							blue = *buf_p++;
 							green = *buf_p++;
 							red = *buf_p++;
@@ -1269,7 +1269,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 							break;
 						case 32:
 							if (buf_p - buffer + (4) > length)
-								ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+								VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 							blue = *buf_p++;
 							green = *buf_p++;
 							red = *buf_p++;
@@ -1307,7 +1307,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 					{
 						case 24:
 							if (buf_p - buffer + (3 * packetSize) > length)
-								ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+								VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 
 							for(j = 0; j < packetSize; j++)
 							{
@@ -1335,7 +1335,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 
 						case 32:
 							if (buf_p - buffer + (4 * packetSize) > length)
-								ri.Sys_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
+								VID_Error (ERR_DROP, "LoadTGA: (%s): Pointer passed end of file - corrupt TGA file", name);
 
 							for(j = 0; j < packetSize; j++)
 							{	
@@ -1376,7 +1376,7 @@ breakOut:;
 		byte *temp;
 		temp = (byte *) malloc (numPixels);
 		if (!temp)
-			ri.Sys_Error (ERR_FATAL, "LoadTGA: not enough memory");
+			VID_Error (ERR_FATAL, "LoadTGA: not enough memory");
 		Com_DPrintf("LoadTGA: Bottom-to-top TGA file (slow): %s\n", name);
 		memcpy (temp, targa_rgba, numPixels);
 		for (row = 0; row < rows; row++)
@@ -1607,19 +1607,19 @@ LoadTGA
 		if (targa_header.pixelSize != 8)
 		{
 			ri.FS_FreeFile (buffer);
-			ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit images supported for type 1 and 9\n", name);
+			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit images supported for type 1 and 9\n", name);
 		}
 
 		if( targa_header.colorMapLength != 256 )
 		{
 			ri.FS_FreeFile (buffer);
-			ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit colormaps are supported for type 1 and 9\n", name);
+			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit colormaps are supported for type 1 and 9\n", name);
 		}
 
 		if( targa_header.colorMapIndex )
 		{
 			ri.FS_FreeFile (buffer);
-			ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) colorMapIndex is not supported for type 1 and 9", name);
+			VID_Error (ERR_DROP, "LoadTGA: (%s) colorMapIndex is not supported for type 1 and 9", name);
 		}
 
 		if (targa_header.colorMapSize == 24)
@@ -1645,7 +1645,7 @@ LoadTGA
 		else
 		{
 			ri.FS_FreeFile (buffer);
-			ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only 24 and 32 bit colormaps are supported for type 1 and 9", name);
+			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 24 and 32 bit colormaps are supported for type 1 and 9", name);
 		}
 	}
 	else if ((targa_header.imageType == 2) || (targa_header.imageType == 10))
@@ -1654,7 +1654,7 @@ LoadTGA
 		if ((targa_header.pixelSize != 32) && (targa_header.pixelSize != 24))
 		{
 			ri.FS_FreeFile (buffer);
-			ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only 32 or 24 bit images supported for type 2 and 10", name);
+			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 32 or 24 bit images supported for type 2 and 10", name);
 		}
 	}
 	else if ((targa_header.imageType == 3) || (targa_header.imageType == 11))
@@ -1663,7 +1663,7 @@ LoadTGA
 		if (targa_header.pixelSize != 8 )
 		{
 			ri.FS_FreeFile (buffer);
-			ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit images supported for type 3 and 11", name);
+			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit images supported for type 3 and 11", name);
 		}
 	}
 
@@ -1811,11 +1811,11 @@ LoadTGA
 
 	if (targa_header.image_type!=2 
 		&& targa_header.image_type!=10) 
-		ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only type 2 and 10 targa RGB images supported\n", name);
+		VID_Error (ERR_DROP, "LoadTGA: (%s) Only type 2 and 10 targa RGB images supported\n", name);
 
 	if (targa_header.colormap_type !=0 
 		|| (targa_header.pixel_size!=32 && targa_header.pixel_size!=24))
-		ri.Sys_Error (ERR_DROP, "LoadTGA: (%s) Only 32 or 24 bit images supported (no colormaps)\n", name);
+		VID_Error (ERR_DROP, "LoadTGA: (%s) Only 32 or 24 bit images supported (no colormaps)\n", name);
 
 	columns = targa_header.width;
 	rows = targa_header.height;
@@ -2237,7 +2237,7 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 			mipmap_buffer = (unsigned *) malloc (MAX_TEXTURE_DIMENSIONS * MAX_TEXTURE_DIMENSIONS * sizeof(unsigned int));
 
 		if (!mipmap_buffer)
-			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
+			VID_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
 
 		temp = mipmap_buffer;
 	}
@@ -2245,7 +2245,7 @@ static void GL_MipMapLinear (unsigned *in, int inWidth, int inHeight)
 	{
 		temp = (unsigned *) malloc (outWidth * outHeight * sizeof(unsigned int));
 		if (!temp)
-			ri.Sys_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
+			VID_Error (ERR_DROP, "GL_MipMapLinear: Out of memory");
 	}
 
 	int inWidthMask = inWidth - 1;
@@ -2381,7 +2381,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 			{
 				scaled_buffer = malloc(MAX_TEXTURE_DIMENSIONS * MAX_TEXTURE_DIMENSIONS * sizeof(int));
 				if (!scaled_buffer)
-					ri.Sys_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
+					VID_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
 			}
 
 			scaled = (unsigned *) scaled_buffer;
@@ -2390,7 +2390,7 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 		{
 			scaled = (unsigned *) malloc (scaled_width * scaled_height * sizeof(unsigned int));
 			if (!scaled)
-				ri.Sys_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
+				VID_Error (ERR_DROP, "GL_Upload32: %s: out of memory", current_texture_filename);
 		}
 	}
 
@@ -2455,10 +2455,10 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	/*if (gl_config.r1gl_GL_SGIS_generate_mipmap)
 	{
 		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		if ((err = glGetError()) != GL_NO_ERROR) ri.Sys_Error (ERR_FATAL, "glGetError: 0x%x", err);
+		if ((err = glGetError()) != GL_NO_ERROR) VID_Error (ERR_FATAL, "glGetError: 0x%x", err);
 
 		glTexParameteri (GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
-		if ((err = glGetError()) != GL_NO_ERROR) ri.Sys_Error (ERR_FATAL, "glGetError: 0x%x", err);
+		if ((err = glGetError()) != GL_NO_ERROR) VID_Error (ERR_FATAL, "glGetError: 0x%x", err);
 	}*/
 
 	glTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
@@ -2563,7 +2563,7 @@ qboolean GL_Upload8 (byte *data, int width, int height,  qboolean mipmap, image_
 	s = width*height;
 
 	if (s > sizeof(trans)/4)
-		ri.Sys_Error (ERR_DROP, "GL_Upload8: %s: %dx%d too large", current_texture_filename, width, height);
+		VID_Error (ERR_DROP, "GL_Upload8: %s: %dx%d too large", current_texture_filename, width, height);
 
 	for (i=0 ; i<s ; i++)
 	{
@@ -2628,14 +2628,14 @@ image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagety
 				}
 				fclose (dump);
 			}
-			ri.Sys_Error (ERR_FATAL, "MAX_GLTEXTURES");
+			VID_Error (ERR_FATAL, "MAX_GLTEXTURES");
 		}
 		numgltextures++;
 	}
 	image = &gltextures[i];
 
 	if (strlen(name) >= sizeof(image->name)-1)
-		ri.Sys_Error (ERR_DROP, "Draw_LoadPic: \"%s\" is too long", name);
+		VID_Error (ERR_DROP, "Draw_LoadPic: \"%s\" is too long", name);
 
 	strcpy (image->name, name);
 	image->registration_sequence = registration_sequence;
@@ -2760,7 +2760,7 @@ image_t *GL_LoadWal (const char *name)
 	}
 
 	if (ofs < sizeof(*mt) || ofs >= len)
-		ri.Sys_Error (ERR_DROP, "Bad texture offset %d in %s", ofs, name);
+		VID_Error (ERR_DROP, "Bad texture offset %d in %s", ofs, name);
 
 	image = GL_LoadPic (name, (byte *)mt + ofs, width, height, it_wall, 8);
 
@@ -2872,7 +2872,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 	len = strlen(name);
 
 	//if (len < 5)
-	//	ri.Sys_Error (ERR_DROP, "GL_FindImage: Bad image name: %s", name);
+	//	VID_Error (ERR_DROP, "GL_FindImage: Bad image name: %s", name);
 
 	//
 	// load the pic from disk
@@ -2954,7 +2954,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 	{
 		LoadPNG (name, &pic, &width, &height);
 		if (!pic)
-			return NULL; // ri.Sys_Error (ERR_DROP, "GL_FindImage: can't load %s", name);
+			return NULL; // VID_Error (ERR_DROP, "GL_FindImage: can't load %s", name);
 		image = GL_LoadPic (name, pic, width, height, type, 32);
 	}
 #endif  // USE_PNG
@@ -2981,7 +2981,7 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 		image = GL_LoadPic (name, pic, width, height, type, 32);
 	}
 	else
-		return NULL;	//	ri.Sys_Error (ERR_DROP, "GL_FindImage: bad extension on: %s", name);
+		return NULL;	//	VID_Error (ERR_DROP, "GL_FindImage: bad extension on: %s", name);
 
 	//newitem = rbsearch (name, rb);
 	//*newitem = image;
@@ -3184,7 +3184,7 @@ int Draw_GetPalette (void)
 
 	LoadPCX ("pics/colormap.pcx", &pic, &pal, &width, &height);
 	if (!pal)
-		ri.Sys_Error (ERR_FATAL, "R1GL was unable to load the colormap (pics/colormap.pcx).\n\nThis file is required for Quake II to function properly. Please make sure that all files are in the correct directories and that baseq2/pak0.pak is installed and readable (not hidden or system).");
+		VID_Error (ERR_FATAL, "R1GL was unable to load the colormap (pics/colormap.pcx).\n\nThis file is required for Quake II to function properly. Please make sure that all files are in the correct directories and that baseq2/pak0.pak is installed and readable (not hidden or system).");
 
 	for (i=0 ; i<256 ; i++)
 	{
