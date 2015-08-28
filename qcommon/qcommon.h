@@ -255,13 +255,6 @@ void Q_NullFunc(void);
 
 //============================================================================
 
-#if Q_BIGENDIAN
-extern	qboolean		bigendien;
-
-extern	int16	LittleShort (int16 l);
-extern	int32		LittleLong (int32 l);
-extern	float	LittleFloat (float l);
-#endif
 //============================================================================
 
 extern	qboolean	q2_initialized;

@@ -490,9 +490,6 @@ CMod_LoadAreaPortals
 */
 void CMod_LoadAreaPortals (lump_t *l)
 {
-#if Q_BIGENDIAN
-	int			i;
-#endif
 	dareaportal_t		*out;
 	dareaportal_t 	*in;
 	int			count;
@@ -509,15 +506,7 @@ void CMod_LoadAreaPortals (lump_t *l)
 	out = map_areaportals;
 	numareaportals = count;
 
-#if Q_BIGENDIAN
-	for ( i=0 ; i<count ; i++, in++, out++)
-	{
-		out->portalnum = LittleLong (in->portalnum);
-		out->otherarea = LittleLong (in->otherarea);
-	}
-#else
 	memcpy (out, in, sizeof(dareaportal_t)*count);
-#endif
 }
 
 /*
@@ -527,9 +516,6 @@ CMod_LoadVisibility
 */
 void CMod_LoadVisibility (lump_t *l)
 {
-#if Q_BIGENDIAN
-	int		i;
-#endif
 
 	numvisibility = l->filelen;
 	if (l->filelen > MAX_MAP_VISIBILITY)
@@ -537,14 +523,6 @@ void CMod_LoadVisibility (lump_t *l)
 
 	memcpy (map_visibility, cmod_base + l->fileofs, l->filelen);
 
-#if Q_BIGENDIAN
-	map_vis->numclusters = LittleLong (map_vis->numclusters);
-	for (i=0 ; i<map_vis->numclusters ; i++)
-	{
-		map_vis->bitofs[i][0] = LittleLong (map_vis->bitofs[i][0]);
-		map_vis->bitofs[i][1] = LittleLong (map_vis->bitofs[i][1]);
-	}
-#endif
 }
 
 
@@ -772,10 +750,6 @@ cmodel_t *CM_LoadMap (const char *name, qboolean clientload, uint32 *checksum)
 			Com_Error (ERR_DROP, "CM_LoadMap: lump %d offset %d of size %d is out of bounds\n%s is probably truncated or otherwise corrupted", i, header.lumps[i].fileofs, header.lumps[i].filelen, name);
 	}
 
-#if Q_BIGENDIAN
-	for (i=0 ; i<sizeof(dheader_t)/4 ; i++)
-		((int *)&header)[i] = LittleLong ( ((int *)&header)[i]);
-#endif
 
 	if (header.version != BSPVERSION)
 	{

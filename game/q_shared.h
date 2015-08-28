@@ -315,11 +315,9 @@ MULTICAST_PVS_R
 int16 ShortSwap (int16 l);
 int32 LongSwap (int32 l);
 
-#if !Q_BIGENDIAN
 #define LittleShort(l) (l)
 #define LittleLong(l) (l)
 #define LittleFloat(l) (l)
-#endif
 
 /*
 ==============================================================
@@ -512,11 +510,6 @@ int Q_strncasecmp (const char *s1, const char *s2, size_t n);
 
 //=============================================
 
-#if Q_BIGENDIAN
-int16	LittleShort(int16 l);
-int32		LittleLong (int32 l);
-float	LittleFloat (float l);
-#endif
 
 void	Swap_Init (void);
 char	*va(const char *format, ...) __attribute__ ((format (printf, 1, 2)));

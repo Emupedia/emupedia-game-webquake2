@@ -395,9 +395,6 @@ Mod_LoadVisibility
 */
 void Mod_LoadVisibility (lump_t *l)
 {
-#if Q_BIGENDIAN
-	int		i;
-#endif
 
 	if (!l->filelen)
 	{
@@ -408,15 +405,6 @@ void Mod_LoadVisibility (lump_t *l)
 	loadmodel->vis = (dvis_t *) Hunk_Alloc ( l->filelen);
 	memcpy (loadmodel->vis, mod_base + l->fileofs, l->filelen);
 
-#if Q_BIGENDIAN
-	loadmodel->vis->numclusters = LittleLong (loadmodel->vis->numclusters);
-
-	for (i=0 ; i<loadmodel->vis->numclusters ; i++)
-	{
-		loadmodel->vis->bitofs[i][0] = LittleLong (loadmodel->vis->bitofs[i][0]);
-		loadmodel->vis->bitofs[i][1] = LittleLong (loadmodel->vis->bitofs[i][1]);
-	}
-#endif
 }
 
 
@@ -431,9 +419,6 @@ void Mod_LoadVertexes (lump_t *l)
 	mvertex_t	*out;
 	int			count;
 
-#if Q_BIGENDIAN
-	int			i;
-#endif
 
 	in = (dvertex_t *) (mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
@@ -445,16 +430,7 @@ void Mod_LoadVertexes (lump_t *l)
 	loadmodel->vertexes = out;
 	loadmodel->numvertexes = count;
 
-#if Q_BIGENDIAN
-	for ( i=0 ; i<count ; i++, in++, out++)
-	{
-		out->position[0] = LittleFloat (in->point[0]);
-		out->position[1] = LittleFloat (in->point[1]);
-		out->position[2] = LittleFloat (in->point[2]);
-	}
-#else
 	memcpy (out, in, sizeof(dvertex_t)*count);
-#endif
 }
 
 /*
@@ -619,19 +595,7 @@ void Mod_LoadTexinfo (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-#if Q_BIGENDIAN
-		out->vecs[0][0] = LittleFloat (in->vecs[0][0]);
-		out->vecs[0][1] = LittleFloat (in->vecs[0][1]);
-		out->vecs[0][2] = LittleFloat (in->vecs[0][2]);
-		out->vecs[0][3] = LittleFloat (in->vecs[0][3]);
-
-		out->vecs[1][0] = LittleFloat (in->vecs[1][0]);
-		out->vecs[1][1] = LittleFloat (in->vecs[1][1]);
-		out->vecs[1][2] = LittleFloat (in->vecs[1][2]);
-		out->vecs[1][3] = LittleFloat (in->vecs[1][3]);
-#else
 		memcpy (out->vecs, in->vecs, sizeof(out->vecs));
-#endif
 
 		out->flags = LittleLong (in->flags);
 		next = LittleLong (in->nexttexinfo);
@@ -1057,9 +1021,6 @@ void Mod_LoadSurfedges (lump_t *l)
 	int		count;
 	int		*in, *out;
 
-#if Q_BIGENDIAN
-	int		i;
-#endif
 	
 	in = (int *)(mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
@@ -1074,12 +1035,7 @@ void Mod_LoadSurfedges (lump_t *l)
 	loadmodel->surfedges = out;
 	loadmodel->numsurfedges = count;
 
-#if Q_BIGENDIAN
-	for ( i=0 ; i<count ; i++)
-		out[i] = LittleLong (in[i]);
-#else
 	memcpy (out, in, sizeof(int)*count);
-#endif
 }
 
 
@@ -1147,10 +1103,6 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 // swap all the lumps
 	mod_base = (byte *)header;
 
-#ifdef Q_BIGENDIAN
-	for (i=0 ; i<sizeof(dheader_t)/4 ; i++)
-		((int *)header)[i] = LittleLong ( ((int *)header)[i]);
-#endif
 
 	//r1: check header pointers point within allocated data
 	for (i = 0; i < MAX_LUMPS; i++)
@@ -1225,9 +1177,6 @@ Mod_LoadAliasModel
 void Mod_LoadAliasModel (model_t *mod, void *buffer)
 {
 	unsigned int		i;
-#if Q_BIGENDIAN
-	int j;
-#endif
 	dmdl_t				header;
 	dmdl_t				*pinmodel, *pheader;
 	dstvert_t			*pinst, *poutst;
@@ -1249,12 +1198,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	pheader = &header;
 	
 	// byte swap the header fields and sanity check
-#if Q_BIGENDIAN
-	for (i=0 ; i<sizeof(dmdl_t)/4 ; i++)
-		((int *)pheader)[i] = LittleLong (((int *)buffer)[i]);
-#else
 	memcpy (pheader, buffer, sizeof(dmdl_t));
-#endif
 
 	if (pheader->skinheight > MAX_LBM_HEIGHT)
 		Com_DPrintf("model %s has a skin taller than traditional maximum of %d", mod->name,
@@ -1325,15 +1269,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	pinst = (dstvert_t *) ((byte *)pinmodel + pheader->ofs_st);
 	poutst = (dstvert_t *) ((byte *)pheader + pheader->ofs_st);
 
-#if Q_BIGENDIAN
-	for (i=0 ; i<pheader->num_st ; i++)
-	{
-		poutst[i].s = LittleShort (pinst[i].s);
-		poutst[i].t = LittleShort (pinst[i].t);
-	}
-#else
 	memcpy (poutst, pinst, pheader->num_st * sizeof(dstvert_t));
-#endif
 
 //
 // load triangle lists
@@ -1341,19 +1277,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	pintri = (dtriangle_t *) ((byte *)pinmodel + pheader->ofs_tris);
 	pouttri = (dtriangle_t *) ((byte *)pheader + pheader->ofs_tris);
 
-#if Q_BIGENDIAN
-	for (i=0 ; i<pheader->num_tris ; i++)
-	{
-		pouttri[i].index_xyz[j] = LittleShort (pintri[i].index_xyz[0]);
-		pouttri[i].index_st[j] = LittleShort (pintri[i].index_st[0]);
-		pouttri[i].index_xyz[j] = LittleShort (pintri[i].index_xyz[1]);
-		pouttri[i].index_st[j] = LittleShort (pintri[i].index_st[1]);
-		pouttri[i].index_xyz[j] = LittleShort (pintri[i].index_xyz[2]);
-		pouttri[i].index_st[j] = LittleShort (pintri[i].index_st[2]);
-	}
-#else
 	memcpy (pouttri, pintri, pheader->num_tris * sizeof(dtriangle_t));
-#endif
 
 //
 // load the frames
@@ -1366,21 +1290,8 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 		poutframe = (daliasframe_t *) ((byte *)pheader 
 			+ pheader->ofs_frames + i * pheader->framesize);
 
-#if Q_BIGENDIAN
-
-		memcpy (poutframe->name, pinframe->name, sizeof(poutframe->name));
-		for (j=0 ; j<3 ; j++)
-		{
-			poutframe->scale[j] = LittleFloat (pinframe->scale[j]);
-			poutframe->translate[j] = LittleFloat (pinframe->translate[j]);
-		}
-		// verts are all 8 bit, so no swapping needed
-		memcpy (poutframe->verts, pinframe->verts, 
-			pheader->num_xyz*sizeof(dtrivertx_t));
-#else
 		memcpy (poutframe, pinframe, sizeof(daliasframe_t)-4);
 		memcpy (poutframe->verts, pinframe->verts, pheader->num_xyz*sizeof(dtrivertx_t));
-#endif
 	}
 
 	mod->type = mod_alias;
@@ -1391,12 +1302,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	pincmd = (int *) ((byte *)pinmodel + pheader->ofs_glcmds);
 	poutcmd = (int *) ((byte *)pheader + pheader->ofs_glcmds);
 
-#if Q_BIGENDIAN
-	for (i=0 ; i<pheader->num_glcmds ; i++)
-		poutcmd[i] = LittleLong (pincmd[i]);
-#else
 	memcpy (poutcmd, pincmd, pheader->num_glcmds * sizeof(int));
-#endif
 
 
 	// register all skins
