@@ -422,25 +422,23 @@ void floating_point_exception_handler(int whatever)
 
 char *Sys_ConsoleInput(void)
 {
-    static char text[1024];
-    int     len;
-	fd_set	fdset;
-    struct timeval timeout;
-
 	if (!dedicated || !dedicated->intvalue)
 		return NULL;
 
 	if (!stdin_active || (nostdin && nostdin->intvalue))
 		return NULL;
 
+	fd_set fdset;
 	FD_ZERO(&fdset);
 	FD_SET(0, &fdset); // stdin
+	struct timeval timeout;
 	timeout.tv_sec = 0;
 	timeout.tv_usec = 0;
 	if (select (1, &fdset, NULL, NULL, &timeout) < 1 || !FD_ISSET(0, &fdset))
 		return NULL;
 
-	len = read (0, text, sizeof(text));
+	static char text[1024];
+	int len = read (0, text, sizeof(text));
 	if (len == 0)
 	{ // eof!
 		//stdin_active = false;
