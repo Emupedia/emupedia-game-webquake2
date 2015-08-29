@@ -472,20 +472,20 @@ void Mod_LoadSubmodels (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-		out->mins[0] = LittleFloat (in->mins[0]) - 1;
-		out->maxs[0] = LittleFloat (in->maxs[0]) + 1;
-		out->origin[0] = LittleFloat (in->origin[0]);
-		out->mins[1] = LittleFloat (in->mins[1]) - 1;
-		out->maxs[1] = LittleFloat (in->maxs[1]) + 1;
-		out->origin[1] = LittleFloat (in->origin[1]);
-		out->mins[2] = LittleFloat (in->mins[2]) - 1;
-		out->maxs[2] = LittleFloat (in->maxs[2]) + 1;
-		out->origin[2] = LittleFloat (in->origin[2]);
+		out->mins[0] = LittleFloat(in->mins[0]) - 1;
+		out->maxs[0] = LittleFloat(in->maxs[0]) + 1;
+		out->origin[0] = LittleFloat(in->origin[0]);
+		out->mins[1] = LittleFloat(in->mins[1]) - 1;
+		out->maxs[1] = LittleFloat(in->maxs[1]) + 1;
+		out->origin[1] = LittleFloat(in->origin[1]);
+		out->mins[2] = LittleFloat(in->mins[2]) - 1;
+		out->maxs[2] = LittleFloat(in->maxs[2]) + 1;
+		out->origin[2] = LittleFloat(in->origin[2]);
 
 		out->radius = RadiusFromBounds (out->mins, out->maxs);
-		out->headnode = LittleLong (in->headnode);
-		out->firstface = LittleLong (in->firstface);
-		out->numfaces = LittleLong (in->numfaces);
+		out->headnode = LittleLong(in->headnode);
+		out->firstface = LittleLong(in->firstface);
+		out->numfaces = LittleLong(in->numfaces);
 		out->visleafs = 0;
 	}
 }
@@ -546,8 +546,8 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 		if (closeFile)
 			FS_FCloseFile (h);
 		
-		*width = LittleLong (mt.width);
-		*height = LittleLong (mt.height);
+		*width = LittleLong(mt.width);
+		*height = LittleLong(mt.height);
 
 #if defined(_DEBUG) && !defined(EMSCRIPTEN)
 		FS_CreatePath (va("wals/%s", name));
@@ -597,8 +597,8 @@ void Mod_LoadTexinfo (lump_t *l)
 	{
 		memcpy (out->vecs, in->vecs, sizeof(out->vecs));
 
-		out->flags = LittleLong (in->flags);
-		next = LittleLong (in->nexttexinfo);
+		out->flags = LittleLong(in->flags);
+		next = LittleLong(in->nexttexinfo);
 
 		if (next > 0)
 			out->next = loadmodel->texinfo + next;
@@ -795,7 +795,7 @@ void Mod_LoadFaces (lump_t *l)
 
 		out->plane = loadmodel->planes + planenum;
 
-		ti = LittleShort (in->texinfo);
+		ti = LittleShort(in->texinfo);
 		if (ti < 0 || ti >= loadmodel->numtexinfo)
 			VID_Error (ERR_DROP, "MOD_LoadBmodel: bad texinfo number");
 
@@ -889,19 +889,19 @@ void Mod_LoadNodes (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-		out->minmaxs[0] = LittleShort (in->mins[0]);
-		out->minmaxs[1] = LittleShort (in->mins[1]);
-		out->minmaxs[2] = LittleShort (in->mins[2]);
+		out->minmaxs[0] = LittleShort(in->mins[0]);
+		out->minmaxs[1] = LittleShort(in->mins[1]);
+		out->minmaxs[2] = LittleShort(in->mins[2]);
 
-		out->minmaxs[3] = LittleShort (in->maxs[0]);
-		out->minmaxs[4] = LittleShort (in->maxs[1]);
-		out->minmaxs[5] = LittleShort (in->maxs[2]);
+		out->minmaxs[3] = LittleShort(in->maxs[0]);
+		out->minmaxs[4] = LittleShort(in->maxs[1]);
+		out->minmaxs[5] = LittleShort(in->maxs[2]);
 	
 		p = LittleLong(in->planenum);
 		out->plane = loadmodel->planes + p;
 
-		out->firstsurface = LittleShort (in->firstface);
-		out->numsurfaces = LittleShort (in->numfaces);
+		out->firstsurface = LittleShort(in->firstface);
+		out->numsurfaces = LittleShort(in->numfaces);
 		out->contents = -1;	// differentiate from leafs
 
 		out->parent = NULL;
@@ -909,7 +909,7 @@ void Mod_LoadNodes (lump_t *l)
 
 		for (j=0 ; j<2 ; j++)
 		{
-			p = LittleLong (in->children[j]);
+			p = LittleLong(in->children[j]);
 			if (p >= 0)
 				out->children[j] = loadmodel->nodes + p;
 			else
@@ -948,13 +948,13 @@ void Mod_LoadLeafs (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-		out->minmaxs[0] = LittleShort (in->mins[0]);
-		out->minmaxs[1] = LittleShort (in->mins[1]);
-		out->minmaxs[2] = LittleShort (in->mins[2]);
+		out->minmaxs[0] = LittleShort(in->mins[0]);
+		out->minmaxs[1] = LittleShort(in->mins[1]);
+		out->minmaxs[2] = LittleShort(in->mins[2]);
 
-		out->minmaxs[3] = LittleShort (in->maxs[0]);
-		out->minmaxs[4] = LittleShort (in->maxs[1]);
-		out->minmaxs[5] = LittleShort (in->maxs[2]);
+		out->minmaxs[3] = LittleShort(in->maxs[0]);
+		out->minmaxs[4] = LittleShort(in->maxs[1]);
+		out->minmaxs[5] = LittleShort(in->maxs[2]);
 
 		out->contents = LittleLong(in->contents);
 		out->cluster = LittleShort(in->cluster);
@@ -1068,13 +1068,13 @@ void Mod_LoadPlanes (lump_t *l)
 		bits = 0;
 		for (j=0 ; j<3 ; j++)
 		{
-			out->normal[j] = LittleFloat (in->normal[j]);
+			out->normal[j] = LittleFloat(in->normal[j]);
 			if (FLOAT_LT_ZERO(out->normal[j]))
 				bits |= 1<<j;
 		}
 
-		out->dist = LittleFloat (in->dist);
-		out->type = (byte)LittleLong (in->type);
+		out->dist = LittleFloat(in->dist);
+		out->type = (byte)LittleLong(in->type);
 		out->signbits = bits;
 	}
 }
@@ -1096,7 +1096,7 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 
 	header = (dheader_t *)buffer;
 
-	i = LittleLong (header->version);
+	i = LittleLong(header->version);
 	if (i != BSPVERSION)
 		VID_Error (ERR_DROP, "Mod_LoadBrushModel: %s has wrong version number (%i should be %i)", mod->name, i, BSPVERSION);
 
@@ -1189,7 +1189,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 
 	pinmodel = (dmdl_t *)buffer;
 
-	version = LittleLong (pinmodel->version);
+	version = LittleLong(pinmodel->version);
 	if (version != ALIAS_VERSION)
 		VID_Error (ERR_DROP, "%s has wrong version number (%i should be %i)",
 				 mod->name, version, ALIAS_VERSION);
@@ -1346,9 +1346,9 @@ void Mod_LoadSpriteModel (model_t *mod, void *buffer)
 	sprin = (dsprite_t *)buffer;
 	sprout = (dsprite_t *) Hunk_Alloc (modfilelen);
 
-	sprout->ident = LittleLong (sprin->ident);
-	sprout->version = LittleLong (sprin->version);
-	sprout->numframes = LittleLong (sprin->numframes);
+	sprout->ident = LittleLong(sprin->ident);
+	sprout->version = LittleLong(sprin->version);
+	sprout->numframes = LittleLong(sprin->numframes);
 
 	if (sprout->version != SPRITE_VERSION)
 		VID_Error (ERR_DROP, "sprite %s has wrong version number (%i should be %i)",
@@ -1364,10 +1364,10 @@ void Mod_LoadSpriteModel (model_t *mod, void *buffer)
 	// byte swap everything
 	for (i=0 ; i<sprout->numframes ; i++)
 	{
-		sprout->frames[i].width = LittleLong (sprin->frames[i].width);
-		sprout->frames[i].height = LittleLong (sprin->frames[i].height);
-		sprout->frames[i].origin_x = LittleLong (sprin->frames[i].origin_x);
-		sprout->frames[i].origin_y = LittleLong (sprin->frames[i].origin_y);
+		sprout->frames[i].width = LittleLong(sprin->frames[i].width);
+		sprout->frames[i].height = LittleLong(sprin->frames[i].height);
+		sprout->frames[i].origin_x = LittleLong(sprin->frames[i].origin_x);
+		sprout->frames[i].origin_y = LittleLong(sprin->frames[i].origin_y);
 		memcpy (sprout->frames[i].name, sprin->frames[i].name, MAX_SKINNAME);
 		fast_strlwr (sprout->frames[i].name);
 		mod->skins[i] = GL_FindImage (sprout->frames[i].name, sprout->frames[i].name, it_sprite);

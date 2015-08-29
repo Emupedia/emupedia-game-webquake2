@@ -504,10 +504,10 @@ void R_DrawSkyBox (void);
 void R_MarkLights (dlight_t *light, int bit, mnode_t *node);
 
 #if 0
-short LittleShort (short l);
+short LittleShort(short l);
 short BigShort (short l);
-int	LittleLong (int l);
-float LittleFloat (float f);
+int	LittleLong(int l);
+float LittleFloat(float f);
 
 char	*va(char *format, ...);
 // does a varargs printf into a temp buffer

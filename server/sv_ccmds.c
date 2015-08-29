@@ -2504,7 +2504,7 @@ static void SV_ServerRecord_f (void)
 
 	// write it to the demo file
 	Com_DPrintf ("signon message length: %i\n", buf.cursize);
-	len = LittleLong (buf.cursize);
+	len = LittleLong(buf.cursize);
 	fwrite (&len, 4, 1, svs.demofile);
 	fwrite (buf_data, buf.cursize, 1, svs.demofile);
 

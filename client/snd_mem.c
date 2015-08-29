@@ -92,7 +92,7 @@ void ResampleSfx (sfx_t *sfx, int inrate, int inwidth, byte *data)
 			srcsample = samplefrac >> 8;
 			samplefrac += fracstep;
 			if (inwidth == 2)
-				sample = LittleShort ( ((int16 *)data)[srcsample] );
+				sample = LittleShort( ((int16 *)data)[srcsample] );
 			else
 				sample = (int32)( (unsigned char)(data[srcsample]) - 128) << 8;
 			if (sc->width == 2)
@@ -535,7 +535,7 @@ wavinfo_t GetWavinfo (char *name, byte *wav, int wavlength)
 			if ((data_p - wav) + 32 <= wavlength && !strncmp ((const char *)data_p + 28, "mark", 4))
 			{	// this is not a proper parse, but it works with cooledit...
 				data_p += 24;
-				i = GetLittleLong ();	// samples in loop
+				i = GetLittleLong();	// samples in loop
 				info.samples = info.loopstart + i;
 //				Com_Printf("looped length: %i\n", i);
 			}
@@ -553,7 +553,7 @@ wavinfo_t GetWavinfo (char *name, byte *wav, int wavlength)
 	}
 
 	data_p += 4;
-	samples = GetLittleLong () / info.width;
+	samples = GetLittleLong() / info.width;
 
 	if (info.samples)
 	{

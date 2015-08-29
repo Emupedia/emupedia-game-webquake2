@@ -154,11 +154,11 @@ void CMod_LoadSubmodels (lump_t *l)
 
 		for (j=0 ; j<3 ; j++)
 		{	// spread the mins / maxs by a pixel
-			out->mins[j] = LittleFloat (in->mins[j]) - 1;
-			out->maxs[j] = LittleFloat (in->maxs[j]) + 1;
-			out->origin[j] = LittleFloat (in->origin[j]);
+			out->mins[j] = LittleFloat(in->mins[j]) - 1;
+			out->maxs[j] = LittleFloat(in->maxs[j]) + 1;
+			out->origin[j] = LittleFloat(in->origin[j]);
 		}
-		out->headnode = LittleLong (in->headnode);
+		out->headnode = LittleLong(in->headnode);
 	}
 }
 
@@ -191,8 +191,8 @@ void CMod_LoadSurfaces (lump_t *l)
 		//FIXME CRASH: crashreport here due to illegal texture pointer.
 		strncpy (out->c.name, in->texture, sizeof(out->c.name)-1);
 		strncpy (out->rname, in->texture, sizeof(out->rname)-1);
-		out->c.flags = LittleLong (in->flags);
-		out->c.value = LittleLong (in->value);
+		out->c.flags = LittleLong(in->flags);
+		out->c.value = LittleLong(in->value);
 	}
 }
 
@@ -226,11 +226,11 @@ void CMod_LoadNodes (lump_t *l)
 
 	for (i=0 ; i<count ; i++, out++, in++)
 	{
-		out->plane = map_planes + LittleLong (in->planenum);
-		out->fastplane = map_fastplanes + LittleLong (in->planenum);
+		out->plane = map_planes + LittleLong(in->planenum);
+		out->fastplane = map_fastplanes + LittleLong(in->planenum);
 		for (j=0 ; j<2 ; j++)
 		{
-			child = LittleLong (in->children[j]);
+			child = LittleLong(in->children[j]);
 			out->children[j] = child;
 		}
 	}
@@ -299,11 +299,11 @@ void CMod_LoadLeafs (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-		out->contents = LittleLong (in->contents);
-		out->cluster = LittleShort (in->cluster);
-		out->area = LittleShort (in->area);
-		out->firstleafbrush = LittleShort (in->firstleafbrush);
-		out->numleafbrushes = LittleShort (in->numleafbrushes);
+		out->contents = LittleLong(in->contents);
+		out->cluster = LittleShort(in->cluster);
+		out->area = LittleShort(in->area);
+		out->firstleafbrush = LittleShort(in->firstleafbrush);
+		out->numleafbrushes = LittleShort(in->numleafbrushes);
 
 		if (out->cluster >= numclusters)
 			numclusters = out->cluster + 1;
@@ -361,20 +361,20 @@ void CMod_LoadPlanes (lump_t *l)
 		bits = 0;
 		for (j=0 ; j<3 ; j++)
 		{
-			out->normal[j] = LittleFloat (in->normal[j]);
+			out->normal[j] = LittleFloat(in->normal[j]);
 			if (FLOAT_LT_ZERO(out->normal[j]))
 				bits |= 1<<j;
 		}
 
-		out->dist = LittleFloat (in->dist);
+		out->dist = LittleFloat(in->dist);
 		if (in->type > 5)
 			Com_Error (ERR_DROP, "CMod_LoadPlanes: bad plane type %u (expected 0-5)", in->type);
-		out->type = (byte)LittleLong (in->type);
+		out->type = (byte)LittleLong(in->type);
 		out->signbits = (byte)bits;
 
 		//r1ch: "fast" planes, less byte->int work needed
 		fout->dist = out->dist;
-		fout->type = LittleLong (in->type);
+		fout->type = LittleLong(in->type);
 		fout->signbits = bits;
 		FastVectorCopy (out->normal, fout->normal);
 	}
@@ -410,7 +410,7 @@ void CMod_LoadLeafBrushes (lump_t *l)
 	numleafbrushes = count;
 
 	for ( i=0 ; i<count ; i++, in++, out++)
-		*out = LittleShort (*in);
+		*out = LittleShort(*in);
 }
 
 /*
@@ -440,9 +440,9 @@ void CMod_LoadBrushSides (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-		num = LittleShort (in->planenum);
+		num = LittleShort(in->planenum);
 		out->plane = &map_planes[num];
-		j = LittleShort (in->texinfo);
+		j = LittleShort(in->texinfo);
 		if (j >= numtexinfo)
 			Com_Error (ERR_DROP, "Bad brushside texinfo (%d > %d)", j, numtexinfo);
 		else if (j < 0)
@@ -476,8 +476,8 @@ void CMod_LoadAreas (lump_t *l)
 
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
-		out->numareaportals = LittleLong (in->numareaportals);
-		out->firstareaportal = LittleLong (in->firstareaportal);
+		out->numareaportals = LittleLong(in->numareaportals);
+		out->firstareaportal = LittleLong(in->firstareaportal);
 		out->floodvalid = 0;
 		out->floodnum = 0;
 	}
@@ -727,7 +727,7 @@ cmodel_t *CM_LoadMap (const char *name, qboolean clientload, uint32 *checksum)
 #else  // USE_AFL
 
 	if (!(override_bits & 2))
-		last_checksum = LittleLong (Com_BlockChecksum (buf, length));
+		last_checksum = LittleLong(Com_BlockChecksum (buf, length));
 
 #endif  // USE_AFL
 

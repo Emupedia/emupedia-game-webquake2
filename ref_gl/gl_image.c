@@ -1587,13 +1587,13 @@ LoadTGA
 	targa_header.colorMapLength = buf_p[0] + buf_p[1] * 256;
 	buf_p+=2;
 	targa_header.colorMapSize = *buf_p++;
-	targa_header.xOrigin = LittleShort (*((short *)buf_p));
+	targa_header.xOrigin = LittleShort(*((short *)buf_p));
 	buf_p+=2;
-	targa_header.yOrigin = LittleShort (*((short *)buf_p));
+	targa_header.yOrigin = LittleShort(*((short *)buf_p));
 	buf_p+=2;
-	targa_header.width = LittleShort (*((short *)buf_p));
+	targa_header.width = LittleShort(*((short *)buf_p));
 	buf_p+=2;
-	targa_header.height = LittleShort (*((short *)buf_p));
+	targa_header.height = LittleShort(*((short *)buf_p));
 	buf_p+=2;
 	targa_header.pixelSize = *buf_p++;
 	targa_header.attributes = *buf_p++;
@@ -1791,20 +1791,20 @@ LoadTGA
 	
 	tmp[0] = buf_p[0];
 	tmp[1] = buf_p[1];
-	targa_header.colormap_index = LittleShort ( *((short *)tmp) );
+	targa_header.colormap_index = LittleShort( *((short *)tmp) );
 	buf_p+=2;
 	tmp[0] = buf_p[0];
 	tmp[1] = buf_p[1];
-	targa_header.colormap_length = LittleShort ( *((short *)tmp) );
+	targa_header.colormap_length = LittleShort( *((short *)tmp) );
 	buf_p+=2;
 	targa_header.colormap_size = *buf_p++;
-	targa_header.x_origin = LittleShort ( *((short *)buf_p) );
+	targa_header.x_origin = LittleShort( *((short *)buf_p) );
 	buf_p+=2;
-	targa_header.y_origin = LittleShort ( *((short *)buf_p) );
+	targa_header.y_origin = LittleShort( *((short *)buf_p) );
 	buf_p+=2;
-	targa_header.width = LittleShort ( *((short *)buf_p) );
+	targa_header.width = LittleShort( *((short *)buf_p) );
 	buf_p+=2;
-	targa_header.height = LittleShort ( *((short *)buf_p) );
+	targa_header.height = LittleShort( *((short *)buf_p) );
 	buf_p+=2;
 	targa_header.pixel_size = *buf_p++;
 	targa_header.attributes = *buf_p++;
@@ -2743,9 +2743,9 @@ image_t *GL_LoadWal (const char *name)
 		return r_notexture;
 	}
 
-	width = LittleLong (mt->width);
-	height = LittleLong (mt->height);
-	ofs = LittleLong (mt->offsets[0]);
+	width = LittleLong(mt->width);
+	height = LittleLong(mt->height);
+	ofs = LittleLong(mt->offsets[0]);
 
 	required = width * height + ((width >> 1) * (height >> 1)) + ((width >> 2) * (height >> 2)) + ((width >> 3) * (height >> 3)) + sizeof(*mt);
 

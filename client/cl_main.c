@@ -306,7 +306,7 @@ qboolean CL_BeginRecording (char *name)
 		{
 			if (buf.cursize + strlen (cl.configstrings[i]) + 64 > buf.maxsize)
 			{	// write it out
-				len = LittleLong (buf.cursize);
+				len = LittleLong(buf.cursize);
 				fwrite (&len, 4, 1, cls.demofile);
 				fwrite (buf.data, buf.cursize, 1, cls.demofile);
 				buf.cursize = 0;
@@ -329,7 +329,7 @@ qboolean CL_BeginRecording (char *name)
 
 		if (buf.cursize + 64 > buf.maxsize)
 		{	// write it out
-			len = LittleLong (buf.cursize);
+			len = LittleLong(buf.cursize);
 			fwrite (&len, 4, 1, cls.demofile);
 			fwrite (buf.data, buf.cursize, 1, cls.demofile);
 			buf.cursize = 0;
@@ -346,7 +346,7 @@ qboolean CL_BeginRecording (char *name)
 
 	// write it to the demo file
 
-	len = LittleLong (buf.cursize);
+	len = LittleLong(buf.cursize);
 	fwrite (&len, 4, 1, cls.demofile);
 	fwrite (buf.data, buf.cursize, 1, cls.demofile);
 
@@ -2713,7 +2713,7 @@ redoSkins:;
 							{
 								//get sprite header
 								spriteheader = (dsprite_t *)precache_model;
-								if (LittleLong (spriteheader->version != SPRITE_VERSION))
+								if (LittleLong(spriteheader->version != SPRITE_VERSION))
 								{
 									//this is unknown version! free and move onto next.
 									FS_FreeFile(precache_model);
@@ -2728,7 +2728,7 @@ redoSkins:;
 						{
 							//get model header
 							pheader = (dmdl_t *)precache_model;
-							if (LittleLong (pheader->version) != ALIAS_VERSION)
+							if (LittleLong(pheader->version) != ALIAS_VERSION)
 							{
 								//unknown version! free and move onto next
 								FS_FreeFile(precache_model);
