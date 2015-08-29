@@ -53,27 +53,15 @@ void BoundPoly (int numverts, float *verts, vec3_t mins, vec3_t maxs)
 
 void SubdividePolygon (int numverts, float *verts)
 {
-	int		i, j, k;
-	vec3_t	mins, maxs;
-	float	m;
-	float	*v;
-	vec3_t	front[64], back[64];
-	int		f, b;
-	float	dist[64];
-	float	frac;
-	glpoly_t	*poly;
-	float	s, t;
-	vec3_t	total;
-	float	total_s, total_t;
-
 	if (numverts > 60)
 		VID_Error (ERR_DROP, "SubdividePolygon: numverts = %i", numverts);
 
+	vec3_t	mins, maxs;
 	BoundPoly (numverts, verts, mins, maxs);
 
-	for (i=0 ; i<3 ; i++)
+	for (int i=0 ; i<3 ; i++)
 	{
-		m = (mins[i] + maxs[i]) * 0.5f;
+		float m = (mins[i] + maxs[i]) * 0.5f;
 		m = SUBDIVIDE_SIZE * (float)floor (m/SUBDIVIDE_SIZE + 0.5f);
 		if (maxs[i] - m < 8)
 			continue;
@@ -81,7 +69,9 @@ void SubdividePolygon (int numverts, float *verts)
 			continue;
 
 		// cut it
-		v = verts + i;
+		float *v = verts + i;
+		int j;
+		float	dist[64];
 		for (j=0 ; j<numverts ; j++, v+= 3)
 			dist[j] = *v - m;
 
@@ -90,9 +80,11 @@ void SubdividePolygon (int numverts, float *verts)
 		v-=i;
 		FastVectorCopy (*verts, *v);
 
-		f = b = 0;
+		int f = 0;
+		int b = 0;
 		v = verts;
 
+		vec3_t	front[64], back[64];
 		for (j=0 ; j<numverts ; j++, v+= 3)
 		{
 			if (FLOAT_GE_ZERO(dist[j]))
@@ -110,8 +102,8 @@ void SubdividePolygon (int numverts, float *verts)
 			if (FLOAT_GT_ZERO (dist[j]) != FLOAT_GT_ZERO(dist[j+1]) )
 			{
 				// clip point
-				frac = dist[j] / (dist[j] - dist[j+1]);
-				for (k=0 ; k<3 ; k++)
+				float frac = dist[j] / (dist[j] - dist[j+1]);
+				for (int k=0 ; k<3 ; k++)
 					front[f][k] = back[b][k] = v[k] + frac*(v[3+k] - v[k]);
 				f++;
 				b++;
@@ -124,7 +116,7 @@ void SubdividePolygon (int numverts, float *verts)
 	}
 
 	// add a point in the center to help keep warp valid
-	poly = (glpoly_t *) Hunk_Alloc (sizeof(glpoly_t) + (numverts + 2) * VERTEXSIZE*sizeof(float));
+	glpoly_t *poly = (glpoly_t *) Hunk_Alloc (sizeof(glpoly_t) + (numverts + 2) * VERTEXSIZE*sizeof(float));
 	
 	poly->next = warpface->polys;
 	poly->numverts = numverts+2;
@@ -135,15 +127,16 @@ void SubdividePolygon (int numverts, float *verts)
 
 	warpface->polys = poly;
 
+	vec3_t	total;
 	VectorClear (total);
 
-	total_s = 0;
-	total_t = 0;
+	float total_s = 0.0f, total_t = 0.0f;
+	int i;
 	for (i=0 ; i<numverts ; i++, verts+= 3)
 	{
 		FastVectorCopy (*verts, poly->verts[i+1]);
-		s = DotProduct (verts, warpface->texinfo->vecs[0]);
-		t = DotProduct (verts, warpface->texinfo->vecs[1]);
+		float s = DotProduct (verts, warpface->texinfo->vecs[0]);
+		float t = DotProduct (verts, warpface->texinfo->vecs[1]);
 
 		total_s += s;
 		total_t += t;
