@@ -1013,11 +1013,6 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 
 		if (LittleLong(header.ident) != IDPAKHEADER)
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: %s is not a valid pak file.", packfile);
-		
-	#if YOU_HAVE_A_BROKEN_COMPUTER
-		header.dirofs = LittleLong (header.dirofs);
-		header.dirlen = LittleLong (header.dirlen);
-	#endif
 
 		if (header.dirlen % sizeof(packfile_t))
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: Bad pak file %s (directory length %u is not a multiple of %d)", packfile, header.dirlen, (int)sizeof(packfile_t));
@@ -1053,10 +1048,6 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 		for (i=0 ; i<numpackfiles ; i++)
 		{
 			fast_strlwr (info[i].name);
-#if YOU_HAVE_A_BROKEN_COMPUTER
-			info[i].filepos = LittleLong(info[i].filepos);
-			info[i].filelen = LittleLong(info[i].filelen);
-#endif
 			if (info[i].filepos + info[i].filelen >= pakLen)
 				Com_Error (ERR_FATAL, "FS_LoadPackFile: File '%.64s' in pak file %s has illegal offset %u past end of file %u. Pak file is possibly corrupt.", MakePrintable (info[i].name, 0), packfile, info[i].filepos, pakLen);
 			
