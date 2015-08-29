@@ -154,7 +154,6 @@ cvar_t	*gl_shadows;
 cvar_t	*gl_dynamic;
 //cvar_t  *gl_monolightmap;
 cvar_t	*gl_modulate;
-cvar_t	*gl_nobind;
 cvar_t	*gl_round_down;
 cvar_t	*gl_picmip;
 cvar_t	*gl_skymip;
@@ -1088,7 +1087,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	//gl_lightmap = Cvar_Get ("gl_lightmap", "0", 0);
 	gl_shadows = Cvar_Get ("gl_shadows", "0", CVAR_ARCHIVE );
 	gl_dynamic = Cvar_Get ("gl_dynamic", "1", 0);
-	gl_nobind = Cvar_Get ("gl_nobind", "0", 0);
 	gl_round_down = Cvar_Get ("gl_round_down", "0", 0);
 	gl_picmip = Cvar_Get ("gl_picmip", "0", 0);
 	gl_skymip = Cvar_Get ("gl_skymip", "0", 0);
