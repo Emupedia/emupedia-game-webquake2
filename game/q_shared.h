@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <assert.h>
 #ifndef NO_ZLIB
 #ifdef _WIN32
 #define ZEXPORT __cdecl
@@ -177,12 +178,7 @@ int Q_vsnprintf (char *buff, size_t len, const char *fmt, va_list va);
 #define idaxp	0
 #endif
 
-#ifdef  NDEBUG
-#define Q_assert(exp)     ((void)0)
-#else
-void _Q_assert (char *expression, char *function, uint32 line);
-#define Q_assert(exp) (void)( (exp) || (_Q_assert(#exp, __FILE__, __LINE__), 0) )
-#endif
+#define Q_assert(exp) assert(exp)
 
 typedef unsigned char 		byte;
 typedef bool qboolean;
