@@ -2630,10 +2630,8 @@ SV_RunGameFrame
 */
 static void SV_RunGameFrame (void)
 {
-#ifndef DEDICATED_ONLY
 	if (host_speeds->intvalue)
 		time_before_game = Sys_Milliseconds ();
-#endif
 
 	// we always need to bump framenum, even if we
 	// don't run the world, otherwise the delta
@@ -2666,10 +2664,8 @@ static void SV_RunGameFrame (void)
 		}
 	}
 
-#ifndef DEDICATED_ONLY
 	if (host_speeds->intvalue)
 		time_after_game = Sys_Milliseconds ();
-#endif
 
 }
 
@@ -2766,9 +2762,7 @@ SV_Frame
 */
 void SV_Frame (int msec)
 {
-#ifndef DEDICATED_ONLY
 	time_before_game = time_after_game = 0;
-#endif
 
 	// if server is not active, do nothing
 	if (!svs.initialized)
@@ -2859,11 +2853,9 @@ void SV_Frame (int msec)
 
 	//have to check this here for possible listen servers loading DLLs and stuff
 	//during server execution
-#ifndef DEDICATED_ONLY
 	//check the server is running proper Q2 physics model
 	//if (!Sys_CheckFPUStatus ())
 	//	Com_Error (ERR_FATAL, "FPU control word is not set as expected, Quake II physics model will break.");
-#endif
 }
 
 //============================================================================

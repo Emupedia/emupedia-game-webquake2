@@ -75,9 +75,6 @@ int SV_CountPlayers (void);
 
 //#define DEMO
 
-#ifdef DEDICATED_ONLY
-qboolean	 global_Service = false;
-#endif
 
 HMODULE hSh32 = NULL;
 FARPROC procShell_NotifyIcon = NULL;
@@ -125,10 +122,6 @@ sizebuf_t	console_buffer;
 byte		console_buff[16384];
 
 //r1: service support
-#ifdef DEDICATED_ONLY
-SERVICE_STATUS          MyServiceStatus; 
-SERVICE_STATUS_HANDLE   MyServiceStatusHandle; 
-#endif
 
 //original game command line
 char	cmdline[4096];
@@ -201,9 +194,7 @@ void Sys_Quit (void)
 {
 	timeEndPeriod( 1 );
 
-#ifndef DEDICATED_ONLY
 	CL_Shutdown();
-#endif
 
 	Qcommon_Shutdown ();
 
@@ -216,9 +207,6 @@ void Sys_Quit (void)
 	if (hSh32)
 		FreeLibrary (hSh32);
 
-#ifdef DEDICATED_ONLY
-	if (!global_Service)
-#endif
 		//exit (0);
 		ExitProcess (0);
 }
@@ -244,168 +232,6 @@ void WinError (void)
 	LocalFree( lpMsgBuf );
 }
 
-#ifdef DEDICATED_ONLY
-
-void EXPORT Sys_ServiceCtrlHandler (DWORD Opcode) 
-{
-    switch(Opcode) 
-    { 
-        case SERVICE_CONTROL_STOP: 
-			// Do whatever it takes to stop here. 
-			MyServiceStatus.dwWin32ExitCode = 0; 
-            MyServiceStatus.dwCurrentState  = SERVICE_STOPPED; 
-            MyServiceStatus.dwCheckPoint    = 0; 
-            MyServiceStatus.dwWaitHint      = 0; 
- 
-            SetServiceStatus (MyServiceStatusHandle, &MyServiceStatus);
-
-			Com_Quit();
-            return; 
-    } 
- 
-    // Send current status. 
-    SetServiceStatus (MyServiceStatusHandle,  &MyServiceStatus);
-} 
-
-void EXPORT Sys_ServiceStart (DWORD argc, LPTSTR *argv) 
-{ 
-    MyServiceStatus.dwServiceType        = SERVICE_WIN32; 
-    MyServiceStatus.dwCurrentState       = SERVICE_START_PENDING; 
-    MyServiceStatus.dwControlsAccepted   = SERVICE_ACCEPT_STOP; 
-    MyServiceStatus.dwWin32ExitCode      = 0; 
-    MyServiceStatus.dwServiceSpecificExitCode = 0; 
-    MyServiceStatus.dwCheckPoint         = 0; 
-    MyServiceStatus.dwWaitHint           = 0; 
- 
-    MyServiceStatusHandle = RegisterServiceCtrlHandler( 
-        argv[0], 
-        (LPHANDLER_FUNCTION)Sys_ServiceCtrlHandler); 
- 
-    if (MyServiceStatusHandle == (SERVICE_STATUS_HANDLE)0)
-        return;
- 
-    // Initialization complete - report running status. 
-    MyServiceStatus.dwCurrentState       = SERVICE_RUNNING; 
-    MyServiceStatus.dwCheckPoint         = 0; 
-    MyServiceStatus.dwWaitHint           = 0; 
- 
-    SetServiceStatus (MyServiceStatusHandle, &MyServiceStatus);
-
-	WinMain (0, NULL, cmdline, 0);
- 
-    return; 
-} 
-
-int EXPORT main(void) 
-{ 
-    SERVICE_TABLE_ENTRY   DispatchTable[] = 
-    { 
-        { "R1Q2", (LPSERVICE_MAIN_FUNCTION)Sys_ServiceStart      }, 
-        { NULL,              NULL          } 
-    }; 
-
-    if (!StartServiceCtrlDispatcher( DispatchTable)) 
-		return 1;
-
-	return 0;
-} 
-
-//================================================================
-
-void Sys_InstallService(char *servername, char *cmdline)
-{ 
-	SC_HANDLE schService, schSCManager;
-
-	char srvName[MAX_OSPATH];
-	char srvDispName[MAX_OSPATH];
-	char lpszBinaryPathName[2048];
-
-	GetModuleFileName(NULL, lpszBinaryPathName, sizeof(lpszBinaryPathName));
- 
-	while (*cmdline != ' ') {
-		cmdline++;
-	}
-
-	cmdline++;
-
-	strcat (lpszBinaryPathName, " -service ");
-	strcat (lpszBinaryPathName, cmdline);
-
-	Com_sprintf (srvDispName, sizeof(srvDispName), "Quake II - %s", servername);
-	Com_sprintf (srvName, sizeof(srvName), "R1Q2(%s)", servername);
-
-	schSCManager = OpenSCManager( 
-		NULL,                    // local machine 
-		NULL,                    // ServicesActive database 
-		SC_MANAGER_ALL_ACCESS);  // full access rights 
- 
-	if (schSCManager == NULL) {
-		Com_Printf ("OpenSCManager FAILED. GetLastError = %d\n", LOG_GENERAL, GetLastError());
-		return;
-	}
-
-    schService = CreateService( 
-        schSCManager,              // SCManager database 
-        srvName,				   // name of service 
-        srvDispName,           // service name to display 
-        SERVICE_ALL_ACCESS,        // desired access 
-        SERVICE_WIN32_OWN_PROCESS, // service type 
-        SERVICE_AUTO_START,      // start type 
-        SERVICE_ERROR_NORMAL,      // error control type 
-        lpszBinaryPathName,        // service's binary 
-        NULL,                      // no load ordering group 
-        NULL,                      // no tag identifier 
-        NULL,                      // no dependencies 
-        NULL,                      // LocalSystem account 
-        NULL);                     // no password 
- 
-    if (schService == NULL)
-	{
-        Com_Printf ("CreateService FAILED. GetLastError = %d\n", LOG_GENERAL, GetLastError());
-	}
-	else
-	{
-        Com_Printf ("CreateService SUCCESS.\n", LOG_GENERAL); 
-		CloseServiceHandle(schService); 
-	}
-
-	CloseServiceHandle (schSCManager);
-}
-
-void Sys_DeleteService (char *servername)
-{
-	SC_HANDLE schService, schSCManager;
-	char srvName[MAX_OSPATH];
-
-	snprintf (srvName, sizeof(srvName)-1, "R1Q2(%s)", servername);
-	//strcpy (srvName, servername);
-
-	schSCManager = OpenSCManager( 
-		NULL,                    // local machine 
-		NULL,                    // ServicesActive database 
-		SC_MANAGER_ALL_ACCESS);  // full access rights 
- 
-	if (schSCManager == NULL) {
-		Com_Printf ("OpenSCManager FAILED. GetLastError = %d\n", LOG_GENERAL, GetLastError());
-		return;
-	}
-
-    schService = OpenService( 
-        schSCManager,       // SCManager database 
-        srvName,       // name of service 
-        DELETE);            // only need DELETE access 
-
-    if (schService == NULL) {
-        Com_Printf ("OpenService FAILED. GetLastError = %d\n", LOG_GENERAL, GetLastError());
-	} else {
-		DeleteService(schService);
-		CloseServiceHandle(schService); 
-		Com_Printf ("DeleteService SUCCESS.\n", LOG_GENERAL); 
-	}
-
-	CloseServiceHandle (schSCManager);
-}
-#endif
 
 void Sys_EnableTray (void)
 {
@@ -448,9 +274,6 @@ void Sys_Minimize (void)
 #ifndef NO_SERVER
 void Sys_SetWindowText (char *buff)
 {
-#ifdef DEDICATED_ONLY
-	if (!global_Service)
-#endif
 		SetWindowText (hwnd_Server, buff);
 }
 
@@ -475,10 +298,6 @@ void ServerWindowProcCommandExecute (void)
 
 void Sys_UpdateConsoleBuffer (void)
 {
-#ifdef DEDICATED_ONLY
-	if (global_Service)
-		return;
-#endif
 
 	if (console_buffer.cursize)
 	{
@@ -555,9 +374,6 @@ LRESULT CALLBACK ServerWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
 			Cbuf_AddText ("quit exiting due to Windows shutdown.\n");
 			return TRUE;
 		case WM_CLOSE:
-#ifdef DEDICATED_ONLY
-			if (!global_Service)
-#endif
 			{
 				if (SV_CountPlayers()) {
 					int ays = MessageBox (hwnd_Server, "There are still players on the server! Really shut it down?", "WARNING!", MB_YESNO + MB_ICONEXCLAMATION);
@@ -677,10 +493,8 @@ void Sys_Init (void)
 	else if ( vinfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
 		s_win95 = true;
 
-#ifndef DEDICATED_ONLY
 	if (vinfo.dwMajorVersion >= 5)
 		os_winxp = true;
-#endif
 
 #ifndef NO_SERVER
 
@@ -699,10 +513,6 @@ void Sys_Init (void)
 			}
 			else if (!strcmp (argv[i], "-oldconsole"))
 			{
-#ifdef DEDICATED_ONLY
-				if (global_Service)
-					Sys_Error ("-oldconsole and service mode are incompatible");
-#endif
 				oldStyleConsole = TRUE;
 				break;
 			}
@@ -725,9 +535,6 @@ void Sys_Init (void)
 		}
 		else
 		{
-#ifdef DEDICATED_ONLY
-			if (!global_Service)
-#endif
 			{
 				if (!LoadLibrary ("Riched20"))
 					Sys_Error ("Couldn't load RICHED20.DLL. GetLastError() = %d", GetLastError());
@@ -949,10 +756,6 @@ void Sys_ConsoleOutput (const char *string)
 		return;
 	}
 
-#ifdef DEDICATED_ONLY
-	if (global_Service)
-		return;
-#endif
 
 	//r1: no output for services, non dedicated and not before buffer is initialized.
 	if (!console_buffer.maxsize)
@@ -1016,7 +819,6 @@ Sys_SendKeyEvents
 Send Key_Event calls
 ================
 */
-#ifndef DEDICATED_ONLY
 void Sys_SendKeyEvents (void)
 {
 	KBD_Update();
@@ -1040,7 +842,6 @@ void Sys_SendKeyEvents (void)
 	// grab frame time 
 	sys_frame_time = timeGetTime();	// FIXME: should this be at start?
 }
-#endif
 
 /*
 ================
@@ -1541,9 +1342,7 @@ static int EXPORT R1Q2UploadProgress (void *clientp, double dltotal, double dlno
 	return 0;
 }
 
-#ifndef DEDICATED_ONLY
 extern cvar_t	*cl_http_proxy;
-#endif
 VOID R1Q2UploadCrashDump (LPCSTR crashDump, LPCSTR crashText)
 {
 	struct curl_httppost* post = NULL;
@@ -1584,10 +1383,8 @@ VOID R1Q2UploadCrashDump (LPCSTR crashDump, LPCSTR crashText)
 		/* Set the form info */
 		curl_easy_setopt (curl, CURLOPT_HTTPPOST, post);
 
-#ifndef DEDICATED_ONLY
 		if (cl_http_proxy)
 			curl_easy_setopt (curl, CURLOPT_PROXY, cl_http_proxy->string);
-#endif
 
 		//curl_easy_setopt (curl, CURLOPT_UPLOAD, 1);
 		if (console)
@@ -2146,7 +1943,6 @@ DWORD R1Q2ExceptionHandler (DWORD exceptionCode, LPEXCEPTION_POINTERS exceptionI
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-#ifndef DEDICATED_ONLY
 
 char	sys_url_location[1024];
 
@@ -2184,7 +1980,6 @@ void Sys_UpdateURLMenu (const char *s)
 
 	Com_sprintf (title, sizeof(title), "Open \"%.64s%s\"", s, dots);
 }
-#endif
 
 const __int64 nano100SecInWeek= (__int64)10000000*60*60*24*7;
 const __int64 nano100SecInDay = (__int64)10000000*60*60*24;
@@ -2359,16 +2154,6 @@ static int WinMainHax (HINSTANCE hInstance, LPSTR lpCmdLine)
 	FixWorkingDirectory ();
 
 	//hInstance is empty when we are back here with service code
-#ifdef DEDICATED_ONLY
-	if (hInstance && argc > 1)
-	{
-		if (!strcmp(argv[1], "-service"))
-		{
-			global_Service = true;
-			return main ();
-		}
-	}
-#endif
 
 #ifdef _MSC_VER
 

@@ -1425,7 +1425,6 @@ void FS_SetGamedir (const char *dir)
 
 	FS_FlushCache();
 
-#ifndef DEDICATED_ONLY
 #ifndef NO_SERVER
 	if (!dedicated->intvalue)
 	{
@@ -1435,7 +1434,6 @@ void FS_SetGamedir (const char *dir)
 		Cmd_ExecuteString ("snd_restart");
 #ifndef NO_SERVER
 	}
-#endif
 #endif
 
 	if (!strcmp(dir,BASEDIRNAME) || (*dir == 0))

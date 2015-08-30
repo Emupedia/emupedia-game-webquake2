@@ -177,10 +177,8 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	int		net_socket;
 	int		err;
 
-#ifndef DEDICATED_ONLY
 	if (NET_GetLoopPacket (sock, net_from, net_message))
 		return 1;
-#endif
 
 	net_socket = ip_sockets[sock];
 
@@ -356,13 +354,11 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 		if (!net_socket)
 			return 0;
 	}
-#ifndef DEDICATED_ONLY
 	else if ( to->type == NA_LOOPBACK )
 	{
 		NET_SendLoopPacket (sock, length, data);
 		return 1;
 	}
-#endif
 	else if (to->type == NA_BROADCAST)
 	{
 		net_socket = ip_sockets[sock];

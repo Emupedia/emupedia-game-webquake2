@@ -208,10 +208,8 @@ static void SV_SpawnServer (const char *server, const char *spawnpoint, server_s
 
 	Cvar_ForceSet ("$mapname", server);
 
-#ifndef DEDICATED_ONLY
 	if (dedicated->intvalue)
 	{
-#endif
 		cmd = Cmd_MacroExpandString("$sv_beginmapcmd");
 		if (cmd)
 		{
@@ -221,9 +219,7 @@ static void SV_SpawnServer (const char *server, const char *spawnpoint, server_s
 		}
 		else
 			Com_Printf ("WARNING: Error expanding $sv_beginmapcmd, ignored.\n", LOG_SERVER|LOG_WARNING);
-#ifndef DEDICATED_ONLY
 	}
-#endif
 
 	Z_Verify("SV_SpawnServer:START");
 
@@ -376,10 +372,8 @@ static void SV_SpawnServer (const char *server, const char *spawnpoint, server_s
 	// set serverinfo variable
 	Cvar_FullSet ("mapname", sv.name, CVAR_SERVERINFO | CVAR_NOSET);
 
-#ifndef DEDICATED_ONLY
 	if (dedicated->intvalue)
 	{
-#endif
 		cmd = Cmd_MacroExpandString("$sv_postbeginmapcmd");
 		if (cmd)
 		{
@@ -389,9 +383,7 @@ static void SV_SpawnServer (const char *server, const char *spawnpoint, server_s
 		}
 		else
 			Com_Printf ("WARNING: Error expanding $sv_postbeginmapcmd, ignored.\n", LOG_SERVER|LOG_WARNING);
-#ifndef DEDICATED_ONLY
 	}
-#endif
 
 	Com_Printf ("-------------------------------------\n", LOG_SERVER);
 	Z_Verify("SV_SpawnServer:END");
@@ -414,14 +406,12 @@ void SV_InitGame (void)
 		// cause any connected clients to reconnect
 		SV_Shutdown ("Server restarted\n", true, false);
 	}
-#ifndef DEDICATED_ONLY
 	else
 	{
 		// make sure the client is down
 		CL_Drop (false, true);
 		SCR_BeginLoadingPlaque ();
 	}
-#endif
 
 	svs.initialized = true;
 	server_start_time = time(NULL);
@@ -602,9 +592,7 @@ void SV_Map (qboolean attractloop, const char *levelstring, qboolean loadgame)
 	{
 		if (attractloop)
 			Com_Error (ERR_HARD, "Demomap may only be used to replay demos (*.dm2)");
-#ifndef DEDICATED_ONLY
 		SCR_BeginLoadingPlaque ();			// for local system
-#endif
 		SV_BroadcastCommand ("changing\n");
 		SV_SpawnServer (level, spawnpoint, ss_cinematic, attractloop, loadgame);
 	}
@@ -613,9 +601,7 @@ void SV_Map (qboolean attractloop, const char *levelstring, qboolean loadgame)
 		if (!attractloop)
 			Com_Printf ("WARNING: Loading a Game DLL while playing back a demo. Use 'demomap' if you encounter problems.\n", LOG_GENERAL);
 			//Com_Error (ERR_HARD, "Demos should be replayed using the 'demomap' command");
-#ifndef DEDICATED_ONLY
 		SCR_BeginLoadingPlaque ();			// for local system
-#endif
 		SV_BroadcastCommand ("changing\n");
 		sv.attractloop = attractloop = 1;
 		SV_SpawnServer (level, spawnpoint, ss_demo, attractloop, loadgame);
@@ -624,9 +610,7 @@ void SV_Map (qboolean attractloop, const char *levelstring, qboolean loadgame)
 	{
 		if (attractloop)
 			Com_Error (ERR_HARD, "Demomap may only be used to replay demos (*.dm2)");
-#ifndef DEDICATED_ONLY
 		SCR_BeginLoadingPlaque ();			// for local system
-#endif
 		SV_BroadcastCommand ("changing\n");
 		SV_SpawnServer (level, spawnpoint, ss_pic, attractloop, loadgame);
 	}
@@ -634,9 +618,7 @@ void SV_Map (qboolean attractloop, const char *levelstring, qboolean loadgame)
 	{
 		if (attractloop)
 			Com_Error (ERR_HARD, "Demomap may only be used to replay demos (*.dm2)");
-#ifndef DEDICATED_ONLY
 		SCR_BeginLoadingPlaque ();			// for local system
-#endif
 		SV_BroadcastCommand ("changing\n");
 		SV_SendClientMessages ();
 		SV_SpawnServer (level, spawnpoint, ss_game, attractloop, loadgame);

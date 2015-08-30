@@ -107,10 +107,8 @@ static	cvar_t		*map_noareas;
 void	CM_InitBoxHull (void);
 void	FloodAreaConnections (void);
 
-#ifndef DEDICATED_ONLY
 int		c_pointcontents;
 int		c_traces, c_brush_traces;
-#endif
 
 /*
 ===============================================================================
@@ -1003,9 +1001,7 @@ int CM_PointLeafnum_r (const vec3_t p, int num)
 			num = node->children[0];
 	}
 
-#ifndef DEDICATED_ONLY
 	c_pointcontents++;		// optimize counter
-#endif
 
 	return -1 - num;
 }
@@ -1188,9 +1184,7 @@ void CM_ClipBoxToBrush (vec3_t mins, vec3_t maxs, vec3_t p1, vec3_t p2,
 	if (!brush->numsides)
 		return;
 
-#ifndef DEDICATED_ONLY
 	c_brush_traces++;
-#endif
 
 	getout = false;
 	startout = false;
@@ -1553,9 +1547,7 @@ trace_t		CM_BoxTrace (vec3_t start, vec3_t end,
 {
 	checkcount++;		// for multi-check avoidance
 
-#ifndef DEDICATED_ONLY
 	c_traces++;			// for statistics, may be zeroed
-#endif
 
 	// fill in a default trace
 	memset (&trace_trace, 0, sizeof(trace_trace));

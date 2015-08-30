@@ -73,9 +73,7 @@ static cvar_t	*logfile_name;
 static cvar_t	*logfile_filterlevel = &uninitialized_cvar;
 static cvar_t	*con_filterlevel = &uninitialized_cvar;
 
-#ifndef DEDICATED_ONLY
 cvar_t	*showtrace;
-#endif
 
 #ifndef NO_SERVER
 cvar_t	*dedicated = &uninitialized_cvar;
@@ -257,9 +255,7 @@ void Com_Printf (const char *fmt, int level, ...)
 
 	if (!(level & con_filterlevel->intvalue))
 	{
-#ifndef DEDICATED_ONLY
 		Con_Print (msg);
-#endif
 
 	// also echo to debugging console
 #if !(defined(EMSCRIPTEN) && defined(NDEBUG))
@@ -434,9 +430,7 @@ void Com_Error (int code, const char *fmt, ...)
 	if (code == ERR_DISCONNECT)
 	{
 		Com_Printf ("Disconnected by server!\n", LOG_CLIENT);
-#ifndef DEDICATED_ONLY
 		CL_Drop (false, true);
-#endif
 		recursive = false;
 
 		longjmp (abortframe, -1);
@@ -448,9 +442,7 @@ void Com_Error (int code, const char *fmt, ...)
 #ifndef NO_SERVER
 		SV_Shutdown (va("Server exited: %s\n", msg), false, false);
 #endif
-#ifndef DEDICATED_ONLY
 		CL_Drop (code == ERR_NET, false);
-#endif
 		recursive = false;
 
 		//r1: auto-restart server code on game crash
@@ -478,10 +470,8 @@ void Com_Error (int code, const char *fmt, ...)
 #ifndef NO_SERVER
 			SV_Shutdown (va("Server fatal crashed: %s\n", msg), false, true);
 #endif
-#ifndef DEDICATED_ONLY
 			if (dbg_unload->intvalue)
 				CL_Shutdown ();
-#endif
 		}
 	}
 
@@ -516,9 +506,7 @@ void Com_Quit (void)
 	else
 		SV_Shutdown ("Server has shut down\n", false, false);
 #endif
-#ifndef DEDICATED_ONLY
 	CL_Shutdown ();
-#endif
 
 	if (logfile)
 	{
@@ -2322,15 +2310,7 @@ void Qcommon_Init (int argc, char **argv)
 		Z_Free = Z_FreeDebug;
 	}
 
-#ifndef DEDICATED_ONLY
 	Key_Init ();
-#else
-	//r1: stub out these so configs don't spam unknown cmd
-	Cmd_AddCommand ("bind",Q_NullFunc);
-	Cmd_AddCommand ("unbind",Q_NullFunc);
-	Cmd_AddCommand ("unbindall",Q_NullFunc);
-	Cmd_AddCommand ("bindlist",Q_NullFunc);
-#endif
 
 	Cmd_AddCommand ("msg_stats", Msg_Stats_f);
 	Cmd_AddCommand ("processtimes", Sys_ProcessTimes_f);
@@ -2371,9 +2351,7 @@ void Qcommon_Init (int argc, char **argv)
 
 	con_filterlevel = Cvar_Get ("con_filterlevel", "0", 0);
 
-#ifndef DEDICATED_ONLY
 	showtrace = Cvar_Get ("showtrace", "0", 0);
-#endif
 #ifndef NO_SERVER
 #ifdef DEDICATED_ONLY
 	dedicated = Cvar_Get ("dedicated", "1", CVAR_NOSET);
@@ -2411,9 +2389,7 @@ void Qcommon_Init (int argc, char **argv)
 				"http://www.r1ch.net/stuff/r1q2/\n"
 				BUILDSTRING " " CPUSTRING " (%s)\n\n", LOG_GENERAL, binary_name);
 
-#ifndef DEDICATED_ONLY
 	CL_Init ();
-#endif
 
 	// add + commands from command line
 	if (!Cbuf_AddLateCommands ())
@@ -2424,7 +2400,6 @@ void Qcommon_Init (int argc, char **argv)
 		{
 #endif
 
-#ifndef DEDICATED_ONLY
 			Cbuf_AddText ("toggleconsole\n");
 
 			Com_Printf (
@@ -2436,7 +2411,6 @@ void Qcommon_Init (int argc, char **argv)
 				"\n", LOG_GENERAL);
 
 			Sys_UpdateURLMenu ("http://www.r1ch.net/forum/index.php?board=8.0");
-#endif
 
 #ifndef NO_SERVER
 		}
@@ -2445,14 +2419,12 @@ void Qcommon_Init (int argc, char **argv)
 #endif
 		Cbuf_Execute ();
 	}
-#ifndef DEDICATED_ONLY
 	else
 	{	
 		// the user asked for something explicit
 		// so drop the loading plaque
 		SCR_EndLoadingPlaque ();
 	}
-#endif
 
 	Cbuf_Execute ();
 
@@ -2522,7 +2494,6 @@ void Qcommon_Frame (int msec_)
 		}*/
 	}
 
-#ifndef DEDICATED_ONLY
 	if (showtrace->intvalue)
 	{
 		extern	int c_traces, c_brush_traces;
@@ -2533,13 +2504,10 @@ void Qcommon_Frame (int msec_)
 		c_brush_traces = 0;
 		c_pointcontents = 0;
 	}
-#endif
 
 #ifndef NO_SERVER
-#ifndef DEDICATED_ONLY
 	if (dedicated->intvalue)
 	{
-#endif
 		do
 		{
 			s = Sys_ConsoleInput ();
@@ -2547,25 +2515,20 @@ void Qcommon_Frame (int msec_)
 				Cbuf_AddText (va("%s\n",s));
 			Cbuf_Execute();
 		} while (s);
-#ifndef DEDICATED_ONLY
 	}
-#endif
 #endif
 
 	//Cbuf_Execute ();
 
-#ifndef DEDICATED_ONLY
 	int		time_before = 0, time_between = 0, time_after;
 
 	if (host_speeds->intvalue)
 		time_before = Sys_Milliseconds ();
-#endif
 
 #ifndef NO_SERVER
 	SV_Frame (msec);
 #endif
 
-#ifndef DEDICATED_ONLY
 	if (host_speeds->intvalue)
 		time_between = Sys_Milliseconds ();
 
@@ -2586,7 +2549,6 @@ void Qcommon_Frame (int msec_)
 		Com_Printf ("all:%3i sv:%3i gm:%3i cl:%3i rf:%3i\n", LOG_GENERAL,
 			all, sv, gm, cl, rf);
 	}
-#endif
 
 }
 

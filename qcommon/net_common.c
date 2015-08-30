@@ -350,7 +350,6 @@ void Net_Restart_f (void)
 	NET_Config (old);
 }
 
-#ifndef DEDICATED_ONLY
 
 #define	MAX_LOOPBACK	4
 
@@ -410,7 +409,6 @@ void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
 	loop->msgs[i].datalen = length;
 }
 
-#endif
 
 int NET_Client_Sleep (int msec)
 {

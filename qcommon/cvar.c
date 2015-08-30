@@ -28,13 +28,8 @@ cvar_t			*cvar_vars;
 static struct rbtree	*cvartree;
 
 //UGLY HACK for client locations
-#ifdef DEDICATED_ONLY
-static const char *CL_Get_Loc_There (void) { return ""; }
-static const char *CL_Get_Loc_Here (void) { return ""; }
-#else
 const char *CL_Get_Loc_There (void);
 const char *CL_Get_Loc_Here (void);
-#endif
 
 //Server metavars
 const char *SV_GetClientID (void);
@@ -425,10 +420,8 @@ static cvar_t *Cvar_Set2 (const char *var_name, const char *value, qboolean forc
 				if (!strcmp(var->name, "game"))
 				{
 					FS_SetGamedir (var->string);
-#ifndef DEDICATED_ONLY
 					if (!Cvar_IntValue ("dedicated"))
 						FS_ExecConfig ("autoexec.cfg");
-#endif
 				}
 			}
 			return var;
@@ -583,10 +576,8 @@ void Cvar_GetLatchedVars (void)
 		if (!strcmp(var->name, "game"))
 		{
 			FS_SetGamedir (var->string);
-#ifndef DEDICATED_ONLY
 			if (!Cvar_IntValue ("dedicated"))
 				FS_ExecConfig ("autoexec.cfg");
-#endif
 		}
 	}
 }

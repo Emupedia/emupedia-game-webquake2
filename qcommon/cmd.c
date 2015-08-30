@@ -34,9 +34,7 @@ static qboolean	cmd_wait;
 
 static int		alias_count;		// for detecting runaway loops
 
-#ifndef DEDICATED_ONLY
 extern qboolean send_packet_now;
-#endif
 
 static struct rbtree	*cmdtree;
 static struct rbtree	*aliastree;
@@ -309,9 +307,7 @@ void Cbuf_Execute (void)
 			// skip out while text still remains in buffer, leaving it
 			// for next frame
 			//Com_Printf ("wait: breaking\n");
-#ifndef DEDICATED_ONLY
 			send_packet_now = true;
-#endif
 			cmd_wait = false;
 			break;
 		}
@@ -497,14 +493,10 @@ void Cmd_Exec_f (void)
 		return;
 	}
 
-#ifndef DEDICATED_ONLY
 	if (Com_ServerState())
-#endif
 		Com_Printf ("execing %s\n", LOG_GENERAL, path);
-#ifndef DEDICATED_ONLY
 	else
 		Com_DPrintf ("execing %s\n",path);
-#endif
 
 	// the file doesn't have a trailing 0, so we need to copy it off
 	//f2 = Z_TagMalloc(len+2, TAGMALLOC_CMDBUFF);
@@ -1423,9 +1415,7 @@ void	Cmd_ExecuteString (char *text)
 		if (!cmd->function)
 		{	// forward to server command
 			//Cmd_ExecuteString (va("cmd %s", text));
-#ifndef DEDICATED_ONLY
 			Cmd_ForwardToServer ();
-#endif
 			//Com_DPrintf ("Cmd_ExecuteString: no function '%s' for '%s', using 'cmd'\n", cmd->name, text);
 		}
 		else
@@ -1463,11 +1453,7 @@ void	Cmd_ExecuteString (char *text)
 	}
 
 	// send it as a server command if we are connected
-#ifndef DEDICATED_ONLY
 	Cmd_ForwardToServer ();
-#else
-	Com_Printf ("Unknown command \"%s\"\n", LOG_GENERAL, text);
-#endif
 }
 
 /*

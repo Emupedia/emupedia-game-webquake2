@@ -136,9 +136,7 @@ void Sys_SetWindowText (char *dummy)
 
 void Sys_Quit (void)
 {
-#ifndef DEDICATED_ONLY
 	CL_Shutdown ();
-#endif
 	Qcommon_Shutdown ();
 #ifndef EMSCRIPTEN
 	fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
@@ -383,9 +381,7 @@ void Sys_Error (const char *error, ...)
     fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
 #endif  // EMSCRIPTEN
 
-#ifndef DEDICATED_ONLY
 	CL_Shutdown ();
-#endif
 	Qcommon_Shutdown ();
     
     va_start (argptr,error);
@@ -580,9 +576,7 @@ void Sys_AppActivate (void)
 
 void Sys_SendKeyEvents (void)
 {
-#ifndef DEDICATED_ONLY
 	KBD_Update();
-#endif
 
 	// grab frame time 
 	sys_frame_time = Sys_Milliseconds();

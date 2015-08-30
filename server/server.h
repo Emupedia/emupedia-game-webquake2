@@ -492,10 +492,6 @@ extern int server_port;
 
 #ifdef _WIN32
 void Sys_UpdateConsoleBuffer (void);
-#ifdef DEDICATED_ONLY
-void Sys_InstallService(char *servername, char *cmdline);
-void Sys_DeleteService (char *servername);
-#endif
 void Sys_EnableTray (void);
 void Sys_DisableTray (void);
 void Sys_Minimize (void);

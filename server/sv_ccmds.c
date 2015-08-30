@@ -2173,35 +2173,6 @@ static void SV_ConSay_f(void)
 }
 
 #ifdef _WIN32
-#ifdef DEDICATED_ONLY
-static void SV_InstallService_f (void)
-{
-
-	if (Cmd_Argc() < 3)
-	{
-		//Com_Printf ("Usage: installservice servername commandline\n");
-		Com_Printf ("Purpose: Install a Win32 service for a server.\n"
-					"Syntax : installservice <servicename> <commandline>\n"
-					"Example: installservice Q2DM +set maxclients 16 +map q2dm1\n", LOG_GENERAL);
-		return;
-	}
-
-	Sys_InstallService (Cmd_Argv(1), Cmd_Args());
-}
-
-static void SV_DeleteService_f (void)
-{
-	if (Cmd_Argc() < 2)
-	{
-		Com_Printf ("Purpose: Remove a Win32 service for a server.\n"
-					"Syntax : deleteservice <servicename>\n"
-					"Example: deleteservice Q2DM\n", LOG_GENERAL);
-		return;
-	}
-
-	Sys_DeleteService (Cmd_Args());
-}
-#endif
 
 static void SV_Trayicon_f (void)
 {
@@ -2593,10 +2564,6 @@ void SV_InitOperatorCommands (void)
 
 	//r1: service support
 #ifdef _WIN32
-#ifdef DEDICATED_ONLY
-	Cmd_AddCommand ("installservice", SV_InstallService_f);
-	Cmd_AddCommand ("deleteservice", SV_DeleteService_f);
-#endif
 
 	Cmd_AddCommand ("tray", SV_Trayicon_f);
 	Cmd_AddCommand ("minimize", SV_Minimize_f);
