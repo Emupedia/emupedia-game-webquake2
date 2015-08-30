@@ -678,9 +678,6 @@ void CL_PingServers_f (void);
 void CL_Snd_Restart_f (void);
 void CL_RequestNextDownload (void);
 
-#ifdef CLIENT_DLL
-void CL_ClDLL_Restart_f (void);
-#endif
 
 //
 // cl_input
@@ -806,81 +803,6 @@ void CL_PredictMovement (void);
 
 void CL_FixCvarCheats (void);
 
-#ifdef CLIENT_DLL
-typedef struct
-{
-	// if api_version is different, the dll cannot be used
-	int		api_version;
-
-	// called when the library is loaded
-	int		(IMPORT *Init) ( void *hinstance );
-
-	// called before the library is unloaded
-	void	(IMPORT *Shutdown) (void);
-
-	// exported functions
-	qboolean	(IMPORT *CLParseTempEnt) (int type);
-} clexport_t;
-
-
-typedef struct
-{
-	//network reading functions
-	int		(EXPORT *MSG_ReadChar) (sizebuf_t *sb);
-	int		(EXPORT *MSG_ReadByte) (sizebuf_t *sb);
-	int		(EXPORT *MSG_ReadShort) (sizebuf_t *sb);
-	int		(EXPORT *MSG_ReadLong) (sizebuf_t *sb);
-	float	(EXPORT *MSG_ReadFloat) (sizebuf_t *sb);
-	char	*(EXPORT *MSG_ReadString) (sizebuf_t *sb);
-	char	*(EXPORT *MSG_ReadStringLine) (sizebuf_t *sb);
-
-	float	(EXPORT *MSG_ReadCoord) (sizebuf_t *sb);
-	void	(EXPORT *MSG_ReadPos) (sizebuf_t *sb, vec3_t pos);
-	float	(EXPORT *MSG_ReadAngle) (sizebuf_t *sb);
-	float	(EXPORT *MSG_ReadAngle16) (sizebuf_t *sb);
-
-	void	(EXPORT *MSG_ReadDir) (sizebuf_t *sb, vec3_t vector);
-	void	(EXPORT *MSG_ReadData) (sizebuf_t *sb, void *buffer, int size);
-
-	void	(EXPORT *Cmd_AddCommand) (const char *name, void(*cmd)(void));
-	void	(EXPORT *Cmd_RemoveCommand) (const char *name);
-
-	int		(EXPORT *Cmd_Argc) (void);
-	char	*(EXPORT *Cmd_Argv) (int i);
-
-	void	(EXPORT *Cmd_ExecuteText) (int exec_when, char *text);
-
-	void	(EXPORT *Com_Error) (int err_level, const char *str, ...);
-	void	(EXPORT *Com_Printf) (const char *str, ...);
-
-	// files will be memory mapped read only
-	// the returned buffer may be part of a larger pak file,
-	// or a discrete file from anywhere in the quake search path
-	// a -1 return means the file does not exist
-	// NULL can be passed for buf to just determine existance
-	int		(EXPORT *FS_LoadFile) (const char *name, void **buf);
-	void	(EXPORT *FS_FreeFile) (void *buf);
-
-	// gamedir will be the current directory that generated
-	// files should be stored to, ie: "f:\quake\id1"
-	char	*(EXPORT *FS_Gamedir) (void);
-
-	cvar_t	*(EXPORT *Cvar_Get) (const char *name, const char *value, int flags);
-	cvar_t	*(EXPORT *Cvar_Set)( const char *name, const char *value );
-	void	 (EXPORT *Cvar_SetValue)( const char *name, float value );
-
-	// memory management
-	void	*(EXPORT *Z_Alloc) (int size);
-	void	(EXPORT *Z_Free) (void *buf);
-} climport_t;
-
-
-// this is the only function actually exported at the linker level
-typedef	clexport_t	(EXPORT *GetClAPI_t) (climport_t);
-
-extern	clexport_t ce;
-extern	qboolean cllib_active;
-#endif
 
 #define _CLIENT_H
 

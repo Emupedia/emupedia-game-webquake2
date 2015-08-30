@@ -742,14 +742,6 @@ void CL_SendConnectPacket (int useProtocol)
 	int			port;
 	unsigned	msglen;
 
-#ifdef CLIENT_DLL
-	if (!cllib_active) {
-		//retry loading it now
-		CL_ClDLL_Restart_f ();
-		//if (!cllib_active)
-			//Com_Error (ERR_DROP, "no client_dll.dll loaded for current game.");
-	}
-#endif
 
 	if (!NET_StringToAdr (cls.servername, &adr))
 	{
@@ -3659,9 +3651,6 @@ void CL_InitLocal (void)
 	Cmd_AddCommand ("spam", CL_Spam_f);
 #endif
 
-#ifdef CLIENT_DLL
-	Cmd_AddCommand ("cl_restart", CL_ClDLL_Restart_f);
-#endif
 
 	Cmd_AddCommand ("cmd", CL_ForwardToServer_f);
 	Cmd_AddCommand ("pause", CL_Pause_f);
@@ -4276,9 +4265,6 @@ void CL_Init (void)
 	
 	V_Init ();
 
-#ifdef CLIENT_DLL
-	CL_ClDLL_Restart_f ();
-#endif
 	
 	SZ_Init (&net_message, net_message_buffer, sizeof(net_message_buffer));
 
