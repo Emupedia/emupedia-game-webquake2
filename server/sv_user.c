@@ -522,9 +522,6 @@ static void SV_New_f (void)
 		MSG_BeginWriting (svc_stufftext);
 		MSG_WriteString ("cmd \177c version $version\n"
 		//as much as I hate to do it this way, wasting userinfo space is equally bad
-#ifdef ANTICHEAT
-		"cmd actoken $actoken\n"
-#endif
 		);
 		SV_AddMessage (sv_client, true);
 	}
@@ -828,112 +825,6 @@ void SV_ClientBegin (client_t *cl)
 		return;
 	}
 
-#ifdef ANTICHEAT
-	if (cl->anticheat_required != ANTICHEAT_EXEMPT)
-	{
-		///client is NOT EXEMPT
-		if (sv_require_anticheat->intvalue == 2 || cl->anticheat_required == ANTICHEAT_REQUIRED)
-		{
-			//anticheat is REQUIRED
-			if (!cl->anticheat_valid)
-			{
-				//client is INVALID
-				if (!SV_AntiCheat_IsConnected())
-				{
-					//acserver is DOWN
-					if (sv_anticheat_error_action->intvalue == 1)
-					{
-						//anticheat server connection is DOWN, client is INVALID, anticheat is REQUIRED, error action is DENY.
-						Com_Printf ("ANTICHEAT: Rejected connecting client %s[%s], no anticheat response (no anticheat server).\n", LOG_SERVER|LOG_ANTICHEAT, cl->name, NET_AdrToString (&cl->netchan.remote_address));
-						SV_ClientPrintf (cl, PRINT_HIGH, "This server is unable to take new connections right now. Please try again later.\n");
-						SV_DropClient (cl, true);
-						return;
-					}
-				}
-				else
-				{
-					if (cl->anticheat_query_sent == ANTICHEAT_QUERY_UNSENT)
-					{
-						//anticheat connection is UP, client is INVALID, anticheat is REQUIRED
-						SV_AntiCheat_QueryClient (cl);
-						return;
-					}
-
-					//anticheat connection is UP, client is STILL INVALID AFTER QUERY, anticheat is REQUIRED
-					Com_Printf ("ANTICHEAT: Rejected connecting client %s[%s], no anticheat response.\n", LOG_SERVER|LOG_ANTICHEAT, cl->name, NET_AdrToString (&cl->netchan.remote_address));
-					SV_ClientPrintf (cl, PRINT_HIGH, "%s\n", sv_anticheat_message->string);
-					SV_DropClient (cl, true);
-					return;
-				}
-			}
-			else
-			{
-				//client IS valid
-				int	match;
-
-				//check banned ac clients
-				match = (int)pow(2, cl->anticheat_client_type-1);
-				if (sv_anticheat_client_restrictions->intvalue & match)
-				{
-					Com_Printf ("ANTICHEAT: Rejected connecting client %s[%s], using restricted client\n", LOG_SERVER|LOG_ANTICHEAT, cl->name, NET_AdrToString (&cl->netchan.remote_address));
-					SV_ClientPrintf (cl, PRINT_HIGH, "Your Quake II client is not permitted on this server.\n");
-					SV_DropClient (cl, true);
-					return;
-				}
-
-				//check protocol version
-				if (sv_anticheat_force_protocol35->intvalue)
-				{
-					if (cl->protocol != PROTOCOL_R1Q2)
-					{
-						Com_Printf ("ANTICHEAT: Rejected connecting client %s[%s], using protocol 34.\n", LOG_SERVER|LOG_ANTICHEAT, cl->name, NET_AdrToString (&cl->netchan.remote_address));
-
-						SV_ClientPrintf (cl, PRINT_CHAT, "You must use protocol 35 on this server. You are being reconnected with protocol 35 enabled.\n");
-
-						MSG_WriteByte (svc_stufftext);
-						MSG_WriteString ("set cl_protocol \"35\"\nreconnect\n");
-						SV_AddMessage (cl, true);
-						SV_DropClient (cl, true);
-						return;
-					}
-				}
-			}
-		}
-		else if (sv_require_anticheat->intvalue == 1)
-		{
-			//anticheat is OPTIONAL
-			if (!cl->anticheat_valid)
-			{
-				//client is INVALID
-				if (cl->anticheat_query_sent == ANTICHEAT_QUERY_UNSENT && SV_AntiCheat_IsConnected())
-				{
-					//client is INVALID, query is UNSENT, anticheat is OPTIONAL
-					SV_AntiCheat_QueryClient (cl);
-					return;
-				}
-			}
-			else
-			{
-				//check protocol version
-				if (sv_anticheat_force_protocol35->intvalue)
-				{
-					if (cl->protocol != PROTOCOL_R1Q2)
-					{
-						Com_Printf ("ANTICHEAT: Rejected connecting client %s[%s], using protocol 34.\n", LOG_SERVER|LOG_ANTICHEAT, cl->name, NET_AdrToString (&cl->netchan.remote_address));
-
-						SV_ClientPrintf (cl, PRINT_CHAT, "You must use protocol 35 on this server. You are being reconnected with protocol 35 enabled.\n");
-
-						MSG_WriteByte (svc_stufftext);
-						MSG_WriteString ("set cl_protocol \"35\"\nreconnect\n");
-						SV_AddMessage (cl, true);
-						SV_DropClient (cl, true);
-						return;
-					}
-				}
-			}
-		}
-	}
-#endif
 
 	if (cl->beginspawncount != svs.spawncount )
 	{
@@ -974,27 +865,6 @@ void SV_ClientBegin (client_t *cl)
 	// call the game begin function
 	ge->ClientBegin (cl->edict);
 
-#ifdef ANTICHEAT
-	if (sv_require_anticheat->intvalue)
-	{
-		//r1: possibly kicked by game in clientbegin? check.
-		if (cl->state > cs_zombie)
-		{
-			if (cl->anticheat_valid)
-			{
-				if (cl->anticheat_file_failures)
-					SV_BroadcastPrintf (PRINT_MEDIUM, ANTICHEATMESSAGE " %s failed %d file check%s.\n", cl->name, cl->anticheat_file_failures, cl->anticheat_file_failures == 1 ? "" : "s");
-			}
-			else
-			{
-				if (cl->anticheat_required == ANTICHEAT_EXEMPT)
-					SV_BroadcastPrintf (PRINT_MEDIUM, ANTICHEATMESSAGE " %s is exempt from using anticheat.\n", cl->name);
-				else
-					SV_BroadcastPrintf (PRINT_MEDIUM, ANTICHEATMESSAGE " %s is not using anticheat.\n", cl->name);
-			}
-		}
-	}
-#endif
 
 	if (cl->cheaternet_message)
 	{
@@ -1564,138 +1434,6 @@ static void SV_BeginDownload_f(void)
 	SV_NextDownload_f ();
 }
 
-#ifdef ANTICHEAT
-static void SV_ACList_f (void)
-{
-	client_t	*cl;
-	const char	*substring;
-
-	if (sv_require_anticheat->intvalue)
-	{
-		substring = Cmd_Argv (1);
-
-		SV_ClientPrintf (sv_client, PRINT_HIGH, 
-			"+----------------+--------+-----+------+\n"
-			"|  Player Name   |AC Valid|Files|Client|\n"
-			"+----------------+--------+-----+------+\n");
-
-		for (cl = svs.clients; cl < svs.clients + maxclients->intvalue; cl++)
-		{
-			if (cl->state < cs_spawned)
-				continue;
-
-			if (!substring[0] || strstr (cl->name, substring))
-			{
-				if (cl->anticheat_valid)
-				{
-					int	index;
-					index = cl->anticheat_client_type;
-					if (index >= 6)
-						index = 0;
-					SV_ClientPrintf (sv_client, PRINT_HIGH, "|%-16s|%s| %3d |%-6s|\n",
-						cl->name, "   yes  ", cl->anticheat_file_failures, anticheat_client_names[index]);
-				}
-				else
-				{
-					SV_ClientPrintf (sv_client, PRINT_HIGH, "|%-16s|%s| N/A | N/A  |\n",
-						cl->name, cl->anticheat_required == ANTICHEAT_EXEMPT ? " exempt " : "   NO   ");
-				}
-			}
-		}
-
-		SV_ClientPrintf (sv_client, PRINT_HIGH, 
-			"+----------------+--------+-----+------+\n");
-
-		if (SV_AntiCheat_IsConnected())
-			SV_ClientPrintf (sv_client, PRINT_HIGH, "File check list in use: %s\n", antiCheatNumFileHashes ? anticheat_hashlist_name : "none");
-
-		SV_ClientPrintf (sv_client, PRINT_HIGH, "This Quake II server is %sconnected to the anticheat server.\nFor information on anticheat, please visit http://antiche.at/\n", SV_AntiCheat_IsConnected () ? "" : "NOT ");
-	}
-	else
-		SV_ClientPrintf (sv_client, PRINT_HIGH, "The anticheat module is not in use on this server.\nFor information on anticheat, please visit http://antiche.at/\n");
-}
-
-static void SV_ACInfo_f (void)
-{
-	ptrdiff_t			clientID;
-	const char			*substring;
-	const char			*filesubstring;
-	client_t			*cl;
-	linkednamelist_t	*bad;
-
-	if (!sv_require_anticheat->intvalue)
-	{
-		SV_ClientPrintf (sv_client, PRINT_HIGH, "The anticheat module is not in use on this server.\nFor information on anticheat, please visit http://antiche.at/\n");
-		return;
-	}
-
-	if (Cmd_Argc() == 1)
-	{
-		cl = sv_client;
-		filesubstring = "";
-	}
-	else
-	{
-		substring = Cmd_Argv (1);
-		filesubstring = Cmd_Argv (2);
-
-		clientID = -1;
-
-		if (StringIsNumeric (substring))
-		{
-			clientID = atoi (substring);
-			if (clientID >= maxclients->intvalue || clientID < 0)
-			{
-				SV_ClientPrintf (sv_client, PRINT_HIGH, "Invalid client ID.\n");
-				return;
-			}
-		}
-		else
-		{
-			for (cl = svs.clients; cl < svs.clients + maxclients->intvalue; cl++)
-			{
-				if (cl->state < cs_spawned)
-					continue;
-
-				if (strstr (cl->name, substring))
-				{
-					clientID = cl - svs.clients;
-					break;
-				}
-			}
-		}
-
-		if (clientID == -1)
-		{
-			SV_ClientPrintf (sv_client, PRINT_HIGH, "Player not found.\n");
-			return;
-		}
-
-		cl = &svs.clients[clientID];
-		if (cl->state < cs_spawned)
-		{
-			SV_ClientPrintf (sv_client, PRINT_HIGH, "Player is not active.\n");
-			return;
-		}
-	}
-
-	if (!cl->anticheat_valid)
-	{
-		SV_ClientPrintf (sv_client, PRINT_HIGH, "%s is not using anticheat.\n", cl->name);
-		return;
-	}
-
-	bad = &cl->anticheat_bad_files;
-
-	SV_ClientPrintf (sv_client, PRINT_HIGH, "File check failures for %s:\n", cl->name);
-	while (bad->next)
-	{
-		bad = bad->next;
-		if (!filesubstring[0] || strstr (bad->name, filesubstring))
-			SV_ClientPrintf (sv_client, PRINT_HIGH, "%s\n", bad->name);
-	}
-}
-#endif
 //============================================================================
 
 
@@ -2143,36 +1881,6 @@ static void SV_PacketDup_f (void)
 	SV_ClientPrintf (sv_client, PRINT_HIGH, "Duplicate packets now set to %d.\n", i);
 }
 
-#ifdef ANTICHEAT
-static void SV_ACToken_f (void)
-{
-	const char *token;
-
-	if (Cmd_Argc() != 2)
-		return;
-
-	token = SV_AntiCheat_CheckToken (Cmd_Argv(1));
-	if (token)
-	{
-		client_t *cl;
-		for (cl = svs.clients; cl < svs.clients + maxclients->intvalue; cl++)
-		{
-			if (cl->state <= cs_zombie)
-				continue;
-
-			//note, we only store pointer, actual string value is irrelevant
-			if (cl->anticheat_token == token)
-			{
-				SV_KickClient (cl, "duplicate anticheat token", "Your anticheat token was used by another player so you have been disconnected.");
-				continue;
-			}
-		}
-
-		Com_Printf ("ANTICHEAT: %s bypassed anticheat requirements with token '%s'\n", LOG_ANTICHEAT|LOG_SERVER, sv_client->name, token);
-		sv_client->anticheat_required = ANTICHEAT_EXEMPT;
-	}
-}
-#endif
 
 typedef struct
 {
@@ -2205,11 +1913,6 @@ static ucmd_t ucmds[] =
 	{"packetdup", SV_PacketDup_f},
 	
 
-#ifdef ANTICHEAT
-	{"aclist", SV_ACList_f},
-	{"acinfo", SV_ACInfo_f},
-	{"actoken", SV_ACToken_f},
-#endif
 
 	{"download", SV_BeginDownload_f},
 	{"nextdl", SV_NextDownload_f},

@@ -489,9 +489,6 @@ int wildcardfit (char *wildcard, char *test);
 /* 0  if *wildcard does not match *test                     */
 /* 1  if *wildcard matches *test                            */
 
-#ifdef ANTICHEAT
-int Sys_GetAntiCheatAPI (void);
-#endif
 
 //=============================================
 

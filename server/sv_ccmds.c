@@ -1625,97 +1625,6 @@ static void SV_ListWhiteHoles_f (void)
 	DumpNetBlockList (&blackhole_exceptions);
 }
 
-#ifdef ANTICHEAT
-static void SV_AddACException_f (void)
-{
-	if (Cmd_Argc() == 1)
-	{
-		Com_Printf ("Purpose: Allow a given IP block to bypass anticheat requirements.\n"
-					"Syntax : addacexception <ip-address/mask>\n"
-					"Example: addacexception 192.168.0.1\n", LOG_GENERAL);
-		return;
-	}
-
-	if (ValidateAndAddToNetBlockList (Cmd_Argv(1), &anticheat_exceptions, TAGMALLOC_ANTICHEAT))
-	{
-		if (sv.state)
-			Com_Printf ("Anticheat exception added.\n", LOG_GENERAL);
-	}
-}
-
-static void SV_DelACException_f (void)
-{
-	int	ret;
-
-	if (Cmd_Argc() == 1)
-	{
-		Com_Printf ("Purpose: Remove a given IP block from the anticheat bypass list.\n"
-					"Syntax : delacexception <ip-address/mask>\n"
-					"Example: delacexception 192.168.0.1\n", LOG_GENERAL);
-		return;
-	}
-
-	ret = ValidateAndRemoveFromNetBlockList (Cmd_Argv(1), &anticheat_exceptions);
-
-	if (sv.state)
-	{
-		if (!ret)
-			Com_Printf ("Anticheat exception removed.\n", LOG_GENERAL);
-		else if (ret == -2)
-			Com_Printf ("Entry not found.\n", LOG_GENERAL);
-	}
-}
-
-static void SV_ListACExceptions_f (void)
-{
-	DumpNetBlockList (&anticheat_exceptions);
-}
-
-static void SV_AddACRequirement_f (void)
-{
-	if (Cmd_Argc() == 1)
-	{
-		Com_Printf ("Purpose: Force a given IP block to require anticheat.\n"
-					"Syntax : addacrequirement <ip-address/mask>\n"
-					"Example: addacrequirement 192.168.0.1\n", LOG_GENERAL);
-		return;
-	}
-
-	if (ValidateAndAddToNetBlockList (Cmd_Argv(1), &anticheat_requirements, TAGMALLOC_ANTICHEAT))
-	{
-		if (sv.state)
-			Com_Printf ("Anticheat requirement added.\n", LOG_GENERAL);
-	}
-}
-
-static void SV_DelACRequirement_f (void)
-{
-	int	ret;
-
-	if (Cmd_Argc() == 1)
-	{
-		Com_Printf ("Purpose: Remove a given IP block from the anticheat requirement list.\n"
-					"Syntax : delacrequirement <ip-address/mask>\n"
-					"Example: delacrequirement 192.168.0.1\n", LOG_GENERAL);
-		return;
-	}
-
-	ret = ValidateAndRemoveFromNetBlockList (Cmd_Argv(1), &anticheat_requirements);
-
-	if (sv.state)
-	{
-		if (!ret)
-			Com_Printf ("Anticheat requirement removed.\n", LOG_GENERAL);
-		else if (ret == -2)
-			Com_Printf ("Entry not found.\n", LOG_GENERAL);
-	}
-}
-
-static void SV_ListACRequirements_f (void)
-{
-	DumpNetBlockList (&anticheat_requirements);
-}
-#endif
 
 /*
 ==================
@@ -2697,18 +2606,4 @@ void SV_InitOperatorCommands (void)
 
 	Cmd_AddCommand ("pc", SV_PassiveConnect_f);
 
-#ifdef ANTICHEAT
-	Cmd_AddCommand ("svaclist", SVCmd_SVACList_f);
-	Cmd_AddCommand ("svacinfo", SVCmd_SVACInfo_f);
-	Cmd_AddCommand ("svacupdate", SVCmd_SVACUpdate_f);
-	Cmd_AddCommand ("svacinvalidate", SVCmd_SVACInvalidate_f);
-
-	Cmd_AddCommand ("addacexception", SV_AddACException_f);
-	Cmd_AddCommand ("delacexception", SV_DelACException_f);
-	Cmd_AddCommand ("listacexceptions", SV_ListACExceptions_f);
-
-	Cmd_AddCommand ("addacrequirement", SV_AddACRequirement_f);
-	Cmd_AddCommand ("delacrequirement", SV_DelACRequirement_f);
-	Cmd_AddCommand ("listacrequirements", SV_ListACRequirements_f);
-#endif
 }

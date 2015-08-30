@@ -195,31 +195,6 @@ cvar_t	*sv_timescale_skew_kick;
 cvar_t	*sv_features;
 cvar_t	*g_features;
 
-#ifdef ANTICHEAT
-cvar_t	*sv_require_anticheat;
-cvar_t	*sv_anticheat_error_action;
-cvar_t	*sv_anticheat_message;
-cvar_t	*sv_anticheat_server_address;
-
-cvar_t	*sv_anticheat_badfile_action;
-cvar_t	*sv_anticheat_badfile_message;
-cvar_t	*sv_anticheat_badfile_max;
-
-cvar_t	*sv_anticheat_nag_time;
-cvar_t	*sv_anticheat_nag_message;
-cvar_t	*sv_anticheat_nag_defer;
-
-cvar_t	*sv_anticheat_show_violation_reason;
-cvar_t	*sv_anticheat_client_disconnect_action;
-cvar_t	*sv_anticheat_forced_disconnect_action;
-
-cvar_t	*sv_anticheat_disable_play;
-cvar_t	*sv_anticheat_client_restrictions;
-cvar_t	*sv_anticheat_force_protocol35;
-
-netblock_t	anticheat_exceptions;
-netblock_t	anticheat_requirements;
-#endif
 
 //r1: not needed
 //cvar_t	*sv_reconnect_limit;	// minimum seconds between connect messages
@@ -326,9 +301,6 @@ void SV_DropClient (client_t *drop, qboolean notify)
 		ge->ClientDisconnect (drop->edict);
 	}
 
-#ifdef ANTICHEAT
-	SV_AntiCheat_Disconnect_Client (drop);
-#endif
 
 	//r1: fix for mods that don't clean score
 	drop->edict->client->ps.stats[STAT_FRAGS] = 0;
@@ -350,9 +322,6 @@ void SV_KickClient (client_t *cl, const char /*@null@*/*reason, const char /*@nu
 //r1: this does the final cleaning up of a client after zombie state.
 void SV_CleanClient (client_t *drop)
 {
-#ifdef ANTICHEAT
-	linkednamelist_t	*bad, *last;
-#endif
 
 	//r1: drop message list
 	if (drop->messageListData)
@@ -399,27 +368,6 @@ void SV_CleanClient (client_t *drop)
 		drop->cheaternet_message = NULL;
 	}
 
-#ifdef ANTICHEAT
-	bad = &drop->anticheat_bad_files;
-	last = NULL;
-	while (bad->next)
-	{
-		bad = bad->next;
-
-		if (last)
-		{
-			Z_Free (last->name);
-			Z_Free (last);
-		}
-		last = bad;
-	}
-
-	if (last)
-	{
-		Z_Free (last->name);
-		Z_Free (last);
-	}
-#endif
 }
 
 const banmatch_t *SV_CheckUserinfoBans (char *userinfo, char *key)
@@ -1649,50 +1597,6 @@ gotnewcl:
 	SV_UpdateUserinfo (newcl, reconnected);
 
 	//r1: netchan init was here
-#ifdef ANTICHEAT
-	if (sv_require_anticheat->intvalue && reconnected && SV_AntiCheat_IsConnected())
-	{
-		uint32		network_ip;
-		netblock_t	*n;
-
-		ac = " ac=1";
-
-		network_ip = *(uint32 *)net_from.ip;
-
-		n = &anticheat_requirements;
-
-		newcl->anticheat_required = ANTICHEAT_NORMAL;
-
-		//r1: forced list
-		while (n->next)
-		{
-			n = n->next;
-			if ((network_ip & n->mask) == (n->ip & n->mask))
-			{
-				newcl->anticheat_required = ANTICHEAT_REQUIRED;
-				break;
-			}
-		}
-
-		n = &anticheat_exceptions;
-
-		//r1: exception list
-		while (n->next)
-		{
-			n = n->next;
-			if ((network_ip & n->mask) == (n->ip & n->mask))
-			{
-				newcl->anticheat_required = ANTICHEAT_EXEMPT;
-				ac = "";
-				break;
-			}
-		}
-
-		if (ac[0])
-			SV_AntiCheat_Challenge (&net_from, newcl);
-	}
-	else
-#endif
 		ac = "";
 
 	// send the connect packet to the client
@@ -2952,9 +2856,6 @@ void SV_Frame (int msec)
 	// clear teleport flags, etc for next frame
 	SV_PrepWorldFrame ();
 
-#ifdef ANTICHEAT
-	SV_AntiCheat_Run ();
-#endif
 
 	//have to check this here for possible listen servers loading DLLs and stuff
 	//during server execution
@@ -3185,14 +3086,6 @@ static void _rcon_buffsize_changed (cvar_t *var, char *oldvalue, char *newvalue)
 	}
 }
 
-#ifdef ANTICHEAT
-
-static void _expand_cvar_newlines (cvar_t *var, char *o, char *n)
-{
-	ExpandNewLines (n);
-}
-
-#endif
 
 /*
 ===============
@@ -3564,62 +3457,6 @@ void SV_Init (void)
 	g_features = Cvar_Get ("g_features", "0", CVAR_NOSET);
 	g_features->help = "Read-only bitmask of extended game features for the server. Do not modify.\n";
 
-#ifdef ANTICHEAT
-	sv_require_anticheat = Cvar_Get ("sv_anticheat_required", "0", CVAR_LATCH);
-	sv_require_anticheat->help = "Require use of the r1ch.net anticheat module by players. Default 0.\n0: Don't require any anticheat module.\n1: Optionally use the anticheat module.\n2: Require the anticheat module.\n";
-
-	sv_anticheat_server_address = Cvar_Get ("sv_anticheat_server_address", "anticheat.r1ch.net", CVAR_LATCH);
-	sv_anticheat_server_address->help = "Address of the r1ch.net anticheat server. To avoid server stalls due to DNS lookup, you may wish to replace this with the current server IP. Default anticheat.r1ch.net.\n";
-
-	sv_anticheat_error_action = Cvar_Get ("sv_anticheat_error_action", "0", 0);
-	sv_anticheat_error_action->help = "Action to take if the anticheat server is unavailable. Default 0.\n0: Allow new clients to connect with no cheat protection\n1: Don't allow new clients until the connection is re-established.\n";
-
-	sv_anticheat_message = Cvar_Get ("sv_anticheat_message", "This server requires the r1ch.net anticheat module. Please see http://antiche.at/ for more details.", 0);
-	sv_anticheat_message->help = "Message to show to players who connect with no anticheat loaded. Use \\n for newline.\n";
-	sv_anticheat_message->changed = _expand_cvar_newlines;
-	ExpandNewLines (sv_anticheat_message->string);
-
-	sv_anticheat_badfile_action = Cvar_Get ("sv_anticheat_badfile_action", "0", 0);
-	sv_anticheat_badfile_action->help = "Action to take on a bad file loaded by a client. Default 0.\n0: Kick client.\n1: Notify client only.\n2: Notify all players.\n";
-
-	sv_anticheat_badfile_message = Cvar_Get ("sv_anticheat_badfile_message", "", 0);
-	sv_anticheat_badfile_message->help = "Message to show to clients that fail file tests, useful to include a URL to your server files / rules or something. Use \\n for newline. Default empty.\n";
-	sv_anticheat_badfile_message->changed = _expand_cvar_newlines;
-	ExpandNewLines (sv_anticheat_badfile_message->string);
-
-	sv_anticheat_badfile_max = Cvar_Get ("sv_anticheat_badfile_max", "0", 0);
-	sv_anticheat_badfile_max->help = "Maximum number of bad files before a client will be kicked, regardless of sv_anticheat_badfile_action value. 0 = disabled. Default 0.\n";
-
-	sv_anticheat_nag_time = Cvar_Get ("sv_anticheat_nag_time", "0", 0);
-	sv_anticheat_nag_time->help = "Seconds to show the sv_anticheat_nag_message. Default 0.\n";
-
-	sv_anticheat_nag_message = Cvar_Get ("sv_anticheat_nag_message", "Please use anticheat on this server.\nSee http://antiche.at/ for downloads.", 0);
-	sv_anticheat_nag_message->help = "Message to show to clients on joining the game if they are not using anticheat. \\n supported. Maximum of 40 characters per line.\n";
-	sv_anticheat_nag_message->changed = _expand_cvar_newlines;
-	ExpandNewLines (sv_anticheat_nag_message->string);
-
-	sv_anticheat_nag_defer = Cvar_Get ("sv_anticheat_nag_defer", "0", 0);
-	sv_anticheat_nag_defer->help = "Delay the anticheat nag message for this many seconds after the player connects. Default 0.\n";
-
-	sv_anticheat_show_violation_reason = Cvar_Get ("sv_anticheat_show_violation_reason", "0", 0);
-	sv_anticheat_show_violation_reason->help = "Include the type of cheat detected when showing a client violation to other players. Default 0.\n";
-
-	sv_anticheat_client_disconnect_action = Cvar_Get ("sv_anticheat_client_disconnect_action", "0", 0);
-	sv_anticheat_client_disconnect_action->help = "Action to take when a client disconnects from the anticheat server mid-game. Default 0.\n0: Mark client as invalid.\n1: Kick client.\n";
-
-	sv_anticheat_forced_disconnect_action = Cvar_Get ("sv_anticheat_forced_disconnect_action", "0", 0);
-	sv_anticheat_forced_disconnect_action->help = "Action to take when a forced anticheat client disconnects from the anticheat server mid-game. Default 0.\n0: Mark client as invalid.\n1: Kick client.\n";
-
-	sv_anticheat_disable_play = Cvar_Get ("sv_anticheat_disable_play", "0", 0);
-	sv_anticheat_disable_play->help = "Disable the use of the 'play' command if a player is using anticheat. default 0.\n";
-	sv_anticheat_disable_play->changed = SV_AntiCheat_UpdatePrefs;
-
-	sv_anticheat_client_restrictions = Cvar_Get ("sv_anticheat_client_restrictions", "0", 0);
-	sv_anticheat_client_restrictions->help = "Restrict the use of certain clients, even if they are anticheat valid. See the anticheat admin forum for further information. Default 0.\n";
-
-	sv_anticheat_force_protocol35 = Cvar_Get ("sv_anticheat_force_protocol35", "0", 0);
-	sv_anticheat_force_protocol35->help = "Force anticheat clients to connect using protocol 35. This may help prevent old hacks from working. Default 0.\n";
-#endif
 
 	//server-private token to prevent spoofed cheaternet responses
 	do cheaternet_token = randomMT(); while (!cheaternet_token);
@@ -3707,9 +3544,6 @@ void SV_Shutdown (const char *finalmsg, qboolean reconnect, qboolean crashing)
 	if (!crashing || dbg_unload->intvalue)
 		SV_ShutdownGameProgs ();
 
-#ifdef ANTICHEAT
-	SV_AntiCheat_Disconnect ();
-#endif
 
 	// free current level
 	if (sv.demofile)

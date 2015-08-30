@@ -175,9 +175,6 @@ tagmalloc_tag_t tagmalloc_tags[] =
 	{TAGMALLOC_CMDBANS, "CMDBANS", 0},
 	{TAGMALLOC_REDBLACK, "REDBLACK", 0},
 	{TAGMALLOC_LRCON, "LRCON", 0},
-#ifdef ANTICHEAT
-	{TAGMALLOC_ANTICHEAT, "ANTICHEAT", 0},
-#endif
 	{TAGMALLOC_MAX_TAGS, "*** UNDEFINED ***", 0}
 };
 

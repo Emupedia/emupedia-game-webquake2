@@ -1689,9 +1689,6 @@ safe:
 	// server connection
 	if (!strcmp(c, "client_connect"))
 	{
-#ifdef ANTICHEAT
-		qboolean	try_to_use_anticheat;
-#endif
 		int			i;
 		char		*buff, *p;
 
@@ -1717,9 +1714,6 @@ safe:
 
 		buff = NET_AdrToString(&cls.netchan.remote_address);
 
-#ifdef ANTICHEAT
-		try_to_use_anticheat = false;
-#endif
 
 		for (i = 1; i < Cmd_Argc(); i++)
 		{
@@ -1736,47 +1730,9 @@ safe:
 				Com_Printf ("HTTP downloading supported by server but this client was built without USE_CURL, bad luck.\n", LOG_CLIENT);
 #endif
 			}
-#ifdef ANTICHEAT
-			else if (!strncmp (p, "ac=", 3))
-			{
-				p+= 3;
-				if (!p[0])
-					continue;
-				if (atoi (p))
-					try_to_use_anticheat = true;
-			}
-#endif
 		}
 
 		//note, not inside the loop as we could potentially clobber cmd_argc/cmd_argv
-#ifdef ANTICHEAT
-		if (try_to_use_anticheat)
-		{
-			MSG_WriteByte (clc_nop);
-			MSG_EndWriting (&cls.netchan.message);
-			Netchan_Transmit (&cls.netchan, 0, NULL);
-			S_StopAllSounds ();
-			con.ormask = 128;
-			Com_Printf("\35\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\37\n", LOG_CLIENT);
-			Com_Printf ("Loading anticheat, this may take a few moments...\n", LOG_GENERAL);
-			Com_Printf("\35\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\37\n", LOG_CLIENT);
-			con.ormask = 0;
-			SCR_UpdateScreen ();
-			SCR_UpdateScreen ();
-			SCR_UpdateScreen ();
-			if (!Sys_GetAntiCheatAPI ())
-				Com_Printf ("        ERROR: anticheat.dll failed to load\n"
-							"Either the file is missing, or something is preventing\n"
-							"it from loading or connecting to the anticheat server.\n"
-							"This is commonly caused by over-aggressive anti-virus\n"
-							"software. Try disabling any anti-virus or other security\n"
-							"software or add an exception for anticheat.dll. Make sure\n"
-							"your system date/time is set correctly as this can prevent\n"
-							"anticheat from working.\n"
-							"\n"
-							"Trying to connect without anticheat support.\n", LOG_GENERAL);
-		}
-#endif
 		p = strchr (buff, ':');
 		if (p)
 			p[0] = 0;
