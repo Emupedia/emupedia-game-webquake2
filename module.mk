@@ -1,4 +1,4 @@
-.PHONY: default all bindirs clean distclean
+.PHONY: default all bindirs clean cppcheck distclean tidy
 
 
 .SUFFIXES:
@@ -6,7 +6,7 @@
 #initialize these
 LIBRARIES:=
 PROGRAMS:=
-ALLSRC:=
+ALLSRC=
 # directories which might contain object files
 # used for both clean and bindirs
 ALLDIRS:=baseq2
@@ -215,6 +215,30 @@ endef  # library-target
 
 
 $(eval $(foreach LIBRARY,$(LIBRARIES), $(call library-target,$(LIBRARY)) ) )
+
+
+export CC
+export CXX
+export CFLAGS
+export CXXFLAGS
+export TOPDIR
+
+compile_commands.json: $(ALLSRC)
+	@echo '[' > $@
+	@$(TOPDIR)/compile_commands.sh $(ALLSRC) >> $@
+	@echo ']' >> $@
+
+
+cppcheck:
+	cppcheck -I $(TOPDIR) -i $(TOPDIR)/foreign --enable=all --inconclusive -D__linux__ -DHAVE_UNISTD_H -DHAVE_STDARG_H -UNO_ZLIB -U_MSC_VER -U_WIN32 -U_WIN64 $(TOPDIR) 2> cppcheck.log
+
+
+NOTFOREIGNSRC:=$(filter-out foreign/%,$(ALLSRC))
+NOTFOREIGNSRC:=$(sort $(NOTFOREIGNSRC))
+
+
+tidy: $(NOTFOREIGNSRC) | compile_commands.json
+	clang-tidy -checks=*,-clang-analyzer-alpha-*,-clang-analyzer-core-*,-clang-analyzer-osx-*,-google-readability-casting,-google-readability-function,-llvm-include-order -p compile_commands.json $(foreach f, $(NOTFOREIGNSRC),$(TOPDIR)/$(f)) > tidy.log
 
 
 -include $(foreach FILE,$(ALLSRC),$(patsubst %.cpp,%.d,$(patsubst %.c,%.d,$(FILE))))

@@ -8,3 +8,6 @@
 *-bin
 
 local.mk
+
+cppcheck.log
+tidy.log
