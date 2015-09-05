@@ -3938,8 +3938,10 @@ void CL_Synchronous_Frame (int msec)
 {
 	static int	extratime;
 
+#ifndef NO_SERVER
 	if (dedicated->value)
 		return;
+#endif  // NO_SERVER
 
 	extratime += msec;
 

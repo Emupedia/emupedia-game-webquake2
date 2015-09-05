@@ -19,6 +19,7 @@ USE_OPENAL:=y
 USE_PNG:=y
 
 BUILD_SERVER:=y
+PURE_CLIENT:=n
 
 
 # compiler options etc

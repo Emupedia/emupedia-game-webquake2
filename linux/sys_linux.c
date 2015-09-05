@@ -416,6 +416,10 @@ void floating_point_exception_handler(int whatever)
 	signal(SIGFPE, floating_point_exception_handler);
 }
 
+
+#ifndef NO_SERVER
+
+
 char *Sys_ConsoleInput(void)
 {
 	if (!dedicated || !dedicated->intvalue)
@@ -453,6 +457,10 @@ char *Sys_ConsoleInput(void)
 
 	return text;
 }
+
+
+#endif  // NO_SERVER
+
 
 /*****************************************************************************/
 
@@ -650,6 +658,7 @@ int main (int argc, char **argv)
     while (1)
     {
 		// find time spent rendering last frame
+#ifndef NO_SERVER
 		if (dedicated->intvalue && sys_loopstyle->intvalue)
 		{
 			newtime = Sys_Milliseconds ();
@@ -657,6 +666,7 @@ int main (int argc, char **argv)
 			spins = 0;
 		}
 		else
+#endif  // NO_SERVER
 		{
 			spins = 0;
 			do

@@ -258,7 +258,7 @@ void Com_Printf (const char *fmt, int level, ...)
 		Con_Print (msg);
 
 	// also echo to debugging console
-#if !(defined(EMSCRIPTEN) && defined(NDEBUG))
+#if !(defined(EMSCRIPTEN) && defined(NDEBUG)) && (!defined(NO_SERVER) )
 		Sys_ConsoleOutput (msg);
 #endif
 	}

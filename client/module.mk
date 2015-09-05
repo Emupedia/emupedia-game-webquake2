@@ -37,8 +37,17 @@ FILES:= \
 	# empty line
 
 
-quake2_MODULES:=client linux qcommon qshared ref_gl server shlinux shwin win32 zlib
+quake2_MODULES:=client linux qcommon qshared ref_gl shlinux shwin win32 zlib
 quake2_SRC:=
+
+
+ifeq ($(PURE_CLIENT),y)
+
+else  # PURE_CLIENT
+
+quake2_MODULES+=server
+
+endif
 
 
 ifeq ($(USE_JPEG),y)

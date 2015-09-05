@@ -88,6 +88,11 @@ CFLAGS+=-DGAME_HARD_LINKED=$(BUILTIN_GAME)
 endif
 
 
+ifeq ($(PURE_CLIENT),y)
+CFLAGS+=-DNO_SERVER
+endif
+
+
 # (call directory-module, dirname)
 define directory-module
 

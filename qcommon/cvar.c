@@ -170,6 +170,7 @@ static const char *Cvar_GetMetaVar (const char *var_name)
 			//aiee
 			return CL_Get_Loc_There ();
 		}
+#ifndef NO_SERVER
 		else if (!strcmp (var_name, "$client.id"))
 		{
 			return SV_GetClientID ();
@@ -182,6 +183,7 @@ static const char *Cvar_GetMetaVar (const char *var_name)
 		{
 			return SV_GetClientName ();
 		}
+#endif  // NO_SERVER
 	}
 
 	return NULL;
