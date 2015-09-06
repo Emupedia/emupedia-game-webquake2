@@ -2434,50 +2434,11 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 			R_FilterTexture (scaled, scaled_width, scaled_height, image->type);
 	}
 
-	//r1ch: hardware/driver mipmap generation
-	//0.1.5: removed due to shitty drivers breaking it, thx ati
-	/*if (gl_config.r1gl_GL_SGIS_generate_mipmap)
-	{
-		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		if ((err = glGetError()) != GL_NO_ERROR) VID_Error (ERR_FATAL, "glGetError: 0x%x", err);
-
-		glTexParameteri (GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
-		if ((err = glGetError()) != GL_NO_ERROR) VID_Error (ERR_FATAL, "glGetError: 0x%x", err);
-	}*/
-
 	glTexImage2D (GL_TEXTURE_2D, 0, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
 
-	//if (mipmap && !(gl_config.r1gl_GL_SGIS_generate_mipmap))
 	if (mipmap)
 	{
-		int		miplevel;
-
-		//if (scaled_width & 1)
-		//	Sys_DebugBreak ();
-
-		miplevel = 0;
-		while (scaled_width > 1 || scaled_height > 1)
-		{
-			GL_MipMap ((byte *)scaled, scaled_width, scaled_height);
-
-			if (gl_config.r1gl_GL_ARB_texture_non_power_of_two)
-			{
-				scaled_width = (int)floor (width / pow(2, miplevel+1));
-				scaled_height = (int)floor (height / pow (2, miplevel+1));
-			}
-			else
-			{
-				scaled_width >>= 1;
-				scaled_height >>= 1;
-			}
-
-			if (scaled_width < 1)
-				scaled_width = 1;
-			if (scaled_height < 1)
-				scaled_height = 1;
-			miplevel++;
-			glTexImage2D (GL_TEXTURE_2D, miplevel, comp, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);;
-		}
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 done: ;
 
