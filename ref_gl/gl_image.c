@@ -2285,7 +2285,7 @@ void GL_MipMap (byte *in, int width, int height)
 	int		i, j;
 	byte	*out;
 
-	if (gl_linear_mipmaps->intvalue)
+	if (true)
 	{
 		GL_MipMapLinear ((unsigned int *)in, width, height);
 		return;

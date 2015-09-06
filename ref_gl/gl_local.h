@@ -386,7 +386,6 @@ extern cvar_t	*gl_doublelight_entities;
 extern cvar_t	*gl_noscrap;
 extern cvar_t	*gl_zfar;
 extern cvar_t	*gl_overbrights;
-extern cvar_t	*gl_linear_mipmaps;
 
 extern cvar_t	*vid_gamma_pics;
 

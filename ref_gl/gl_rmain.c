@@ -139,7 +139,6 @@ cvar_t	*gl_r1gl_test;
 cvar_t	*gl_doublelight_entities;
 cvar_t	*gl_noscrap;
 cvar_t	*gl_overbrights;
-cvar_t	*gl_linear_mipmaps;
 
 cvar_t	*vid_gamma_pics;
 
@@ -1129,7 +1128,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	gl_doublelight_entities = Cvar_Get ("gl_doublelight_entities", "1", 0);
 	gl_noscrap = Cvar_Get ("gl_noscrap", "1", 0);
 	gl_overbrights = Cvar_Get ("gl_overbrights", "0", 0);
-	gl_linear_mipmaps = Cvar_Get ("gl_linear_mipmaps", "0", 0);
 
 	vid_forcedrefresh = Cvar_Get ("vid_forcedrefresh", "0", 0);
 	vid_optimalrefresh = Cvar_Get ("vid_optimalrefresh", "0", 0);
