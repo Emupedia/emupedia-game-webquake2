@@ -1,15 +1,21 @@
+{-# OPTIONS_GHC -XScopedTypeVariables #-}
 module Main (main) where
 import Control.Monad (replicateM)
 import Data.Time
 import GHC.IO.Handle
+import Stats
 import System.Environment (getArgs)
 import System.Process (CreateProcess(..), createProcess, proc, waitForProcess, StdStream(..))
+import Text.Printf
 
 
 doBenchTime :: Int -> String -> [String] -> IO ()
 doBenchTime repeats cmd args = do
-  times <- replicateM repeats $ timeCommand cmd args
-  putStrLn $ "Time spent: " ++ (show times)
+  times_ <- replicateM repeats $ timeCommand cmd args
+  putStrLn $ "Times: " ++ (show times_)
+  let (times :: [Double]) = map realToFrac times_
+  printf "Min/med/max: %01.2f  %01.2f  %01.2f sec\n" (minimum times) (median times) (maximum times)
+  printf "Mean: %01.2f  +/-  %01.2f sec\n" (mean times) (stddev times)
 
 
 timeCommand :: String -> [String] -> IO NominalDiffTime
