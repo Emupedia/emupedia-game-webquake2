@@ -464,6 +464,9 @@ void R_LightPoint (vec3_t p, vec3_t color);
 void R_PushDlights (void);
 void clearImageHash(void);
 unsigned int hashify (const char *S);
+
+void Cmd_HashStats_f (void);
+
 //====================================================================
 
 extern	model_t	*r_worldmodel;
@@ -473,8 +476,12 @@ extern	vec4_t		d_8to24float[256];
 
 extern	int		registration_sequence;
 
+void MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar );
 
 void V_AddBlend (float r, float g, float b, float a, float *v_blend);
+
+void R_SetCacheState( msurface_t *surf );
+void R_BuildLightMap (msurface_t *surf, byte *dest, int stride);
 
 void R_RenderView (refdef_t *fd);
 void GL_ScreenShot_f (void);
@@ -499,6 +506,11 @@ void R_AddSkySurface (msurface_t *fa);
 void R_ClearSkyBox (void);
 void R_DrawSkyBox (void);
 void R_MarkLights (dlight_t *light, int bit, mnode_t *node);
+
+void GL_BuildPolygonFromSurface(msurface_t *fa);
+void GL_CreateSurfaceLightmap (msurface_t *surf);
+void GL_EndBuildingLightmaps (void);
+void GL_BeginBuildingLightmaps (void);
 
 void	Draw_GetPicSize (int *w, int *h, char *name);
 void	Draw_Pic (int x, int y, char *name);

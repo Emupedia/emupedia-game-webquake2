@@ -1056,7 +1056,7 @@ void R_RenderFrame (refdef_t *fd)
 	R_SetGL2D ();
 }
 
-void Cmd_HashStats_f (void);
+
 static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 {
 	r_lefthand = Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
@@ -1940,12 +1940,6 @@ void R_DrawBeam( entity_t *e )
 
 //===================================================================
 
-
-void	Draw_Pic (int x, int y, char *name);
-void	Draw_Char (int x, int y, int c);
-void	Draw_TileClear (int x, int y, int w, int h, char *name);
-void	Draw_Fill (int x, int y, int w, int h, int c);
-void	Draw_FadeScreen (void);
 
 /*
 @@@@@@@@@@@@@@@@@@@@@

@@ -416,7 +416,6 @@ R_DrawAliasModel
 
 =================
 */
-extern void MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar );
 void R_DrawAliasModel (entity_t *e)
 {
 	int			i;
