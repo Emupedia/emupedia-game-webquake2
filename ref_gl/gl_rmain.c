@@ -1641,14 +1641,14 @@ void R_Shutdown (void)
 		memset(gl_state.lightmap_textures, 0, MAX_LIGHTMAPS * sizeof(GLuint));
 	}
 
-	ri.Cmd_RemoveCommand ("modellist");
-	ri.Cmd_RemoveCommand ("screenshot");
-	ri.Cmd_RemoveCommand ("imagelist");
-	ri.Cmd_RemoveCommand ("gl_strings");
-	ri.Cmd_RemoveCommand ("hash_stats");
+	Cmd_RemoveCommand ("modellist");
+	Cmd_RemoveCommand ("screenshot");
+	Cmd_RemoveCommand ("imagelist");
+	Cmd_RemoveCommand ("gl_strings");
+	Cmd_RemoveCommand ("hash_stats");
 
 #ifdef R1GL_RELEASE
-	ri.Cmd_RemoveCommand ("r1gl_version");
+	Cmd_RemoveCommand ("r1gl_version");
 #endif
 
 	Mod_FreeAll ();
@@ -2024,10 +2024,10 @@ void RW_IN_Shutdown(void) {
     if (mouse_avail) {
 	mouse_avail = false;
 
-	ri.Cmd_RemoveCommand ("+mlook");
-	ri.Cmd_RemoveCommand ("-mlook");
+	Cmd_RemoveCommand ("+mlook");
+	Cmd_RemoveCommand ("-mlook");
 
-	ri.Cmd_RemoveCommand ("force_centerview");
+	Cmd_RemoveCommand ("force_centerview");
     }
 
 #ifdef HAVE_JOYSTICK
