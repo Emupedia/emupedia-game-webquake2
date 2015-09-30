@@ -155,7 +155,6 @@ typedef struct
 
 typedef struct
 {
-	char	*(*Cmd_Argv) (int i);
 	void	(*Cmd_ExecuteText) (int exec_when, char *text);
 
 	// files will be memory mapped read only

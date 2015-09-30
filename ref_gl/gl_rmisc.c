@@ -298,7 +298,7 @@ void GL_ScreenShot_f (void)
 
 	glReadPixels (0, 0, viddef.width, viddef.height, GL_RGB, GL_UNSIGNED_BYTE, buffer ); 
 #if defined(_WIN32) && defined(USE_PNG)
-	if (!strcmp (ri.Cmd_Argv(1), "jpg"))
+	if (!strcmp (Cmd_Argv(1), "jpg"))
 	{
 		//GL_ScreenShot_JPG (buffer);
 	}
