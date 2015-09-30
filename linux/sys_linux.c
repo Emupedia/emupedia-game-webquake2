@@ -336,7 +336,7 @@ void Sys_Init(void)
 #endif
   /* Install our signal handler */
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(USE_AFL)
 
 #ifndef __x86_64__
 	struct sigaction sa;
