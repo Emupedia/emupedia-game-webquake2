@@ -181,7 +181,7 @@ static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damag
 		return 0;
 
 	int			power_armor_type;
-	int			power;
+	int power = 0;
 	if (client)
 	{
 		power_armor_type = PowerArmorType (ent);
