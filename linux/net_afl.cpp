@@ -81,28 +81,28 @@ static void fuzzRead(char *dest, size_t size) {
 		__AFL_INIT();
 #endif
 
-	FILE *f = fopen(fuzzFileName, "rb");
-	if (!f) {
-		Com_Printf("Failed to open afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, fuzzFileName, errno, strerror(errno));
-		// so we stop uselessly running the fuzzer
-		__builtin_trap();
-	}
+		FILE *f = fopen(fuzzFileName, "rb");
+		if (!f) {
+			Com_Printf("Failed to open afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, fuzzFileName, errno, strerror(errno));
+			// so we stop uselessly running the fuzzer
+			__builtin_trap();
+		}
 
-	struct stat statbuf;
-	memset(&statbuf, 0, sizeof(struct stat));
-	int retval = fstat(fileno(f), &statbuf);
-	if (retval != 0) {
-		Com_Printf("Failed to stat afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, fuzzFileName, errno, strerror(errno));
+		struct stat statbuf;
+		memset(&statbuf, 0, sizeof(struct stat));
+		int retval = fstat(fileno(f), &statbuf);
+		if (retval != 0) {
+			Com_Printf("Failed to stat afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, fuzzFileName, errno, strerror(errno));
+			fclose(f);
+			// so we stop uselessly running the fuzzer
+			__builtin_trap();
+		}
+
+		fuzzSize = statbuf.st_size;
+		fuzzBuf = new char[fuzzSize];
+		fread(fuzzBuf, 1, fuzzSize, f);
+
 		fclose(f);
-		// so we stop uselessly running the fuzzer
-		__builtin_trap();
-	}
-
-	fuzzSize = statbuf.st_size;
-	fuzzBuf = new char[fuzzSize];
-	fread(fuzzBuf, 1, fuzzSize, f);
-
-	fclose(f);
 	}
 
 	fuzzExpectLeft(size);
