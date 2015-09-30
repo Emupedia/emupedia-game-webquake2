@@ -492,7 +492,7 @@ float CalcFov (float fov_x, int width, int height)
 	static int		lw, lh;
 
 	//r1: only calculate if needed
-	if (width != lw || height != lh || *(int*)&fov_x != *(int*)&last_fov)
+	if (width != lw || height != lh || fov_x != last_fov)
 	{
 		float			x;
 

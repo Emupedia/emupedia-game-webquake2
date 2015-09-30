@@ -2001,7 +2001,9 @@ void CL_ReadPackets (void)
 		//
 		// remote command packet
 		//
-		if (*(int *)net_message_buffer == -1)
+		int32_t temp = 0;
+		memcpy(&temp, net_message_buffer, 4);
+		if (temp == -1)
 		{
 			if (i == -1 && cls.key_dest != key_game)
 				Com_Printf ("Port unreachable from %s\n", LOG_CLIENT|LOG_NOTICE, NET_AdrToString (&net_from));
@@ -2009,7 +2011,7 @@ void CL_ReadPackets (void)
 				CL_ConnectionlessPacket ();
 			continue;
 		}
-		else if (*(int *)net_message_buffer == -2)
+		else if (temp == -2)
 		{
 			CL_ProxyPacket ();
 			continue;
