@@ -102,7 +102,7 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr)
 	
 	if (isip != -1)
 	{
-		*(int *)&((struct sockaddr_in *)sadr)->sin_addr = inet_addr(copy);
+		((struct sockaddr_in *)sadr)->sin_addr.s_addr = inet_addr(copy);
 	}
 	else
 	{

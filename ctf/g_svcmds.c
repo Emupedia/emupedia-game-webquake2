@@ -242,9 +242,12 @@ void SVCmd_WriteIP_f(void){
 	fprintf(f, "set filterban %d\n",(int)filterban->value);
 	
 	for (int i = 0; i < numipfilters; i++) {
-		byte	b[4];
-		*(unsigned *)b = ipfilters[i].compare;
-		fprintf(f, "sv addip %i.%i.%i.%i\n", b[0], b[1], b[2], b[3]);
+		union {
+			byte	b[4];
+			unsigned u;
+		} temp;
+		temp.u = ipfilters[i].compare;
+		fprintf(f, "sv addip %i.%i.%i.%i\n", temp.b[0], temp.b[1], temp.b[2], temp.b[3]);
 	}
 	
 	fclose(f);
