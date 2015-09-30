@@ -1591,18 +1591,6 @@ retryQGL:
 
 	VID_Printf( PRINT_ALL, "Initializing r1gl extensions:\n" );
 
-	/*gl_config.r1gl_GL_SGIS_generate_mipmap = false;
-	if ( strstr( gl_config.extensions_string, "GL_SGIS_generate_mipmap" ) ) {
-		if ( gl_ext_generate_mipmap->value ) {
-			VID_Printf( PRINT_ALL, "...using GL_SGIS_generate_mipmap\n" );
-			gl_config.r1gl_GL_SGIS_generate_mipmap = true;
-		} else {
-			VID_Printf( PRINT_ALL, "...ignoring GL_SGIS_generate_mipmap\n" );		
-		}
-	} else {
-		VID_Printf( PRINT_ALL, "...GL_SGIS_generate_mipmap not found\n" );
-	}*/
-
 	gl_config.r1gl_GL_EXT_texture_filter_anisotropic = false;
 	if ( strstr( gl_config.extensions_string, "GL_EXT_texture_filter_anisotropic" ) )
 	{
