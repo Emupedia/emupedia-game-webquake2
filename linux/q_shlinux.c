@@ -91,7 +91,14 @@ void Hunk_Free (void *base)
 Sys_Milliseconds
 ================
 */
-unsigned int curtime;
+
+
+unsigned int curtime = 0;
+
+
+#ifndef USE_AFL
+
+
 unsigned int Sys_Milliseconds (void)
 {
 	struct timeval tp;
@@ -110,6 +117,10 @@ unsigned int Sys_Milliseconds (void)
 	
 	return curtime;
 }
+
+
+#endif  // USE_AFL
+
 
 void Sys_DebugBreak (void)
 {

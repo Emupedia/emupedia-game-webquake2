@@ -250,6 +250,14 @@ float frand() {
 }
 
 
+unsigned int Sys_Milliseconds(void) {
+	// TODO: read delay from file
+	curtime++;
+	return curtime;
+
+}
+
+
 int NET_GetPacket(netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 {
 #ifndef DEDICATED_ONLY
