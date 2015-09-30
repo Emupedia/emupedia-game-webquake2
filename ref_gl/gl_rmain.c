@@ -1169,15 +1169,15 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 
 	//con_alpha = Cvar_Get ("con_alpha", "1.0", 0);
 
-	ri.Cmd_AddCommand( "imagelist", GL_ImageList_f );
-	ri.Cmd_AddCommand( "screenshot", GL_ScreenShot_f );
-	ri.Cmd_AddCommand( "modellist", Mod_Modellist_f );
-	ri.Cmd_AddCommand( "gl_strings", GL_Strings_f );
-	ri.Cmd_AddCommand( "hash_stats", Cmd_HashStats_f );
+	Cmd_AddCommand( "imagelist", GL_ImageList_f );
+	Cmd_AddCommand( "screenshot", GL_ScreenShot_f );
+	Cmd_AddCommand( "modellist", Mod_Modellist_f );
+	Cmd_AddCommand( "gl_strings", GL_Strings_f );
+	Cmd_AddCommand( "hash_stats", Cmd_HashStats_f );
 	
 
 #ifdef R1GL_RELEASE
-	ri.Cmd_AddCommand ("r1gl_version", GL_Version_f);
+	Cmd_AddCommand ("r1gl_version", GL_Version_f);
 #endif
 }
 
@@ -2006,10 +2006,10 @@ void RW_IN_Init(in_state_t *in_state_p)
 	m_forward = Cvar_Get ("m_forward", "1", 0);
 	m_side = Cvar_Get ("m_side", "0.8", 0);
 
-	ri.Cmd_AddCommand ("+mlook", RW_IN_MLookDown);
-	ri.Cmd_AddCommand ("-mlook", RW_IN_MLookUp);
+	Cmd_AddCommand ("+mlook", RW_IN_MLookDown);
+	Cmd_AddCommand ("-mlook", RW_IN_MLookUp);
 
-	ri.Cmd_AddCommand ("force_centerview", Force_CenterView_f);
+	Cmd_AddCommand ("force_centerview", Force_CenterView_f);
 
 	mouse_x = mouse_y = 0.0;
 	mouse_avail = true;
