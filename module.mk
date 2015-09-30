@@ -164,6 +164,14 @@ distclean: clean
 
 # rules here
 
+foreign/%$(OBJSUFFIX): foreign/%.c | bindirs
+	$(CC) -c -MF foreign/$*.d -MP -MMD -std=gnu99 $(CFLAGS) -w -o $@ $<
+
+
+foreign/%$(OBJSUFFIX): foreign/%.cpp | bindirs
+	$(CXX) -c -MF foreign/$*.d -MP -MMD $(CXXFLAGS) -w -o $@ $<
+
+
 %$(OBJSUFFIX): %.c | bindirs
 	$(CC) -c -MF $*.d -MP -MMD -std=gnu99 $(CFLAGS) -o $@ $<
 
