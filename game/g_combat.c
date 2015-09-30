@@ -170,25 +170,18 @@ dflags		these flags are used to control how T_Damage works
 */
 static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damage, int dflags)
 {
-	gclient_t	*client;
-	int			save;
-	int			power_armor_type;
-	int			index;
-	int			damagePerCell;
-	int			pa_te_type;
-	int			power;
-	int			power_used;
-
 	if (!damage)
 		return 0;
 
-	index = 0;
+	int index = 0;
 
-	client = ent->client;
+	gclient_t *client = ent->client;
 
 	if (dflags & DAMAGE_NO_ARMOR)
 		return 0;
 
+	int			power_armor_type;
+	int			power;
 	if (client)
 	{
 		power_armor_type = PowerArmorType (ent);
@@ -211,6 +204,9 @@ static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damag
 	
 	if (!power)
 		return 0;
+
+	int			damagePerCell;
+	int			pa_te_type;
 
 	if (power_armor_type == POWER_ARMOR_SCREEN)
 	{
@@ -237,7 +233,7 @@ static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damag
 		damage = (2 * damage) / 3;
 	}
 
-	save = power * damagePerCell;
+	int save = power * damagePerCell;
 	if (!save)
 		return 0;
 	if (save > damage)
@@ -246,7 +242,7 @@ static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damag
 	SpawnDamage (pa_te_type, point, normal, save);
 	ent->powerarmor_time = level.time + 0.2f;
 
-	power_used = save / damagePerCell;
+	int power_used = save / damagePerCell;
 
 	if (client)
 		client->pers.inventory[index] -= power_used;
