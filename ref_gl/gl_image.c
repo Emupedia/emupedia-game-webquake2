@@ -2208,12 +2208,8 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 	int scaled_width, scaled_height;
 		for (scaled_width = 1 ; scaled_width < width ; scaled_width<<=1)
 			;
-		if (gl_round_down->intvalue && scaled_width > width && mipmap)
-			scaled_width >>= 1;
 		for (scaled_height = 1 ; scaled_height < height ; scaled_height<<=1)
 			;
-		if (gl_round_down->intvalue && scaled_height > height && mipmap)
-			scaled_height >>= 1;
 
 	// don't ever bother with >256 textures
 	if (scaled_width > MAX_TEXTURE_DIMENSIONS)
