@@ -156,7 +156,6 @@ typedef struct
 typedef struct
 {
 	cvar_t	*(*Cvar_Set)( const char *name, const char *value );
-	void	 (*Cvar_SetValue)( const char *name, float value );
 
 	void		(*Vid_MenuInit)( void );
 	void		(*Vid_NewWindow)( int width, int height );

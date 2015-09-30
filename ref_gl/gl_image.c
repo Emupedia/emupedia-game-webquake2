@@ -3058,9 +3058,9 @@ void	GL_InitImages (void)
 		ri.Cvar_Set( "intensity", "1" );
 
 	if (gl_contrast->value < 0.5f)
-		ri.Cvar_SetValue ("gl_contrast", 0.5f);
+		Cvar_SetValue ("gl_contrast", 0.5f);
 	else if (gl_contrast->value > 1.5f)
-		ri.Cvar_SetValue ("gl_contrast", 1.5f);
+		Cvar_SetValue ("gl_contrast", 1.5f);
 
 	if (gl_overbrights->intvalue)
 		g = 1.0;

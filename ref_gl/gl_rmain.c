@@ -1400,7 +1400,7 @@ static int R_SetMode(unsigned int width, unsigned int height)
 		}
 		else if ( err & VID_ERR_FULLSCREEN_FAILED )
 		{
-			ri.Cvar_SetValue( "vid_fullscreen", 0);
+			Cvar_SetValue( "vid_fullscreen", 0);
 			vid_fullscreen->modified = false;
 			VID_Printf( PRINT_ALL, "ref_gl::R_SetMode() - fullscreen unavailable in this mode\n" );
 			if ( ( err = GLimp_SetMode( &viddef.width, &viddef.height, false ) ) == VID_ERR_NONE )
@@ -1719,9 +1719,9 @@ void R_BeginFrame(void)
 	if (gl_contrast->modified)
 	{
 		if (gl_contrast->value < 0.5f)
-			ri.Cvar_SetValue ("gl_contrast", 0.5f);
+			Cvar_SetValue ("gl_contrast", 0.5f);
 		else if (gl_contrast->value > 1.5f)
-			ri.Cvar_SetValue ("gl_contrast", 1.5f);
+			Cvar_SetValue ("gl_contrast", 1.5f);
 
 		gl_contrast->modified = false;
 	}
@@ -2305,7 +2305,7 @@ EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEve
 	} else {
 		SDL_Log("Pointer lock lost");
 		SDL_SetRelativeMouseMode(SDL_FALSE);
-		ri.Cvar_SetValue( "_windowed_mouse", 0 );
+		Cvar_SetValue( "_windowed_mouse", 0 );
 
 		// release all keys so Alt etc. don't get stuck on
 		for (unsigned int i = 0; i < SDL_NUM_SCANCODES; i++) {
@@ -2332,7 +2332,7 @@ int FilterEvents(void* userdata, SDL_Event* event)
 			if (SDL_GetRelativeMouseMode() != SDL_TRUE) {
 				SDL_Log("Setting Relative + Grab");
 				SDL_SetRelativeMouseMode(SDL_TRUE);
-				ri.Cvar_SetValue( "_windowed_mouse", 1 );
+				Cvar_SetValue( "_windowed_mouse", 1 );
 			}
 			break;
 		default:
@@ -2406,7 +2406,7 @@ void GetEvent(SDL_Event *event)
 			}
 
 
-			ri.Cvar_SetValue( "vid_fullscreen", fs );
+			Cvar_SetValue( "vid_fullscreen", fs );
 
 			fullscreen = Cvar_Get( "vid_fullscreen", "0", 0 );
 			fullscreen->modified = false;	// we just changed it with SDL.
@@ -2422,7 +2422,7 @@ void GetEvent(SDL_Event *event)
 			SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
 			gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
 			*/	
-			ri.Cvar_SetValue( "_windowed_mouse", newValue );
+			Cvar_SetValue( "_windowed_mouse", newValue );
 			
 			break; /* ignore this key */
 		}

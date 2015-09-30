@@ -329,9 +329,9 @@ void R_BlendLightmaps (void)
 	if (gl_coloredlightmaps->modified)
 	{
 		if (gl_coloredlightmaps->value > 1)
-			ri.Cvar_SetValue ("gl_coloredlightmaps", 1);
+			Cvar_SetValue ("gl_coloredlightmaps", 1);
 		else if (gl_coloredlightmaps->value < 0)
-			ri.Cvar_SetValue ("gl_coloredlightmaps", 0);
+			Cvar_SetValue ("gl_coloredlightmaps", 0);
 
 		gl_coloredlightmaps->modified = false;
 
