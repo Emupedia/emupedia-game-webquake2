@@ -639,10 +639,6 @@ void R_SetSky (char *name, float rotate, vec3_t axis)
 
 	for (i=0 ; i<6 ; i++)
 	{
-		// chop down rotating skies for less memory
-		if (gl_skymip->intvalue || skyrotate)
-			gl_picmip->value++;
-
 		Com_sprintf (pathname, sizeof(pathname), "env/%s%s.tga", skyname, suf[i]);
 
 		sky_images[i] = GL_FindImage (pathname, skyname, it_sky);
@@ -650,8 +646,7 @@ void R_SetSky (char *name, float rotate, vec3_t axis)
 			sky_images[i] = r_notexture;
 
 		if (gl_skymip->intvalue || skyrotate)
-		{	// take less memory
-			gl_picmip->value--;
+		{
 			sky_min = 1.0/256;
 			sky_max = 255.0/256;
 		}

@@ -8,7 +8,6 @@ extern cvar_t *scr_viewsize;
 
 static cvar_t *vid_width;
 static cvar_t *vid_height;
-static cvar_t *gl_picmip;
 
 static cvar_t *_windowed_mouse;
 
@@ -26,7 +25,6 @@ static menuframework_s	s_opengl_menu;
 static menuframework_s *s_current_menu;
 
 static menulist_s		s_mode_list;
-static menuslider_s		s_tq_slider;
 static menuslider_s		s_screensize_slider;
 static menuslider_s		s_brightness_slider;
 static menulist_s  		s_fs_box;
@@ -90,7 +88,6 @@ static void ApplyChanges( void *unused )
 	gamma = ( 0.8 - ( s_brightness_slider.curvalue/10.0 - 0.5 ) ) + 0.5;
 
 	Cvar_SetValue( "vid_gamma", gamma );
-	Cvar_SetValue( "gl_picmip", 3 - s_tq_slider.curvalue );
 	Cvar_SetValue( "vid_fullscreen", s_fs_box.curvalue );
 	Cvar_SetValue( "vid_width", vid_modes[s_mode_list.curvalue].width);
 	Cvar_SetValue( "vid_height", vid_modes[s_mode_list.curvalue].height);
@@ -129,8 +126,6 @@ void VID_MenuInit( void )
 		0
 	};
 
-	if ( !gl_picmip )
-		gl_picmip = Cvar_Get( "gl_picmip", "0", 0 );
 	if (!vid_width) {
 		vid_width = Cvar_Get("vid_width", "1280", 0);
 	}
@@ -190,14 +185,6 @@ void VID_MenuInit( void )
 	s_brightness_slider.maxvalue = 13;
 	s_brightness_slider.curvalue = ( 1.3 - vid_gamma->value + 0.5 ) * 10;
 
-	s_tq_slider.generic.type = MTYPE_SLIDER;
-	s_tq_slider.generic.x = 0;
-	s_tq_slider.generic.y = cur_y_value = cur_y_value + 20;
-	s_tq_slider.generic.name = "texture quality";
-	s_tq_slider.minvalue = 0;
-	s_tq_slider.maxvalue = 3;
-	s_tq_slider.curvalue = 3 - gl_picmip->value;
-
 	s_defaults_action.generic.type = MTYPE_ACTION;
 	s_defaults_action.generic.name = "reset to default";
 	s_defaults_action.generic.x    = 0;
@@ -221,7 +208,6 @@ void VID_MenuInit( void )
 	Menu_AddItem( &s_opengl_menu, ( void * ) &s_mode_list );
 	Menu_AddItem( &s_opengl_menu, ( void * ) &s_screensize_slider );
 	Menu_AddItem( &s_opengl_menu, ( void * ) &s_brightness_slider );
-	Menu_AddItem( &s_opengl_menu, ( void * ) &s_tq_slider );
 
 	Menu_AddItem( &s_opengl_menu, ( void * ) &s_defaults_action );
 	Menu_AddItem( &s_opengl_menu, ( void * ) &s_apply_action );
