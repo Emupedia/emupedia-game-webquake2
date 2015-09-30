@@ -3055,7 +3055,7 @@ void	GL_InitImages (void)
 	gl_texture_lighting_mode = Cvar_Get ("gl_texture_lighting_mode", "0", 0);
 
 	if ( intensity->value <= 1 )
-		ri.Cvar_Set( "intensity", "1" );
+		Cvar_Set( "intensity", "1" );
 
 	if (gl_contrast->value < 0.5f)
 		Cvar_SetValue ("gl_contrast", 0.5f);
