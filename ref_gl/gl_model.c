@@ -355,7 +355,7 @@ model_t *Mod_ForName (char *name, qboolean crash)
 	mod->hash_next = models_hash[hash];
 	models_hash[hash] = mod;
 
-	ri.FS_FreeFile (buf);
+	FS_FreeFile (buf);
 
 	return mod;
 }

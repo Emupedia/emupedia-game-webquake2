@@ -417,7 +417,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 		|| pcx->data >= len)
 	{
 		VID_Printf (PRINT_ALL, "Bad PCX file: %s\n", filename);
-		ri.FS_FreeFile (pcx);
+		FS_FreeFile (pcx);
 		return;
 	}
 
@@ -502,7 +502,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 	if (raw - base != len - 769)
 		Com_DPrintf("Empty space in PCX file: %s\n", filename);
 
-	ri.FS_FreeFile (pcx);
+	FS_FreeFile (pcx);
 	return;
 
 abortload:
@@ -519,7 +519,7 @@ abortload:
 		*palette = NULL;
 	}
 
-	ri.FS_FreeFile (pcx);
+	FS_FreeFile (pcx);
 }
 
 
@@ -558,7 +558,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 
 	if ((png_check_sig(PngFileBuffer.Buffer, 8)) == 0)
 	{
-		ri.FS_FreeFile (PngFileBuffer.Buffer); 
+		FS_FreeFile (PngFileBuffer.Buffer); 
 		VID_Printf (PRINT_ALL, "Not a PNG file: %s\n", name);
 		return;
     }
@@ -569,7 +569,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 
     if (!png_ptr)
 	{
-		ri.FS_FreeFile (PngFileBuffer.Buffer);
+		FS_FreeFile (PngFileBuffer.Buffer);
 		VID_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
 		return;
 	}
@@ -578,7 +578,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
     if (!info_ptr)
 	{
         png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-		ri.FS_FreeFile (PngFileBuffer.Buffer);
+		FS_FreeFile (PngFileBuffer.Buffer);
 		VID_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
 		return;
     }
@@ -587,7 +587,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
     if (!end_info)
 	{
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-		ri.FS_FreeFile (PngFileBuffer.Buffer);
+		FS_FreeFile (PngFileBuffer.Buffer);
 		VID_Printf (PRINT_ALL, "Bad PNG file: %s\n", name);
 		return;
     }
@@ -599,7 +599,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 	if (info_ptr->height > MAX_TEXTURE_DIMENSIONS)
 	{
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-		ri.FS_FreeFile (PngFileBuffer.Buffer);
+		FS_FreeFile (PngFileBuffer.Buffer);
 		VID_Printf (PRINT_ALL, "Oversized PNG file: %s\n", name);
 		return;
 	}
@@ -648,7 +648,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 	png_read_end(png_ptr, end_info);
 	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 
-	ri.FS_FreeFile (PngFileBuffer.Buffer);
+	FS_FreeFile (PngFileBuffer.Buffer);
 }
 
 
@@ -804,7 +804,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 		temp1 = header.colormap_index;
 		temp2 = header.colormap_length;
 		if( (temp1 + temp2 + 1) >= MAXCOLORS ) {
-			ri.FS_FreeFile( data );
+			FS_FreeFile( data );
 			return;
 		}
 		ColorMap = (byte *)malloc( MAXCOLORS * 4 );
@@ -1045,7 +1045,7 @@ PixEncode:
 	if (mapped)
 		free( ColorMap );
 	
-	ri.FS_FreeFile( data );
+	FS_FreeFile( data );
 }
 #else
 
@@ -1370,7 +1370,7 @@ breakOut:;
 		free (temp);
 	}
 
-	ri.FS_FreeFile (buffer);
+	FS_FreeFile (buffer);
 }
 #endif
 
@@ -1438,7 +1438,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	if (rawsize < 10 || rawdata[6] != 'J' || rawdata[7] != 'F' || rawdata[8] != 'I' || rawdata[9] != 'F')
 	{ 
 		VID_Printf (PRINT_ALL, "Invalid JPEG header: %s\n", filename); 
-		ri.FS_FreeFile(rawdata); 
+		FS_FreeFile(rawdata); 
 		return; 
 	} 
 
@@ -1452,7 +1452,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	{
 		VID_Printf(PRINT_ALL, "Invalid JPEG colour components\n");
 		jpeg_destroy_decompress(&cinfo);
-		ri.FS_FreeFile(rawdata);
+		FS_FreeFile(rawdata);
 		return;
 	}
 
@@ -1462,7 +1462,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	{
 		VID_Printf(PRINT_ALL, "Insufficient memory for JPEG buffer\n");
 		jpeg_destroy_decompress(&cinfo);
-		ri.FS_FreeFile(rawdata);
+		FS_FreeFile(rawdata);
 		return;
 	}
 
@@ -1477,7 +1477,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 		VID_Printf (PRINT_ALL, "Insufficient memory for JPEG scanline buffer\n");
 		free (rgbadata);
 		jpeg_destroy_decompress (&cinfo);
-		ri.FS_FreeFile (rawdata);
+		FS_FreeFile (rawdata);
 		return;
 	}
 
@@ -1590,19 +1590,19 @@ LoadTGA
 		// uncompressed colormapped image
 		if (targa_header.pixelSize != 8)
 		{
-			ri.FS_FreeFile (buffer);
+			FS_FreeFile (buffer);
 			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit images supported for type 1 and 9\n", name);
 		}
 
 		if( targa_header.colorMapLength != 256 )
 		{
-			ri.FS_FreeFile (buffer);
+			FS_FreeFile (buffer);
 			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit colormaps are supported for type 1 and 9\n", name);
 		}
 
 		if( targa_header.colorMapIndex )
 		{
-			ri.FS_FreeFile (buffer);
+			FS_FreeFile (buffer);
 			VID_Error (ERR_DROP, "LoadTGA: (%s) colorMapIndex is not supported for type 1 and 9", name);
 		}
 
@@ -1628,7 +1628,7 @@ LoadTGA
 		}
 		else
 		{
-			ri.FS_FreeFile (buffer);
+			FS_FreeFile (buffer);
 			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 24 and 32 bit colormaps are supported for type 1 and 9", name);
 		}
 	}
@@ -1637,7 +1637,7 @@ LoadTGA
 		// uncompressed or RLE compressed RGB
 		if ((targa_header.pixelSize != 32) && (targa_header.pixelSize != 24))
 		{
-			ri.FS_FreeFile (buffer);
+			FS_FreeFile (buffer);
 			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 32 or 24 bit images supported for type 2 and 10", name);
 		}
 	}
@@ -1646,7 +1646,7 @@ LoadTGA
 		// uncompressed greyscale
 		if (targa_header.pixelSize != 8 )
 		{
-			ri.FS_FreeFile (buffer);
+			FS_FreeFile (buffer);
 			VID_Error (ERR_DROP, "LoadTGA: (%s) Only 8 bit images supported for type 3 and 11", name);
 		}
 	}
@@ -1743,7 +1743,7 @@ LoadTGA
 		}
 	}
 
-	ri.FS_FreeFile (buffer);
+	FS_FreeFile (buffer);
 }*/
 
 /*void LoadTGA (char *name, byte **pic, int *width, int *height)
@@ -1924,7 +1924,7 @@ LoadTGA
 		}
 	}
 
-	ri.FS_FreeFile (buffer);
+	FS_FreeFile (buffer);
 }*/
 
 
@@ -2585,7 +2585,7 @@ image_t *GL_LoadWal (const char *name)
 
 	image = GL_LoadPic (name, (byte *)mt + ofs, width, height, it_wall, 8);
 
-	ri.FS_FreeFile ((void *)mt);
+	FS_FreeFile ((void *)mt);
 
 	return image;
 }

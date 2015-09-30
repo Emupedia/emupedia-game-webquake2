@@ -155,8 +155,6 @@ typedef struct
 
 typedef struct
 {
-	void	(*FS_FreeFile) (void *buf);
-
 	// gamedir will be the current directory that generated
 	// files should be stored to, ie: "f:\quake\id1"
 	char	*(*FS_Gamedir) (void);
