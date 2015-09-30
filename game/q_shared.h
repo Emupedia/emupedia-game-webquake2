@@ -373,14 +373,21 @@ typedef union
 	float	f[3];
 } vectorhack_t;
 
+
+// this works because vec3_t is an array which is a pointer
+// evil C stuff
+static inline void VectorClear(vec3_t a) {
+	a[0] = 0.0f;
+	a[1] = 0.0f;
+	a[2] = 0.0f;
+}
+
+
 #define DotProduct(x,y)			(x[0]*y[0]+x[1]*y[1]+x[2]*y[2])
 #define VectorSubtract(a,b,c)	(c[0]=a[0]-b[0],c[1]=a[1]-b[1],c[2]=a[2]-b[2])
 #define VectorAdd(a,b,c)		(c[0]=a[0]+b[0],c[1]=a[1]+b[1],c[2]=a[2]+b[2])
 #define VectorCopy(src,dst)		(dst[0]=src[0],dst[1]=src[1],dst[2]=src[2])
 #define FastVectorCopy(src,dst)		*(vectorhack_t *)&(dst) = *(vectorhack_t *)&(src)
-//#define VectorClear(a)			(a[0]=a[1]=a[2]=0)
-//#define VectorClear(a)			(memset ((&a), 0, sizeof((a))))
-#define VectorClear(a)			*(int *)&(a)[0] = 0, *(int *)&(a)[1] = 0, *(int *)&(a)[2] = 0
 #define VectorNegate(a,b)		(b[0]=-a[0],b[1]=-a[1],b[2]=-a[2])
 #define VectorSet(v, x, y, z)	(v[0]=(x), v[1]=(y), v[2]=(z))
 #define VectorAverage(a,b,o)	((o)[0]=((a)[0]+(b)[0])*0.5f,(o)[1]=((a)[1]+(b)[1])*0.5f,(o)[2]=((a)[2]+(b)[2])*0.5f)
