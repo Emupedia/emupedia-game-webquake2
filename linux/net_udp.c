@@ -171,23 +171,18 @@ struct probehdr
 
 int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 {
-	int 	ret;
-	struct sockaddr_in	from;
-	uint32	fromlen;
-	int		net_socket;
-	int		err;
-
 	if (NET_GetLoopPacket (sock, net_from, net_message))
 		return 1;
 
-	net_socket = ip_sockets[sock];
+	int net_socket = ip_sockets[sock];
 
 	if (!net_socket)
 		return 0;
 
-	fromlen = sizeof(from);
+	struct sockaddr_in	from;
+	uint32 fromlen = sizeof(from);
 
-	ret = recvfrom (net_socket, net_message->data, net_message->maxsize
+	int ret = recvfrom (net_socket, net_message->data, net_message->maxsize
 		, 0, (struct sockaddr *)&from, &fromlen);
 
 	if (ret == -1)
@@ -204,7 +199,7 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 		struct sock_extended_err *e;
 #endif  // SOCK_EXTENDED_ERR
 
-		err = errno;
+		int err = errno;
 
 		memset (&rcvbuf, 0, sizeof(rcvbuf));
 
