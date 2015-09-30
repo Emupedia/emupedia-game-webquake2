@@ -297,9 +297,9 @@ void NET_Init (void)
 
 	NET_Common_Init ();
 
-#ifdef __AFL_HAVE_MANUAL_INIT
-	__afl_manual_init();
-#endif  // __AFL_HAVE_MANUAL_INIT
+#ifdef __AFL_HAVE_MANUAL_CONTROL
+  __AFL_INIT();
+#endif
 
 	cvar_t *afl_fuzz_file = Cvar_Get("afl_fuzz_file", NULL, 0);
 	if (!afl_fuzz_file) {
