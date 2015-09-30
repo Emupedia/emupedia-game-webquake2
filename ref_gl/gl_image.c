@@ -384,7 +384,7 @@ void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int 
 	//
 	// load the file
 	//
-	len = ri.FS_LoadFile (filename, (void **)&raw);
+	len = FS_LoadFile (filename, (void **)&raw);
 	if (!raw || len < sizeof(pcx_t))
 	{
 		Com_DPrintf("Bad/missing PCX file: %s\n", filename);
@@ -551,7 +551,7 @@ void LoadPNG (const char *name, byte **pic, int *width, int *height)
 
 	*pic = NULL;
 
-	ri.FS_LoadFile (name, (void **)&PngFileBuffer.Buffer);
+	FS_LoadFile (name, (void **)&PngFileBuffer.Buffer);
 
     if (!PngFileBuffer.Buffer)
 		return;
@@ -716,7 +716,7 @@ void LoadTGA (const char *filename, byte **pic, int *width, int *height)
 	*pic = NULL;
 
 	// load file
-	length = ri.FS_LoadFile( filename, (void *)&data );
+	length = FS_LoadFile( filename, (void *)&data );
 
 	if( !data )
 		return;
@@ -1074,7 +1074,7 @@ void LoadTGA (const char *name, byte **pic, int *width, int *height)
 	//
 	// load the file
 	//
-	length = ri.FS_LoadFile (name, (void **)&buffer);
+	length = FS_LoadFile (name, (void **)&buffer);
 	if (!buffer)
 		return;
 
@@ -1430,7 +1430,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	*pic = NULL;
 
 	// Load JPEG file into memory
-	rawsize = ri.FS_LoadFile(filename, (void **)&rawdata);
+	rawsize = FS_LoadFile(filename, (void **)&rawdata);
 
 	if (!rawdata)
 		return;	
@@ -1557,7 +1557,7 @@ LoadTGA
 	// load the file
 	//
 
-	length = ri.FS_LoadFile (name, (void **)&buffer);
+	length = FS_LoadFile (name, (void **)&buffer);
 	if (!buffer || (length <= 0))
 		return;
 
@@ -1763,7 +1763,7 @@ LoadTGA
 	//
 	// load the file
 	//
-	ri.FS_LoadFile (name, (void **)&buffer);
+	FS_LoadFile (name, (void **)&buffer);
 	if (!buffer)
 		return;
 
@@ -2557,7 +2557,7 @@ image_t *GL_LoadWal (const char *name)
 	int			width, height, ofs, len, required;
 	image_t		*image;
 
-	len = ri.FS_LoadFile (name, (void **)&mt);
+	len = FS_LoadFile (name, (void **)&mt);
 	if (!mt)
 	{
 		VID_Printf (PRINT_ALL, "GL_FindImage: can't load %s\n", name);
