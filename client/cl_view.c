@@ -631,8 +631,6 @@ void V_RenderView(void)
 			cl.refdef.blend[3] = 0.5;
 		}
 
-		// offset vieworg appropriately if we're doing stereo separation
-
 		// never let it sit exactly on a node line, because a water plane can
 		// dissapear when viewed with the eye exactly on it.
 		// the server protocol only specifies to 1/8 pixel, so add 1/16 in each axis

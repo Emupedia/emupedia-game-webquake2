@@ -1620,13 +1620,6 @@ retryQGL:
 	Com_DPrintf("GL_SetDefaultState()\n" );
 	GL_SetDefaultState();
 
-	/*
-	** draw our stereo patterns
-	*/
-#if 0 // commented out until H3D pays us the money they owe us
-	GL_DrawStereoPattern();
-#endif
-
 	Com_DPrintf("GL_InitImages()\n" );
 	GL_InitImages ();
 
