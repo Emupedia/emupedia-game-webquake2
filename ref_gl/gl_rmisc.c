@@ -124,11 +124,11 @@ unsigned int __stdcall png_write_thread (byte *buffer)
 	png_bytepp	row_pointers;
 
 	// create the scrnshots directory if it doesn't exist
-	Com_sprintf (checkname, sizeof(checkname), "%s/scrnshot/", ri.FS_Gamedir());
+	Com_sprintf (checkname, sizeof(checkname), "%s/scrnshot/", FS_Gamedir());
 	FS_CreatePath (checkname);
 
 	for (i = 0; i < 999; i++) {
-		sprintf (picname, "%s/scrnshot/quake%.3d.png", ri.FS_Gamedir(), i);
+		sprintf (picname, "%s/scrnshot/quake%.3d.png", FS_Gamedir(), i);
 		f = fopen (picname, "rb");
 		if (!f)
 			break;
@@ -220,11 +220,11 @@ void GL_ScreenShot_JPG (byte *buffer)
 	int i, offset, w3;
 
 	// create the scrnshots directory if it doesn't exist
-	Com_sprintf (checkname, sizeof(checkname), "%s/scrnshot/", ri.FS_Gamedir());
+	Com_sprintf (checkname, sizeof(checkname), "%s/scrnshot/", FS_Gamedir());
 	FS_CreatePath (checkname);
 
 	for (i = 0; i < 999; i++) {
-		sprintf (picname, "%s/scrnshot/quake%.3d.jpg", ri.FS_Gamedir(), i);
+		sprintf (picname, "%s/scrnshot/quake%.3d.jpg", FS_Gamedir(), i);
 		f = fopen (picname, "rb");
 		if (!f)
 			break;
