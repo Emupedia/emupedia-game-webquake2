@@ -46,97 +46,6 @@ cvar_t	*net_no_recverr;
 //Aiee...
 #include "../qcommon/net_common.c"
 
-/*
-=============
-NET_StringToAdr
-
-localhost
-idnewt
-idnewt:28000
-192.246.40.70
-192.246.40.70:28000
-=============
-*/
-/*qboolean	NET_StringToSockaddr (char *s, struct sockaddr *sadr)
-{
-	int		isip = 0;
-	char	*p;
-	struct hostent	*h;
-	char	*colon;
-	char	copy[128];
-	
-	memset (sadr, 0, sizeof(*sadr));
-
-	//r1: better than just the first digit for ip validity :)
-	p = s;
-	while (*p) {
-		if (*p == '.') {
-			isip++;
-		} else if (*p == ':') {
-			break;
-		} else if (!isdigit(*p)) {
-			isip = 0;
-			break;
-		}
-		p++;
-	}
-
-	((struct sockaddr_in *)sadr)->sin_family = AF_INET;
-	((struct sockaddr_in *)sadr)->sin_port = 0;
-
-	strncpy (copy, s, sizeof(copy)-1);
-
-	// strip off a trailing :port if present
-	for (colon = copy ; *colon ; colon++)
-		if (*colon == ':')
-		{
-			*colon = 0;
-			((struct sockaddr_in *)sadr)->sin_port = htons((int16)atoi(colon+1));	
-		}
-	
-	if (isip)
-	{
-		*(int *)&((struct sockaddr_in *)sadr)->sin_addr = inet_addr(copy);
-	}
-	else
-	{
-		if (! (h = gethostbyname(copy)) )
-			return 0;
-		*(int *)&((struct sockaddr_in *)sadr)->sin_addr = *(int *)h->h_addr_list[0];
-	}
-	
-	return true;
-}*/
-
-/*
-=============
-NET_StringToAdr
-
-localhost
-idnewt
-idnewt:28000
-192.246.40.70
-192.246.40.70:28000
-=============
-*/
-/*qboolean	NET_StringToAdr (char *s, netadr_t *a)
-{
-	struct sockaddr_in sadr;
-	
-	if (!strcmp (s, "localhost"))
-	{
-		memset (a, 0, sizeof(*a));
-		a->type = NA_LOOPBACK;
-		return true;
-	}
-
-	if (!NET_StringToSockaddr (s, (struct sockaddr *)&sadr))
-		return false;
-	
-	SockadrToNetadr (&sadr, a);
-
-	return true;
-}*/
 
 void Net_Stats_f (void)
 {
@@ -151,14 +60,6 @@ void Net_Stats_f (void)
 				net_total_in, net_packets_in, (int)(((net_total_in * 8) / 1024) / diff),
 				net_total_out, net_packets_out, (int)((net_total_out * 8) / 1024) / diff);
 }
-
-/*
-=============================================================================
-
-LOOPBACK BUFFERS FOR LOCAL PLAYER
-
-=============================================================================
-*/
 
 
 //=============================================================================
