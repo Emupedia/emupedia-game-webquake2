@@ -61,7 +61,7 @@ static void fuzzQuit() {
 	delete[] fuzzBuf;
 	fuzzBuf = NULL;
 
-	Com_Quit();
+	exit(0);
 }
 
 
