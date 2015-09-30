@@ -47,6 +47,7 @@ extern "C" {
 static off_t fuzzSize = 0;
 static off_t fuzzOffs = 0;
 static char *fuzzBuf = NULL;
+static const char *fuzzFileName = NULL;
 
 static FILE *fuzzOut = NULL;
 
@@ -75,6 +76,35 @@ static void fuzzExpectLeft(off_t numBytes) {
 
 
 static void fuzzRead(char *dest, size_t size) {
+	if (fuzzBuf == NULL) {
+#ifdef __AFL_HAVE_MANUAL_CONTROL
+		__AFL_INIT();
+#endif
+
+	FILE *f = fopen(fuzzFileName, "rb");
+	if (!f) {
+		Com_Printf("Failed to open afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, fuzzFileName, errno, strerror(errno));
+		// so we stop uselessly running the fuzzer
+		__builtin_trap();
+	}
+
+	struct stat statbuf;
+	memset(&statbuf, 0, sizeof(struct stat));
+	int retval = fstat(fileno(f), &statbuf);
+	if (retval != 0) {
+		Com_Printf("Failed to stat afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, fuzzFileName, errno, strerror(errno));
+		fclose(f);
+		// so we stop uselessly running the fuzzer
+		__builtin_trap();
+	}
+
+	fuzzSize = statbuf.st_size;
+	fuzzBuf = new char[fuzzSize];
+	fread(fuzzBuf, 1, fuzzSize, f);
+
+	fclose(f);
+	}
+
 	fuzzExpectLeft(size);
 	memcpy(dest, fuzzBuf + fuzzOffs, size);
 	fuzzOffs += size;
@@ -297,46 +327,19 @@ void NET_Init (void)
 
 	NET_Common_Init ();
 
-#ifdef __AFL_HAVE_MANUAL_CONTROL
-  __AFL_INIT();
-#endif
-
 	cvar_t *afl_fuzz_file = Cvar_Get("afl_fuzz_file", NULL, 0);
 	if (!afl_fuzz_file) {
 		Com_Printf("afl_fuzz_file not set\n", LOG_NET);
 		// so we stop uselessly running the fuzzer
 		__builtin_trap();
 	}
-
-	FILE *f = fopen(afl_fuzz_file->string, "rb");
-	if (!f) {
-		Com_Printf("Failed to open afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, afl_fuzz_file->string, errno, strerror(errno));
-		// so we stop uselessly running the fuzzer
-		__builtin_trap();
-	}
-
-	struct stat statbuf;
-	memset(&statbuf, 0, sizeof(struct stat));
-	int retval = fstat(fileno(f), &statbuf);
-	if (retval != 0) {
-		Com_Printf("Failed to stat afl_fuzz_file \"%s\" %d \"%s\" \n", LOG_NET, afl_fuzz_file->string, errno, strerror(errno));
-		fclose(f);
-		// so we stop uselessly running the fuzzer
-		__builtin_trap();
-	}
-
-	fuzzSize = statbuf.st_size;
-	fuzzBuf = new char[fuzzSize];
-	fread(fuzzBuf, 1, fuzzSize, f);
-
-	fclose(f);
+	fuzzFileName = afl_fuzz_file->string;
 
 	cvar_t *afl_fuzz_out_file = Cvar_Get("afl_fuzz_out_file", NULL, 0);
 	if (afl_fuzz_out_file) {
 		fuzzOut = fopen(afl_fuzz_out_file->string, "wb");
 		if (!fuzzOut) {
 			Com_Printf("Failed to open afl_fuzz_out_file \"%s\" %d \"%s\" \n", LOG_NET, afl_fuzz_out_file->string, errno, strerror(errno));
-			fclose(f);
 			// so we stop uselessly running the fuzzer
 			__builtin_trap();
 		}
