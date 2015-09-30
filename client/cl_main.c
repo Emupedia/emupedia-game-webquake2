@@ -1012,7 +1012,10 @@ void CL_Rcon_f (void)
 		return;
 	}
 
-	*(int *)message = -1;
+	message[0] = 0xFF;
+	message[1] = 0xFF;
+	message[2] = 0xFF;
+	message[3] = 0xFF;
 	message[4] = 0;
 
 	NET_Config (NET_CLIENT);		// allow remote
@@ -1330,7 +1333,10 @@ void CL_Packet_f (void)
 	in = Cmd_Args2(2);
 	out = send+4;
 
-	*(int *)send = -1;
+	send[0] = 0xFF;
+	send[1] = 0xFF;
+	send[2] = 0xFF;
+	send[3] = 0xFF;
 
 	l = (int)strlen (in);
 	for (i=0 ; i<l ; i++)
@@ -1495,7 +1501,10 @@ void CL_PingServers_f (void)
 
 	//also ping local server
 	adr.type = NA_IP;;
-	*(int *)&adr.ip = 0x100007F;
+	adr.ip[0] = 127;
+	adr.ip[1] = 0;
+	adr.ip[2] = 0;
+	adr.ip[3] = 1;
 	adr.port = ShortSwap(PORT_SERVER);
 	Netchan_OutOfBandPrint (NS_CLIENT, &adr, "info 34\n");
 
