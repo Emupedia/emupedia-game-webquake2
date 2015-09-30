@@ -1504,7 +1504,7 @@ int R_Init( void *hinstance, void *hWnd )
 		r_turbsin[j] *= 0.5;
 	}
 
-	ri.Cmd_ExecuteText (EXEC_NOW, "exec r1gl.cfg\n");
+	Cbuf_ExecuteText (EXEC_NOW, "exec r1gl.cfg\n");
 
 	VID_Printf (PRINT_ALL, "ref_gl version: "REF_VERSION"\n");
 
@@ -2464,7 +2464,7 @@ void GetEvent(SDL_Event *event)
 		}
 		break;
 	case SDL_QUIT:
-		ri.Cmd_ExecuteText(EXEC_NOW, "quit");
+		Cbuf_ExecuteText(EXEC_NOW, "quit");
 		break;
 	}
 

@@ -346,7 +346,7 @@ void GL_Version_f (void)
 	snprintf (buffer, sizeof(buffer)-1, "echo Version: "REF_VERSION"\ncmd say \"I'm using "REF_VERSION" (%s/%s) %s | http://r1gl.r1.cx/\"", gl_config.vendor_string, gl_config.renderer_string,
 		gl_config.wglPFD ? va("%dc/%dd/%da/%ds [WGL]", (int)gl_colorbits->value, (int)gl_depthbits->value, (int)gl_alphabits->value, (int)gl_stencilbits->value)
 		: va("%dc GL", gl_config.bitDepth));
-	ri.Cmd_ExecuteText (EXEC_APPEND, buffer);
+	Cbuf_ExecuteText (EXEC_APPEND, buffer);
 }
 #endif
 

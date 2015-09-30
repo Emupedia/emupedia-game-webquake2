@@ -155,8 +155,6 @@ typedef struct
 
 typedef struct
 {
-	void	(*Cmd_ExecuteText) (int exec_when, char *text);
-
 	// files will be memory mapped read only
 	// the returned buffer may be part of a larger pak file,
 	// or a discrete file from anywhere in the quake search path
