@@ -2206,13 +2206,6 @@ int		upload_width, upload_height;
 qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, int bpp, image_t *image)
 {
 	int scaled_width, scaled_height;
-	if (gl_config.r1gl_GL_ARB_texture_non_power_of_two)
-	{
-		scaled_width = width;
-		scaled_height = height;
-	}
-	else
-	{
 		for (scaled_width = 1 ; scaled_width < width ; scaled_width<<=1)
 			;
 		if (gl_round_down->intvalue && scaled_width > width && mipmap)
@@ -2221,7 +2214,6 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 			;
 		if (gl_round_down->intvalue && scaled_height > height && mipmap)
 			scaled_height >>= 1;
-	}
 
 	// let people sample down the world textures for speed
 	if (mipmap)

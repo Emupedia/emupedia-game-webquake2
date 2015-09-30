@@ -121,7 +121,6 @@ cvar_t	*gl_ext_pointparameters;
 //cvar_t	*gl_ext_generate_mipmap;
 cvar_t	*gl_ext_point_sprite;
 cvar_t	*gl_ext_texture_filter_anisotropic;
-cvar_t	*gl_ext_texture_non_power_of_two;
 cvar_t	*gl_ext_max_anisotropy;
 
 cvar_t	*gl_colorbits;
@@ -1109,7 +1108,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	//gl_ext_generate_mipmap = Cvar_Get ("gl_ext_generate_mipmap", "0", 0);
 	gl_ext_point_sprite = Cvar_Get ("gl_ext_point_sprite", "0", 0);
 	gl_ext_texture_filter_anisotropic = Cvar_Get ("gl_ext_texture_filter_anisotropic", "0", 0);
-	gl_ext_texture_non_power_of_two = Cvar_Get ("gl_ext_texture_non_power_of_two", "0", 0);
 	gl_ext_max_anisotropy = Cvar_Get ("gl_ext_max_anisotropy", "2", 0);
 	
 	gl_colorbits = Cvar_Get ("gl_colorbits", "0", 0);
@@ -1618,18 +1616,6 @@ retryQGL:
 		VID_Printf( PRINT_ALL, "...GL_EXT_texture_filter_anisotropic not found\n" );
 	}
 	gl_ext_texture_filter_anisotropic->modified = false;
-
-	gl_config.r1gl_GL_ARB_texture_non_power_of_two = false;
-	if ( strstr( gl_config.extensions_string, "GL_ARB_texture_non_power_of_two" ) ) {
-		if (gl_ext_texture_non_power_of_two->intvalue ) {
-			VID_Printf( PRINT_ALL, "...using GL_ARB_texture_non_power_of_two\n" );
-			gl_config.r1gl_GL_ARB_texture_non_power_of_two = true;
-		} else {
-			VID_Printf( PRINT_ALL, "...ignoring GL_ARB_texture_non_power_of_two\n" );		
-		}
-	} else {
-		VID_Printf( PRINT_ALL, "...GL_ARB_texture_non_power_of_two not found\n" );
-	}
 
 	Com_DPrintf("GL_SetDefaultState()\n" );
 	GL_SetDefaultState();
