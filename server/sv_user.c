@@ -1616,7 +1616,7 @@ const banmatch_t *VarBanMatch (varban_t *bans, const char *var, const char *resu
 							continue;
 						
 						case '#':
-							if (!Q_stricmp (matchvalue+1, result) ==  notResult)
+							if ((!Q_stricmp (matchvalue+1, result)) == notResult)
 								return match;
 							continue;
 						default:
@@ -1624,7 +1624,7 @@ const banmatch_t *VarBanMatch (varban_t *bans, const char *var, const char *resu
 					}
 				}
 
-				if (!Q_stricmp (matchvalue, result) ==  notResult)
+				if ((!Q_stricmp(matchvalue, result)) == notResult)
 					return match;
 			}
 
