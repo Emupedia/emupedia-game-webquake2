@@ -769,8 +769,13 @@ static inline bool NET_CompareAdr(const netadr_t *a, const netadr_t *b) {
 }
 
 
-#define NET_CompareBaseAdr(a,b) \
-	(*(uint32 *)(a)->ip == *(uint32 *)(b)->ip)
+static inline bool NET_CompareBaseAdr(const netadr_t *a, const netadr_t *b) {
+	return (a->ip[0] == b->ip[0])
+	    && (a->ip[1] == b->ip[1])
+	    && (a->ip[2] == b->ip[2])
+	    && (a->ip[3] == b->ip[3]);
+}
+
 
 char		*NET_inet_ntoa (uint32 ip);
 char		*NET_AdrToString (netadr_t *a);
