@@ -2021,20 +2021,20 @@ void RW_IN_Init(in_state_t *in_state_p)
 }
 
 void RW_IN_Shutdown(void) {
-    if (mouse_avail) {
-	mouse_avail = false;
+	if (mouse_avail) {
+		mouse_avail = false;
 
-	Cmd_RemoveCommand ("+mlook");
-	Cmd_RemoveCommand ("-mlook");
+		Cmd_RemoveCommand ("+mlook");
+		Cmd_RemoveCommand ("-mlook");
 
-	Cmd_RemoveCommand ("force_centerview");
-    }
+		Cmd_RemoveCommand ("force_centerview");
+	}
 
 #ifdef HAVE_JOYSTICK
-    if (joy) {
-	SDL_JoystickClose(joy);
-	joy = NULL;
-    }
+	if (joy) {
+		SDL_JoystickClose(joy);
+		joy = NULL;
+	}
 #endif
 }
 
