@@ -154,7 +154,6 @@ cvar_t	*gl_dynamic;
 cvar_t	*gl_modulate;
 cvar_t	*gl_round_down;
 cvar_t	*gl_picmip;
-cvar_t	*gl_skymip;
 cvar_t	*gl_showtris;
 cvar_t	*gl_clear;
 cvar_t	*gl_cull;
@@ -1087,7 +1086,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	gl_dynamic = Cvar_Get ("gl_dynamic", "1", 0);
 	gl_round_down = Cvar_Get ("gl_round_down", "0", 0);
 	gl_picmip = Cvar_Get ("gl_picmip", "0", 0);
-	gl_skymip = Cvar_Get ("gl_skymip", "0", 0);
 	gl_showtris = Cvar_Get ("gl_showtris", "0", 0);
 	gl_clear = Cvar_Get ("gl_clear", "0", 0);
 	gl_cull = Cvar_Get ("gl_cull", "1", 0);

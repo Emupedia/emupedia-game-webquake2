@@ -645,7 +645,7 @@ void R_SetSky (char *name, float rotate, vec3_t axis)
 		if (!sky_images[i])
 			sky_images[i] = r_notexture;
 
-		if (gl_skymip->intvalue || skyrotate)
+		if (skyrotate)
 		{
 			sky_min = 1.0/256;
 			sky_max = 255.0/256;
