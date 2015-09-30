@@ -155,7 +155,6 @@ typedef struct
 
 typedef struct
 {
-	int		(*Cmd_Argc) (void);
 	char	*(*Cmd_Argv) (int i);
 	void	(*Cmd_ExecuteText) (int exec_when, char *text);
 
