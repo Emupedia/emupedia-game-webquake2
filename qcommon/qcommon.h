@@ -753,8 +753,21 @@ int			NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 #define NET_IsLocalHost(x) \
 	((x)->type == NA_LOOPBACK)
 
-#define NET_CompareAdr(a,b) \
-	((*(uint32 *)(a)->ip == *(uint32 *)(b)->ip) && (a)->port == (b)->port)
+
+static inline bool NET_CompareAdr(const netadr_t *a, const netadr_t *b) {
+	// this doesn't compare type
+	// it was that way when i found it
+	// why?
+	if (a->port != b->port) {
+		return false;
+	}
+
+	return (a->ip[0] == b->ip[0])
+	    && (a->ip[1] == b->ip[1])
+	    && (a->ip[2] == b->ip[2])
+	    && (a->ip[3] == b->ip[3]);
+}
+
 
 #define NET_CompareBaseAdr(a,b) \
 	(*(uint32 *)(a)->ip == *(uint32 *)(b)->ip)
