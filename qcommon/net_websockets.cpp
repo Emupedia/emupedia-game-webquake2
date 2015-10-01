@@ -122,7 +122,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		Com_Printf("websocketCallback LWS_CALLBACK_UNLOCK_POLL\n", LOG_NET);
 
 	default:
-	Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
+		Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
 		break;
 	}
 
