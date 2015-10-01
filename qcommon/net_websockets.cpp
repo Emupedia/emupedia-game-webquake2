@@ -106,15 +106,16 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 
 void NET_Init (void)
 {
-	// TODO: init libwebsockets
-	// TODO: on emscripten pre-establish server connection
-	STUBBED("NET_Init");
+	NET_Common_Init ();
+	net_no_recverr = Cvar_Get ("net_no_recverr", "0", 0);
 }
 
 
 int NET_IPSocket (char *net_interface, int port)
 {
 	STUBBED("NET_IPSocket");
+	// TODO: init libwebsockets
+	// TODO: on emscripten pre-establish server connection
 	return 0;
 }
 
