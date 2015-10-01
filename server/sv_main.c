@@ -1195,6 +1195,7 @@ static void SVC_DirectConnect (void)
 	challenge = atoi(Cmd_Argv(3));
 
 	// see if the challenge is valid
+#ifndef USE_AFL  // when fuzzing accept all
 	if (!NET_IsLocalHost (adr))
 	{
 		for (i=0 ; i<MAX_CHALLENGES ; i++)
@@ -1219,6 +1220,7 @@ static void SVC_DirectConnect (void)
 			return;
 		}
 	}
+#endif  // USE_AFL
 
 	//r1: deny if server is locked
 	if (sv_locked->intvalue)
