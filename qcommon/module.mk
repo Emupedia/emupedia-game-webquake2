@@ -32,5 +32,11 @@ FILES:= \
 SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 
+ifeq ($(USE_LIBWEBSOCKETS),y)
+CFLAGS+=-isystem$(TOPDIR)/foreign/libwebsockets/lib
+CFLAGS+=-DUSE_LIBWEBSOCKETS
+endif  # USE_LIBWEBSOCKETS
+
+
 d  := $(dirstack_$(sp))
 sp := $(basename $(sp))

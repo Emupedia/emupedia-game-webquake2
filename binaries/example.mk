@@ -27,6 +27,7 @@ PURE_CLIENT:=n
 CC:=gcc
 CXX:=g++
 CFLAGS:=-g -DNDEBUG -DLINUX
+CFLAGS+=-DCMAKE_BUILD # for libwebsockets
 CFLAGS+=-Wall -Wextra
 CFLAGS+=-Wno-sign-compare -Wno-unused-parameter
 CFLAGS+=$(shell sdl2-config --cflags)

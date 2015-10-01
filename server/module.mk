@@ -32,6 +32,10 @@ r1q2ded_MODULES+=$(BUILTIN_GAME)
 endif
 
 
+ifeq ($(USE_LIBWEBSOCKETS),y)
+r1q2ded_MODULES+=libwebsockets
+endif  # USE_LIBWEBSOCKETS
+
 
 ifeq ($(BUILD_SERVER),y)
 

@@ -81,6 +81,11 @@ CFLAGS+=-DDECLSPEC="" -DHAVE_LIBC=1 -DSDLCALL=""
 endif  # STATIC_SDL2
 
 
+ifeq ($(USE_LIBWEBSOCKETS),y)
+quake2_MODULES+=libwebsockets
+endif  # USE_LIBWEBSOCKETS
+
+
 ifneq ($(BUILTIN_GAME),)
 quake2_MODULES+=$(BUILTIN_GAME)
 endif

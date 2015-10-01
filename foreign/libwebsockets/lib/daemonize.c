@@ -1,3 +1,6 @@
+#ifndef _WIN32
+
+
 /*
  * This code is mainly taken from Doug Potter's page
  *
@@ -219,3 +222,5 @@ lws_daemonize(const char *_lock_path)
 	return 0;
 }
 
+
+#endif  // _WIN32

@@ -29,6 +29,7 @@ CXX:=i686-w64-mingw32-g++
 CFLAGS:=-gstabs -DNDEBUG -D__CRT__NO_INLINE=1 -mwindows
 CFLAGS+=-w
 CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
+CFLAGS+=-DLWS_LIBRARY_VERSION=\"1.4\"
 OPTFLAGS:=-O2 -mtune=generic -fno-strict-aliasing -ffloat-store
 
 
@@ -41,6 +42,7 @@ LDLIBS:=-lwinmm -lwsock32
 LDLIBS_client:=-ldsound
 LDLIBS_ref_gl:=-lopengl32
 LDLIBS_sdl2:=-limm32 -lole32 -loleaut32 -luuid -lversion
+LDLIBS_libwebsockets:=-lws2_32
 
 
 SOCFLAGS:=

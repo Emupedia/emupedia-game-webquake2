@@ -24,6 +24,9 @@
 
 #ifndef EMSCRIPTEN
 #include <libwebsockets.h>
+
+#undef VERSION
+
 #endif  // EMSCRIPTEN
 
 
@@ -78,6 +81,32 @@ cvar_t	*net_no_recverr;
 #endif  // NDEBUG
 
 
+#ifndef EMSCRIPTEN
+
+
+static int websocketCallback(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+{
+	STUBBED("websocketCallback");
+
+	Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
+
+	return 0;
+}
+
+
+// not const because libwebsockets writes to it
+static struct libwebsocket_protocols protocols[] = {
+	  { "quake2", websocketCallback, 0, 0 } /* end */
+	, { NULL, NULL, 0, 0 } /* end */
+};
+
+
+static struct libwebsocket_context *websocketContext;
+
+
+#endif  // EMSCRIPTEN
+
+
 void Net_Stats_f (void)
 {
 	int now = time(0);
@@ -113,10 +142,35 @@ void NET_Init (void)
 
 int NET_IPSocket (char *net_interface, int port)
 {
+#ifdef EMSCRIPTEN
+
 	STUBBED("NET_IPSocket");
-	// TODO: init libwebsockets
 	// TODO: on emscripten pre-establish server connection
 	return 0;
+
+#else  // EMSCRIPTEN
+
+	struct lws_context_creation_info info;
+	memset(&info, 0, sizeof(info));
+	// TODO: CONTEXT_PORT_NO_LISTEN when NO_SERVER?
+	info.port = port;
+	info.protocols = protocols;
+	info.gid = -1;
+	info.uid = -1;
+	// TODO: SSL?
+	// TODO: put keepalive stuff in cvars
+	info.ka_time = 5;
+	info.ka_probes = 3;
+	info.ka_interval = 1;
+
+	websocketContext = libwebsocket_create_context(&info);
+	if (!websocketContext) {
+		return 0;
+	}
+
+#endif  // EMSCRIPTEN
+
+	return 1;
 }
 
 

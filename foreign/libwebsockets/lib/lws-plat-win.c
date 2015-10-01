@@ -1,3 +1,6 @@
+#ifdef _WIN32
+
+
 #include "private-libwebsockets.h"
 
 unsigned long long
@@ -421,3 +424,6 @@ lws_plat_inet_ntop(int af, const void *src, char *dst, int cnt)
 	lws_free(buffer);
 	return ok ? dst : NULL;
 }
+
+
+#endif  // _WIN32

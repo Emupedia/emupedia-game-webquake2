@@ -4,12 +4,7 @@ d              := $(dir)
 
 
 SUBDIRS:= \
-	glew \
-	libjpeg-turbo \
-	libpng \
-	libwebsockets \
-	SDL2 \
-	zlib \
+	lib \
 	# empty line
 
 DIRS:=$(addprefix $(d)/,$(SUBDIRS))
@@ -19,9 +14,6 @@ $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))
 
 FILES:= \
 	# empty line
-
-
-SRC_$(d):=$(addprefix $(d)/,$(FILES))
 
 
 d  := $(dirstack_$(sp))

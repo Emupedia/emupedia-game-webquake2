@@ -1,3 +1,6 @@
+#ifndef _WIN32
+
+
 #include "private-libwebsockets.h"
 
 #include <pwd.h>
@@ -456,3 +459,6 @@ lws_plat_inet_ntop(int af, const void *src, char *dst, int cnt)
 {
 	return inet_ntop(af, src, dst, cnt);
 }
+
+
+#endif  // _WIN32
