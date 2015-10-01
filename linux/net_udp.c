@@ -238,10 +238,7 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 
 int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 {
-	int		ret;
-	struct sockaddr_in	addr;
 	int		net_socket;
-
 	if (to->type == NA_IP)
 	{
 		net_socket = ip_sockets[sock];
@@ -265,9 +262,10 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 		return 0;
 	}
 
+	struct sockaddr_in	addr;
 	NetadrToSockadr (to, &addr);
 
-	ret = sendto (net_socket, data, length, 0, (struct sockaddr *)&addr, sizeof(addr) );
+	int ret = sendto (net_socket, data, length, 0, (struct sockaddr *)&addr, sizeof(addr) );
 	if (ret == -1)
 	{
 		Com_Printf ("NET_SendPacket to %s: ERROR: %s\n", LOG_NET, NET_AdrToString(to), NET_ErrorString());
@@ -300,12 +298,8 @@ NET_Socket
 */
 int NET_IPSocket (char *net_interface, int port)
 {
-	int newsocket;
-	struct sockaddr_in address;
-	qboolean _true = true;
-	int	i = 1;
-
-	if ((newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+	int newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (newsocket == -1)
 	{
 		Com_Printf ("UDP_OpenSocket: Couldn't make socket: %s\n", LOG_NET, NET_ErrorString());
 		return 0;
@@ -315,6 +309,7 @@ int NET_IPSocket (char *net_interface, int port)
 		Com_Error (ERR_FATAL, "NET_IPSocket: socket is higher than FD_SETSIZE");
 
 	// make it non-blocking
+	qboolean _true = true;
 	if (ioctl (newsocket, FIONBIO, &_true) == -1)
 	{
 		Com_Printf ("UDP_OpenSocket: Couldn't make non-blocking: %s\n", LOG_NET, NET_ErrorString());
@@ -322,6 +317,7 @@ int NET_IPSocket (char *net_interface, int port)
 	}
 
 	// make it broadcast capable
+	int	i = 1;
 	if (setsockopt(newsocket, SOL_SOCKET, SO_BROADCAST, (char *)&i, sizeof(i)) == -1)
 	{
 		Com_Printf ("UDP_OpenSocket: Couldn't set SO_BROADCAST: %s\n", LOG_NET, NET_ErrorString());
@@ -337,6 +333,7 @@ int NET_IPSocket (char *net_interface, int port)
 		}
 	}
 
+	struct sockaddr_in address;
 	if (!net_interface || !net_interface[0] || !Q_stricmp(net_interface, "localhost"))
 		address.sin_addr.s_addr = INADDR_ANY;
 	else
