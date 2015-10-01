@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // net_wins.c
 
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(USE_LIBWEBSOCKETS)
 
 
 #define WIN32_LEAN_AND_MEAN
@@ -507,4 +507,4 @@ char *NET_ErrorString (void)
 }
 
 
-#endif   // _WIN32
+#endif  // defined(_WIN32) && !defined(USE_LIBWEBSOCKETS)

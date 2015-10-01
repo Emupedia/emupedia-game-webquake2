@@ -22,6 +22,7 @@ FILES:= \
 	md4.c \
 	mersennetwister.c \
 	net_chan.c \
+	net_websockets.cpp \
 	pmove.c \
 	redblack.c \
 	unzip.c \

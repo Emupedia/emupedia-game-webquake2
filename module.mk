@@ -70,6 +70,12 @@ CFLAGS+=-DUSE_GLEW -DGLEW_STATIC -DGLEW_NO_GLU
 endif  # USE_GLEW
 
 
+ifeq ($(USE_LIBWEBSOCKETS),y)
+CFLAGS+=-isystem$(TOPDIR)/foreign/libwebsockets/lib
+CFLAGS+=-DUSE_LIBWEBSOCKETS
+endif  # USE_LIBWEBSOCKETS
+
+
 ifeq ($(USE_OPENAL),y)
 CFLAGS+=-DUSE_OPENAL
 endif  # USE_OPENAL

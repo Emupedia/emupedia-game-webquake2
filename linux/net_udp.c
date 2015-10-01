@@ -1,10 +1,8 @@
 // net_wins.c
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(USE_LIBWEBSOCKETS) && !defined(EMSCRIPTEN)
 
-#ifndef EMSCRIPTEN
 #define SOCK_EXTENDED_ERR 1
-#endif  // EMSCRIPTEN
 
 #include "../qcommon/qcommon.h"
 
@@ -387,4 +385,4 @@ char *NET_ErrorString (void)
 }
 
 
-#endif  // !_WIN32
+#endif  // defined(_WIN32) && !defined(USE_LIBWEBSOCKETS) && !defined(EMSCRIPTEN)
