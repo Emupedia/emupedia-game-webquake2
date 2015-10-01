@@ -88,7 +88,43 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 {
 	STUBBED("websocketCallback");
 
+	switch (reason) {
+	case LWS_CALLBACK_PROTOCOL_INIT:
+		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_INIT\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_PROTOCOL_DESTROY:
+		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_DESTROY\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_GET_THREAD_ID:
+		Com_Printf("websocketCallback LWS_CALLBACK_GET_THREAD_ID\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_ADD_POLL_FD:
+		Com_Printf("websocketCallback LWS_CALLBACK_ADD_POLL_FD\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_DEL_POLL_FD:
+		Com_Printf("websocketCallback LWS_CALLBACK_DEL_POLL_FD\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CHANGE_MODE_POLL_FD:
+		Com_Printf("websocketCallback LWS_CALLBACK_CHANGE_MODE_POLL_FD\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_LOCK_POLL:
+		Com_Printf("websocketCallback LWS_CALLBACK_LOCK_POLL\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_UNLOCK_POLL:
+		break;
+		Com_Printf("websocketCallback LWS_CALLBACK_UNLOCK_POLL\n", LOG_NET);
+
+	default:
 	Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
+		break;
+	}
 
 	return 0;
 }
@@ -167,6 +203,9 @@ int NET_IPSocket (char *net_interface, int port)
 	if (!websocketContext) {
 		return 0;
 	}
+
+	int retval = libwebsocket_service(websocketContext, 0);
+	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
 
 #endif  // EMSCRIPTEN
 
