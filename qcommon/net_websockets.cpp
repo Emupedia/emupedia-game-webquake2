@@ -71,8 +71,6 @@ static unsigned long long net_packets_out = 0;
 int			server_port = 0;
 //netadr_t	net_local_adr;
 
-static int			ip_sockets[2] = { 0, 0 };
-
 cvar_t	*net_no_recverr = NULL;
 
 
@@ -258,17 +256,8 @@ int	NET_Config (int toOpen)
 
 	if (toOpen == NET_NONE)
 	{
-		if (ip_sockets[NS_CLIENT])
-		{
-			closesocket (ip_sockets[NS_CLIENT]);
-			ip_sockets[NS_CLIENT] = 0;
-		}
-
-		if (ip_sockets[NS_SERVER])
-		{
-			closesocket (ip_sockets[NS_SERVER]);
-			ip_sockets[NS_SERVER] = 0;
-		}
+		STUBBED("NET_Config close network");
+		server_port = 0;
 
 		old_config = NET_NONE;
 	}
@@ -285,7 +274,6 @@ int	NET_Config (int toOpen)
 	int		port;
 	if (flags & NET_SERVER)
 	{
-		if (!ip_sockets[NS_SERVER])
 		{
 			port = Cvar_Get("ip_hostport", "0", CVAR_NOSET)->intvalue;
 			if (!port)
@@ -297,8 +285,11 @@ int	NET_Config (int toOpen)
 				}
 			}
 			server_port = port;
-			ip_sockets[NS_SERVER] = NET_IPSocket (ip->string, port);
-			if (!ip_sockets[NS_SERVER] && dedicated)
+
+			STUBBED("NET_Config init server");
+			bool failed = false;  // TODO
+
+			if (failed && dedicated)
 				Com_Error (ERR_FATAL, "Couldn't allocate dedicated server IP port on %s:%d. Another application is probably using it.", ip->string, port);
 		}
 	}
@@ -307,8 +298,6 @@ int	NET_Config (int toOpen)
 	if (dedicated)
 		return i;
 
-	if (!ip_sockets[NS_CLIENT])
-	{
 		int newport = (int)(random() * 64000 + 1024);
 		port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
 		if (!port)
@@ -321,12 +310,11 @@ int	NET_Config (int toOpen)
 			}
 		}
 
-		ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, newport);
-		if (!ip_sockets[NS_CLIENT])
-			ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, PORT_ANY);
-	}
+		STUBBED("NET_Config init client");
+		bool failed = false;  // TODO;
+		// TODO: first on newport, if that fails on PORT_ANY
 
-	if (!ip_sockets[NS_CLIENT])
+	if (failed)
 		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
 
 	return i;
@@ -452,12 +440,14 @@ void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
 
 int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 {
-	int		net_socket;
 	if (to->type == NA_IP)
 	{
-		net_socket = ip_sockets[sock];
-		if (!net_socket)
+#ifndef EMSCRIPTEN
+		// if network not initialized return 0
+		if (!websocketContext) {
 			return 0;
+		}
+#endif  // EMSCRIPTEN
 	}
 	else if ( to->type == NA_LOOPBACK )
 	{
@@ -466,9 +456,12 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	}
 	else if (to->type == NA_BROADCAST)
 	{
-		net_socket = ip_sockets[sock];
-		if (!net_socket)
+#ifndef EMSCRIPTEN
+		// if network not initialized return 0
+		if (!websocketContext) {
 			return 0;
+		}
+#endif  // EMSCRIPTEN
 	}
 	else
 	{
@@ -504,7 +497,7 @@ void NET_Sleep(int msec)
 	extern cvar_t *dedicated;
 	//extern qboolean stdin_active;
 
-	if (!ip_sockets[NS_SERVER] || !dedicated->intvalue)
+	if (!server_port || !dedicated->intvalue)
 		return; // we're not a server, just run full speed
 
 	//Com_Printf ("NET_Sleep (%d)\n", LOG_GENERAL, msec);
