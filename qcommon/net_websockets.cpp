@@ -36,6 +36,9 @@ extern "C" {
 #include "../qcommon/qcommon.h"
 
 
+}  // extern "C"
+
+
 static unsigned int net_inittime = 0;
 
 static unsigned long long net_total_in = 0;
@@ -482,9 +485,6 @@ void NET_Sleep(int msec)
 	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
 }
 #endif
-
-
-}  // extern "C"
 
 
 #ifdef NDEBUG
