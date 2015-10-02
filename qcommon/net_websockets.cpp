@@ -78,11 +78,11 @@ cvar_t	*net_no_recverr = NULL;
 
 int _true = 1;
 
-static	cvar_t	*net_ignore_icmp;
+static	cvar_t	*net_ignore_icmp = NULL;
 
 
-netadr_t	net_proxy_addr;
-qboolean	net_proxy_active;
+netadr_t	net_proxy_addr = { NA_IP, { 0, 0, 0, 0 }, 0 };
+qboolean	net_proxy_active = false;
 
 
 #define	MAX_LOOPBACK	4
@@ -158,7 +158,7 @@ static struct libwebsocket_protocols protocols[] = {
 };
 
 
-static struct libwebsocket_context *websocketContext;
+static struct libwebsocket_context *websocketContext = NULL;
 
 
 #endif  // EMSCRIPTEN
