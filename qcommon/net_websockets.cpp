@@ -465,8 +465,36 @@ void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
 
 int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 {
+	int		net_socket;
+	if (to->type == NA_IP)
+	{
+		net_socket = ip_sockets[sock];
+		if (!net_socket)
+			return 0;
+	}
+	else if ( to->type == NA_LOOPBACK )
+	{
+		NET_SendLoopPacket (sock, length, data);
+		return 1;
+	}
+	else if (to->type == NA_BROADCAST)
+	{
+		net_socket = ip_sockets[sock];
+		if (!net_socket)
+			return 0;
+	}
+	else
+	{
+		Com_Error (ERR_FATAL, "NET_SendPacket: bad address type");
+		return 0;
+	}
+
 	STUBBED("NET_SendPacket");
-	return 0;
+
+	net_packets_out++;
+	net_total_out += length;
+
+	return 1;
 }
 
 
