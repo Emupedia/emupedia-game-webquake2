@@ -100,6 +100,9 @@ typedef struct
 loopback_t	loopbacks[2];
 
 
+static bool websocketInitialized = false;
+
+
 #ifndef EMSCRIPTEN
 
 
@@ -158,12 +161,16 @@ static struct libwebsocket_context *websocketContext = NULL;
 
 
 static bool createWebsocketContext(int port) {
+	assert(!websocketInitialized);
 	assert(!websocketContext);
 
 	struct lws_context_creation_info info;
 	memset(&info, 0, sizeof(info));
-	// TODO: CONTEXT_PORT_NO_LISTEN when NO_SERVER?
+	if (port == PORT_ANY) {
+		info.port = CONTEXT_PORT_NO_LISTEN;
+	} else {
 	info.port = port;
+	}
 	info.protocols = protocols;
 	info.gid = -1;
 	info.uid = -1;
@@ -181,7 +188,18 @@ static bool createWebsocketContext(int port) {
 	int retval = libwebsocket_service(websocketContext, 0);
 	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
 
+	websocketInitialized = true;
 	return true;
+}
+
+
+static void websocketShutdown() {
+	assert(websocketInitialized);
+	assert(websocketContext);
+
+	libwebsocket_context_destroy(websocketContext);
+	websocketContext = NULL;
+	websocketInitialized = false;
 }
 
 
@@ -189,10 +207,19 @@ static bool createWebsocketContext(int port) {
 
 
 static bool createWebsocketContext(int port) {
-	// TODO: on emscripten pre-establish server connection
+	assert(!websocketInitialized);
+
+	// TODO: pre-establish server connection
 	STUBBED("createWebsocketContext");
 
+	websocketInitialized = true;
 	return true;
+}
+
+
+static void websocketShutdown() {
+	assert(websocketInitialized);
+	websocketInitialized = false;
 }
 
 
@@ -292,18 +319,9 @@ int	NET_Config (int toOpen)
 
 	if (toOpen == NET_NONE)
 	{
-#ifdef EMSCRIPTEN
-
-		STUBBED("NET_Config close network");
-
-#else  // EMSCRIPTEN
-
-		if (websocketContext) {
-			libwebsocket_context_destroy(websocketContext);
-			websocketContext = NULL;
+		if (websocketInitialized) {
+			websocketShutdown();
 		}
-
-#endif  // EMSCRIPTEN
 
 		server_port = 0;
 
@@ -335,6 +353,11 @@ int	NET_Config (int toOpen)
 			server_port = port;
 
 			bool failed = false;
+			// shut down old context
+			if (websocketInitialized) {
+				websocketShutdown();
+			}
+
 			if (!createWebsocketContext(port)) {
 				failed = true;
 				server_port = 0;
@@ -349,21 +372,10 @@ int	NET_Config (int toOpen)
 	if (dedicated)
 		return i;
 
-	int newport = (int)(random() * 64000 + 1024);
-	port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
-	if (!port)
-	{
-		
-		port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
-		if (!port) {
-			port = PORT_ANY;
-			Cvar_Set ("clientport", va ("%d", newport));
-		}
+	bool failed = false;
+	if (!websocketInitialized) {
+		failed = !createWebsocketContext(PORT_ANY);
 	}
-
-	STUBBED("NET_Config init client");
-	bool failed = false;  // TODO;
-	// TODO: first on newport, if that fails on PORT_ANY
 
 	if (failed)
 		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
@@ -402,12 +414,10 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	if (NET_GetLoopPacket (sock, net_from, net_message))
 		return 1;
 
-#ifndef EMSCRIPTEN
-	if (!websocketContext) {
+	if (!websocketInitialized) {
 		// not initialized yet
 		return 0;
 	}
-#endif  // EMSCRIPTEN
 
 	STUBBED("NET_GetPacket");
 
@@ -463,12 +473,10 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 {
 	if (to->type == NA_IP)
 	{
-#ifndef EMSCRIPTEN
 		// if network not initialized return 0
-		if (!websocketContext) {
+		if (!websocketInitialized) {
 			return 0;
 		}
-#endif  // EMSCRIPTEN
 	}
 	else if ( to->type == NA_LOOPBACK )
 	{
@@ -477,12 +485,10 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	}
 	else if (to->type == NA_BROADCAST)
 	{
-#ifndef EMSCRIPTEN
 		// if network not initialized return 0
-		if (!websocketContext) {
+		if (!websocketInitialized) {
 			return 0;
 		}
-#endif  // EMSCRIPTEN
 	}
 	else
 	{
