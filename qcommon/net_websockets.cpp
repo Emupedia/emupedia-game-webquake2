@@ -223,6 +223,27 @@ char	*NET_BaseAdrToString (netadr_t *a)
 }
 
 
+int NET_Client_Sleep (int msec)
+{
+    struct timeval	timeout;
+	fd_set			fdset;
+	SOCKET			i;
+
+	FD_ZERO(&fdset);
+	i = 0;
+
+	if (ip_sockets[NS_CLIENT])
+	{
+		FD_SET(ip_sockets[NS_CLIENT], &fdset); // network socket
+		i = ip_sockets[NS_CLIENT];
+	}
+
+	timeout.tv_sec = msec/1000;
+	timeout.tv_usec = (msec%1000)*1000;
+	return select ((int)(i+1), &fdset, NULL, NULL, &timeout);
+}
+
+
 void NET_Common_Init (void)
 {
 	net_ignore_icmp = Cvar_Get ("net_ignore_icmp", "0", 0);
@@ -232,9 +253,97 @@ void NET_Common_Init (void)
 }
 
 
+/*
+====================
+NET_Config
+
+A single player game will only use the loopback code
+====================
+*/
+int	NET_Config (int toOpen)
+{
+	int		i;
+	static	int	old_config;
+
+	i = old_config;
+
+	if (old_config == toOpen)
+		return i;
+
+	old_config |= toOpen;
+
+	if (toOpen == NET_NONE)
+	{
+		if (ip_sockets[NS_CLIENT])
+		{
+			closesocket (ip_sockets[NS_CLIENT]);
+			ip_sockets[NS_CLIENT] = 0;
+		}
+
+		if (ip_sockets[NS_SERVER])
+		{
+			closesocket (ip_sockets[NS_SERVER]);
+			ip_sockets[NS_SERVER] = 0;
+		}
+
+		old_config = NET_NONE;
+	}
+
+	NET_OpenIP (toOpen);
+
+	return i;
+}
+
+
+qboolean	NET_GetLoopPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
+{
+	int		i;
+	loopback_t	*loop;
+
+	loop = &loopbacks[sock];
+
+	if (loop->send - loop->get > MAX_LOOPBACK)
+		loop->get = loop->send - MAX_LOOPBACK;
+
+	if (loop->get >= loop->send)
+		return false;
+
+	i = loop->get & (MAX_LOOPBACK-1);
+	loop->get++;
+
+	memcpy (net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
+	net_message->cursize = loop->msgs[i].datalen;
+	memset (net_from, 0, sizeof(*net_from));
+	net_from->type = NA_LOOPBACK;
+	net_from->ip[0] = 127;
+	net_from->ip[3] = 1;
+	net_from->port = PORT_SERVER;
+	return true;
+
+}
+
+
+int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
+{
+	if (NET_GetLoopPacket (sock, net_from, net_message))
+		return 1;
+
+	STUBBED("NET_GetPacket");
+
+	return 0;
+}
+
+
 uint32 NET_htonl (uint32 ip)
 {
 	return htonl (ip);
+}
+
+
+void NET_Init (void)
+{
+	NET_Common_Init ();
+	net_no_recverr = Cvar_Get ("net_no_recverr", "0", 0);
 }
 
 
@@ -244,9 +353,192 @@ char	*NET_inet_ntoa (uint32 ip)
 }
 
 
+int NET_IPSocket (char *net_interface, int port)
+{
+#ifdef EMSCRIPTEN
+
+	STUBBED("NET_IPSocket");
+	// TODO: on emscripten pre-establish server connection
+	return 0;
+
+#else  // EMSCRIPTEN
+
+	struct lws_context_creation_info info;
+	memset(&info, 0, sizeof(info));
+	// TODO: CONTEXT_PORT_NO_LISTEN when NO_SERVER?
+	info.port = port;
+	info.protocols = protocols;
+	info.gid = -1;
+	info.uid = -1;
+	// TODO: SSL?
+	// TODO: put keepalive stuff in cvars
+	info.ka_time = 5;
+	info.ka_probes = 3;
+	info.ka_interval = 1;
+
+	websocketContext = libwebsocket_create_context(&info);
+	if (!websocketContext) {
+		return 0;
+	}
+
+	int retval = libwebsocket_service(websocketContext, 0);
+	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
+
+#endif  // EMSCRIPTEN
+
+	return 1;
+}
+
+
 uint32 NET_ntohl (uint32 ip)
 {
 	return ntohl (ip);
+}
+
+
+/*
+====================
+NET_OpenIP
+====================
+*/
+void NET_OpenIP (int flags)
+{
+	cvar_t	*ip;
+	int		port;
+	int		dedicated;
+
+	net_total_in = net_packets_in = net_total_out = net_packets_out = 0;
+	net_inittime = (unsigned int)time(NULL);
+
+	ip = Cvar_Get ("ip", "localhost", CVAR_NOSET);
+
+	dedicated = Cvar_IntValue ("dedicated");
+
+	if (flags & NET_SERVER)
+	{
+		if (!ip_sockets[NS_SERVER])
+		{
+			port = Cvar_Get("ip_hostport", "0", CVAR_NOSET)->intvalue;
+			if (!port)
+			{
+				port = Cvar_Get("hostport", "0", CVAR_NOSET)->intvalue;
+				if (!port)
+				{
+					port = Cvar_Get("port", va("%i", PORT_SERVER), CVAR_NOSET)->intvalue;
+				}
+			}
+			server_port = port;
+			ip_sockets[NS_SERVER] = NET_IPSocket (ip->string, port);
+			if (!ip_sockets[NS_SERVER] && dedicated)
+				Com_Error (ERR_FATAL, "Couldn't allocate dedicated server IP port on %s:%d. Another application is probably using it.", ip->string, port);
+		}
+	}
+
+	// dedicated servers don't need client ports
+	if (dedicated)
+		return;
+
+	if (!ip_sockets[NS_CLIENT])
+	{
+		int newport = (int)(random() * 64000 + 1024);
+		port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
+		if (!port)
+		{
+			
+			port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
+			if (!port) {
+				port = PORT_ANY;
+				Cvar_Set ("clientport", va ("%d", newport));
+			}
+		}
+
+		ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, newport);
+		if (!ip_sockets[NS_CLIENT])
+			ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, PORT_ANY);
+	}
+
+	if (!ip_sockets[NS_CLIENT])
+		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
+}
+
+
+void Net_Restart_f (void)
+{
+	int old;
+	old = NET_Config (NET_NONE);
+	NET_Config (old);
+}
+
+
+void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
+{
+	int		i;
+	loopback_t	*loop;
+
+	loop = &loopbacks[sock^1];
+
+	i = loop->send & (MAX_LOOPBACK-1);
+	loop->send++;
+
+	memcpy (loop->msgs[i].data, data, length);
+	loop->msgs[i].datalen = length;
+}
+
+
+int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
+{
+	STUBBED("NET_SendPacket");
+	return 0;
+}
+
+
+void NET_SetProxy (netadr_t *proxy)
+{
+	if (proxy)
+	{
+		net_proxy_addr = *proxy;
+		net_proxy_active = true;
+	}
+	else
+		net_proxy_active = false;
+}
+
+
+// sleeps msec or until net socket is ready
+#ifndef NO_SERVER
+void NET_Sleep(int msec)
+{
+    struct timeval timeout;
+	fd_set	fdset;
+	extern cvar_t *dedicated;
+	//extern qboolean stdin_active;
+
+	if (!ip_sockets[NS_SERVER] || !dedicated->intvalue)
+		return; // we're not a server, just run full speed
+
+	//Com_Printf ("NET_Sleep (%d)\n", LOG_GENERAL, msec);
+
+	FD_ZERO(&fdset);
+	FD_SET(ip_sockets[NS_SERVER], &fdset); // network socket
+	timeout.tv_sec = msec/1000;
+	timeout.tv_usec = (msec%1000)*1000;
+	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
+}
+#endif
+
+
+void Net_Stats_f (void)
+{
+	int now = time(0);
+	int diff = now - net_inittime;
+
+	Com_Printf ("Network up for %i seconds.\n"
+				"%llu bytes in %llu packets received (av: %i kbps)\n"
+				"%llu bytes in %llu packets sent (av: %i kbps)\n", LOG_NET,
+				
+				diff,
+				net_total_in, net_packets_in, (int)(((net_total_in * 8) / 1024) / diff),
+				net_total_out, net_packets_out, (int)((net_total_out * 8) / 1024) / diff);
 }
 
 
@@ -358,295 +650,5 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr)
 	return true;
 }
 
-
-/*
-====================
-NET_Config
-
-A single player game will only use the loopback code
-====================
-*/
-int	NET_Config (int toOpen)
-{
-	int		i;
-	static	int	old_config;
-
-	i = old_config;
-
-	if (old_config == toOpen)
-		return i;
-
-	old_config |= toOpen;
-
-	if (toOpen == NET_NONE)
-	{
-		if (ip_sockets[NS_CLIENT])
-		{
-			closesocket (ip_sockets[NS_CLIENT]);
-			ip_sockets[NS_CLIENT] = 0;
-		}
-
-		if (ip_sockets[NS_SERVER])
-		{
-			closesocket (ip_sockets[NS_SERVER]);
-			ip_sockets[NS_SERVER] = 0;
-		}
-
-		old_config = NET_NONE;
-	}
-
-	NET_OpenIP (toOpen);
-
-	return i;
-}
-
-void NET_SetProxy (netadr_t *proxy)
-{
-	if (proxy)
-	{
-		net_proxy_addr = *proxy;
-		net_proxy_active = true;
-	}
-	else
-		net_proxy_active = false;
-}
-
-
-int NET_Client_Sleep (int msec)
-{
-    struct timeval	timeout;
-	fd_set			fdset;
-	SOCKET			i;
-
-	FD_ZERO(&fdset);
-	i = 0;
-
-	if (ip_sockets[NS_CLIENT])
-	{
-		FD_SET(ip_sockets[NS_CLIENT], &fdset); // network socket
-		i = ip_sockets[NS_CLIENT];
-	}
-
-	timeout.tv_sec = msec/1000;
-	timeout.tv_usec = (msec%1000)*1000;
-	return select ((int)(i+1), &fdset, NULL, NULL, &timeout);
-}
-
-
-qboolean	NET_GetLoopPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
-{
-	int		i;
-	loopback_t	*loop;
-
-	loop = &loopbacks[sock];
-
-	if (loop->send - loop->get > MAX_LOOPBACK)
-		loop->get = loop->send - MAX_LOOPBACK;
-
-	if (loop->get >= loop->send)
-		return false;
-
-	i = loop->get & (MAX_LOOPBACK-1);
-	loop->get++;
-
-	memcpy (net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
-	net_message->cursize = loop->msgs[i].datalen;
-	memset (net_from, 0, sizeof(*net_from));
-	net_from->type = NA_LOOPBACK;
-	net_from->ip[0] = 127;
-	net_from->ip[3] = 1;
-	net_from->port = PORT_SERVER;
-	return true;
-
-}
-
-
-/*
-====================
-NET_OpenIP
-====================
-*/
-void NET_OpenIP (int flags)
-{
-	cvar_t	*ip;
-	int		port;
-	int		dedicated;
-
-	net_total_in = net_packets_in = net_total_out = net_packets_out = 0;
-	net_inittime = (unsigned int)time(NULL);
-
-	ip = Cvar_Get ("ip", "localhost", CVAR_NOSET);
-
-	dedicated = Cvar_IntValue ("dedicated");
-
-	if (flags & NET_SERVER)
-	{
-		if (!ip_sockets[NS_SERVER])
-		{
-			port = Cvar_Get("ip_hostport", "0", CVAR_NOSET)->intvalue;
-			if (!port)
-			{
-				port = Cvar_Get("hostport", "0", CVAR_NOSET)->intvalue;
-				if (!port)
-				{
-					port = Cvar_Get("port", va("%i", PORT_SERVER), CVAR_NOSET)->intvalue;
-				}
-			}
-			server_port = port;
-			ip_sockets[NS_SERVER] = NET_IPSocket (ip->string, port);
-			if (!ip_sockets[NS_SERVER] && dedicated)
-				Com_Error (ERR_FATAL, "Couldn't allocate dedicated server IP port on %s:%d. Another application is probably using it.", ip->string, port);
-		}
-	}
-
-	// dedicated servers don't need client ports
-	if (dedicated)
-		return;
-
-	if (!ip_sockets[NS_CLIENT])
-	{
-		int newport = (int)(random() * 64000 + 1024);
-		port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
-		if (!port)
-		{
-			
-			port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
-			if (!port) {
-				port = PORT_ANY;
-				Cvar_Set ("clientport", va ("%d", newport));
-			}
-		}
-
-		ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, newport);
-		if (!ip_sockets[NS_CLIENT])
-			ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, PORT_ANY);
-	}
-
-	if (!ip_sockets[NS_CLIENT])
-		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
-}
-
-
-void Net_Restart_f (void)
-{
-	int old;
-	old = NET_Config (NET_NONE);
-	NET_Config (old);
-}
-
-
-void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
-{
-	int		i;
-	loopback_t	*loop;
-
-	loop = &loopbacks[sock^1];
-
-	i = loop->send & (MAX_LOOPBACK-1);
-	loop->send++;
-
-	memcpy (loop->msgs[i].data, data, length);
-	loop->msgs[i].datalen = length;
-}
-
-
-// sleeps msec or until net socket is ready
-#ifndef NO_SERVER
-void NET_Sleep(int msec)
-{
-    struct timeval timeout;
-	fd_set	fdset;
-	extern cvar_t *dedicated;
-	//extern qboolean stdin_active;
-
-	if (!ip_sockets[NS_SERVER] || !dedicated->intvalue)
-		return; // we're not a server, just run full speed
-
-	//Com_Printf ("NET_Sleep (%d)\n", LOG_GENERAL, msec);
-
-	FD_ZERO(&fdset);
-	FD_SET(ip_sockets[NS_SERVER], &fdset); // network socket
-	timeout.tv_sec = msec/1000;
-	timeout.tv_usec = (msec%1000)*1000;
-	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
-}
-#endif
-
-
-void Net_Stats_f (void)
-{
-	int now = time(0);
-	int diff = now - net_inittime;
-
-	Com_Printf ("Network up for %i seconds.\n"
-				"%llu bytes in %llu packets received (av: %i kbps)\n"
-				"%llu bytes in %llu packets sent (av: %i kbps)\n", LOG_NET,
-				
-				diff,
-				net_total_in, net_packets_in, (int)(((net_total_in * 8) / 1024) / diff),
-				net_total_out, net_packets_out, (int)((net_total_out * 8) / 1024) / diff);
-}
-
-
-int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
-{
-	if (NET_GetLoopPacket (sock, net_from, net_message))
-		return 1;
-
-	STUBBED("NET_GetPacket");
-
-	return 0;
-}
-
-
-void NET_Init (void)
-{
-	NET_Common_Init ();
-	net_no_recverr = Cvar_Get ("net_no_recverr", "0", 0);
-}
-
-
-int NET_IPSocket (char *net_interface, int port)
-{
-#ifdef EMSCRIPTEN
-
-	STUBBED("NET_IPSocket");
-	// TODO: on emscripten pre-establish server connection
-	return 0;
-
-#else  // EMSCRIPTEN
-
-	struct lws_context_creation_info info;
-	memset(&info, 0, sizeof(info));
-	// TODO: CONTEXT_PORT_NO_LISTEN when NO_SERVER?
-	info.port = port;
-	info.protocols = protocols;
-	info.gid = -1;
-	info.uid = -1;
-	// TODO: SSL?
-	// TODO: put keepalive stuff in cvars
-	info.ka_time = 5;
-	info.ka_probes = 3;
-	info.ka_interval = 1;
-
-	websocketContext = libwebsocket_create_context(&info);
-	if (!websocketContext) {
-		return 0;
-	}
-
-	int retval = libwebsocket_service(websocketContext, 0);
-	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
-
-#endif  // EMSCRIPTEN
-
-	return 1;
-}
-
-
-int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
-{
-	STUBBED("NET_SendPacket");
-	return 0;
-}
 
 #endif  // defined(USE_LIBWEBSOCKETS) || defined(EMSCRIPTEN)
