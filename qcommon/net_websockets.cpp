@@ -51,6 +51,32 @@ static int			ip_sockets[2] = { 0, 0 };
 cvar_t	*net_no_recverr = NULL;
 
 
+int _true = 1;
+
+static	cvar_t	*net_ignore_icmp;
+
+
+netadr_t	net_proxy_addr;
+qboolean	net_proxy_active;
+
+
+#define	MAX_LOOPBACK	4
+
+typedef struct
+{
+	byte	data[MAX_MSGLEN];
+	int		datalen;
+} loopmsg_t;
+
+typedef struct
+{
+	loopmsg_t	msgs[MAX_LOOPBACK];
+	int			get, send;
+} loopback_t;
+
+loopback_t	loopbacks[2];
+
+
 char *NET_ErrorString (void);
 int NET_IPSocket (char *net_interface, int port);
 void NET_OpenIP (int flags);
@@ -66,13 +92,6 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
 #define INVALID_SOCKET -1
 #endif
 
-int _true = 1;
-
-static	cvar_t	*net_ignore_icmp;
-
-
-netadr_t	net_proxy_addr;
-qboolean	net_proxy_active;
 
 void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
 {
@@ -302,23 +321,6 @@ void NET_SetProxy (netadr_t *proxy)
 	else
 		net_proxy_active = false;
 }
-
-
-#define	MAX_LOOPBACK	4
-
-typedef struct
-{
-	byte	data[MAX_MSGLEN];
-	int		datalen;
-} loopmsg_t;
-
-typedef struct
-{
-	loopmsg_t	msgs[MAX_LOOPBACK];
-	int			get, send;
-} loopback_t;
-
-loopback_t	loopbacks[2];
 
 
 int NET_Client_Sleep (int msec)
