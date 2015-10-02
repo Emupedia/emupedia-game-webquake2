@@ -166,7 +166,6 @@ static struct libwebsocket_context *websocketContext = NULL;
 
 char *NET_ErrorString (void);
 int NET_IPSocket (char *net_interface, int port);
-void NET_OpenIP (int flags);
 void Net_Restart_f (void);
 void Net_Stats_f (void);
 qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
@@ -287,7 +286,61 @@ int	NET_Config (int toOpen)
 		old_config = NET_NONE;
 	}
 
-	NET_OpenIP (toOpen);
+	int flags = toOpen;
+
+	net_total_in = net_packets_in = net_total_out = net_packets_out = 0;
+	net_inittime = (unsigned int)time(NULL);
+
+	cvar_t	*ip = Cvar_Get ("ip", "localhost", CVAR_NOSET);
+
+	int dedicated = Cvar_IntValue ("dedicated");
+
+	int		port;
+	if (flags & NET_SERVER)
+	{
+		if (!ip_sockets[NS_SERVER])
+		{
+			port = Cvar_Get("ip_hostport", "0", CVAR_NOSET)->intvalue;
+			if (!port)
+			{
+				port = Cvar_Get("hostport", "0", CVAR_NOSET)->intvalue;
+				if (!port)
+				{
+					port = Cvar_Get("port", va("%i", PORT_SERVER), CVAR_NOSET)->intvalue;
+				}
+			}
+			server_port = port;
+			ip_sockets[NS_SERVER] = NET_IPSocket (ip->string, port);
+			if (!ip_sockets[NS_SERVER] && dedicated)
+				Com_Error (ERR_FATAL, "Couldn't allocate dedicated server IP port on %s:%d. Another application is probably using it.", ip->string, port);
+		}
+	}
+
+	// dedicated servers don't need client ports
+	if (dedicated)
+		return i;
+
+	if (!ip_sockets[NS_CLIENT])
+	{
+		int newport = (int)(random() * 64000 + 1024);
+		port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
+		if (!port)
+		{
+			
+			port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
+			if (!port) {
+				port = PORT_ANY;
+				Cvar_Set ("clientport", va ("%d", newport));
+			}
+		}
+
+		ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, newport);
+		if (!ip_sockets[NS_CLIENT])
+			ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, PORT_ANY);
+	}
+
+	if (!ip_sockets[NS_CLIENT])
+		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
 
 	return i;
 }
@@ -388,69 +441,6 @@ int NET_IPSocket (char *net_interface, int port)
 uint32 NET_ntohl (uint32 ip)
 {
 	return ntohl (ip);
-}
-
-
-/*
-====================
-NET_OpenIP
-====================
-*/
-void NET_OpenIP (int flags)
-{
-	net_total_in = net_packets_in = net_total_out = net_packets_out = 0;
-	net_inittime = (unsigned int)time(NULL);
-
-	cvar_t	*ip = Cvar_Get ("ip", "localhost", CVAR_NOSET);
-
-	int dedicated = Cvar_IntValue ("dedicated");
-
-	int		port;
-	if (flags & NET_SERVER)
-	{
-		if (!ip_sockets[NS_SERVER])
-		{
-			port = Cvar_Get("ip_hostport", "0", CVAR_NOSET)->intvalue;
-			if (!port)
-			{
-				port = Cvar_Get("hostport", "0", CVAR_NOSET)->intvalue;
-				if (!port)
-				{
-					port = Cvar_Get("port", va("%i", PORT_SERVER), CVAR_NOSET)->intvalue;
-				}
-			}
-			server_port = port;
-			ip_sockets[NS_SERVER] = NET_IPSocket (ip->string, port);
-			if (!ip_sockets[NS_SERVER] && dedicated)
-				Com_Error (ERR_FATAL, "Couldn't allocate dedicated server IP port on %s:%d. Another application is probably using it.", ip->string, port);
-		}
-	}
-
-	// dedicated servers don't need client ports
-	if (dedicated)
-		return;
-
-	if (!ip_sockets[NS_CLIENT])
-	{
-		int newport = (int)(random() * 64000 + 1024);
-		port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
-		if (!port)
-		{
-			
-			port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
-			if (!port) {
-				port = PORT_ANY;
-				Cvar_Set ("clientport", va ("%d", newport));
-			}
-		}
-
-		ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, newport);
-		if (!ip_sockets[NS_CLIENT])
-			ip_sockets[NS_CLIENT] = NET_IPSocket (ip->string, PORT_ANY);
-	}
-
-	if (!ip_sockets[NS_CLIENT])
-		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
 }
 
 
