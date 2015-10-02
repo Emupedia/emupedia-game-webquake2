@@ -59,24 +59,6 @@ void Net_Stats_f (void);
 qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
 
 
-/*
-=============
-NET_StringToAdr
-
-localhost
-idnewt
-idnewt:28000
-192.246.40.70
-192.246.40.70:28000
-=============
-*/
-/*#define DO(src,dest)	\
-	copy[0] = s[src];	\
-	copy[1] = s[src + 1];	\
-	sscanf (copy, "%x", &val);	\
-	((struct sockaddr_ipx *)sadr)->dest = val*/
-
-
 #ifndef _WIN32
 #define closesocket close
 #define ioctlsocket ioctl
