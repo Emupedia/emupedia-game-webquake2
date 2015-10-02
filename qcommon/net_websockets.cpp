@@ -159,11 +159,49 @@ static struct libwebsocket_protocols protocols[] = {
 static struct libwebsocket_context *websocketContext = NULL;
 
 
+static bool createWebsocketContext(int port) {
+	assert(!websocketContext);
+
+	struct lws_context_creation_info info;
+	memset(&info, 0, sizeof(info));
+	// TODO: CONTEXT_PORT_NO_LISTEN when NO_SERVER?
+	info.port = port;
+	info.protocols = protocols;
+	info.gid = -1;
+	info.uid = -1;
+	// TODO: SSL?
+	// TODO: put keepalive stuff in cvars
+	info.ka_time = 5;
+	info.ka_probes = 3;
+	info.ka_interval = 1;
+
+	websocketContext = libwebsocket_create_context(&info);
+	if (!websocketContext) {
+		return false;
+	}
+
+	int retval = libwebsocket_service(websocketContext, 0);
+	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
+
+	return true;
+}
+
+
+#else  // EMSCRIPTEN
+
+
+static bool createWebsocketContext(int port) {
+	// TODO: on emscripten pre-establish server connection
+	STUBBED("createWebsocketContext");
+
+	return true;
+}
+
+
 #endif  // EMSCRIPTEN
 
 
 char *NET_ErrorString (void);
-int NET_IPSocket (char *net_interface, int port);
 void Net_Restart_f (void);
 void Net_Stats_f (void);
 qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
@@ -286,8 +324,11 @@ int	NET_Config (int toOpen)
 			}
 			server_port = port;
 
-			STUBBED("NET_Config init server");
-			bool failed = false;  // TODO
+			bool failed = false;
+			if (!createWebsocketContext(port)) {
+				failed = true;
+				server_port = 0;
+			}
 
 			if (failed && dedicated)
 				Com_Error (ERR_FATAL, "Couldn't allocate dedicated server IP port on %s:%d. Another application is probably using it.", ip->string, port);
@@ -373,43 +414,6 @@ void NET_Init (void)
 char	*NET_inet_ntoa (uint32 ip)
 {
 	return inet_ntoa (*(struct in_addr *)&ip);
-}
-
-
-int NET_IPSocket (char *net_interface, int port)
-{
-#ifdef EMSCRIPTEN
-
-	STUBBED("NET_IPSocket");
-	// TODO: on emscripten pre-establish server connection
-	return 0;
-
-#else  // EMSCRIPTEN
-
-	struct lws_context_creation_info info;
-	memset(&info, 0, sizeof(info));
-	// TODO: CONTEXT_PORT_NO_LISTEN when NO_SERVER?
-	info.port = port;
-	info.protocols = protocols;
-	info.gid = -1;
-	info.uid = -1;
-	// TODO: SSL?
-	// TODO: put keepalive stuff in cvars
-	info.ka_time = 5;
-	info.ka_probes = 3;
-	info.ka_interval = 1;
-
-	websocketContext = libwebsocket_create_context(&info);
-	if (!websocketContext) {
-		return 0;
-	}
-
-	int retval = libwebsocket_service(websocketContext, 0);
-	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
-
-#endif  // EMSCRIPTEN
-
-	return 1;
 }
 
 
