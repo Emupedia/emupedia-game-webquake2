@@ -224,21 +224,8 @@ char	*NET_BaseAdrToString (netadr_t *a)
 
 int NET_Client_Sleep (int msec)
 {
-	fd_set			fdset;
-
-	FD_ZERO(&fdset);
-	SOCKET			i = 0;
-
-	if (ip_sockets[NS_CLIENT])
-	{
-		FD_SET(ip_sockets[NS_CLIENT], &fdset); // network socket
-		i = ip_sockets[NS_CLIENT];
-	}
-
-    struct timeval	timeout;
-	timeout.tv_sec = msec/1000;
-	timeout.tv_usec = (msec%1000)*1000;
-	return select ((int)(i+1), &fdset, NULL, NULL, &timeout);
+	STUBBED("NET_Client_Sleep");
+	return 0;
 }
 
 
@@ -522,13 +509,7 @@ void NET_Sleep(int msec)
 
 	//Com_Printf ("NET_Sleep (%d)\n", LOG_GENERAL, msec);
 
-	fd_set	fdset;
-	FD_ZERO(&fdset);
-	FD_SET(ip_sockets[NS_SERVER], &fdset); // network socket
-    struct timeval timeout;
-	timeout.tv_sec = msec/1000;
-	timeout.tv_usec = (msec%1000)*1000;
-	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
+	STUBBED("NET_Sleep");
 }
 #endif
 
