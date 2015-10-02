@@ -36,21 +36,21 @@ extern "C" {
 #include "../qcommon/qcommon.h"
 
 
-static unsigned int net_inittime;
+static unsigned int net_inittime = 0;
 
-static unsigned long long net_total_in;
-static unsigned long long net_total_out;
-static unsigned long long net_packets_in;
-static unsigned long long net_packets_out;
+static unsigned long long net_total_in = 0;
+static unsigned long long net_total_out = 0;
+static unsigned long long net_packets_in = 0;
+static unsigned long long net_packets_out = 0;
 
-int			server_port;
+int			server_port = 0;
 //netadr_t	net_local_adr;
 
-static int			ip_sockets[2];
+static int			ip_sockets[2] = { 0, 0 };
 
 char *NET_ErrorString (void);
 
-cvar_t	*net_no_recverr;
+cvar_t	*net_no_recverr = NULL;
 
 //Aiee...
 #include "../qcommon/net_common.c"
