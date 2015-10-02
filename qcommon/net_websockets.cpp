@@ -39,6 +39,28 @@ extern "C" {
 }  // extern "C"
 
 
+#ifdef NDEBUG
+
+
+#define STUBBED(x)
+
+
+#else  // NDEBUG
+
+
+#define STUBBED(x) do { \
+	static bool seen_this = false; \
+	if (!seen_this) { \
+		seen_this = true; \
+		Com_Printf ("STUBBED: %s at %s (%s:%d)\n", LOG_NET, \
+		x, __FUNCTION__, __FILE__, __LINE__); \
+	} \
+	} while (0)
+
+
+#endif  // NDEBUG
+
+
 static unsigned int net_inittime = 0;
 
 static unsigned long long net_total_in = 0;
@@ -487,28 +509,6 @@ void NET_Sleep(int msec)
 	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
 }
 #endif
-
-
-#ifdef NDEBUG
-
-
-#define STUBBED(x)
-
-
-#else  // NDEBUG
-
-
-#define STUBBED(x) do { \
-	static bool seen_this = false; \
-	if (!seen_this) { \
-		seen_this = true; \
-		Com_Printf ("STUBBED: %s at %s (%s:%d)\n", LOG_NET, \
-		x, __FUNCTION__, __FILE__, __LINE__); \
-	} \
-	} while (0)
-
-
-#endif  // NDEBUG
 
 
 #ifndef EMSCRIPTEN
