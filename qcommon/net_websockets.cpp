@@ -89,11 +89,13 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
 
 
 #ifndef _WIN32
-#define closesocket close
-#define ioctlsocket ioctl
 #define SOCKET unsigned int
 #define INVALID_SOCKET -1
 #endif
+
+
+void closesocket(int socket) {
+}
 
 
 void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
