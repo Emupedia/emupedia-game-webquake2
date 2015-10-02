@@ -349,21 +349,21 @@ int	NET_Config (int toOpen)
 	if (dedicated)
 		return i;
 
-		int newport = (int)(random() * 64000 + 1024);
-		port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
-		if (!port)
-		{
-			
-			port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
-			if (!port) {
-				port = PORT_ANY;
-				Cvar_Set ("clientport", va ("%d", newport));
-			}
+	int newport = (int)(random() * 64000 + 1024);
+	port = Cvar_Get("ip_clientport", va("%i", newport), CVAR_NOSET)->intvalue;
+	if (!port)
+	{
+		
+		port = Cvar_Get("clientport", va("%i", newport) , CVAR_NOSET)->intvalue;
+		if (!port) {
+			port = PORT_ANY;
+			Cvar_Set ("clientport", va ("%d", newport));
 		}
+	}
 
-		STUBBED("NET_Config init client");
-		bool failed = false;  // TODO;
-		// TODO: first on newport, if that fails on PORT_ANY
+	STUBBED("NET_Config init client");
+	bool failed = false;  // TODO;
+	// TODO: first on newport, if that fails on PORT_ANY
 
 	if (failed)
 		Com_Error (ERR_DROP, "Couldn't allocate client IP port.");
