@@ -105,8 +105,6 @@ loopback_t	loopbacks[2];
 
 static int websocketCallback(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
 {
-	STUBBED("websocketCallback");
-
 	switch (reason) {
 	case LWS_CALLBACK_PROTOCOL_INIT:
 		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_INIT\n", LOG_NET);
