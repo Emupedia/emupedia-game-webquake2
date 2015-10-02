@@ -402,6 +402,13 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	if (NET_GetLoopPacket (sock, net_from, net_message))
 		return 1;
 
+#ifndef EMSCRIPTEN
+	if (!websocketContext) {
+		// not initialized yet
+		return 0;
+	}
+#endif  // EMSCRIPTEN
+
 	STUBBED("NET_GetPacket");
 
 	return 0;
