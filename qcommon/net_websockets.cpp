@@ -110,36 +110,36 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 {
 	switch (reason) {
 	case LWS_CALLBACK_PROTOCOL_INIT:
-		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_INIT\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_PROTOCOL_DESTROY:
-		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_DESTROY\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_GET_THREAD_ID:
-		Com_Printf("websocketCallback LWS_CALLBACK_GET_THREAD_ID\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_ADD_POLL_FD:
-		Com_Printf("websocketCallback LWS_CALLBACK_ADD_POLL_FD\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_DEL_POLL_FD:
-		Com_Printf("websocketCallback LWS_CALLBACK_DEL_POLL_FD\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_CHANGE_MODE_POLL_FD:
-		Com_Printf("websocketCallback LWS_CALLBACK_CHANGE_MODE_POLL_FD\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_LOCK_POLL:
-		Com_Printf("websocketCallback LWS_CALLBACK_LOCK_POLL\n", LOG_NET);
+		// ignored
 		break;
 
 	case LWS_CALLBACK_UNLOCK_POLL:
+		// ignored
 		break;
-		Com_Printf("websocketCallback LWS_CALLBACK_UNLOCK_POLL\n", LOG_NET);
 
 	default:
 		Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
@@ -418,6 +418,13 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 		// not initialized yet
 		return 0;
 	}
+
+#ifndef EMSCRIPTEN
+
+	// TODO: what does the return value mean? do we care?
+	libwebsocket_service(websocketContext, 0);
+
+#endif  // EMSCRIPTEN
 
 	STUBBED("NET_GetPacket");
 
