@@ -50,17 +50,11 @@ void NET_Common_Init (void)
 
 qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr)
 {
-	int	isip = 0;
-	const char *p;
-	struct hostent	*h;
-	char	*colon;
-//	int		val;
-	char	copy[128];
-	
 	memset (sadr, 0, sizeof(*sadr));
 
 	//r1: better than just the first digit for ip validity :)
-	p = s;
+	const char *p = s;
+	int	isip = 0;
 	while (p[0])
 	{
 		if (p[0] == '.')
@@ -86,11 +80,13 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr)
 	
 	((struct sockaddr_in *)sadr)->sin_port = 0;
 
+	char	copy[128];
+	
 	//r1: CHECK THE GODDAMN BUFFER SIZE... sigh yet another overflow.
 	Q_strncpy (copy, s, sizeof(copy)-1);
 
 	// strip off a trailing :port if present
-	for (colon = copy ; colon[0] ; colon++)
+	for (char	*colon = copy ; colon[0] ; colon++)
 	{
 		if (colon[0] == ':')
 		{
@@ -106,6 +102,7 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr)
 	}
 	else
 	{
+		struct hostent	*h;
 		if (! (h = gethostbyname(copy)) )
 			return false;
 		*(int *)&((struct sockaddr_in *)sadr)->sin_addr = *(int *)h->h_addr_list[0];
@@ -213,10 +210,9 @@ A single player game will only use the loopback code
 */
 int	NET_Config (int toOpen)
 {
-	int		i;
 	static	int	old_config;
 
-	i = old_config;
+	int i = old_config;
 
 	if (old_config == toOpen)
 		return i;
@@ -263,16 +259,14 @@ NET_OpenIP
 */
 void NET_OpenIP (int flags)
 {
-	cvar_t	*ip;
-	int		port;
-	int		dedicated;
-
 	net_total_in = net_packets_in = net_total_out = net_packets_out = 0;
 	net_inittime = (unsigned int)time(NULL);
 
-	ip = Cvar_Get ("ip", "localhost", CVAR_NOSET);
+	cvar_t	*ip = Cvar_Get ("ip", "localhost", CVAR_NOSET);
 
-	dedicated = Cvar_IntValue ("dedicated");
+	int dedicated = Cvar_IntValue ("dedicated");
+
+	int		port;
 
 	if (flags & NET_SERVER)
 	{
@@ -325,8 +319,6 @@ void NET_OpenIP (int flags)
 #ifndef NO_SERVER
 void NET_Sleep(int msec)
 {
-    struct timeval timeout;
-	fd_set	fdset;
 	extern cvar_t *dedicated;
 	//extern qboolean stdin_active;
 
@@ -335,8 +327,10 @@ void NET_Sleep(int msec)
 
 	//Com_Printf ("NET_Sleep (%d)\n", LOG_GENERAL, msec);
 
+	fd_set	fdset;
 	FD_ZERO(&fdset);
 	FD_SET(ip_sockets[NS_SERVER], &fdset); // network socket
+    struct timeval timeout;
 	timeout.tv_sec = msec/1000;
 	timeout.tv_usec = (msec%1000)*1000;
 	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
@@ -345,8 +339,7 @@ void NET_Sleep(int msec)
 
 void Net_Restart_f (void)
 {
-	int old;
-	old = NET_Config (NET_NONE);
+	int old = NET_Config (NET_NONE);
 	NET_Config (old);
 }
 
@@ -369,10 +362,7 @@ loopback_t	loopbacks[2];
 
 qboolean	NET_GetLoopPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 {
-	int		i;
-	loopback_t	*loop;
-
-	loop = &loopbacks[sock];
+	loopback_t	*loop = &loopbacks[sock];
 
 	if (loop->send - loop->get > MAX_LOOPBACK)
 		loop->get = loop->send - MAX_LOOPBACK;
@@ -380,7 +370,7 @@ qboolean	NET_GetLoopPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_me
 	if (loop->get >= loop->send)
 		return false;
 
-	i = loop->get & (MAX_LOOPBACK-1);
+	int i = loop->get & (MAX_LOOPBACK-1);
 	loop->get++;
 
 	memcpy (net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
@@ -397,12 +387,9 @@ qboolean	NET_GetLoopPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_me
 
 void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
 {
-	int		i;
-	loopback_t	*loop;
+	loopback_t	*loop = &loopbacks[sock^1];
 
-	loop = &loopbacks[sock^1];
-
-	i = loop->send & (MAX_LOOPBACK-1);
+	int i = loop->send & (MAX_LOOPBACK-1);
 	loop->send++;
 
 	memcpy (loop->msgs[i].data, data, length);
@@ -412,12 +399,10 @@ void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
 
 int NET_Client_Sleep (int msec)
 {
-    struct timeval	timeout;
 	fd_set			fdset;
-	SOCKET			i;
 
 	FD_ZERO(&fdset);
-	i = 0;
+	SOCKET			i = 0;
 
 	if (ip_sockets[NS_CLIENT])
 	{
@@ -425,6 +410,7 @@ int NET_Client_Sleep (int msec)
 		i = ip_sockets[NS_CLIENT];
 	}
 
+    struct timeval	timeout;
 	timeout.tv_sec = msec/1000;
 	timeout.tv_usec = (msec%1000)*1000;
 	return select ((int)(i+1), &fdset, NULL, NULL, &timeout);
