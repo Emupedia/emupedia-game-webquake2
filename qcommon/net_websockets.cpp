@@ -39,6 +39,10 @@ extern "C" {
 }  // extern "C"
 
 
+#include <memory>
+#include <unordered_map>
+
+
 #ifdef NDEBUG
 
 
@@ -103,7 +107,51 @@ loopback_t	loopbacks[2];
 static bool websocketInitialized = false;
 
 
+struct Connection;
+
+
+namespace std {
+
+
+template <> struct hash<netadr_t> {
+	typedef netadr_t argument_type;
+	typedef std::size_t result_type;
+
+	result_type operator()(const argument_type &val) const {
+		uint32_t temp = val.port;
+		temp = (temp << 16) | val.type;
+
+		result_type h1 = std::hash<uint32_t>()(temp);
+
+		temp =                val.ip[0];
+		temp = (temp << 8 ) | val.ip[1];
+		temp = (temp << 8 ) | val.ip[2];
+		temp = (temp << 8 ) | val.ip[3];
+
+		result_type h2 = std::hash<uint32_t>()(temp);
+
+		return h1 ^ (h2 << 2);
+	}
+};
+
+
+}  // namespace std
+
+
+bool operator==(const netadr_t &a, const netadr_t &b) {
+	STUBBED("operator netadr_t ==");
+	return false;
+}
+
+
+static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
+
+
 #ifndef EMSCRIPTEN
+
+
+struct Connection {
+};
 
 
 static int websocketCallback(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
@@ -204,6 +252,10 @@ static void websocketShutdown() {
 
 
 #else  // EMSCRIPTEN
+
+
+struct Connection {
+};
 
 
 static bool createWebsocketContext(int port) {
@@ -502,6 +554,12 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	}
 
 	assert(to->type == NA_IP);
+
+	const auto &it = connections.find(*to);
+	if (it == connections.end()) {
+		STUBBED("NET_SendPacket no such connection, TODO: establish");
+	}
+
 	STUBBED("NET_SendPacket");
 
 	net_packets_out++;
