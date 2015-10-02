@@ -48,10 +48,15 @@ int			server_port = 0;
 
 static int			ip_sockets[2] = { 0, 0 };
 
-char *NET_ErrorString (void);
-qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
-
 cvar_t	*net_no_recverr = NULL;
+
+
+char *NET_ErrorString (void);
+int NET_IPSocket (char *net_interface, int port);
+void NET_OpenIP (int flags);
+void Net_Restart_f (void);
+void Net_Stats_f (void);
+qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
 
 
 /*
@@ -71,8 +76,6 @@ idnewt:28000
 	sscanf (copy, "%x", &val);	\
 	((struct sockaddr_ipx *)sadr)->dest = val*/
 
-void NET_OpenIP (int flags);
-int NET_IPSocket (char *net_interface, int port);
 
 #ifndef _WIN32
 #define closesocket close
@@ -85,8 +88,6 @@ int _true = 1;
 
 static	cvar_t	*net_ignore_icmp;
 
-void Net_Restart_f (void);
-void Net_Stats_f (void);
 
 netadr_t	net_proxy_addr;
 qboolean	net_proxy_active;
