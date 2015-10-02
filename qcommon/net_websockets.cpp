@@ -294,7 +294,19 @@ int	NET_Config (int toOpen)
 
 	if (toOpen == NET_NONE)
 	{
+#ifdef EMSCRIPTEN
+
 		STUBBED("NET_Config close network");
+
+#else  // EMSCRIPTEN
+
+		if (websocketContext) {
+			libwebsocket_context_destroy(websocketContext);
+			websocketContext = NULL;
+		}
+
+#endif  // EMSCRIPTEN
+
 		server_port = 0;
 
 		old_config = NET_NONE;
