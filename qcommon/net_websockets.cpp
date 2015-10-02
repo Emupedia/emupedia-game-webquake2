@@ -102,6 +102,68 @@ typedef struct
 loopback_t	loopbacks[2];
 
 
+#ifndef EMSCRIPTEN
+
+
+static int websocketCallback(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+{
+	STUBBED("websocketCallback");
+
+	switch (reason) {
+	case LWS_CALLBACK_PROTOCOL_INIT:
+		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_INIT\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_PROTOCOL_DESTROY:
+		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_DESTROY\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_GET_THREAD_ID:
+		Com_Printf("websocketCallback LWS_CALLBACK_GET_THREAD_ID\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_ADD_POLL_FD:
+		Com_Printf("websocketCallback LWS_CALLBACK_ADD_POLL_FD\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_DEL_POLL_FD:
+		Com_Printf("websocketCallback LWS_CALLBACK_DEL_POLL_FD\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CHANGE_MODE_POLL_FD:
+		Com_Printf("websocketCallback LWS_CALLBACK_CHANGE_MODE_POLL_FD\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_LOCK_POLL:
+		Com_Printf("websocketCallback LWS_CALLBACK_LOCK_POLL\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_UNLOCK_POLL:
+		break;
+		Com_Printf("websocketCallback LWS_CALLBACK_UNLOCK_POLL\n", LOG_NET);
+
+	default:
+		Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
+		break;
+	}
+
+	return 0;
+}
+
+
+// not const because libwebsockets writes to it
+static struct libwebsocket_protocols protocols[] = {
+	  { "quake2", websocketCallback, 0, 0 } /* end */
+	, { NULL, NULL, 0, 0 } /* end */
+};
+
+
+static struct libwebsocket_context *websocketContext;
+
+
+#endif  // EMSCRIPTEN
+
+
 char *NET_ErrorString (void);
 int NET_IPSocket (char *net_interface, int port);
 void NET_OpenIP (int flags);
@@ -509,68 +571,6 @@ void NET_Sleep(int msec)
 	select ((int)(ip_sockets[NS_SERVER]+1), &fdset, NULL, NULL, &timeout);
 }
 #endif
-
-
-#ifndef EMSCRIPTEN
-
-
-static int websocketCallback(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
-{
-	STUBBED("websocketCallback");
-
-	switch (reason) {
-	case LWS_CALLBACK_PROTOCOL_INIT:
-		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_INIT\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_PROTOCOL_DESTROY:
-		Com_Printf("websocketCallback LWS_CALLBACK_PROTOCOL_DESTROY\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_GET_THREAD_ID:
-		Com_Printf("websocketCallback LWS_CALLBACK_GET_THREAD_ID\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_ADD_POLL_FD:
-		Com_Printf("websocketCallback LWS_CALLBACK_ADD_POLL_FD\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_DEL_POLL_FD:
-		Com_Printf("websocketCallback LWS_CALLBACK_DEL_POLL_FD\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_CHANGE_MODE_POLL_FD:
-		Com_Printf("websocketCallback LWS_CALLBACK_CHANGE_MODE_POLL_FD\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_LOCK_POLL:
-		Com_Printf("websocketCallback LWS_CALLBACK_LOCK_POLL\n", LOG_NET);
-		break;
-
-	case LWS_CALLBACK_UNLOCK_POLL:
-		break;
-		Com_Printf("websocketCallback LWS_CALLBACK_UNLOCK_POLL\n", LOG_NET);
-
-	default:
-		Com_Printf ("websocketCallback reason %d\n", LOG_NET, reason);
-		break;
-	}
-
-	return 0;
-}
-
-
-// not const because libwebsockets writes to it
-static struct libwebsocket_protocols protocols[] = {
-	  { "quake2", websocketCallback, 0, 0 } /* end */
-	, { NULL, NULL, 0, 0 } /* end */
-};
-
-
-static struct libwebsocket_context *websocketContext;
-
-
-#endif  // EMSCRIPTEN
 
 
 void Net_Stats_f (void)
