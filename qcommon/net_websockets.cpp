@@ -200,8 +200,8 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 
 // not const because libwebsockets writes to it
 static struct libwebsocket_protocols protocols[] = {
-	  { "quake2", websocketCallback, 0, 0 } /* end */
-	, { NULL, NULL, 0, 0 } /* end */
+	  { "quake2", websocketCallback, 0, 0, 0, NULL, NULL, 0 }
+	, { NULL, NULL, 0, 0, 0, NULL, NULL, 0  } /* end */
 };
 
 
