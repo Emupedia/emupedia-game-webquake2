@@ -40,6 +40,7 @@ extern "C" {
 
 
 #include <memory>
+#include <tuple>
 #include <unordered_map>
 
 
@@ -139,8 +140,11 @@ template <> struct hash<netadr_t> {
 
 
 bool operator==(const netadr_t &a, const netadr_t &b) {
-	STUBBED("operator netadr_t ==");
-	return false;
+	if (a.type != b.type) {
+		return false;
+	}
+
+	return NET_CompareAdr(&a, &b);
 }
 
 
@@ -151,18 +155,73 @@ static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 
 
 struct Connection {
+	netadr_t addr;
+	struct libwebsocket *wsi;
+
+
+	Connection(netadr_t addr_, struct libwebsocket *wsi_)
+	: addr(addr_)
+	, wsi(wsi_)
+	{
+	}
+
+
+	~Connection()
+	{
+		STUBBED("~Connection");
+	}
 };
 
 
 static int websocketCallback(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
 {
 	switch (reason) {
+	case LWS_CALLBACK_ESTABLISHED:
+		Com_Printf("websocketCallback LWS_CALLBACK_ESTABLISHED\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
+		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_CONNECTION_ERROR\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CLIENT_FILTER_PRE_ESTABLISH:
+		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_FILTER_PRE_ESTABLISH\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CLIENT_ESTABLISHED:
+		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_ESTABLISHED\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CLOSED:
+		Com_Printf("websocketCallback LWS_CALLBACK_CLOSED\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_FILTER_NETWORK_CONNECTION:
+		Com_Printf("websocketCallback LWS_CALLBACK_FILTER_NETWORK_CONNECTION\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_SERVER_NEW_CLIENT_INSTANTIATED:
+		Com_Printf("websocketCallback LWS_CALLBACK_SERVER_NEW_CLIENT_INSTANTIATED\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_FILTER_PROTOCOL_CONNECTION:
+		Com_Printf("websocketCallback LWS_CALLBACK_FILTER_PROTOCOL_CONNECTION\n", LOG_NET);
+		break;
+
 	case LWS_CALLBACK_PROTOCOL_INIT:
 		// ignored
 		break;
 
 	case LWS_CALLBACK_PROTOCOL_DESTROY:
 		// ignored
+		break;
+
+	case LWS_CALLBACK_WSI_CREATE:
+		Com_Printf("websocketCallback LWS_CALLBACK_WSI_CREATE\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_WSI_DESTROY:
+		Com_Printf("websocketCallback LWS_CALLBACK_WSI_DESTROY\n", LOG_NET);
 		break;
 
 	case LWS_CALLBACK_GET_THREAD_ID:
@@ -251,10 +310,35 @@ static void websocketShutdown() {
 }
 
 
+static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
+	char addrBuf[3 * 4 + 5];
+	snprintf(addrBuf, sizeof(addrBuf), "%u.%u.%u.%u", to.ip[0], to.ip[1], to.ip[2], to.ip[3]);
+	struct libwebsocket *newWsi = libwebsocket_client_connect(websocketContext, addrBuf, ntohs(to.port), 0, "/", addrBuf, addrBuf, "quake2", -1);
+	if (newWsi == NULL) {
+		return std::unique_ptr<Connection>();
+	}
+
+	return std::unique_ptr<Connection>(new Connection(to, newWsi));
+}
+
+
 #else  // EMSCRIPTEN
 
 
 struct Connection {
+	netadr_t addr;
+
+
+	explicit Connection(netadr_t addr_)
+	: addr(addr_)
+	{
+	}
+
+
+	~Connection()
+	{
+		STUBBED("~Connection");
+	}
 };
 
 
@@ -275,6 +359,9 @@ static void websocketShutdown() {
 }
 
 
+static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
+	return std::unique_ptr<Connection>();
+}
 #endif  // EMSCRIPTEN
 
 
@@ -530,6 +617,8 @@ void NET_SendLoopPacket (netsrc_t sock, int length, const void *data)
 
 int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 {
+	assert(to != NULL);
+
 	if (to->type == NA_IP)
 	{
 		// if network not initialized return 0
@@ -555,9 +644,17 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 
 	assert(to->type == NA_IP);
 
-	const auto &it = connections.find(*to);
+	auto it = connections.find(*to);
 	if (it == connections.end()) {
-		STUBBED("NET_SendPacket no such connection, TODO: establish");
+		// no connection, create it
+		auto conn = createConnection(*to);
+		if (!conn) {
+			// TODO: log it?
+			return 0;
+		}
+		bool success = false;
+		std::tie(it, success) = connections.emplace(*to, std::move(conn));
+		assert(success);  // it wasn't there before so this can't fail
 	}
 
 	STUBBED("NET_SendPacket");
