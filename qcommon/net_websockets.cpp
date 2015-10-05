@@ -781,7 +781,11 @@ void NET_Sleep(int msec)
 
 	//Com_Printf ("NET_Sleep (%d)\n", LOG_GENERAL, msec);
 
-	STUBBED("NET_Sleep");
+#ifndef EMSCRIPTEN
+
+	libwebsocket_service(websocketContext, msec);
+
+#endif  // EMSCRIPTEN
 }
 #endif
 
