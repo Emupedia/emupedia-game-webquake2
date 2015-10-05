@@ -3149,7 +3149,16 @@ void SV_Init (void)
 
 	sv_airaccelerate = Cvar_Get("sv_airaccelerate", "0", CVAR_LATCH);
 
+#if !defined(EMSCRIPTEN) && !defined(USE_LIBWEBSOCKETS)
+
 	public_server = Cvar_Get ("public", "1", 0);
+
+#else  // !defined(EMSCRIPTEN) && !defined(USE_LIBWEBSOCKETS)
+
+	public_server = Cvar_Get ("public", "0", 0);
+
+#endif  // !defined(EMSCRIPTEN) && !defined(USE_LIBWEBSOCKETS)
+
 	public_server->help = "If set, sends information about this server to master servers which will cause the server to be shown in server browsers. See also 'setmaster' command. Default 0.\n";
 
 	//r1: not needed
