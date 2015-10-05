@@ -42,6 +42,7 @@ extern "C" {
 #include <memory>
 #include <tuple>
 #include <unordered_map>
+#include <vector>
 
 
 #ifdef NDEBUG
@@ -163,6 +164,7 @@ static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 struct Connection {
 	netadr_t addr;
 	struct libwebsocket *wsi;
+	std::vector<char> recvBuffer;
 
 
 	Connection(netadr_t addr_, struct libwebsocket *wsi_)
@@ -176,6 +178,9 @@ struct Connection {
 	{
 		STUBBED("~Connection");
 	}
+
+
+	bool recvPacket(sizebuf_t *net_message);
 };
 
 
@@ -231,11 +236,22 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		break;
 
 	case LWS_CALLBACK_RECEIVE:
-		Com_Printf("websocketCallback LWS_CALLBACK_RECEIVE\n", LOG_NET);
-		break;
-
 	case LWS_CALLBACK_CLIENT_RECEIVE:
-		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_RECEIVE\n", LOG_NET);
+		{
+			assert(wsi != NULL);
+
+			// TODO: better ( O(1) ) way to find connection
+			for (auto &p : connections) {
+				auto &conn = p.second;
+				assert(conn->wsi != NULL);
+				const char *buf = reinterpret_cast<char *>(in);
+				if (conn->wsi == wsi) {
+					conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
+					break;
+				}
+			}
+
+		}
 		break;
 
 	case LWS_CALLBACK_FILTER_NETWORK_CONNECTION:
@@ -376,6 +392,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 struct Connection {
 	netadr_t addr;
+	std::vector<char> recvBuffer;
 
 
 	explicit Connection(netadr_t addr_)
@@ -388,6 +405,9 @@ struct Connection {
 	{
 		STUBBED("~Connection");
 	}
+
+
+	bool recvPacket(sizebuf_t *net_message);
 };
 
 
@@ -411,7 +431,37 @@ static void websocketShutdown() {
 static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	return std::unique_ptr<Connection>();
 }
+
+
 #endif  // EMSCRIPTEN
+
+
+bool Connection::recvPacket(sizebuf_t *net_message) {
+	assert(net_message);
+
+	if (recvBuffer.size() < 2) {
+		return false;
+	}
+
+	uint16_t length = 0;
+	memcpy(&length, &recvBuffer[0], 2);
+	if (recvBuffer.size() < static_cast<size_t>(length) + 2) {
+		// incomplete packet
+		return false;
+	}
+
+	if (length > net_message->maxsize) {
+		Com_Printf("Oversize packet from %s\n", LOG_NET, NET_AdrToString(&addr));
+		recvBuffer.erase(recvBuffer.begin(), recvBuffer.begin() + 2 + length);
+		return false;
+	}
+
+	memcpy(net_message->data, &recvBuffer[2], length);
+	net_message->cursize = length;
+	recvBuffer.erase(recvBuffer.begin(), recvBuffer.begin() + 2 + length);
+
+	return true;
+}
 
 
 char *NET_ErrorString (void);
@@ -607,14 +657,19 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 		return 0;
 	}
 
-#ifndef EMSCRIPTEN
+	// FIXME: better( O(1) ) way to find a connection with data
+	for (const auto &p : connections) {
+		const auto &conn = p.second;
+		if (conn->recvPacket(net_message)) {
+			*net_from = p.first;
 
-	// TODO: what does the return value mean? do we care?
-	libwebsocket_service(websocketContext, 0);
+			net_packets_in++;
+			net_total_in += net_message->cursize;
 
-#endif  // EMSCRIPTEN
-
-	STUBBED("NET_GetPacket");
+			return 1;
+		}
+		// not enough data for a complete packet, try next connection
+	}
 
 	return 0;
 }
