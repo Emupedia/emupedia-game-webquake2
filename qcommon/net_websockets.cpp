@@ -151,6 +151,12 @@ bool operator==(const netadr_t &a, const netadr_t &b) {
 static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 
 
+#define SockadrToNetadr(s,a) \
+	a->type = NA_IP; \
+	*(int *)&a->ip = ((struct sockaddr_in *)s)->sin_addr.s_addr; \
+	a->port = ((struct sockaddr_in *)s)->sin_port; \
+
+
 #ifndef EMSCRIPTEN
 
 
@@ -765,12 +771,6 @@ void Net_Stats_f (void)
 				net_total_in, net_packets_in, (int)(((net_total_in * 8) / 1024) / diff),
 				net_total_out, net_packets_out, (int)((net_total_out * 8) / 1024) / diff);
 }
-
-
-#define SockadrToNetadr(s,a) \
-	a->type = NA_IP; \
-	*(int *)&a->ip = ((struct sockaddr_in *)s)->sin_addr.s_addr; \
-	a->port = ((struct sockaddr_in *)s)->sin_port; \
 
 
 /*
