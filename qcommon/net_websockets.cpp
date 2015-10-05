@@ -183,7 +183,35 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 {
 	switch (reason) {
 	case LWS_CALLBACK_ESTABLISHED:
-		Com_Printf("websocketCallback LWS_CALLBACK_ESTABLISHED\n", LOG_NET);
+		{
+			// TODO: should be earlier?
+			int fd = libwebsocket_get_socket_fd(wsi);
+			struct sockaddr sadr;
+			memset(&sadr, 0, sizeof(sadr));
+			socklen_t len = sizeof(sadr);
+			int retval = getpeername(fd, &sadr, &len);
+			if (retval < 0) {
+				Com_Printf("getpeername failed: %s (%d)\n", LOG_NET, strerror(errno), errno);
+				return -1;
+			}
+
+			netadr_t addr;
+			netadr_t *temp = &addr;  // FIXME: bad macro shit!
+			SockadrToNetadr(&sadr, temp);
+
+			auto it = connections.find(addr);
+			if (it != connections.end()) {
+				// must not exist yet
+				Com_Printf("ERROR: New connection from \"%s\" but it already exists", LOG_NET, NET_AdrToString(&addr));
+				return -1;
+			}
+
+			std::unique_ptr<Connection> conn(new Connection(addr, wsi));
+
+			bool success = false;
+			std::tie(it, success) = connections.emplace(addr, std::move(conn));
+			assert(success);  // it wasn't there before so this can't fail
+		}
 		break;
 
 	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
