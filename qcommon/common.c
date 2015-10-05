@@ -2353,11 +2353,7 @@ void Qcommon_Init (int argc, char **argv)
 
 	showtrace = Cvar_Get ("showtrace", "0", 0);
 #ifndef NO_SERVER
-#ifdef DEDICATED_ONLY
-	dedicated = Cvar_Get ("dedicated", "1", CVAR_NOSET);
-#else
-	dedicated = Cvar_Get ("dedicated", "0", CVAR_NOSET);
-#endif
+	dedicated = Cvar_Get ("dedicated", is_dedicated ? "1" : "0", CVAR_NOSET);
 #endif
 
 	sys_loopstyle = Cvar_Get ("sys_loopstyle", "1", 0);

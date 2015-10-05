@@ -258,6 +258,7 @@ void Q_NullFunc(void);
 //============================================================================
 
 extern	qboolean	q2_initialized;
+extern const bool is_dedicated;
 
 int	COM_Argc (void);
 char *COM_Argv (int arg);	// range and null checked

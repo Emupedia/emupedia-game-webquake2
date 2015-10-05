@@ -174,6 +174,10 @@ extern	cvar_t *allow_download_models;
 extern	cvar_t *allow_download_sounds;
 extern	cvar_t *allow_download_maps;
 
+
+const bool is_dedicated = false;
+
+
 //======================================================================
 
 /*

@@ -2,6 +2,7 @@
 
 
 qboolean send_packet_now = false;
+const bool is_dedicated = true;
 
 
 void CL_Shutdown(void)
