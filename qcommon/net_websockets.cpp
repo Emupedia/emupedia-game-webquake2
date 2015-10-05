@@ -196,6 +196,14 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		Com_Printf("websocketCallback LWS_CALLBACK_CLOSED\n", LOG_NET);
 		break;
 
+	case LWS_CALLBACK_RECEIVE:
+		Com_Printf("websocketCallback LWS_CALLBACK_RECEIVE\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CLIENT_RECEIVE:
+		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_RECEIVE\n", LOG_NET);
+		break;
+
 	case LWS_CALLBACK_FILTER_NETWORK_CONNECTION:
 		Com_Printf("websocketCallback LWS_CALLBACK_FILTER_NETWORK_CONNECTION\n", LOG_NET);
 		break;
@@ -206,6 +214,10 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 
 	case LWS_CALLBACK_FILTER_PROTOCOL_CONNECTION:
 		Com_Printf("websocketCallback LWS_CALLBACK_FILTER_PROTOCOL_CONNECTION\n", LOG_NET);
+		break;
+
+	case LWS_CALLBACK_CLIENT_APPEND_HANDSHAKE_HEADER:
+		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_APPEND_HANDSHAKE_HEADER\n", LOG_NET);
 		break;
 
 	case LWS_CALLBACK_PROTOCOL_INIT:
@@ -317,6 +329,9 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	if (newWsi == NULL) {
 		return std::unique_ptr<Connection>();
 	}
+
+	// TODO: necessary?
+	libwebsocket_service(websocketContext, 0);
 
 	return std::unique_ptr<Connection>(new Connection(to, newWsi));
 }
@@ -657,7 +672,49 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 		assert(success);  // it wasn't there before so this can't fail
 	}
 
+	assert(it->second.get() != NULL);
+	Connection &conn = *(it->second.get());
+	assert(conn.addr == *to);
+
+#ifdef EMSCRIPTEN
+
 	STUBBED("NET_SendPacket");
+
+#else  // EMSCRIPTEN
+
+	assert(conn.wsi);
+
+	// TODO: allocate from heap, keep permanently
+	// connection-specific?
+	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + length + LWS_SEND_BUFFER_POST_PADDING];
+	assert(length < 16384);
+	uint16_t l16 = length;
+	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING], &l16, 2);
+	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2], data, length);
+
+	// TODO: too many calls to libwebsocket_service here
+	libwebsocket_service(websocketContext, 0);
+
+	// TODO: track socket writable status, only write when would not block
+	// TODO: buffer or drop?
+	int retval = libwebsocket_write(conn.wsi, &sendBuf[LWS_SEND_BUFFER_PRE_PADDING], length + 2, LWS_WRITE_BINARY);
+	if (retval < 0) {
+		Com_Printf("NET_SendPacket to %s: ERROR while sending\n", LOG_NET, NET_AdrToString(to));
+		return 0;
+	}
+
+	libwebsocket_service(websocketContext, 0);
+
+	if (retval < length) {
+		// partial send
+		// TODO: handle this better, try to resend rest later
+		Com_Printf("NET_SendPacket to %s: ERROR: partial send\n", LOG_NET, NET_AdrToString(to));
+		STUBBED("resend");
+		connections.erase(it);
+		return 0;
+	}
+
+#endif  // EMSCRIPTEN
 
 	net_packets_out++;
 	net_total_out += length;
