@@ -43,6 +43,9 @@ LDFLAGS+=-s FORCE_ALIGNED_MEMORY=1
 LDLIBS:=
 LDLIBS_ref_gl:=
 
+JS_LIBS:=qcommon/q2websocket.js
+
+
 ifeq ($(STATIC_SDL2),y)
 
 LDLIBS_client:=

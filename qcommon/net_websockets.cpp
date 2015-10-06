@@ -22,7 +22,21 @@
 #endif  // _WIN32
 
 
-#ifndef EMSCRIPTEN
+#ifdef EMSCRIPTEN
+
+
+extern "C" {
+
+// these are defined in javascript
+void q2wsInit();
+int q2wsConnect(const char *url);
+
+
+}  // extern "C"
+
+
+#else  // EMSCRIPTEN
+
 #include <libwebsockets.h>
 
 #undef VERSION
@@ -40,6 +54,7 @@ extern "C" {
 
 
 #include <memory>
+#include <string>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
@@ -392,12 +407,15 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 struct Connection {
 	netadr_t addr;
+	int socket;
 	std::vector<char> recvBuffer;
 
 
-	explicit Connection(netadr_t addr_)
+	explicit Connection(netadr_t addr_, int socket_)
 	: addr(addr_)
+	, socket(socket_)
 	{
+		assert(socket > 0);
 	}
 
 
@@ -414,8 +432,7 @@ struct Connection {
 static bool createWebsocketContext(int port) {
 	assert(!websocketInitialized);
 
-	// TODO: pre-establish server connection
-	STUBBED("createWebsocketContext");
+	q2wsInit();
 
 	websocketInitialized = true;
 	return true;
@@ -424,12 +441,24 @@ static bool createWebsocketContext(int port) {
 
 static void websocketShutdown() {
 	assert(websocketInitialized);
+
+	STUBBED("websocketShutdown");
+
 	websocketInitialized = false;
 }
 
 
 static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
-	return std::unique_ptr<Connection>();
+	std::string url = std::string("ws://") + NET_AdrToString(&to) + "/";
+
+	int socket = q2wsConnect(url.c_str());
+	if (socket < 0) {
+		return std::unique_ptr<Connection>();
+	}
+
+	Com_Printf("created websocket connection %d\n", LOG_NET, socket);
+
+	return std::unique_ptr<Connection>(new Connection(to, socket));
 }
 
 

@@ -211,8 +211,8 @@ endif
 
 $1_OBJ:=$$($1_SRC:.c=$(OBJSUFFIX))
 $1_OBJ:=$$($1_OBJ:.cpp=$(OBJSUFFIX))
-$1$(EXESUFFIX): $$($1_OBJ) | bindirs
-	$$(LINK) $(LDFLAGS) -o $$@ $$^ $$(foreach module, $$($1_MODULES), $$(LDLIBS_$$(module))) $$($1_LIBS) $(LDLIBS)
+$1$(EXESUFFIX): $$($1_OBJ) $(JS_LIBS) | bindirs
+	$$(LINK) $(LDFLAGS) -o $$@ $$($1_OBJ) $$(foreach module, $$($1_MODULES), $$(LDLIBS_$$(module))) $$($1_LIBS) $(LDLIBS) $$(foreach jslib, $$(JS_LIBS), --js-library $(TOPDIR)/$$(jslib))
 
 endef  # program-target
 
