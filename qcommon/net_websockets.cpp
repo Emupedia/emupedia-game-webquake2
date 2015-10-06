@@ -25,11 +25,18 @@
 #ifdef EMSCRIPTEN
 
 
+#include <emscripten.h>
+
+
 extern "C" {
 
 // these are defined in javascript
 void q2wsInit();
 int q2wsConnect(const char *url);
+void q2wsSend(int socket, const char *buf, unsigned int length);
+
+
+void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int length);
 
 
 }  // extern "C"
@@ -462,6 +469,21 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 }
 
 
+void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int len) {
+	// TODO: better( O(1) ) way to find Connection
+	for (const auto &p : connections) {
+		auto &conn = p.second;
+		assert(conn->socket > 0);
+		if (conn->socket == socket) {
+			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
+			return;
+		}
+	}
+
+	Com_Printf("q2wsMessageCallback ERROR: no such socket %d\n", LOG_NET, socket);
+}
+
+
 #endif  // EMSCRIPTEN
 
 
@@ -796,7 +818,15 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 
 #ifdef EMSCRIPTEN
 
-	STUBBED("NET_SendPacket");
+	assert(conn.socket > 0);
+
+	char sendBuf[2 + length];
+	assert(length < 16384);
+	uint16_t l16 = length;
+	memcpy(&sendBuf[0], &l16, 2);
+	memcpy(&sendBuf[2], data, length);
+
+	q2wsSend(conn.socket, &sendBuf[0], length + 2);
 
 #else  // EMSCRIPTEN
 
