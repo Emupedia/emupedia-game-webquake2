@@ -501,7 +501,7 @@ void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
 }
 
 
-char	*NET_AdrToString (netadr_t *a)
+char	*NET_AdrToString (const netadr_t *a)
 {
 	static	char	s[32];
 	
@@ -511,7 +511,7 @@ char	*NET_AdrToString (netadr_t *a)
 }
 
 
-char	*NET_BaseAdrToString (netadr_t *a)
+char	*NET_BaseAdrToString (const netadr_t *a)
 {
 	static	char	s[32];
 	

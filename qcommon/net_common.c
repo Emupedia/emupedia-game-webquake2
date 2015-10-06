@@ -182,7 +182,7 @@ uint32 NET_ntohl (uint32 ip)
 	return ntohl (ip);
 }
 
-char	*NET_AdrToString (netadr_t *a)
+char	*NET_AdrToString (const netadr_t *a)
 {
 	static	char	s[32];
 	
@@ -191,7 +191,7 @@ char	*NET_AdrToString (netadr_t *a)
 	return s;
 }
 
-char	*NET_BaseAdrToString (netadr_t *a)
+char	*NET_BaseAdrToString (const netadr_t *a)
 {
 	static	char	s[32];
 	

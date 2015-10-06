@@ -779,7 +779,7 @@ static inline bool NET_CompareBaseAdr(const netadr_t *a, const netadr_t *b) {
 
 
 char		*NET_inet_ntoa (uint32 ip);
-char		*NET_AdrToString (netadr_t *a);
+char		*NET_AdrToString (const netadr_t *a);
 qboolean	NET_StringToAdr (const char *s, netadr_t *a);
 #ifndef NO_SERVER
 void		NET_Sleep(int msec);
