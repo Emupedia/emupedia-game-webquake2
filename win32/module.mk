@@ -12,7 +12,6 @@ $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))
 
 
 FILES:= \
-	sys_win.c \
 	# empty line
 
 
