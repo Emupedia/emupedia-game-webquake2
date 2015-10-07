@@ -222,8 +222,9 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 				return -1;
 			}
 
+			STUBBED("FIXME: bad macro shit");
 			netadr_t addr;
-			netadr_t *temp = &addr;  // FIXME: bad macro shit!
+			netadr_t *temp = &addr;
 			SockadrToNetadr(&sadr, temp);
 
 			auto it = connections.find(addr);
@@ -262,7 +263,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		{
 			assert(wsi != NULL);
 
-			// TODO: better ( O(1) ) way to find connection
+			STUBBED("TODO: better ( O(1) ) way to find connection");
 			for (auto &p : connections) {
 				auto &conn = p.second;
 				assert(conn->wsi != NULL);
@@ -365,8 +366,7 @@ static bool createWebsocketContext(int port) {
 	info.protocols = protocols;
 	info.gid = -1;
 	info.uid = -1;
-	// TODO: SSL?
-	// TODO: put keepalive stuff in cvars
+	STUBBED("TODO: put keepalive stuff in cvars");
 	info.ka_time = 5;
 	info.ka_probes = 3;
 	info.ka_interval = 1;
@@ -399,10 +399,11 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	snprintf(addrBuf, sizeof(addrBuf), "%u.%u.%u.%u", to.ip[0], to.ip[1], to.ip[2], to.ip[3]);
 	struct libwebsocket *newWsi = libwebsocket_client_connect(websocketContext, addrBuf, ntohs(to.port), 0, "/", addrBuf, addrBuf, "quake2", -1);
 	if (newWsi == NULL) {
+		STUBBED("TODO: log connection create failure");
 		return std::unique_ptr<Connection>();
 	}
 
-	// TODO: necessary?
+	STUBBED("TODO: unnecessary(?) libwebsocket_service");
 	libwebsocket_service(websocketContext, 0);
 
 	return std::unique_ptr<Connection>(new Connection(to, newWsi));
@@ -470,7 +471,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 
 void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int len) {
-	// TODO: better( O(1) ) way to find Connection
+	STUBBED("TODO: better( O(1) ) way to find Connection");
 	for (const auto &p : connections) {
 		auto &conn = p.second;
 		assert(conn->socket > 0);
@@ -708,7 +709,7 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 		return 0;
 	}
 
-	// FIXME: better( O(1) ) way to find a connection with data
+	STUBBED("better( O(1) ) way to find a connection with data");
 	for (const auto &p : connections) {
 		const auto &conn = p.second;
 		if (conn->recvPacket(net_message)) {
@@ -804,7 +805,7 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 		// no connection, create it
 		auto conn = createConnection(*to);
 		if (!conn) {
-			// TODO: log it?
+			// createConnection already logged the failure
 			return 0;
 		}
 		bool success = false;
@@ -815,6 +816,8 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	assert(it->second.get() != NULL);
 	Connection &conn = *(it->second.get());
 	assert(conn.addr == *to);
+
+	STUBBED("TODO: refactor send");
 
 #ifdef EMSCRIPTEN
 
@@ -832,8 +835,7 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 
 	assert(conn.wsi);
 
-	// TODO: allocate from heap, keep permanently
-	// connection-specific?
+	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
 	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + length + LWS_SEND_BUFFER_POST_PADDING];
 	assert(length < 16384);
 	uint16_t l16 = length;
@@ -856,8 +858,8 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	if (retval < length) {
 		// partial send
 		// TODO: handle this better, try to resend rest later
-		Com_Printf("NET_SendPacket to %s: ERROR: partial send\n", LOG_NET, NET_AdrToString(to));
 		STUBBED("resend");
+		Com_Printf("NET_SendPacket to %s: ERROR: partial send\n", LOG_NET, NET_AdrToString(to));
 		connections.erase(it);
 		return 0;
 	}
