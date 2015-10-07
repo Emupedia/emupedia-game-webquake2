@@ -63,7 +63,10 @@ var LibraryQ2Websocket = {
 			socket.send(binary.buffer);
 		} catch (err) {
 			console.log("Error in webSocket.send: " + err);
+			return -1;
 		}
+
+		return 0;
 	}
 };
 

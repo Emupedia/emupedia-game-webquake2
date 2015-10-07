@@ -33,7 +33,7 @@ extern "C" {
 // these are defined in javascript
 void q2wsInit();
 int q2wsConnect(const char *url);
-void q2wsSend(int socket, const char *buf, unsigned int length);
+int q2wsSend(int socket, const char *buf, unsigned int length);
 
 
 void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int length);
@@ -203,6 +203,8 @@ struct Connection {
 
 
 	bool recvPacket(sizebuf_t *net_message);
+
+	bool sendPacket(const char *data, size_t length);
 };
 
 
@@ -410,6 +412,39 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 }
 
 
+bool Connection::sendPacket(const char *data, size_t length) {
+	assert(wsi);
+
+	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
+	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + length + LWS_SEND_BUFFER_POST_PADDING];
+	assert(length < 16384);
+	uint16_t l16 = length;
+	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING], &l16, 2);
+	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2], data, length);
+
+	// TODO: too many calls to libwebsocket_service here
+	libwebsocket_service(websocketContext, 0);
+
+	// TODO: track socket writable status, only write when would not block
+	// TODO: buffer or drop?
+	int retval = libwebsocket_write(wsi, &sendBuf[LWS_SEND_BUFFER_PRE_PADDING], length + 2, LWS_WRITE_BINARY);
+	if (retval < 0) {
+		return false;
+	}
+
+	libwebsocket_service(websocketContext, 0);
+
+	if (retval < length) {
+		// partial send
+		// TODO: handle this better, try to resend rest later
+		STUBBED("resend");
+		return false;
+	}
+
+	return true;
+}
+
+
 #else  // EMSCRIPTEN
 
 
@@ -434,6 +469,8 @@ struct Connection {
 
 
 	bool recvPacket(sizebuf_t *net_message);
+
+	bool sendPacket(const char *data, size_t len);
 };
 
 
@@ -482,6 +519,20 @@ void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsig
 	}
 
 	Com_Printf("q2wsMessageCallback ERROR: no such socket %d\n", LOG_NET, socket);
+}
+
+
+bool Connection::sendPacket(const char *data, size_t length) {
+	assert(socket > 0);
+
+	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
+	char sendBuf[2 + length];
+	assert(length < 16384);
+	uint16_t l16 = length;
+	memcpy(&sendBuf[0], &l16, 2);
+	memcpy(&sendBuf[2], data, length);
+
+	return (q2wsSend(socket, &sendBuf[0], length + 2) >= 0);
 }
 
 
@@ -817,54 +868,12 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	Connection &conn = *(it->second.get());
 	assert(conn.addr == *to);
 
-	STUBBED("TODO: refactor send");
+	bool success = conn.sendPacket(reinterpret_cast<const char *>(data), length);
 
-#ifdef EMSCRIPTEN
-
-	assert(conn.socket > 0);
-
-	char sendBuf[2 + length];
-	assert(length < 16384);
-	uint16_t l16 = length;
-	memcpy(&sendBuf[0], &l16, 2);
-	memcpy(&sendBuf[2], data, length);
-
-	q2wsSend(conn.socket, &sendBuf[0], length + 2);
-
-#else  // EMSCRIPTEN
-
-	assert(conn.wsi);
-
-	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
-	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + length + LWS_SEND_BUFFER_POST_PADDING];
-	assert(length < 16384);
-	uint16_t l16 = length;
-	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING], &l16, 2);
-	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2], data, length);
-
-	// TODO: too many calls to libwebsocket_service here
-	libwebsocket_service(websocketContext, 0);
-
-	// TODO: track socket writable status, only write when would not block
-	// TODO: buffer or drop?
-	int retval = libwebsocket_write(conn.wsi, &sendBuf[LWS_SEND_BUFFER_PRE_PADDING], length + 2, LWS_WRITE_BINARY);
-	if (retval < 0) {
+	if (!success) {
 		Com_Printf("NET_SendPacket to %s: ERROR while sending\n", LOG_NET, NET_AdrToString(to));
 		return 0;
 	}
-
-	libwebsocket_service(websocketContext, 0);
-
-	if (retval < length) {
-		// partial send
-		// TODO: handle this better, try to resend rest later
-		STUBBED("resend");
-		Com_Printf("NET_SendPacket to %s: ERROR: partial send\n", LOG_NET, NET_AdrToString(to));
-		connections.erase(it);
-		return 0;
-	}
-
-#endif  // EMSCRIPTEN
 
 	net_packets_out++;
 	net_total_out += length;
