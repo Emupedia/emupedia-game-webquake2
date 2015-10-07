@@ -3585,11 +3585,6 @@ static int EXPORT pmicmpfnc( const void *_a, const void *_b )
 
 static qboolean PlayerConfig_MenuInit( void )
 {
-	//extern cvar_t *name;
-	//extern cvar_t *skin;
-
-	//cvar_t *hand = Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
-
 	static const char *handedness[] = { "right", "left", "center", 0 };
 
 	PlayerConfig_ScanDirectories();
