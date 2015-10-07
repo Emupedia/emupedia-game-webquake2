@@ -3707,10 +3707,6 @@ static qboolean PlayerConfig_MenuInit( void )
 	s_player_handedness_box.curvalue = Cvar_IntValue( "hand" );
 	s_player_handedness_box.itemnames = handedness;
 
-	for (i = 0; i < sizeof(rate_tbl) / sizeof(*rate_tbl) - 1; i++)
-		if (Cvar_IntValue("rate") == rate_tbl[i])
-			break;
-
 	s_player_rate_title.generic.type = MTYPE_SEPARATOR;
 	s_player_rate_title.generic.name = "connect speed";
 	s_player_rate_title.generic.x    = 56;
@@ -3722,7 +3718,13 @@ static qboolean PlayerConfig_MenuInit( void )
 	s_player_rate_box.generic.name	= 0;
 	s_player_rate_box.generic.cursor_offset = -48;
 	s_player_rate_box.generic.callback = RateCallback;
+
+	for (i = 0; i < sizeof(rate_tbl) / sizeof(*rate_tbl) - 1; i++) {
+		if (Cvar_IntValue("rate") == rate_tbl[i]) {
 	s_player_rate_box.curvalue = i;
+			break;
+		}
+	}
 	s_player_rate_box.itemnames = rate_names;
 
 	s_player_download_action.generic.type = MTYPE_ACTION;
