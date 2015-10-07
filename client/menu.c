@@ -3588,14 +3588,6 @@ static qboolean PlayerConfig_MenuInit( void )
 	//extern cvar_t *name;
 	//extern cvar_t *skin;
 
-	char currentdirectory[1024];
-	char currentskin[1024];
-	int i = 0;
-	int	hand;
-
-	int currentdirectoryindex = 0;
-	int currentskinindex = 0;
-
 	//cvar_t *hand = Cvar_Get( "hand", "0", CVAR_USERINFO | CVAR_ARCHIVE );
 
 	static const char *handedness[] = { "right", "left", "center", 0 };
@@ -3605,14 +3597,16 @@ static qboolean PlayerConfig_MenuInit( void )
 	if (s_numplayermodels == 0)
 		return false;
 
-	hand = Cvar_IntValue ("hand");
+	int hand = Cvar_IntValue ("hand");
 
 	if ( hand < 0 || hand > 2)
 		Cvar_Set( "hand", "0" );
 
 	//r1: BUFFER OVERFLOW WAS HERE
+	char currentdirectory[1024];
 	Q_strncpy( currentdirectory, Cvar_VariableString ("skin"), sizeof(currentdirectory)-1);
 
+	char currentskin[1024];
 	if ( strchr( currentdirectory, '/' ) )
 	{
 		strcpy( currentskin, strchr( currentdirectory, '/' ) + 1 );
@@ -3631,8 +3625,11 @@ static qboolean PlayerConfig_MenuInit( void )
 
 	qsort( s_pmi, s_numplayermodels, sizeof( s_pmi[0] ), (int (EXPORT *)(const void *, const void *))pmicmpfnc );
 
+	int currentdirectoryindex = 0;
+	int currentskinindex = 0;
+
 	memset( s_pmnames, 0, sizeof( s_pmnames ) );
-	for ( i = 0; i < s_numplayermodels; i++ )
+	for (int i = 0; i < s_numplayermodels; i++)
 	{
 		s_pmnames[i] = s_pmi[i].displayname;
 		if ( Q_stricmp( s_pmi[i].directory, currentdirectory ) == 0 )
@@ -3719,7 +3716,7 @@ static qboolean PlayerConfig_MenuInit( void )
 	s_player_rate_box.generic.cursor_offset = -48;
 	s_player_rate_box.generic.callback = RateCallback;
 
-	for (i = 0; i < sizeof(rate_tbl) / sizeof(*rate_tbl) - 1; i++) {
+	for (int i = 0; i < sizeof(rate_tbl) / sizeof(*rate_tbl) - 1; i++) {
 		if (Cvar_IntValue("rate") == rate_tbl[i]) {
 			s_player_rate_box.curvalue = i;
 			break;
