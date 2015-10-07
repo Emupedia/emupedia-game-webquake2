@@ -70,3 +70,7 @@ void EXPORT SCR_DebugGraph (float value, int color)
 void SCR_EndLoadingPlaque (void)
 {
 }
+
+
+void M_Menu_Simple_Multiplayer_f(void) {
+}

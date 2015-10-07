@@ -2396,6 +2396,12 @@ void Qcommon_Init (int argc, char **argv)
 		{
 #endif
 
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+			M_Menu_Simple_Multiplayer_f();
+
+#else  // SIMPLE_MULTIPLAYER_MENU
+
 			Cbuf_AddText ("toggleconsole\n");
 
 			Com_Printf (
@@ -2407,6 +2413,7 @@ void Qcommon_Init (int argc, char **argv)
 				"\n", LOG_GENERAL);
 
 			Sys_UpdateURLMenu ("http://www.r1ch.net/forum/index.php?board=8.0");
+#endif  // SIMPLE_MULTIPLAYER_MENU
 
 #ifndef NO_SERVER
 		}

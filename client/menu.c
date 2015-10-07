@@ -42,19 +42,35 @@ static char *menu_move_sound	= "misc/menu2.wav";
 static char *menu_out_sound		= "misc/menu3.wav";
 
 void M_Menu_Main_f (void);
+
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+void M_Menu_Simple_Multiplayer_f(void);
+
+#else  // SIMPLE_MULTIPLAYER_MENU
+
 static 		void M_Menu_PlayerConfig_f (void);
 static 			void M_Menu_DownloadOptions_f (void);
-static 		void M_Menu_Credits_f( void );
 static 	void M_Menu_Multiplayer_f( void );
 static 		void M_Menu_JoinServer_f (void);
 static 			void M_Menu_AddressBook_f( void );
 static 		void M_Menu_StartServer_f (void);
 static 			void M_Menu_DMOptions_f (void);
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
+static 		void M_Menu_Credits_f( void );
+
 static 	void M_Menu_Video_f (void);
 static 	void M_Menu_Options_f (void);
 static 		void M_Menu_R1Q2_f (void);
 static 		void M_Menu_Keys_f (void);
 static 	void M_Menu_Quit_f (void);
+
+
+static bool playerStuff_MenuInit(int offset);
+static void PlayerConfig_MenuDraw_worker(menuframework_s *menu);
+
 
 qboolean	m_entersound;		// play after drawing a frame, so caching
 								// won't disrupt the sound
@@ -474,7 +490,17 @@ static const char *M_Main_Key (int key)
 		switch (m_main_cursor)
 		{
 		case M_MENU_MULTIPLAYER:
+
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+			M_Menu_Simple_Multiplayer_f();
+
+#else   // SIMPLE_MULTIPLAYER_MENU
+
 			M_Menu_Multiplayer_f();
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
 			break;
 
 		case M_MENU_OPTIONS:
@@ -510,9 +536,28 @@ MULTIPLAYER MENU
 =======================================================================
 */
 static menuframework_s	s_multiplayer_menu;
-static menuaction_s		s_join_network_server_action;
-static menuaction_s		s_start_network_server_action;
-static menuaction_s		s_player_setup_action;
+
+
+static menuframework_s	s_player_config_menu;
+static menufield_s		s_player_name_field;
+static menulist_s		s_player_model_box;
+static menulist_s		s_player_skin_box;
+static menulist_s		s_player_handedness_box;
+static menuseparator_s	s_player_skin_title;
+static menuseparator_s	s_player_model_title;
+static menuseparator_s	s_player_hand_title;
+
+
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+static menuaction_s s_play_action;
+
+#else  // SIMPLE_MULTIPLAYER_MENU
+
+static menulist_s		s_player_rate_box;
+static menuseparator_s	s_player_rate_title;
+static menuaction_s		s_player_download_action;
+
 
 static void Multiplayer_MenuDraw (void)
 {
@@ -521,6 +566,86 @@ static void Multiplayer_MenuDraw (void)
 	Menu_AdjustCursor( &s_multiplayer_menu, 1 );
 	Menu_Draw( &s_multiplayer_menu );
 }
+
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
+
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+
+static void Multiplayer_MenuDraw (void)
+{
+	M_Banner( "m_banner_multiplayer" );
+
+	Menu_AdjustCursor( &s_multiplayer_menu, 1 );
+	PlayerConfig_MenuDraw_worker( &s_multiplayer_menu );
+}
+
+
+static void PlayFunc( void *unused )
+{
+	char	buffer[128];
+
+	// FIXME: proper address from environment
+	netadr_t preconfaddr;
+	NET_StringToAdr("127.0.0.1:27910", &preconfaddr);
+
+	Com_sprintf (buffer, sizeof(buffer), "connect %s\n", NET_AdrToString (&preconfaddr));
+	Cbuf_AddText (buffer);
+	M_ForceMenuOff ();
+}
+
+
+static void SimpleMultiplayer_MenuInit() {
+	bool retval = playerStuff_MenuInit(0);
+	if (!retval) {
+		return;
+	}
+
+	s_multiplayer_menu.x = viddef.width / 2 - 95; 
+	s_multiplayer_menu.y = viddef.height / 2 - 67;
+	s_multiplayer_menu.nitems = 0;
+
+	s_play_action.generic.type  = MTYPE_ACTION;
+	s_play_action.generic.flags = QMF_LEFT_JUSTIFY;
+	s_play_action.generic.x     = 0;
+	s_play_action.generic.y     = 156;
+	s_play_action.generic.name  = " Play";
+	s_play_action.generic.callback = PlayFunc;
+
+	Menu_AddItem( &s_multiplayer_menu, &s_player_name_field );
+	Menu_AddItem( &s_multiplayer_menu, &s_player_model_title );
+	Menu_AddItem( &s_multiplayer_menu, &s_player_model_box );
+	if ( s_player_skin_box.itemnames )
+	{
+		Menu_AddItem( &s_multiplayer_menu, &s_player_skin_title );
+		Menu_AddItem( &s_multiplayer_menu, &s_player_skin_box );
+	}
+	Menu_AddItem( &s_multiplayer_menu, &s_player_hand_title );
+	Menu_AddItem( &s_multiplayer_menu, &s_player_handedness_box );
+	Menu_AddItem( &s_multiplayer_menu, &s_play_action );
+}
+
+
+static const char *Multiplayer_MenuKey( int key )
+{
+	return Default_MenuKey( &s_multiplayer_menu, key );
+}
+
+
+void M_Menu_Simple_Multiplayer_f(void) {
+	SimpleMultiplayer_MenuInit();
+	M_PushMenu( Multiplayer_MenuDraw, Multiplayer_MenuKey );
+}
+
+
+#else  // SIMPLE_MULTIPLAYER_MENU
+
+
+static menuaction_s		s_join_network_server_action;
+static menuaction_s		s_start_network_server_action;
+static menuaction_s		s_player_setup_action;
 
 static void PlayerSetupFunc( void *unused )
 {
@@ -582,6 +707,10 @@ static void M_Menu_Multiplayer_f( void )
 	Multiplayer_MenuInit();
 	M_PushMenu( Multiplayer_MenuDraw, Multiplayer_MenuKey );
 }
+
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
 
 /*
 =======================================================================
@@ -2099,6 +2228,7 @@ static const char *M_Credits_Key( int key )
 
 extern int Developer_searchpath (void);
 
+
 static void M_Menu_Credits_f( void )
 {
 	int		n;
@@ -2176,11 +2306,19 @@ JOIN SERVER MENU
 */
 #define MAX_LOCAL_SERVERS 8
 
+
+#ifndef SIMPLE_MULTIPLAYER_MENU
+
+
 static menuframework_s	s_joinserver_menu;
 static menuseparator_s	s_joinserver_server_title;
 static menuaction_s		s_joinserver_search_action;
 static menuaction_s		s_joinserver_address_book_action;
 static menuaction_s		s_joinserver_server_actions[MAX_LOCAL_SERVERS];
+
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
 
 int		m_num_servers;
 #define	NO_SERVER_STRING	"<no server>"
@@ -2210,6 +2348,10 @@ void M_AddToServerList (netadr_t adr, char *info)
 	snprintf (local_server_names[m_num_servers], sizeof(local_server_names[m_num_servers])-1, "%d. %s", m_num_servers+1, info);
 	m_num_servers++;
 }
+
+
+
+#ifndef SIMPLE_MULTIPLAYER_MENU
 
 
 static void JoinServerFunc( void *self )
@@ -3322,6 +3464,10 @@ static void M_Menu_AddressBook_f(void)
 	M_PushMenu( AddressBook_MenuDraw, AddressBook_MenuKey );
 }
 
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
+
 /*
 =============================================================================
 
@@ -3329,17 +3475,6 @@ PLAYER CONFIG MENU
 
 =============================================================================
 */
-static menuframework_s	s_player_config_menu;
-static menufield_s		s_player_name_field;
-static menulist_s		s_player_model_box;
-static menulist_s		s_player_skin_box;
-static menulist_s		s_player_handedness_box;
-static menulist_s		s_player_rate_box;
-static menuseparator_s	s_player_skin_title;
-static menuseparator_s	s_player_model_title;
-static menuseparator_s	s_player_hand_title;
-static menuseparator_s	s_player_rate_title;
-static menuaction_s		s_player_download_action;
 
 #define MAX_DISPLAYNAME 16
 #define MAX_PLAYERMODELS 1024
@@ -3356,6 +3491,15 @@ static playermodelinfo_s s_pmi[MAX_PLAYERMODELS];
 static char *s_pmnames[MAX_PLAYERMODELS];
 static int s_numplayermodels;
 
+static void HandednessCallback( void *unused )
+{
+	Cvar_SetValue( "hand", (float)s_player_handedness_box.curvalue );
+}
+
+
+#ifndef SIMPLE_MULTIPLAYER_MENU
+
+
 static int rate_tbl[] = { 2500, 3200, 4300, 5000, 15000, 0 };
 static const char *rate_names[] = { "28.8 Modem", "33.6 Modem", "56.6 Modem", "ISDN",
 	"Cable/DSL/LAN", "User defined", 0 };
@@ -3365,16 +3509,15 @@ static void DownloadOptionsFunc( void *self )
 	M_Menu_DownloadOptions_f();
 }
 
-static void HandednessCallback( void *unused )
-{
-	Cvar_SetValue( "hand", (float)s_player_handedness_box.curvalue );
-}
-
 static void RateCallback( void *unused )
 {
 	if (s_player_rate_box.curvalue != sizeof(rate_tbl) / sizeof(*rate_tbl) - 1)
 		Cvar_SetValue( "rate", (float)rate_tbl[s_player_rate_box.curvalue] );
 }
+
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
 
 static void ModelCallback( void *unused )
 {
@@ -3583,8 +3726,7 @@ static int EXPORT pmicmpfnc( const void *_a, const void *_b )
 }
 
 
-static qboolean PlayerConfig_MenuInit( void )
-{
+static bool playerStuff_MenuInit(int offset) {
 	static const char *handedness[] = { "right", "left", "center", 0 };
 
 	PlayerConfig_ScanDirectories();
@@ -3644,15 +3786,11 @@ static qboolean PlayerConfig_MenuInit( void )
 		}
 	}
 
-	s_player_config_menu.x = viddef.width / 2 - 95; 
-	s_player_config_menu.y = viddef.height / 2 - 97;
-	s_player_config_menu.nitems = 0;
-
 	s_player_name_field.generic.type = MTYPE_FIELD;
 	s_player_name_field.generic.name = "name";
 	s_player_name_field.generic.callback = 0;
 	s_player_name_field.generic.x		= 0;
-	s_player_name_field.generic.y		= 0;
+	s_player_name_field.generic.y		= offset + 0;
 	s_player_name_field.length	= 20;
 	s_player_name_field.visible_length = 20;
 	strncpy( s_player_name_field.buffer, Cvar_VariableString ("name"), sizeof(s_player_name_field.buffer)-1);
@@ -3661,11 +3799,11 @@ static qboolean PlayerConfig_MenuInit( void )
 	s_player_model_title.generic.type = MTYPE_SEPARATOR;
 	s_player_model_title.generic.name = "model";
 	s_player_model_title.generic.x    = -8;
-	s_player_model_title.generic.y	 = 60;
+	s_player_model_title.generic.y	 = offset + 60;
 
 	s_player_model_box.generic.type = MTYPE_SPINCONTROL;
 	s_player_model_box.generic.x	= -56;
-	s_player_model_box.generic.y	= 70;
+	s_player_model_box.generic.y	= offset + 70;
 	s_player_model_box.generic.callback = ModelCallback;
 	s_player_model_box.generic.cursor_offset = -48;
 	s_player_model_box.curvalue = currentdirectoryindex;
@@ -3674,11 +3812,11 @@ static qboolean PlayerConfig_MenuInit( void )
 	s_player_skin_title.generic.type = MTYPE_SEPARATOR;
 	s_player_skin_title.generic.name = "skin";
 	s_player_skin_title.generic.x    = -16;
-	s_player_skin_title.generic.y	 = 84;
+	s_player_skin_title.generic.y	 = offset + 84;
 
 	s_player_skin_box.generic.type = MTYPE_SPINCONTROL;
 	s_player_skin_box.generic.x	= -56;
-	s_player_skin_box.generic.y	= 94;
+	s_player_skin_box.generic.y	= offset + 94;
 	s_player_skin_box.generic.name	= 0;
 	s_player_skin_box.generic.callback = 0;
 	s_player_skin_box.generic.cursor_offset = -48;
@@ -3688,16 +3826,34 @@ static qboolean PlayerConfig_MenuInit( void )
 	s_player_hand_title.generic.type = MTYPE_SEPARATOR;
 	s_player_hand_title.generic.name = "handedness";
 	s_player_hand_title.generic.x    = 32;
-	s_player_hand_title.generic.y	 = 108;
+	s_player_hand_title.generic.y	 = offset + 108;
 
 	s_player_handedness_box.generic.type = MTYPE_SPINCONTROL;
 	s_player_handedness_box.generic.x	= -56;
-	s_player_handedness_box.generic.y	= 118;
+	s_player_handedness_box.generic.y	= offset + 118;
 	s_player_handedness_box.generic.name	= 0;
 	s_player_handedness_box.generic.cursor_offset = -48;
 	s_player_handedness_box.generic.callback = HandednessCallback;
 	s_player_handedness_box.curvalue = Cvar_IntValue( "hand" );
 	s_player_handedness_box.itemnames = handedness;
+
+	return true;
+}
+
+
+#ifndef SIMPLE_MULTIPLAYER_MENU
+
+
+static qboolean PlayerConfig_MenuInit( void )
+{
+	bool retval = playerStuff_MenuInit(0);
+	if (!retval) {
+		return false;
+	}
+
+	s_player_config_menu.x = viddef.width / 2 - 95; 
+	s_player_config_menu.y = viddef.height / 2 - 97;
+	s_player_config_menu.nitems = 0;
 
 	s_player_rate_title.generic.type = MTYPE_SEPARATOR;
 	s_player_rate_title.generic.name = "connect speed";
@@ -3744,8 +3900,12 @@ static qboolean PlayerConfig_MenuInit( void )
 	return true;
 }
 
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
+
 extern float CalcFov( float fov_x, int w, int h );
-static void PlayerConfig_MenuDraw( void )
+static void PlayerConfig_MenuDraw_worker(menuframework_s *menu)
 {
 	refdef_t refdef;
 	char scratch[MAX_QPATH];
@@ -3791,7 +3951,7 @@ static void PlayerConfig_MenuDraw( void )
 		refdef.lightstyles = 0;
 		refdef.rdflags = RDF_NOWORLDMODEL;
 
-		Menu_Draw( &s_player_config_menu );
+		Menu_Draw( menu );
 
 		M_DrawTextBox( (int)(( refdef.x ) * ( 320.0F / viddef.width ) - 8), (int)(( viddef.height / 2 ) * ( 240.0F / viddef.height) - 77), refdef.width / 8, refdef.height / 8 );
 		refdef.height += 4;
@@ -3804,6 +3964,16 @@ static void PlayerConfig_MenuDraw( void )
 		re.DrawPic( s_player_config_menu.x - 40, refdef.y, scratch );
 	}
 }
+
+
+#ifndef SIMPLE_MULTIPLAYER_MENU
+
+
+static void PlayerConfig_MenuDraw( void )
+{
+	PlayerConfig_MenuDraw_worker( &s_player_config_menu );
+}
+
 
 static const char *PlayerConfig_MenuKey (int key)
 {
@@ -3852,6 +4022,9 @@ static void M_Menu_PlayerConfig_f (void)
 }
 
 
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
+
 /*
 =======================================================================
 
@@ -3879,14 +4052,25 @@ M_Init
 void M_Init (void)
 {
 	Cmd_AddCommand ("menu_main", M_Menu_Main_f);
+
+		Cmd_AddCommand ("menu_credits", M_Menu_Credits_f );
+
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+	Cmd_AddCommand ("menu_multiplayer", M_Menu_Simple_Multiplayer_f );
+
+#else  // SIMPLE_MULTIPLAYER_MENU
+
 		Cmd_AddCommand ("menu_joinserver", M_Menu_JoinServer_f);
 			Cmd_AddCommand ("menu_addressbook", M_Menu_AddressBook_f);
 		Cmd_AddCommand ("menu_startserver", M_Menu_StartServer_f);
 			Cmd_AddCommand ("menu_dmoptions", M_Menu_DMOptions_f);
 		Cmd_AddCommand ("menu_playerconfig", M_Menu_PlayerConfig_f);
 			Cmd_AddCommand ("menu_downloadoptions", M_Menu_DownloadOptions_f);
-		Cmd_AddCommand ("menu_credits", M_Menu_Credits_f );
 	Cmd_AddCommand ("menu_multiplayer", M_Menu_Multiplayer_f );
+
+#endif  // SIMPLE_MULTIPLAYER_MENU
+
 	Cmd_AddCommand ("menu_video", M_Menu_Video_f);
 	Cmd_AddCommand ("menu_options", M_Menu_Options_f);
 		Cmd_AddCommand ("menu_r1q2", M_Menu_R1Q2_f);

@@ -23,6 +23,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef _CLIENT_H
 
+
+#if defined(EMSCRIPTEN) || defined(USE_LIBWEBSOCKETS)
+#define SIMPLE_MULTIPLAYER_MENU
+#endif  // websockets
+
+
 #define	BUILDING_CLIENT		1
 #define	DECOUPLED_RENDERER	1
 
@@ -784,6 +790,7 @@ void M_Init (void);
 void M_Keydown (int key);
 void M_Draw (void);
 void M_Menu_Main_f (void);
+void M_Menu_Simple_Multiplayer_f(void);
 void M_ForceMenuOff (void);
 void M_AddToServerList (netadr_t adr, char *info);
 
