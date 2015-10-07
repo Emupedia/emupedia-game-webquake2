@@ -3721,7 +3721,7 @@ static qboolean PlayerConfig_MenuInit( void )
 
 	for (i = 0; i < sizeof(rate_tbl) / sizeof(*rate_tbl) - 1; i++) {
 		if (Cvar_IntValue("rate") == rate_tbl[i]) {
-	s_player_rate_box.curvalue = i;
+			s_player_rate_box.curvalue = i;
 			break;
 		}
 	}
