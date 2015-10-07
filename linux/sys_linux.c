@@ -138,9 +138,17 @@ void Sys_Quit (void)
 {
 	CL_Shutdown ();
 	Qcommon_Shutdown ();
-#ifndef EMSCRIPTEN
+
+#ifdef EMSCRIPTEN
+
+	emscripten_cancel_main_loop();
+
+#else  // EMSCRIPTEN
+
 	fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+
 #endif  // EMSCRIPTEN
+
 	exit(0);
 }
 
