@@ -72,5 +72,9 @@ void SCR_EndLoadingPlaque (void)
 }
 
 
+void M_Menu_Main_f(void) {
+}
+
+
 void M_Menu_Simple_Multiplayer_f(void) {
 }

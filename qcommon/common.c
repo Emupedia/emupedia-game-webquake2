@@ -2398,6 +2398,7 @@ void Qcommon_Init (int argc, char **argv)
 
 #ifdef SIMPLE_MULTIPLAYER_MENU
 
+			M_Menu_Main_f();
 			M_Menu_Simple_Multiplayer_f();
 
 #else  // SIMPLE_MULTIPLAYER_MENU
