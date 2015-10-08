@@ -18,6 +18,17 @@ var LibraryQ2Websocket = {
 			var q2wsMessageCallback = Module.cwrap('q2wsMessageCallback', null, ['number', 'array', 'number']);
 			q2wsMessageCallback(this.socketId, buf, buf.length);
 		}
+
+		, createSocket: function(url) {
+			var socket = new WebSocket(url, "quake2");
+
+			socket.onopen = Q2WS.onOpenFunc;
+			socket.onmessage = Q2WS.onMessageFunc;
+			socket.onclose = Q2WS.onCloseFunc;
+			socket.binaryType = 'arraybuffer';
+
+			return socket;
+		}
 	}
 
 
@@ -31,7 +42,7 @@ var LibraryQ2Websocket = {
 		console.log("q2wsConnect " + url);
 
 		try {
-			var socket = new WebSocket(url, "quake2");
+			var socket = Q2WS.createSocket(url);
 		} catch (err) {
 			console.log("Error connecting to " + url + " : " + err);
 			return -1;
@@ -40,12 +51,7 @@ var LibraryQ2Websocket = {
 		var socketId = Q2WS.newSocketId;
 		Q2WS.newSocketId++;
 		Q2WS.sockets[socketId] = socket;
-
 		socket.socketId = socketId;
-		socket.onopen = Q2WS.onOpenFunc;
-		socket.onmessage = Q2WS.onMessageFunc;
-		socket.onclose = Q2WS.onCloseFunc;
-		socket.binaryType = 'arraybuffer';
 
 		return socketId;
 	}
