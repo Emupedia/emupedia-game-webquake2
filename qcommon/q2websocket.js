@@ -4,6 +4,7 @@ var LibraryQ2Websocket = {
 		  sockets: []
 		, newSocketId: 1
 		, preparedSocket: null
+		, q2wsMessageCallback: null
 
 		, onOpenFunc: function() {
 			console.log("websocket onOpen");
@@ -15,9 +16,7 @@ var LibraryQ2Websocket = {
 
 		, onMessageFunc: function(msg) {
 			var buf = new Uint8Array(msg.data);
-			// TODO: this doesn't change, store it during init
-			var q2wsMessageCallback = Module.cwrap('q2wsMessageCallback', null, ['number', 'array', 'number']);
-			q2wsMessageCallback(this.socketId, buf, buf.length);
+			Q2WS.q2wsMessageCallback(this.socketId, buf, buf.length);
 		}
 
 		, createSocket: function(url) {
@@ -36,6 +35,7 @@ var LibraryQ2Websocket = {
 
 	, q2wsInit: function() {
 		console.log("q2wsInit");
+		Q2WS.q2wsMessageCallback = Module.cwrap('q2wsMessageCallback', null, ['number', 'array', 'number']);
 	}
 
 
