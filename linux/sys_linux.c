@@ -660,8 +660,8 @@ int main (int argc, char **argv)
 
 	char *addrStr = getenv("Q2SERVER");
 	if (addrStr != NULL) {
-	netadr_t adr;
-	NET_StringToAdr(addrStr, &adr);
+		netadr_t adr;
+		NET_StringToAdr(addrStr, &adr);
 
 		NET_PreConnect(&adr);
 	}

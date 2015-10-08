@@ -49,12 +49,12 @@ var LibraryQ2Websocket = {
 			var socket = Q2WS.preparedSocket;
 			Q2WS.preparedSocket = null;
 		} else {
-		try {
-			var socket = Q2WS.createSocket(url);
-		} catch (err) {
-			console.log("Error connecting to " + url + " : " + err);
-			return -1;
-		}
+			try {
+				var socket = Q2WS.createSocket(url);
+			} catch (err) {
+				console.log("Error connecting to " + url + " : " + err);
+				return -1;
+			}
 		}
 
 		var socketId = Q2WS.newSocketId;
