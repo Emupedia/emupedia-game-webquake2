@@ -1296,8 +1296,29 @@
 
       Module['preRun'].push(function() {
         // Set ENV variables here
-        // TODO: get from document.URL
-        ENV.Q2SERVER='127.0.0.1:27910';
+        var url = document.URL;
+
+        // remove protocol
+        var protoIdx = url.indexOf('://')
+        if (protoIdx != -1) {
+            url = url.substr(protoIdx + 3);
+        }
+
+        // remove path
+        var slashIdx = url.indexOf('/')
+        if (slashIdx != -1) {
+            url = url.substr(0, slashIdx);
+        }
+
+        // gethostbyname doesn't work in a browser, it must be an ip address
+        var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/;
+        var ip_addr = ip_regex.exec(url);
+        if (ip_addr != null) {
+            ENV.Q2SERVER = url + ':27910';
+        } else {
+            // you should set something here
+            ENV.Q2SERVER = '127.0.0.1:27910';
+        }
 
         // TODO: add local file save here
       });

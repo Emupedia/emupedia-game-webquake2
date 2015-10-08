@@ -591,7 +591,11 @@ static void PlayFunc( void *unused )
 	}
 
 	netadr_t preconfaddr;
-	NET_StringToAdr(addrStr, &preconfaddr);
+	memset(&preconfaddr, 0, sizeof(preconfaddr));
+	bool success = NET_StringToAdr(addrStr, &preconfaddr);
+	if (!success) {
+		Com_Printf("NET_StringToAdr failed\n", LOG_GENERAL);
+	}
 
 	char	buffer[128];
 	Com_sprintf (buffer, sizeof(buffer), "connect %s\n", NET_AdrToString (&preconfaddr));
