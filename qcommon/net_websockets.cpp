@@ -33,6 +33,7 @@ extern "C" {
 // these are defined in javascript
 void q2wsInit();
 int q2wsConnect(const char *url);
+void q2wsPrepSocket(const char *url);
 int q2wsSend(int socket, const char *buf, unsigned int length);
 
 
@@ -493,8 +494,18 @@ static void websocketShutdown() {
 }
 
 
+static std::string addrToUrl(const netadr_t &to) {
+	return std::string("ws://") + NET_AdrToString(&to) + "/";
+}
+
+
+void NET_PreConnect(const netadr_t *to) {
+	q2wsPrepSocket(addrToUrl(*to).c_str());
+}
+
+
 static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
-	std::string url = std::string("ws://") + NET_AdrToString(&to) + "/";
+	std::string url = addrToUrl(to);
 
 	int socket = q2wsConnect(url.c_str());
 	if (socket < 0) {

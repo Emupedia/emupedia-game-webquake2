@@ -741,6 +741,10 @@ void		NET_Shutdown (void);
 
 int			NET_Config (int openFlags);
 
+#ifdef EMSCRIPTEN
+void NET_PreConnect(const netadr_t *to);
+#endif  // EMSCRIPTEN
+
 int			NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message);
 int			NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to);
 

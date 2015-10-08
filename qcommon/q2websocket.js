@@ -3,6 +3,7 @@ var LibraryQ2Websocket = {
 	, $Q2WS: {
 		  sockets: []
 		, newSocketId: 1
+		, preparedSocket: null
 
 		, onOpenFunc: function() {
 			console.log("websocket onOpen");
@@ -26,6 +27,7 @@ var LibraryQ2Websocket = {
 			socket.onmessage = Q2WS.onMessageFunc;
 			socket.onclose = Q2WS.onCloseFunc;
 			socket.binaryType = 'arraybuffer';
+			socket.url = url;
 
 			return socket;
 		}
@@ -41,11 +43,18 @@ var LibraryQ2Websocket = {
 		var url = Pointer_stringify(url_);
 		console.log("q2wsConnect " + url);
 
+		// are we connecting to the pre-established server?
+		if (Q2WS.preparedSocket != null && Q2WS.preparedSocket.url == url) {
+			console.log("Using pre-established socket");
+			var socket = Q2WS.preparedSocket;
+			Q2WS.preparedSocket = null;
+		} else {
 		try {
 			var socket = Q2WS.createSocket(url);
 		} catch (err) {
 			console.log("Error connecting to " + url + " : " + err);
 			return -1;
+		}
 		}
 
 		var socketId = Q2WS.newSocketId;
@@ -54,6 +63,19 @@ var LibraryQ2Websocket = {
 		socket.socketId = socketId;
 
 		return socketId;
+	}
+
+
+	, q2wsPrepSocket: function(url_) {
+		var url = Pointer_stringify(url_);
+		console.log("q2wsPrepSocket " + url);
+
+		try {
+			var socket = Q2WS.createSocket(url);
+			Q2WS.preparedSocket = socket;
+		} catch (err) {
+			console.log("Error connecting to " + url + " : " + err);
+		}
 	}
 
 
