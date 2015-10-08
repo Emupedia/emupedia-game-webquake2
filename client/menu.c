@@ -588,6 +588,12 @@ static void SimpleMultiplayerMenu_UpdateCvars();
 
 static void PlayFunc( void *unused )
 {
+	// refuse to continue until player has a name
+	if (s_player_name_field.buffer[0] == '\0') {
+		s_multiplayer_menu.cursor = 0;
+		return;
+	}
+
 	SimpleMultiplayerMenu_UpdateCvars();
 
 	char *addrStr = getenv("Q2SERVER");
