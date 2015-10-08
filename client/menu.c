@@ -3759,6 +3759,26 @@ static int EXPORT pmicmpfnc( const void *_a, const void *_b )
 }
 
 
+// TODO: move somewhere else
+static int randRange(uint32_t minValue, uint32_t maxValue) {
+	assert(maxValue > minValue);
+	uint32_t range = maxValue - minValue + 1;
+	assert(range > 0);
+
+	const uint32_t randMax = 0xFFFFFFFFU;
+	const uint32_t slice = randMax / range;
+
+	uint32_t x;
+	// the non-biased way, see
+	// http://stackoverflow.com/questions/10984974/why-do-people-say-there-is-modulo-bias-when-using-a-random-number-generator
+	do {
+		x = randomMT();
+	} while (x >= (slice * range));
+
+	return (x / slice) + minValue;
+}
+
+
 static bool playerStuff_MenuInit(int offset) {
 	static const char *handedness[] = { "right", "left", "center", 0 };
 
@@ -3828,6 +3848,19 @@ static bool playerStuff_MenuInit(int offset) {
 	s_player_name_field.visible_length = 20;
 	strncpy( s_player_name_field.buffer, Cvar_VariableString ("name"), sizeof(s_player_name_field.buffer)-1);
 	s_player_name_field.cursor = (int)strlen( s_player_name_field.buffer );
+
+	if (strncmp(s_player_name_field.buffer, "Player", 6) == 0) {
+		// default "Player", clear it so it's easier to type in a new one
+		s_player_name_field.buffer[0] = '\0';
+		s_player_name_field.cursor = 0;
+
+		// assign random model and skin
+		// so if people just hit enter we don't end up with a bunch of identical players
+
+		currentdirectoryindex = randRange(0, s_numplayermodels - 1);
+		currentskinindex = randRange(0, s_pmi[currentdirectoryindex].nskins - 1);
+		Com_Printf("assigned random model %d and skin %d\n", LOG_GENERAL, currentdirectoryindex, currentskinindex);
+	}
 
 	s_player_model_title.generic.type = MTYPE_SEPARATOR;
 	s_player_model_title.generic.name = "model";
