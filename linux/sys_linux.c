@@ -658,6 +658,14 @@ int main (int argc, char **argv)
 
 #ifdef EMSCRIPTEN
 
+	char *addrStr = getenv("Q2SERVER");
+	Com_Printf("addrStr: \"%s\"\n", LOG_GENERAL, addrStr);
+
+	netadr_t adr;
+	NET_StringToAdr(addrStr, &adr);
+
+	Com_Printf("adr to string: \"%s\"\n", LOG_GENERAL, NET_AdrToString(&adr));
+
 	g_oldtime = Sys_Milliseconds();
 	emscripten_set_main_loop(mainloop, 0, 1);
 

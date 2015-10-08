@@ -1293,6 +1293,14 @@
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
+
+      Module['preRun'].push(function() {
+        // Set ENV variables here
+        // TODO: get from document.URL
+        ENV.Q2SERVER='127.0.0.1:27910';
+
+        // TODO: add local file save here
+      });
     </script>
     <script async type="text/javascript" src="quake2.js"></script>
   </body>

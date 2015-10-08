@@ -585,12 +585,15 @@ static void Multiplayer_MenuDraw (void)
 
 static void PlayFunc( void *unused )
 {
-	char	buffer[128];
+	char *addrStr = getenv("Q2SERVER");
+	if (!addrStr) {
+		Com_Error(ERR_FATAL, "No server configured");
+	}
 
-	// FIXME: proper address from environment
 	netadr_t preconfaddr;
-	NET_StringToAdr("127.0.0.1:27910", &preconfaddr);
+	NET_StringToAdr(addrStr, &preconfaddr);
 
+	char	buffer[128];
 	Com_sprintf (buffer, sizeof(buffer), "connect %s\n", NET_AdrToString (&preconfaddr));
 	Cbuf_AddText (buffer);
 	M_ForceMenuOff ();
