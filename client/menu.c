@@ -650,6 +650,18 @@ static const char *SimpleMultiplayer_MenuKey( int key )
 {
 	if (key == K_ESCAPE) {
 		SimpleMultiplayerMenu_UpdateCvars();
+	} else if (key == K_ENTER && s_multiplayer_menu.items[s_multiplayer_menu.cursor] != &s_play_action) {
+		// enter pressed in field which is not "play"
+
+		if (s_multiplayer_menu.cursor == 0) {
+			// player name field, don't allow skip to next field until there's a player name
+			if (s_player_name_field.buffer[0] != '\0') {
+				s_multiplayer_menu.cursor++;
+			}
+		} else {
+			s_multiplayer_menu.cursor++;
+			return menu_move_sound;
+		}
 	}
 
 	return Default_MenuKey( &s_multiplayer_menu, key );
