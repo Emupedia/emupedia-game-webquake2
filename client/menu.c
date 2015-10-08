@@ -583,8 +583,13 @@ static void Multiplayer_MenuDraw (void)
 }
 
 
+static void SimpleMultiplayerMenu_UpdateCvars();
+
+
 static void PlayFunc( void *unused )
 {
+	SimpleMultiplayerMenu_UpdateCvars();
+
 	char *addrStr = getenv("Q2SERVER");
 	if (!addrStr) {
 		Com_Error(ERR_FATAL, "No server configured");
@@ -635,15 +640,19 @@ static void SimpleMultiplayer_MenuInit() {
 }
 
 
-static const char *Multiplayer_MenuKey( int key )
+static const char *SimpleMultiplayer_MenuKey( int key )
 {
+	if (key == K_ESCAPE) {
+		SimpleMultiplayerMenu_UpdateCvars();
+	}
+
 	return Default_MenuKey( &s_multiplayer_menu, key );
 }
 
 
 void M_Menu_Simple_Multiplayer_f(void) {
 	SimpleMultiplayer_MenuInit();
-	M_PushMenu( Multiplayer_MenuDraw, Multiplayer_MenuKey );
+	M_PushMenu( Multiplayer_MenuDraw, SimpleMultiplayer_MenuKey );
 }
 
 
@@ -3504,7 +3513,24 @@ static void HandednessCallback( void *unused )
 }
 
 
-#ifndef SIMPLE_MULTIPLAYER_MENU
+#ifdef SIMPLE_MULTIPLAYER_MENU
+
+
+static void SimpleMultiplayerMenu_UpdateCvars() {
+	if (s_player_name_field.buffer[0] != '\0') {
+		Cvar_Set("name", s_player_name_field.buffer);
+	}
+
+	char scratch[1024];
+	Com_sprintf(scratch, sizeof( scratch ), "%s/%s",
+		s_pmi[s_player_model_box.curvalue].directory, 
+		s_pmi[s_player_model_box.curvalue].skindisplaynames[s_player_skin_box.curvalue]);
+
+	Cvar_Set("skin", scratch);
+}
+
+
+#else  // SIMPLE_MULTIPLAYER_MENU
 
 
 static int rate_tbl[] = { 2500, 3200, 4300, 5000, 15000, 0 };
