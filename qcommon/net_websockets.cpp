@@ -173,9 +173,6 @@ bool operator==(const netadr_t &a, const netadr_t &b) {
 }
 
 
-static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
-
-
 #define SockadrToNetadr(s,a) \
 	a->type = NA_IP; \
 	*(int *)&a->ip = ((struct sockaddr_in *)s)->sin_addr.s_addr; \
@@ -185,7 +182,22 @@ static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 #ifndef EMSCRIPTEN
 
 
-static struct libwebsocket_context *websocketContext = NULL;
+// to avoid having a bunch of stuff in top-level context
+// especially with constructors/destructors
+struct WSState {
+	std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
+
+	struct libwebsocket_context *websocketContext;
+
+
+	WSState()
+	: websocketContext(NULL)
+	{
+	}
+};
+
+
+static WSState *wsState = NULL;
 
 
 struct Connection {
@@ -204,7 +216,7 @@ struct Connection {
 	~Connection()
 	{
 		assert(wsi != NULL);
-		libwebsocket_callback_on_writable(websocketContext, wsi);
+		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
 		wsi = NULL;
 		// since it's no longer in the hash map, next callback should remove it
 	}
@@ -237,8 +249,8 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			netadr_t *temp = &addr;
 			SockadrToNetadr(&sadr, temp);
 
-			auto it = connections.find(addr);
-			if (it != connections.end()) {
+			auto it = wsState->connections.find(addr);
+			if (it != wsState->connections.end()) {
 				// must not exist yet
 				Com_Printf("ERROR: New connection from \"%s\" but it already exists", LOG_NET, NET_AdrToString(&addr));
 				return -1;
@@ -247,7 +259,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			std::unique_ptr<Connection> conn(new Connection(addr, wsi));
 
 			bool success = false;
-			std::tie(it, success) = connections.emplace(addr, std::move(conn));
+			std::tie(it, success) = wsState->connections.emplace(addr, std::move(conn));
 			assert(success);  // it wasn't there before so this can't fail
 		}
 		break;
@@ -274,7 +286,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			assert(wsi != NULL);
 
 			STUBBED("TODO: better ( O(1) ) way to find connection");
-			for (auto &p : connections) {
+			for (auto &p : wsState->connections) {
 				auto &conn = p.second;
 				assert(conn->wsi != NULL);
 				const char *buf = reinterpret_cast<char *>(in);
@@ -361,7 +373,9 @@ static struct libwebsocket_protocols protocols[] = {
 
 static bool createWebsocketContext(int port) {
 	assert(!websocketInitialized);
-	assert(!websocketContext);
+	assert(!wsState);
+
+	wsState = new WSState;
 
 	struct lws_context_creation_info info;
 	memset(&info, 0, sizeof(info));
@@ -378,12 +392,12 @@ static bool createWebsocketContext(int port) {
 	info.ka_probes = 3;
 	info.ka_interval = 1;
 
-	websocketContext = libwebsocket_create_context(&info);
-	if (!websocketContext) {
+	wsState->websocketContext = libwebsocket_create_context(&info);
+	if (!wsState->websocketContext) {
 		return false;
 	}
 
-	int retval = libwebsocket_service(websocketContext, 0);
+	int retval = libwebsocket_service(wsState->websocketContext, 0);
 	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
 
 	websocketInitialized = true;
@@ -393,12 +407,15 @@ static bool createWebsocketContext(int port) {
 
 static void websocketShutdown() {
 	assert(websocketInitialized);
-	assert(websocketContext);
+	assert(wsState);
+	assert(wsState->websocketContext);
 
-	connections.clear();
+	wsState->connections.clear();
 
-	libwebsocket_context_destroy(websocketContext);
-	websocketContext = NULL;
+	libwebsocket_context_destroy(wsState->websocketContext);
+	wsState->websocketContext = NULL;
+	delete wsState;
+	wsState = NULL;
 	websocketInitialized = false;
 }
 
@@ -406,14 +423,14 @@ static void websocketShutdown() {
 static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	char addrBuf[3 * 4 + 5];
 	snprintf(addrBuf, sizeof(addrBuf), "%u.%u.%u.%u", to.ip[0], to.ip[1], to.ip[2], to.ip[3]);
-	struct libwebsocket *newWsi = libwebsocket_client_connect(websocketContext, addrBuf, ntohs(to.port), 0, "/", addrBuf, addrBuf, "quake2", -1);
+	struct libwebsocket *newWsi = libwebsocket_client_connect(wsState->websocketContext, addrBuf, ntohs(to.port), 0, "/", addrBuf, addrBuf, "quake2", -1);
 	if (newWsi == NULL) {
 		STUBBED("TODO: log connection create failure");
 		return std::unique_ptr<Connection>();
 	}
 
 	STUBBED("TODO: unnecessary(?) libwebsocket_service");
-	libwebsocket_service(websocketContext, 0);
+	libwebsocket_service(wsState->websocketContext, 0);
 
 	return std::unique_ptr<Connection>(new Connection(to, newWsi));
 }
@@ -430,7 +447,7 @@ bool Connection::sendPacket(const char *data, size_t length) {
 	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2], data, length);
 
 	// TODO: too many calls to libwebsocket_service here
-	libwebsocket_service(websocketContext, 0);
+	libwebsocket_service(wsState->websocketContext, 0);
 
 	// TODO: track socket writable status, only write when would not block
 	// TODO: buffer or drop?
@@ -439,7 +456,7 @@ bool Connection::sendPacket(const char *data, size_t length) {
 		return false;
 	}
 
-	libwebsocket_service(websocketContext, 0);
+	libwebsocket_service(wsState->websocketContext, 0);
 
 	if (retval < length) {
 		// partial send
@@ -455,6 +472,19 @@ bool Connection::sendPacket(const char *data, size_t length) {
 #else  // EMSCRIPTEN
 
 
+// to avoid having a bunch of stuff in top-level context
+// especially with constructors/destructors
+struct WSState {
+	std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
+
+
+	WSState()
+	{
+	}
+};
+
+
+static WSState *wsState = NULL;
 struct Connection {
 	netadr_t addr;
 	int socket;
@@ -485,6 +515,9 @@ struct Connection {
 
 static bool createWebsocketContext(int port) {
 	assert(!websocketInitialized);
+	assert(!wsState);
+
+	wsState = new WSState;
 
 	q2wsInit();
 
@@ -495,11 +528,14 @@ static bool createWebsocketContext(int port) {
 
 static void websocketShutdown() {
 	assert(websocketInitialized);
+	assert(wsState);
 
-	connections.clear();
+	wsState->connections.clear();
 
 	STUBBED("websocketShutdown");
 
+	delete wsState;
+	wsState = NULL;
 	websocketInitialized = false;
 }
 
@@ -530,7 +566,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int len) {
 	STUBBED("TODO: better( O(1) ) way to find Connection");
-	for (const auto &p : connections) {
+	for (const auto &p : wsState->connections) {
 		auto &conn = p.second;
 		assert(conn->socket > 0);
 		if (conn->socket == socket) {
@@ -782,7 +818,7 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	}
 
 	STUBBED("better( O(1) ) way to find a connection with data");
-	for (const auto &p : connections) {
+	for (const auto &p : wsState->connections) {
 		const auto &conn = p.second;
 		if (conn->recvPacket(net_message)) {
 			*net_from = p.first;
@@ -872,8 +908,8 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 
 	assert(to->type == NA_IP);
 
-	auto it = connections.find(*to);
-	if (it == connections.end()) {
+	auto it = wsState->connections.find(*to);
+	if (it == wsState->connections.end()) {
 		// no connection, create it
 		auto conn = createConnection(*to);
 		if (!conn) {
@@ -881,7 +917,7 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 			return 0;
 		}
 		bool success = false;
-		std::tie(it, success) = connections.emplace(*to, std::move(conn));
+		std::tie(it, success) = wsState->connections.emplace(*to, std::move(conn));
 		assert(success);  // it wasn't there before so this can't fail
 	}
 
@@ -929,7 +965,7 @@ void NET_Sleep(int msec)
 
 #ifndef EMSCRIPTEN
 
-	libwebsocket_service(websocketContext, msec);
+	libwebsocket_service(wsState->websocketContext, msec);
 
 #endif  // EMSCRIPTEN
 }
