@@ -2770,6 +2770,7 @@ Qcommon_Shutdown
 */
 void Qcommon_Shutdown (void)
 {
+	NET_Shutdown();
 }
 
 void Z_CheckGameLeaks (void)

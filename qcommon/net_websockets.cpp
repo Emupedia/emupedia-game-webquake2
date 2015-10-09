@@ -926,6 +926,11 @@ void NET_Sleep(int msec)
 #endif
 
 
+void NET_Shutdown() {
+	NET_Config(NET_NONE);
+}
+
+
 void Net_Stats_f (void)
 {
 	int now = time(0);
