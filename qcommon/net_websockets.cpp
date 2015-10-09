@@ -295,9 +295,9 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 				return -1;
 			}
 
-				assert(conn->wsi == wsi);
-				const char *buf = reinterpret_cast<char *>(in);
-					conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
+			assert(conn->wsi == wsi);
+			const char *buf = reinterpret_cast<char *>(in);
+			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
 
 		}
 		break;
@@ -384,7 +384,7 @@ static bool createWebsocketContext(int port) {
 	if (port == PORT_ANY) {
 		info.port = CONTEXT_PORT_NO_LISTEN;
 	} else {
-	info.port = port;
+		info.port = port;
 	}
 	info.protocols = protocols;
 	info.gid = -1;
@@ -604,8 +604,8 @@ void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsig
 		return;
 	}
 
-		assert(conn->socket == socket);
-			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
+	assert(conn->socket == socket);
+	conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
 }
 
 
