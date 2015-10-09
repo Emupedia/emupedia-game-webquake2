@@ -191,6 +191,9 @@ struct WSState {
 	: websocketContext(NULL)
 	{
 	}
+
+
+	Connection *findConnection(const struct libwebsocket *wsi);
 };
 
 
@@ -282,16 +285,15 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		{
 			assert(wsi != NULL);
 
-			STUBBED("TODO: better ( O(1) ) way to find connection");
-			for (auto &p : wsState->connections) {
-				auto &conn = p.second;
-				assert(conn->wsi != NULL);
-				const char *buf = reinterpret_cast<char *>(in);
-				if (conn->wsi == wsi) {
-					conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
-					break;
-				}
+			Connection *conn = wsState->findConnection(wsi);
+			if (!conn) {
+				Com_Printf("ERROR: Receive on connection we don't know\n", LOG_NET);
+				return -1;
 			}
+
+				assert(conn->wsi == wsi);
+				const char *buf = reinterpret_cast<char *>(in);
+					conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
 
 		}
 		break;
@@ -413,6 +415,20 @@ static void websocketShutdown() {
 }
 
 
+Connection *WSState::findConnection(const struct libwebsocket *wsi) {
+	STUBBED("TODO: better ( O(1) ) way to find connection");
+	for (auto &p : connections) {
+		auto &conn = p.second;
+		assert(conn->wsi != NULL);
+		if (conn->wsi == wsi) {
+			return conn.get();
+		}
+	}
+
+	return NULL;
+}
+
+
 static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	char addrBuf[3 * 4 + 5];
 	snprintf(addrBuf, sizeof(addrBuf), "%u.%u.%u.%u", to.ip[0], to.ip[1], to.ip[2], to.ip[3]);
@@ -474,6 +490,9 @@ struct WSState {
 	WSState()
 	{
 	}
+
+
+	Connection *findConnection(int socket);
 };
 
 
@@ -529,6 +548,20 @@ static void websocketShutdown() {
 }
 
 
+Connection *WSState::findConnection(int socket) {
+	STUBBED("TODO: better ( O(1) ) way to find connection");
+	for (auto &p : connections) {
+		auto &conn = p.second;
+		assert(conn->socket > 0);
+		if (conn->socket == socket) {
+			return conn.get();
+		}
+	}
+
+	return NULL;
+}
+
+
 static std::string addrToUrl(const netadr_t &to) {
 	return std::string("ws://") + NET_AdrToString(&to) + "/";
 }
@@ -554,17 +587,14 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 
 void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int len) {
-	STUBBED("TODO: better( O(1) ) way to find Connection");
-	for (const auto &p : wsState->connections) {
-		auto &conn = p.second;
-		assert(conn->socket > 0);
-		if (conn->socket == socket) {
-			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
-			return;
-		}
+	Connection *conn = wsState->findConnection(socket);
+	if (!conn) {
+		Com_Printf("ERROR: Receive on connection we don't know\n", LOG_NET);
+		return;
 	}
 
-	Com_Printf("q2wsMessageCallback ERROR: no such socket %d\n", LOG_NET, socket);
+		assert(conn->socket == socket);
+			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
 }
 
 
