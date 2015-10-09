@@ -130,9 +130,6 @@ typedef struct
 loopback_t	loopbacks[2];
 
 
-static bool websocketInitialized = false;
-
-
 struct Connection;
 
 
@@ -372,7 +369,6 @@ static struct libwebsocket_protocols protocols[] = {
 
 
 static bool createWebsocketContext(int port) {
-	assert(!websocketInitialized);
 	assert(!wsState);
 
 	wsState = new WSState;
@@ -400,13 +396,11 @@ static bool createWebsocketContext(int port) {
 	int retval = libwebsocket_service(wsState->websocketContext, 0);
 	Com_Printf("libwebsocket_service returned %d\n", LOG_NET, retval);
 
-	websocketInitialized = true;
 	return true;
 }
 
 
 static void websocketShutdown() {
-	assert(websocketInitialized);
 	assert(wsState);
 	assert(wsState->websocketContext);
 
@@ -416,7 +410,6 @@ static void websocketShutdown() {
 	wsState->websocketContext = NULL;
 	delete wsState;
 	wsState = NULL;
-	websocketInitialized = false;
 }
 
 
@@ -514,20 +507,17 @@ struct Connection {
 
 
 static bool createWebsocketContext(int port) {
-	assert(!websocketInitialized);
 	assert(!wsState);
 
 	wsState = new WSState;
 
 	q2wsInit();
 
-	websocketInitialized = true;
 	return true;
 }
 
 
 static void websocketShutdown() {
-	assert(websocketInitialized);
 	assert(wsState);
 
 	wsState->connections.clear();
@@ -536,7 +526,6 @@ static void websocketShutdown() {
 
 	delete wsState;
 	wsState = NULL;
-	websocketInitialized = false;
 }
 
 
@@ -717,8 +706,9 @@ int	NET_Config (int toOpen)
 
 	if (toOpen == NET_NONE)
 	{
-		if (websocketInitialized) {
+		if (wsState) {
 			websocketShutdown();
+			assert(!wsState);
 		}
 
 		server_port = 0;
@@ -752,8 +742,9 @@ int	NET_Config (int toOpen)
 
 			bool failed = false;
 			// shut down old context
-			if (websocketInitialized) {
+			if (wsState) {
 				websocketShutdown();
+				assert(!wsState);
 			}
 
 			if (!createWebsocketContext(port)) {
@@ -771,7 +762,7 @@ int	NET_Config (int toOpen)
 		return i;
 
 	bool failed = false;
-	if (!websocketInitialized) {
+	if (!wsState) {
 		failed = !createWebsocketContext(PORT_ANY);
 	}
 
@@ -812,7 +803,7 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	if (NET_GetLoopPacket (sock, net_from, net_message))
 		return 1;
 
-	if (!websocketInitialized) {
+	if (!wsState) {
 		// not initialized yet
 		return 0;
 	}
@@ -886,7 +877,7 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	if (to->type == NA_IP)
 	{
 		// if network not initialized return 0
-		if (!websocketInitialized) {
+		if (!wsState) {
 			return 0;
 		}
 	}
