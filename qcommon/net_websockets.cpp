@@ -184,6 +184,9 @@ bool operator==(const netadr_t &a, const netadr_t &b) {
 struct WSState {
 	std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 
+	// not owned
+	std::unordered_map<const struct libwebsocket *, Connection *> wsiLookup;
+
 	struct libwebsocket_context *websocketContext;
 
 
@@ -257,6 +260,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			}
 
 			std::unique_ptr<Connection> conn(new Connection(addr, wsi));
+			wsState->wsiLookup.emplace(wsi, conn.get());
 
 			bool success = false;
 			std::tie(it, success) = wsState->connections.emplace(addr, std::move(conn));
@@ -416,20 +420,19 @@ static void websocketShutdown() {
 
 
 Connection *WSState::findConnection(const struct libwebsocket *wsi) {
-	STUBBED("TODO: better ( O(1) ) way to find connection");
-	for (auto &p : connections) {
-		auto &conn = p.second;
-		assert(conn->wsi != NULL);
-		if (conn->wsi == wsi) {
-			return conn.get();
-		}
+	auto it = wsiLookup.find(wsi);
+	if (it == wsiLookup.end()) {
+		return NULL;
 	}
 
-	return NULL;
+	assert(it->second != NULL);
+	return it->second;
 }
 
 
 static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
+	assert(wsState);
+
 	char addrBuf[3 * 4 + 5];
 	snprintf(addrBuf, sizeof(addrBuf), "%u.%u.%u.%u", to.ip[0], to.ip[1], to.ip[2], to.ip[3]);
 	struct libwebsocket *newWsi = libwebsocket_client_connect(wsState->websocketContext, addrBuf, ntohs(to.port), 0, "/", addrBuf, addrBuf, "quake2", -1);
@@ -441,7 +444,11 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	STUBBED("TODO: unnecessary(?) libwebsocket_service");
 	libwebsocket_service(wsState->websocketContext, 0);
 
-	return std::unique_ptr<Connection>(new Connection(to, newWsi));
+	std::unique_ptr<Connection> conn(new Connection(to, newWsi));
+
+	wsState->wsiLookup.emplace(newWsi, conn.get());
+
+	return conn;
 }
 
 
@@ -485,6 +492,8 @@ bool Connection::sendPacket(const char *data, size_t length) {
 // especially with constructors/destructors
 struct WSState {
 	std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
+
+	std::unordered_map<int, Connection *> socketLookup;
 
 
 	WSState()
@@ -549,16 +558,14 @@ static void websocketShutdown() {
 
 
 Connection *WSState::findConnection(int socket) {
-	STUBBED("TODO: better ( O(1) ) way to find connection");
-	for (auto &p : connections) {
-		auto &conn = p.second;
-		assert(conn->socket > 0);
-		if (conn->socket == socket) {
-			return conn.get();
-		}
+	assert(socket > 0);
+	auto it = socketLookup.find(socket);
+	if (it == socketLookup.end()) {
+		return NULL;
 	}
 
-	return NULL;
+	assert(it->second != NULL);
+	return it->second;
 }
 
 
@@ -582,7 +589,11 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 	Com_Printf("created websocket connection %d\n", LOG_NET, socket);
 
-	return std::unique_ptr<Connection>(new Connection(to, socket));
+	std::unique_ptr<Connection> conn(new Connection(to, socket));
+
+	wsState->socketLookup.emplace(socket, conn.get());
+
+	return conn;
 }
 
 
