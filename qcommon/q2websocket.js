@@ -66,6 +66,16 @@ var LibraryQ2Websocket = {
 	}
 
 
+	, q2wsClose: function(socketId) {
+		assert(socketId > 0);
+		assert(socketId < Q2WS.sockets.length);
+		var socket = Q2WS.sockets[socketId];
+		assert(socket != null);
+		socket.close();
+		Q2WS.sockets[socketId] = null;
+	}
+
+
 	, q2wsPrepSocket: function(url_) {
 		var url = Pointer_stringify(url_);
 		console.log("q2wsPrepSocket " + url);

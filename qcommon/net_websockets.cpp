@@ -33,6 +33,7 @@ extern "C" {
 // these are defined in javascript
 void q2wsInit();
 int q2wsConnect(const char *url);
+void q2wsClose(int socket);
 void q2wsPrepSocket(const char *url);
 int q2wsSend(int socket, const char *buf, unsigned int length);
 
@@ -184,6 +185,9 @@ static std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 #ifndef EMSCRIPTEN
 
 
+static struct libwebsocket_context *websocketContext = NULL;
+
+
 struct Connection {
 	netadr_t addr;
 	struct libwebsocket *wsi;
@@ -199,7 +203,10 @@ struct Connection {
 
 	~Connection()
 	{
-		STUBBED("~Connection");
+		assert(wsi != NULL);
+		libwebsocket_callback_on_writable(websocketContext, wsi);
+		wsi = NULL;
+		// since it's no longer in the hash map, next callback should remove it
 	}
 
 
@@ -352,9 +359,6 @@ static struct libwebsocket_protocols protocols[] = {
 };
 
 
-static struct libwebsocket_context *websocketContext = NULL;
-
-
 static bool createWebsocketContext(int port) {
 	assert(!websocketInitialized);
 	assert(!websocketContext);
@@ -390,6 +394,8 @@ static bool createWebsocketContext(int port) {
 static void websocketShutdown() {
 	assert(websocketInitialized);
 	assert(websocketContext);
+
+	connections.clear();
 
 	libwebsocket_context_destroy(websocketContext);
 	websocketContext = NULL;
@@ -465,7 +471,9 @@ struct Connection {
 
 	~Connection()
 	{
-		STUBBED("~Connection");
+		assert(socket > 0);
+		q2wsClose(socket);
+		socket = 0;
 	}
 
 
@@ -487,6 +495,8 @@ static bool createWebsocketContext(int port) {
 
 static void websocketShutdown() {
 	assert(websocketInitialized);
+
+	connections.clear();
 
 	STUBBED("websocketShutdown");
 
