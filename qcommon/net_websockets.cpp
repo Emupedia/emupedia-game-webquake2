@@ -999,6 +999,11 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 
 	auto it = wsState->connections.find(*to);
 	if (it == wsState->connections.end()) {
+		if (sock == NS_SERVER) {
+			// server can't create outgoing connections
+			return 0;
+		}
+
 		// no connection, create it
 		auto conn = createConnection(*to);
 		if (!conn) {
