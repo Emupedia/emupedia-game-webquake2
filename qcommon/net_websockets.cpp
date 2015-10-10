@@ -273,10 +273,6 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		}
 		break;
 
-	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
-		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_CONNECTION_ERROR\n", LOG_NET);
-		break;
-
 	case LWS_CALLBACK_CLIENT_FILTER_PRE_ESTABLISH:
 		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_FILTER_PRE_ESTABLISH\n", LOG_NET);
 		break;
@@ -285,6 +281,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_ESTABLISHED\n", LOG_NET);
 		break;
 
+	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
 	case LWS_CALLBACK_CLOSED:
 		{
 			assert(wsi != NULL);
