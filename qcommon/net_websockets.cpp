@@ -220,8 +220,13 @@ struct Connection {
 	{
 		assert(wsi != NULL);
 		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
+
+		auto wsiIt = wsState->wsiLookup.find(wsi);
+		assert(wsiIt != wsState->wsiLookup.end());
+		wsState->wsiLookup.erase(wsiIt);
+
 		wsi = NULL;
-		// since it's no longer in the hash map, next callback should remove it
+		// since it's no longer in the hash map, next callback should close it
 	}
 
 
@@ -281,7 +286,31 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		break;
 
 	case LWS_CALLBACK_CLOSED:
-		Com_Printf("websocketCallback LWS_CALLBACK_CLOSED\n", LOG_NET);
+		{
+			assert(wsi != NULL);
+
+			auto wsiIt = wsState->wsiLookup.find(wsi);
+			if (wsiIt == wsState->wsiLookup.end()) {
+				Com_Printf("ERROR: Close on connection we don't know\n", LOG_NET);
+				return -1;
+			}
+			Connection *conn = wsiIt->second;
+			assert(conn->wsi == wsi);
+
+			netadr_t addr = conn->addr;
+			auto connIt = wsState->connections.find(addr);
+			// it must be there
+			assert(connIt != wsState->connections.end());
+			assert(conn == connIt->second.get());
+
+			Com_Printf("Disconnecting from %s\n", LOG_NET, NET_AdrToString(&addr));
+
+			wsState->connections.erase(connIt);
+
+			// Connection destructor should have removed this
+			wsiIt = wsState->wsiLookup.find(wsi);
+			assert(wsiIt == wsState->wsiLookup.end());
+		}
 		break;
 
 	case LWS_CALLBACK_RECEIVE:
@@ -411,6 +440,7 @@ static void websocketShutdown() {
 	assert(wsState->websocketContext);
 
 	wsState->connections.clear();
+	assert(wsState->wsiLookup.empty());
 
 	libwebsocket_context_destroy(wsState->websocketContext);
 	wsState->websocketContext = NULL;
