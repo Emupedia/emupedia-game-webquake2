@@ -126,6 +126,7 @@ DIRS:= \
 	qcommon \
 	ref_gl \
 	server \
+	utils \
 	win32 \
 	# empty line
 $(eval $(foreach directory, $(DIRS), $(call directory-module,$(directory)) ))

@@ -22,6 +22,7 @@ STATIC_SDL2:=y
 PURE_CLIENT:=n
 
 BUILD_SERVER:=y
+BUILD_UTILS:=n
 
 # compiler options etc
 CC:=i686-w64-mingw32-gcc
