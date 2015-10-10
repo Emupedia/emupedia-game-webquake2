@@ -19,9 +19,14 @@ unpak_MODULES:=
 unpak_SRC:=$(d)/unpak.cpp
 
 
+pak_MODULES:=
+pak_SRC:=$(d)/pak.cpp
+
+
 ifeq ($(BUILD_UTILS),y)
 
 PROGRAMS+= \
+	pak \
 	unpak \
 	#empty line
 
