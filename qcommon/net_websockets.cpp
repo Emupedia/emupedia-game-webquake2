@@ -207,11 +207,13 @@ struct Connection {
 	netadr_t addr;
 	struct libwebsocket *wsi;
 	std::vector<char> recvBuffer;
+	bool writable;
 
 
 	Connection(netadr_t addr_, struct libwebsocket *wsi_)
 	: addr(addr_)
 	, wsi(wsi_)
+	, writable(false)
 	{
 	}
 
@@ -270,6 +272,8 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			bool success = false;
 			std::tie(it, success) = wsState->connections.emplace(addr, std::move(conn));
 			assert(success);  // it wasn't there before so this can't fail
+
+			libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
 		}
 		break;
 
@@ -279,6 +283,8 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 
 	case LWS_CALLBACK_CLIENT_ESTABLISHED:
 		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_ESTABLISHED\n", LOG_NET);
+
+		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
 		break;
 
 	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
@@ -325,6 +331,22 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			const char *buf = reinterpret_cast<char *>(in);
 			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
 
+		}
+		break;
+
+	case LWS_CALLBACK_CLIENT_WRITEABLE:
+	case LWS_CALLBACK_SERVER_WRITEABLE:
+		{
+			assert(wsi != NULL);
+
+			Connection *conn = wsState->findConnection(wsi);
+			if (!conn) {
+				Com_Printf("ERROR: Writable on connection we don't know\n", LOG_NET);
+				return -1;
+			}
+
+			assert(conn->wsi == wsi);
+			conn->writable = true;
 		}
 		break;
 
@@ -467,6 +489,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 		STUBBED("TODO: log connection create failure");
 		return std::unique_ptr<Connection>();
 	}
+	libwebsocket_callback_on_writable(wsState->websocketContext, newWsi);
 
 	STUBBED("TODO: unnecessary(?) libwebsocket_service");
 	libwebsocket_service(wsState->websocketContext, 0);
@@ -492,12 +515,19 @@ bool Connection::sendPacket(const char *data, size_t length) {
 	// TODO: too many calls to libwebsocket_service here
 	libwebsocket_service(wsState->websocketContext, 0);
 
-	// TODO: track socket writable status, only write when would not block
+	if (!writable) {
+		// track socket writable status, only write when would not block
 	// TODO: buffer or drop?
+		return false;
+	}
+
 	int retval = libwebsocket_write(wsi, &sendBuf[LWS_SEND_BUFFER_PRE_PADDING], length + 2, LWS_WRITE_BINARY);
 	if (retval < 0) {
 		return false;
 	}
+
+	writable = false;
+	libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
 
 	libwebsocket_service(wsState->websocketContext, 0);
 
