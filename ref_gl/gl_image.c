@@ -2201,6 +2201,12 @@ void GL_LightScaleTexture (unsigned *in, int inwidth, int inheight, qboolean onl
 }
 
 
+// http://graphics.stanford.edu/~seander/bithacks.html
+static inline bool isPow2(unsigned int v) {
+	return (v & (v - 1)) == 0;
+}
+
+
 int		upload_width, upload_height;
 
 qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, int bpp, image_t *image)
@@ -2210,6 +2216,11 @@ qboolean GL_Upload32 (unsigned *data, int width, int height, qboolean mipmap, in
 			;
 		for (scaled_height = 1 ; scaled_height < height ; scaled_height<<=1)
 			;
+
+	// WebGL can't do mipmapping on non-pow2 textures
+	if (mipmap && !(isPow2(scaled_width) && isPow2(scaled_height))) {
+		mipmap = false;
+	}
 
 	// don't ever bother with >256 textures
 	if (scaled_width > MAX_TEXTURE_DIMENSIONS)
@@ -2340,6 +2351,12 @@ done: ;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+
+	if (!(isPow2(scaled_width) && isPow2(scaled_height))) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 
 	if (!r_registering)
