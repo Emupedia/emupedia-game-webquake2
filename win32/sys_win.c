@@ -1318,129 +1318,6 @@ BOOL CALLBACK EnumerateLoadedModulesProcInfo (PSTR ModuleName, DWORD64 ModuleBas
 	return TRUE;
 }
 
-#ifdef USE_CURL
-static int EXPORT R1Q2UploadProgress (void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)
-{
-	char	progressBuff[512];
-	DWORD	len, ret;
-	double	speed;
-	int		percent;
-
-	if (ultotal <= 0)
-		return 0;
-
-	curl_easy_getinfo ((CURL *)clientp, CURLINFO_SPEED_UPLOAD, &speed);
-
-	percent = (int)((ulnow / ultotal)*100.0f);
-
-	len = snprintf (progressBuff, sizeof(progressBuff)-1, "[%d%%] %g / %g bytes, %g bytes/sec.\n", percent, ulnow, ultotal, speed);
-	WriteConsole(GetStdHandle (STD_OUTPUT_HANDLE), progressBuff, len, &ret, NULL);
-
-	snprintf (progressBuff, sizeof(progressBuff)-1, "[%d%%] R1Q2 Crash Dump Uploader", percent);
-	SetConsoleTitle (progressBuff);
-
-	return 0;
-}
-
-extern cvar_t	*cl_http_proxy;
-VOID R1Q2UploadCrashDump (LPCSTR crashDump, LPCSTR crashText)
-{
-	struct curl_httppost* post = NULL;
-	struct curl_httppost* last = NULL;
-
-	CURL	*curl;
-
-	DWORD	lenDmp;
-	DWORD	lenTxt;
-	DWORD	ret;
-
-	BOOL	console = FALSE;
-
-	__try
-	{
-		lenDmp = Sys_FileLength (crashDump);
-		lenTxt = Sys_FileLength (crashText);
-
-		if (lenTxt == -1)
-			return;
-
-		if (AllocConsole ())
-			console = TRUE;
-
-		SetConsoleTitle ("R1Q2 Crash Dump Uploader");
-
-		if (console)
-			WriteConsole(GetStdHandle (STD_OUTPUT_HANDLE), "Connecting...\n", 14, &ret, NULL);
-
-		curl = curl_easy_init ();
-
-		/* Add simple file section */
-		if (lenDmp > 0)
-			curl_formadd (&post, &last, CURLFORM_PTRNAME, "minidump", CURLFORM_FILE, crashDump, CURLFORM_END);
-
-		curl_formadd (&post, &last, CURLFORM_PTRNAME, "report", CURLFORM_FILE, crashText, CURLFORM_END);
-
-		/* Set the form info */
-		curl_easy_setopt (curl, CURLOPT_HTTPPOST, post);
-
-		if (cl_http_proxy)
-			curl_easy_setopt (curl, CURLOPT_PROXY, cl_http_proxy->string);
-
-		//curl_easy_setopt (curl, CURLOPT_UPLOAD, 1);
-		if (console)
-		{
-			curl_easy_setopt (curl, CURLOPT_PROGRESSFUNCTION, R1Q2UploadProgress);
-			curl_easy_setopt (curl, CURLOPT_PROGRESSDATA, curl);
-			curl_easy_setopt (curl, CURLOPT_NOPROGRESS, 0);
-		}
-		else
-		{
-			curl_easy_setopt (curl, CURLOPT_NOPROGRESS, 1);
-		}
-
-		curl_easy_setopt (curl, CURLOPT_FOLLOWLOCATION, 1);
-		curl_easy_setopt (curl, CURLOPT_USERAGENT, R1Q2_VERSION_STRING);
-		curl_easy_setopt (curl, CURLOPT_URL, "http://www.r1ch.net/stuff/r1q2/receiveCrashDump.php");
-
-		if (curl_easy_perform (curl) != CURLE_OK)
-		{
-			if (!win_silentexceptionhandler->intvalue)
-				MessageBox (NULL, "An error occured while trying to upload the crash dump. Please post it manually on the R1Q2 forums.", "Upload Error", MB_ICONEXCLAMATION | MB_OK);
-		}
-		else
-		{
-			if (!win_silentexceptionhandler->intvalue)
-			{
-				long response;
-
-				if (curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response) == CURLE_OK)
-				{
-					if (response == 202)
-					{
-						MessageBox (NULL, "Upload completed, however the server reports that you are using an out of date R1Q2 version. Crash reports from old versions are not as likely to be investigated as the problem may already have been fixed. Please update your R1Q2 using the R1Q2Updater.", "Upload Complete", MB_ICONEXCLAMATION | MB_OK);
-					}
-					else if (response == 200)
-					{
-						MessageBox (NULL, "Upload completed. Thanks for submitting your crash report!\n\nIf you would like feedback on the cause of this crash, please post a brief note on the R1Q2 forums describing what you were doing at the time the exception occured. If possible, please also attach the R1Q2CrashLog.txt file.", "Upload Complete", MB_ICONINFORMATION | MB_OK);
-					}
-					else
-					{
-						MessageBox (NULL, "Upload failed, HTTP error.", "Upload Failed", MB_ICONEXCLAMATION | MB_OK);
-					}
-				}
-			}
-		}
-	}
-	__except (EXCEPTION_EXECUTE_HANDLER)
-	{
-		if (!win_silentexceptionhandler->intvalue)
-			MessageBox (NULL, "An exception occured while trying to upload the crash dump. Please post it manually on the R1Q2 forums.", "Upload Error", MB_ICONEXCLAMATION | MB_OK);
-	}
-
-	if (console)
-		FreeConsole ();
-}
-#endif
 
 BOOL IsOpenGLValid (VOID)
 {
@@ -1906,18 +1783,6 @@ DWORD R1Q2ExceptionHandler (DWORD exceptionCode, LPEXCEPTION_POINTERS exceptionI
 		}
 	}
 
-#ifdef USE_CURL
-	if (wantUpload)
-	{
-		if (!win_silentexceptionhandler->intvalue)
-			ret = MessageBox (NULL, "Would you like to upload this crash report to r1ch.net to help improve R1Q2? If you are able to reproduce this crash, please do not submit multiple reports as this will only delay processing.\r\n\r\nIf you would like feedback on this crash, please post the crash report and .dmp file on the r1ch.net forums.", "Unhandled Exception", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
-		else
-			ret = IDYES;
-
-		if (ret == IDYES)
-			R1Q2UploadCrashDump (dumpPath, tempPath);
-	}
-	else
 	{
 		CHAR message[1024], *s;
 		strcpy (message, "Crash analysis:\r\n\r\n");
@@ -1934,7 +1799,6 @@ DWORD R1Q2ExceptionHandler (DWORD exceptionCode, LPEXCEPTION_POINTERS exceptionI
 
 		MessageBox (NULL, message, "Unhandled Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
-#endif
 
 	FreeLibrary (hDbgHelp);
 	if (hVersion)
