@@ -1116,7 +1116,7 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	
 	gl_zfar = Cvar_Get ("gl_zfar", "8192", 0);
 
-	cl_version = Cvar_Get ("cl_version", REF_VERSION, CVAR_NOSET); 
+	cl_version = Cvar_Get ("cl_version", VERSION, CVAR_NOSET);
 	
 	gl_r1gl_test = Cvar_Get ("gl_r1gl_test", "0", 0);
 	gl_doublelight_entities = Cvar_Get ("gl_doublelight_entities", "1", 0);
@@ -1174,11 +1174,6 @@ static void R_Register(unsigned int defaultWidth, unsigned int defaultHeight)
 	Cmd_AddCommand( "modellist", Mod_Modellist_f );
 	Cmd_AddCommand( "gl_strings", GL_Strings_f );
 	Cmd_AddCommand( "hash_stats", Cmd_HashStats_f );
-	
-
-#ifdef R1GL_RELEASE
-	Cmd_AddCommand ("r1gl_version", GL_Version_f);
-#endif
 }
 
 
@@ -1504,10 +1499,6 @@ int R_Init( void *hinstance, void *hWnd )
 		r_turbsin[j] *= 0.5;
 	}
 
-	Cbuf_ExecuteText (EXEC_NOW, "exec r1gl.cfg\n");
-
-	VID_Printf (PRINT_ALL, "ref_gl version: "REF_VERSION"\n");
-
 	Com_DPrintf("Draw_GetPalette()\n");
 	Draw_GetPalette ();
 
@@ -1585,7 +1576,7 @@ retryQGL:
 	}
 #endif
 
-	VID_Printf( PRINT_ALL, "Initializing r1gl extensions:\n" );
+	VID_Printf( PRINT_ALL, "Initializing extensions:\n" );
 
 	gl_config.r1gl_GL_EXT_texture_filter_anisotropic = false;
 	if ( strstr( gl_config.extensions_string, "GL_EXT_texture_filter_anisotropic" ) )
@@ -1646,10 +1637,6 @@ void R_Shutdown (void)
 	Cmd_RemoveCommand ("imagelist");
 	Cmd_RemoveCommand ("gl_strings");
 	Cmd_RemoveCommand ("hash_stats");
-
-#ifdef R1GL_RELEASE
-	Cmd_RemoveCommand ("r1gl_version");
-#endif
 
 	Mod_FreeAll ();
 

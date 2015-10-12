@@ -22,13 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef _QCOMMON_H
 
-#ifdef NDEBUG
-	#include "../build.h"
-	#define	VERSION		"b" BUILD
-#else
-	#define BUILD "DEBUG BUILD"
-	#define	VERSION		BUILD
-#endif
+#define	VERSION		"0.9"
 
 #include "../game/q_shared.h"
 
@@ -108,38 +102,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #endif
 
-//Please don't define this on your own builds, it's used
-//in the SIGSEGV handler to help me determine build info
-//from crash reports. Users will never see this.
-#ifdef R1RELEASE
-	#define RELEASESTRING "Binary Build (" __DATE__ ")"
-	#if R1RELEASE == 1
-		#define R1BINARY "r1q2ded"
-	#elif R1RELEASE == 2
-		#define R1BINARY "r1q2ded-old"
-	#elif R1RELEASE == 3
-		#define R1BINARY "r1q2ded-x86_64"
-	#elif R1RELEASE == 4
-		#define R1BINARY "DEDICATED-x86"
-	#elif R1RELEASE == 5
-		#define R1BINARY "R1Q2-x86"
-	#elif R1RELEASE == 6
-		#define R1BINARY "R1Q2-AMD64"
-	#elif R1RELEASE == 7
-		#define R1BINARY "R1Q2-x86-debug"
-	#else
-		#error What the hell is going on here
-	#endif
-	#define PRODUCTNAME "R1Q2"
-	#define PRODUCTNAMELOWER "r1q2"
-#else
-	#define R1BINARY "R1Q2"
-	#define RELEASESTRING "Source Build"
-	#define PRODUCTNAME "R1Q2 (modified)"
-	#define PRODUCTNAMELOWER "r1q2 (mod)"
-#endif
 
-#define R1Q2_VERSION_STRING "R1Q2 " VERSION " " CPUSTRING " " __DATE__ " " BUILDSTRING
+#define PRODUCTNAME "WebQuake2"
+#define PRODUCTNAMELOWER "webquake2"
+
 
 //============================================================================
 

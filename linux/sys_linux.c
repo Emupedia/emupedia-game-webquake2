@@ -242,7 +242,7 @@ void Sys_Backtrace (int sig, siginfo_t *siginfo, void *secret)
 	for (i = 0; i < size; i++)
 		fprintf (stderr, "%.2zd: %s\n", i, strings[i]);
 
-	fprintf (stderr, "\nVersion: " R1BINARY " " VERSION " (" BUILDSTRING " " CPUSTRING ") " RELEASESTRING "\n");
+	fprintf (stderr, "\nVersion: WebQuake2 " VERSION " (" BUILDSTRING " " CPUSTRING ")\n");
 
 	uname (&info);
 	fprintf (stderr, "OS Info: %s %s %s %s %s\n\n", info.sysname, info.nodename, info.release, info.version, info.machine);

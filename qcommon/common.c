@@ -2360,8 +2360,7 @@ void Qcommon_Init (int argc, char **argv)
 	
 	err_fatal = Cvar_Get ("err_fatal", "0", 0);
 
-	//s = va("R1Q2 %s %s %s %s", VERSION, CPUSTRING, __DATE__, BUILDSTRING);
-	Cvar_Get ("version", R1Q2_VERSION_STRING, CVAR_SERVERINFO|CVAR_NOSET);
+	Cvar_Get ("version", "WebQuake2 " VERSION " " CPUSTRING, CVAR_SERVERINFO|CVAR_NOSET);
 
 #ifndef NO_SERVER
 	if (dedicated->intvalue)
@@ -2381,9 +2380,7 @@ void Qcommon_Init (int argc, char **argv)
 #endif
 
 	Com_Printf ("====== Quake2 Initialized ======\n", LOG_GENERAL);	
-	Com_Printf ("R1Q2 build " BUILD ", compiled " __DATE__ ".\n"
-				"http://www.r1ch.net/stuff/r1q2/\n"
-				BUILDSTRING " " CPUSTRING " (%s)\n\n", LOG_GENERAL, binary_name);
+	Com_Printf ("WebQuake2 version " VERSION "\n", LOG_GENERAL);
 
 	CL_Init ();
 

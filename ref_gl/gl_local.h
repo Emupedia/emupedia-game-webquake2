@@ -94,15 +94,6 @@ void qglActiveTexture(GLenum);
 void flushDraws(const char *reason);
 
 
-//please keep this undefined on modified versions.
-#define R1GL_RELEASE 1
-
-#ifdef R1GL_RELEASE
-#define	REF_VERSION	"R1GL 0.1.5.42"
-#else
-#define REF_VERSION "R1GL015-modified"
-#endif
-
 #define	MAX_TEXTURE_DIMENSIONS	1024
 
 // up / down
@@ -528,7 +519,6 @@ image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type)
 image_t	*GL_FindImageBase (const char *basename, imagetype_t type);
 void	GL_TextureMode(const char *string);
 void	GL_ImageList_f (void);
-void	GL_Version_f (void);
 
 //void	GL_SetTexturePalette( unsigned palette[256] );
 
