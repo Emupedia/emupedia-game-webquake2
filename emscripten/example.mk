@@ -62,4 +62,4 @@ LTOLDFLAGS:=--llvm-lto 3
 
 
 OBJSUFFIX:=.o
-EXESUFFIX:=.html
+EXESUFFIX:=.js
