@@ -909,8 +909,9 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	STUBBED("better( O(1) ) way to find a connection with data");
 	for (const auto &p : wsState->connections) {
 		const auto &conn = p.second;
+		assert(conn->addr == p.first);
 		if (conn->recvPacket(net_message)) {
-			*net_from = p.first;
+			*net_from = conn->addr;
 
 			net_packets_in++;
 			net_total_in += net_message->cursize;
