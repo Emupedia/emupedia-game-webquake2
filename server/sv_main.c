@@ -3108,8 +3108,8 @@ void SV_Init (void)
 	Cvar_Get ("cheats", "0", CVAR_SERVERINFO|CVAR_LATCH);
 	Cvar_Get ("protocol", va("%i", PROTOCOL_R1Q2), CVAR_NOSET);
 
-	//r1: default 8
-	maxclients = Cvar_Get ("maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH);
+	// default 64 since any modern computer should be able to handle it
+	maxclients = Cvar_Get ("maxclients", "64", CVAR_SERVERINFO | CVAR_LATCH);
 
 	hostname = Cvar_Get ("hostname", "Unnamed R1Q2 Server", CVAR_SERVERINFO | CVAR_ARCHIVE);
 
