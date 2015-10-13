@@ -22,6 +22,14 @@
 #endif  // _WIN32
 
 
+enum ReadyState {
+	  Connecting = 0
+	, Open = 1
+	, Closing = 2
+	, Closed = 3
+};
+
+
 #ifdef EMSCRIPTEN
 
 
@@ -33,12 +41,14 @@ extern "C" {
 // these are defined in javascript
 void q2wsInit();
 int q2wsConnect(const char *url);
+ReadyState q2wsGetReadyState(int socket);
 void q2wsClose(int socket);
 void q2wsPrepSocket(const char *url);
 int q2wsSend(int socket, const char *buf, unsigned int length);
 
 
 void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsigned int length);
+void EMSCRIPTEN_KEEPALIVE q2wsSocketStatusCallback(int socket, ReadyState readyState);
 
 
 }  // extern "C"
@@ -211,12 +221,14 @@ struct Connection {
 	netadr_t addr;
 	struct libwebsocket *wsi;
 	std::vector<char> recvBuffer;
+	ReadyState readyState;
 	bool writable;
 
 
 	Connection(netadr_t addr_, struct libwebsocket *wsi_)
 	: addr(addr_)
 	, wsi(wsi_)
+	, readyState(Connecting)
 	, writable(false)
 	{
 	}
@@ -225,7 +237,11 @@ struct Connection {
 	~Connection()
 	{
 		assert(wsi != NULL);
+		if (readyState == Connecting || readyState == Open) {
+			// game-initiated close, tell libwebsockets to close it
 		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
+			readyState = Closed;
+		}
 
 		auto wsiIt = wsState->wsiLookup.find(wsi);
 		assert(wsiIt != wsState->wsiLookup.end());
@@ -281,6 +297,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			}
 
 			std::unique_ptr<Connection> conn(new Connection(addr, wsi));
+			conn->readyState = Open;
 			wsState->wsiLookup.emplace(wsi, conn.get());
 
 			bool success = false;
@@ -296,9 +313,19 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 		break;
 
 	case LWS_CALLBACK_CLIENT_ESTABLISHED:
-		Com_Printf("websocketCallback LWS_CALLBACK_CLIENT_ESTABLISHED\n", LOG_NET);
+		{
+			auto wsiIt = wsState->wsiLookup.find(wsi);
+			if (wsiIt == wsState->wsiLookup.end()) {
+				Com_Printf("ERROR: Established on connection we don't know\n", LOG_NET);
+				return -1;
+			}
+			Connection *conn = wsiIt->second;
+			assert(conn->wsi == wsi);
+			assert(conn->readyState == Connecting);
+			conn->readyState = Open;
 
 		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
+		}
 		break;
 
 	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
@@ -313,6 +340,8 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			}
 			Connection *conn = wsiIt->second;
 			assert(conn->wsi == wsi);
+			assert(conn->readyState != Closed);
+			conn->readyState = Closed;
 
 			netadr_t addr = conn->addr;
 			auto connIt = wsState->connections.find(addr);
@@ -352,6 +381,8 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 				return -1;
 			}
 
+			assert(conn->readyState == Open);
+
 			bool alreadyHasData = !conn->recvBuffer.empty();
 			if (alreadyHasData) {
 				// if there's data already in the buffer the connection must also be in pendingData
@@ -380,6 +411,11 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			}
 
 			assert(conn->wsi == wsi);
+			if (conn->readyState == Closed || conn->readyState == Closing) {
+				// game has closed, close the actual connection
+				return -1;
+			}
+
 			conn->writable = true;
 		}
 		break;
@@ -541,6 +577,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 
 bool Connection::sendPacket(const char *data, size_t length) {
 	assert(wsi);
+	assert(readyState == Open);
 
 	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
 	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + length + LWS_SEND_BUFFER_POST_PADDING];
@@ -607,11 +644,13 @@ struct Connection {
 	netadr_t addr;
 	int socket;
 	std::vector<char> recvBuffer;
+	ReadyState readyState;
 
 
 	explicit Connection(netadr_t addr_, int socket_)
 	: addr(addr_)
 	, socket(socket_)
+	, readyState(Connecting)
 	{
 		assert(socket > 0);
 	}
@@ -620,6 +659,7 @@ struct Connection {
 	~Connection()
 	{
 		assert(socket > 0);
+		q2wsClose(socket);
 
 		auto socketIt = wsState->socketLookup.find(socket);
 		assert(socketIt != wsState->socketLookup.end());
@@ -635,7 +675,6 @@ struct Connection {
 			assert(wsState->pendingData.find(this) == wsState->pendingData.end());
 		}
 
-		q2wsClose(socket);
 		socket = 0;
 	}
 
@@ -706,6 +745,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	Com_Printf("created websocket connection %d\n", LOG_NET, socket);
 
 	std::unique_ptr<Connection> conn(new Connection(to, socket));
+	conn->readyState = q2wsGetReadyState(socket);
 
 	wsState->socketLookup.emplace(socket, conn.get());
 
@@ -719,6 +759,8 @@ void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsig
 		Com_Printf("ERROR: Receive on connection we don't know\n", LOG_NET);
 		return;
 	}
+
+	assert(conn->readyState == Open);
 
 	bool alreadyHasData = !conn->recvBuffer.empty();
 	if (alreadyHasData) {
@@ -735,8 +777,23 @@ void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsig
 }
 
 
+void EMSCRIPTEN_KEEPALIVE q2wsSocketStatusCallback(int socket, ReadyState readyState) {
+	assert(socket > 0);
+	Com_Printf("q2wsSocketStatusCallback %d %d\n", LOG_NET, socket, readyState);
+
+	Connection *conn = wsState->findConnection(socket);
+	if (!conn) {
+		Com_Printf("ERROR: Receive on connection we don't know\n", LOG_NET);
+		return;
+	}
+
+	conn->readyState = readyState;
+}
+
+
 bool Connection::sendPacket(const char *data, size_t length) {
 	assert(socket > 0);
+	assert(readyState == Open);
 
 	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
 	char sendBuf[2 + length];
@@ -1095,6 +1152,31 @@ int NET_SendPacket (netsrc_t sock, int length, const void *data, netadr_t *to)
 	assert(it->second.get() != NULL);
 	Connection &conn = *(it->second.get());
 	assert(conn.addr == *to);
+
+
+	switch (conn.readyState) {
+	case Connecting:
+		// connection not open yet, discard packet and report success
+#ifndef EMSCRIPTEN
+		libwebsocket_service(wsState->websocketContext, 0);
+#endif  // EMSCRIPTEN
+
+		return 1;
+		break;
+
+	case Open:
+		// it's all good
+		break;
+
+	case Closed:
+	case Closing:
+		printf("connection closed\n");
+		// connection close, remove it and report failure
+		// should this really happen?
+		wsState->connections.erase(it);
+		return 0;
+		break;
+	}
 
 	bool success = conn.sendPacket(reinterpret_cast<const char *>(data), length);
 

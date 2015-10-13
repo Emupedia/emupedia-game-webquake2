@@ -5,13 +5,20 @@ var LibraryQ2Websocket = {
 		, newSocketId: 1
 		, preparedSocket: null
 		, q2wsMessageCallback: null
+		, q2wsSocketStatusCallback: null
 
 		, onOpenFunc: function() {
 			console.log("websocket onOpen");
+			if (this.socketId != null) {
+				Q2WS.q2wsSocketStatusCallback(this.socketId, this.readyState);
+			}
 		}
 
 		, onCloseFunc: function() {
 			console.log("websocket onClose");
+			if (this.socketId != null) {
+				Q2WS.q2wsSocketStatusCallback(this.socketId, this.readyState);
+			}
 		}
 
 		, onMessageFunc: function(msg) {
@@ -36,6 +43,7 @@ var LibraryQ2Websocket = {
 	, q2wsInit: function() {
 		console.log("q2wsInit");
 		Q2WS.q2wsMessageCallback = Module.cwrap('q2wsMessageCallback', null, ['number', 'array', 'number']);
+		Q2WS.q2wsSocketStatusCallback = Module.cwrap('q2wsSocketStatusCallback', null, ['number', 'number']);
 	}
 
 
@@ -63,6 +71,15 @@ var LibraryQ2Websocket = {
 		socket.socketId = socketId;
 
 		return socketId;
+	}
+
+
+	, q2wsGetReadyState: function(socketId) {
+		assert(socketId > 0);
+		assert(socketId < Q2WS.sockets.length);
+		var socket = Q2WS.sockets[socketId];
+		assert(socket != null);
+		return socket.readyState;
 	}
 
 
