@@ -240,7 +240,7 @@ struct Connection {
 		if (readyState == Connecting || readyState == Open) {
 			// game-initiated close, tell libwebsockets to close it
 		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
-			readyState = Closed;
+			setReadyState(Closed);
 		}
 
 		auto wsiIt = wsState->wsiLookup.find(wsi);
@@ -265,6 +265,8 @@ struct Connection {
 	bool recvPacket(sizebuf_t *net_message);
 
 	bool sendPacket(const char *data, size_t length);
+
+	void setReadyState(ReadyState newState);
 };
 
 
@@ -297,7 +299,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			}
 
 			std::unique_ptr<Connection> conn(new Connection(addr, wsi));
-			conn->readyState = Open;
+			conn->setReadyState(Open);
 			wsState->wsiLookup.emplace(wsi, conn.get());
 
 			bool success = false;
@@ -322,7 +324,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			Connection *conn = wsiIt->second;
 			assert(conn->wsi == wsi);
 			assert(conn->readyState == Connecting);
-			conn->readyState = Open;
+			conn->setReadyState(Open);
 
 		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
 		}
@@ -341,7 +343,7 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			Connection *conn = wsiIt->second;
 			assert(conn->wsi == wsi);
 			assert(conn->readyState != Closed);
-			conn->readyState = Closed;
+			conn->setReadyState(Closed);
 
 			netadr_t addr = conn->addr;
 			auto connIt = wsState->connections.find(addr);
@@ -682,6 +684,8 @@ struct Connection {
 	bool recvPacket(sizebuf_t *net_message);
 
 	bool sendPacket(const char *data, size_t len);
+
+	void setReadyState(ReadyState newState);
 };
 
 
@@ -745,7 +749,7 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 	Com_Printf("created websocket connection %d\n", LOG_NET, socket);
 
 	std::unique_ptr<Connection> conn(new Connection(to, socket));
-	conn->readyState = q2wsGetReadyState(socket);
+	conn->setReadyState(q2wsGetReadyState(socket));
 
 	wsState->socketLookup.emplace(socket, conn.get());
 
@@ -787,7 +791,7 @@ void EMSCRIPTEN_KEEPALIVE q2wsSocketStatusCallback(int socket, ReadyState readyS
 		return;
 	}
 
-	conn->readyState = readyState;
+	conn->setReadyState(readyState);
 }
 
 
@@ -854,8 +858,30 @@ qboolean	NET_StringToSockaddr (const char *s, struct sockaddr *sadr);
 #endif
 
 
-void closesocket(int socket) {
+static const char *readyStateStr(ReadyState readyState) {
+	switch (readyState) {
+	case Connecting:
+		return "connecting";
+
+	case Open:
+		return "open";
+
+	case Closing:
+		return "closing";
+
+	case Closed:
+		return "closed";
+	}
+
+	__builtin_unreachable();
 }
+
+
+void Connection::setReadyState(ReadyState newState) {
+	Com_Printf("Connection status change from %s to %s\n", LOG_NET, readyStateStr(readyState), readyStateStr(newState));
+	readyState = newState;
+}
+
 
 
 void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
