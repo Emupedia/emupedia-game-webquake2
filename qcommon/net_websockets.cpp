@@ -66,6 +66,7 @@ extern "C" {
 #include <string>
 #include <tuple>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 
@@ -184,8 +185,11 @@ bool operator==(const netadr_t &a, const netadr_t &b) {
 struct WSState {
 	std::unordered_map<netadr_t, std::unique_ptr<Connection> > connections;
 
+	// TODO: use intrusive containers
 	// not owned
 	std::unordered_map<const struct libwebsocket *, Connection *> wsiLookup;
+	// connections with pending data
+	std::unordered_set<Connection *> pendingData;
 
 	struct libwebsocket_context *websocketContext;
 
@@ -226,6 +230,16 @@ struct Connection {
 		auto wsiIt = wsState->wsiLookup.find(wsi);
 		assert(wsiIt != wsState->wsiLookup.end());
 		wsState->wsiLookup.erase(wsiIt);
+
+		bool hasData = !recvBuffer.empty();
+		if (hasData) {
+			auto pendingIt = wsState->pendingData.find(this);
+			assert(pendingIt != wsState->pendingData.end());
+			wsState->pendingData.erase(pendingIt);
+		} else {
+			// no data in buffer, must not be in pendingData
+			assert(wsState->pendingData.find(this) == wsState->pendingData.end());
+		}
 
 		wsi = NULL;
 		// since it's no longer in the hash map, next callback should close it
@@ -306,6 +320,12 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			assert(connIt != wsState->connections.end());
 			assert(conn == connIt->second.get());
 
+			bool hasDataRemaining = !conn->recvBuffer.empty();
+			if (hasDataRemaining) {
+				// if there's data remaining it must also be in pendingData
+				assert(wsState->pendingData.find(conn) != wsState->pendingData.end());
+			}
+
 			Com_Printf("Disconnecting from %s\n", LOG_NET, NET_AdrToString(&addr));
 
 			wsState->connections.erase(connIt);
@@ -313,6 +333,11 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 			// Connection destructor should have removed this
 			wsiIt = wsState->wsiLookup.find(wsi);
 			assert(wsiIt == wsState->wsiLookup.end());
+
+			if (hasDataRemaining) {
+				// if it was in pendingData the destructor must have removed it
+				assert(wsState->pendingData.find(conn) == wsState->pendingData.end());
+			}
 		}
 		break;
 
@@ -327,10 +352,19 @@ static int websocketCallback(struct libwebsocket_context *context, struct libweb
 				return -1;
 			}
 
+			bool alreadyHasData = !conn->recvBuffer.empty();
+			if (alreadyHasData) {
+				// if there's data already in the buffer the connection must also be in pendingData
+				assert(wsState->pendingData.find(conn) != wsState->pendingData.end());
+			}
+
 			assert(conn->wsi == wsi);
 			const char *buf = reinterpret_cast<char *>(in);
 			conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
 
+			if (!alreadyHasData) {
+				wsState->pendingData.insert(conn);
+			}
 		}
 		break;
 
@@ -459,7 +493,10 @@ static void websocketShutdown() {
 	assert(wsState->websocketContext);
 
 	wsState->connections.clear();
+
+	// destroying all the connections must have cleared these
 	assert(wsState->wsiLookup.empty());
+	assert(wsState->pendingData.empty());
 
 	libwebsocket_context_destroy(wsState->websocketContext);
 	wsState->websocketContext = NULL;
@@ -552,6 +589,9 @@ struct WSState {
 
 	std::unordered_map<int, Connection *> socketLookup;
 
+	// connections with pending data
+	std::unordered_set<Connection *> pendingData;
+
 
 	WSState()
 	{
@@ -580,6 +620,21 @@ struct Connection {
 	~Connection()
 	{
 		assert(socket > 0);
+
+		auto socketIt = wsState->socketLookup.find(socket);
+		assert(socketIt != wsState->socketLookup.end());
+		wsState->socketLookup.erase(socketIt);
+
+		bool hasData = !recvBuffer.empty();
+		if (hasData) {
+			auto pendingIt = wsState->pendingData.find(this);
+			assert(pendingIt != wsState->pendingData.end());
+			wsState->pendingData.erase(pendingIt);
+		} else {
+			// no data in buffer, must not be in pendingData
+			assert(wsState->pendingData.find(this) == wsState->pendingData.end());
+		}
+
 		q2wsClose(socket);
 		socket = 0;
 	}
@@ -607,7 +662,11 @@ static void websocketShutdown() {
 
 	wsState->connections.clear();
 
-	STUBBED("websocketShutdown");
+	// destroying all the connections must have cleared these
+	assert(wsState->socketLookup.empty());
+	assert(wsState->pendingData.empty());
+
+	STUBBED("clean up javascript side");
 
 	delete wsState;
 	wsState = NULL;
@@ -661,8 +720,18 @@ void EMSCRIPTEN_KEEPALIVE q2wsMessageCallback(int socket, const char *buf, unsig
 		return;
 	}
 
+	bool alreadyHasData = !conn->recvBuffer.empty();
+	if (alreadyHasData) {
+		// if there's data remaining it must also be in pendingData
+		assert(wsState->pendingData.find(conn) != wsState->pendingData.end());
+	}
+
 	assert(conn->socket == socket);
 	conn->recvBuffer.insert(conn->recvBuffer.end(), buf, buf + len);
+
+	if (!alreadyHasData) {
+		wsState->pendingData.insert(conn);
+	}
 }
 
 
@@ -685,6 +754,7 @@ bool Connection::sendPacket(const char *data, size_t length) {
 
 bool Connection::recvPacket(sizebuf_t *net_message) {
 	assert(net_message);
+	assert(wsState->pendingData.find(this) != wsState->pendingData.end());
 
 	if (recvBuffer.size() < 2) {
 		return false;
@@ -706,6 +776,10 @@ bool Connection::recvPacket(sizebuf_t *net_message) {
 	memcpy(net_message->data, &recvBuffer[2], length);
 	net_message->cursize = length;
 	recvBuffer.erase(recvBuffer.begin(), recvBuffer.begin() + 2 + length);
+	if (recvBuffer.empty()) {
+		// it's now empty, remove from pendingData
+		wsState->pendingData.erase(this);
+	}
 
 	return true;
 }
@@ -906,10 +980,12 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 		return 0;
 	}
 
-	STUBBED("better( O(1) ) way to find a connection with data");
-	for (const auto &p : wsState->connections) {
-		const auto &conn = p.second;
-		assert(conn->addr == p.first);
+	if (wsState->pendingData.empty()) {
+		return 0;
+	}
+
+	// don't iterate via reference, recvPacket will alter the data structure
+	for (auto conn : wsState->pendingData) {
 		if (conn->recvPacket(net_message)) {
 			*net_from = conn->addr;
 
