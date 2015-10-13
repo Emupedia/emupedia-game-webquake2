@@ -53,6 +53,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef _WIN32
 #ifdef _MSC_VER
+#define STATICINLINE static __inline
+
 // unknown pragmas are SUPPOSED to be ignored, but....
 //#pragma warning(disable : 4244)     // MIPS
 //#pragma warning(disable : 4136)     // X86
@@ -164,6 +166,10 @@ void Q_strlwr (char *str);
 int Q_vsnprintf (char *buff, size_t len, const char *fmt, va_list va);
 //int Q_snprintf (char *buff, size_t len, const char *fmt, ...);
 
+#endif
+
+#ifndef STATICINLINE
+#define STATICINLINE static inline
 #endif
 
 #if (defined _M_IX86 || defined __i386__) && !defined C_ONLY && !defined __sun__
@@ -376,7 +382,7 @@ typedef union
 
 // this works because vec3_t is an array which is a pointer
 // evil C stuff
-static inline void VectorClear(vec3_t a) {
+STATICINLINE void VectorClear(vec3_t a) {
 	a[0] = 0.0f;
 	a[1] = 0.0f;
 	a[2] = 0.0f;
