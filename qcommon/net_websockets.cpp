@@ -223,6 +223,7 @@ struct Connection {
 	std::vector<char> recvBuffer;
 	ReadyState readyState;
 	bool writable;
+	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + MAX_MSGLEN + LWS_SEND_BUFFER_POST_PADDING];
 
 
 	Connection(netadr_t addr_, struct libwebsocket *wsi_)
@@ -231,6 +232,7 @@ struct Connection {
 	, readyState(Connecting)
 	, writable(false)
 	{
+		memset(&sendBuf, 0, sizeof(sendBuf));
 	}
 
 
@@ -580,9 +582,6 @@ static std::unique_ptr<Connection> createConnection(const netadr_t &to) {
 bool Connection::sendPacket(const char *data, size_t length) {
 	assert(wsi);
 	assert(readyState == Open);
-
-	STUBBED("TODO: allocate from sendBuf from heap, keep permanently"); // connection-specific?
-	unsigned char sendBuf[LWS_SEND_BUFFER_PRE_PADDING + 2 + length + LWS_SEND_BUFFER_POST_PADDING];
 	assert(length < 16384);
 	uint16_t l16 = length;
 	memcpy(&sendBuf[LWS_SEND_BUFFER_PRE_PADDING], &l16, 2);
