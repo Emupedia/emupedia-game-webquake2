@@ -102,6 +102,9 @@ extern "C" {
 #endif  // NDEBUG
 
 
+extern "C" {
+
+
 static unsigned int net_inittime = 0;
 
 static unsigned long long net_total_in = 0;
@@ -125,6 +128,10 @@ qboolean	net_proxy_active = false;
 
 
 #define	MAX_LOOPBACK	4
+
+
+}  // extern "C"
+
 
 typedef struct
 {
