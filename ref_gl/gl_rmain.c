@@ -209,8 +209,6 @@ extern cvar_t		*gl_contrast;
 #define JOY_AXIS_U			4
 #define JOY_AXIS_V			5
 
-static qboolean                 X11_active = false;
-
 
 static SDL_Window *window;
 static SDL_GLContext glcontext;
@@ -1345,8 +1343,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 
 	// let the sound and input subsystems know about the new window
 	ri.Vid_NewWindow(viddef.width, viddef.height);
-
-	X11_active = true;
 
 	return true;
 }
@@ -2701,8 +2697,6 @@ void GLimp_Shutdown( void )
 		SDL_Quit();
 	else
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
-		
-	X11_active = false;
 }
 
 
@@ -2720,9 +2714,6 @@ void KBD_Update(void)
 
 	KBD_Update_Flag = 1;
 
-// get events from x server
-	if (X11_active)
-	{
 #ifdef HAVE_JOYSTICK
 		if (joystick_avail && joy) {
 		  jx = SDL_JoystickGetAxis(joy, lr_axis);
@@ -2735,7 +2726,6 @@ void KBD_Update(void)
 			Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down, Sys_Milliseconds());
 			keyq_tail = (keyq_tail + 1) & 63;
 		}
-	}
 
 	KBD_Update_Flag = 0;
 }
