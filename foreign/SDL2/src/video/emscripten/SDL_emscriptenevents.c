@@ -296,9 +296,19 @@ Emscripten_ConvertUTF32toUTF8(Uint32 codepoint, char * text)
     return SDL_TRUE;
 }
 
+
+static int scrollhax = 0;
+
+
 EM_BOOL
 Emscripten_HandleMouseMove(int eventType, const EmscriptenMouseEvent *mouseEvent, void *userData)
 {
+    if (scrollhax) {
+        /* horrible hack for chrome, see below in scroll event handler */
+        scrollhax = 0;
+        return 1;
+    }
+
     SDL_WindowData *window_data = userData;
     int mx = mouseEvent->canvasX, my = mouseEvent->canvasY;
     EmscriptenPointerlockChangeEvent pointerlock_status;
@@ -357,6 +367,14 @@ Emscripten_HandleWheel(int eventType, const EmscriptenWheelEvent *wheelEvent, vo
 {
     SDL_WindowData *window_data = userData;
     SDL_SendMouseWheel(window_data->window, 0, wheelEvent->deltaX, -wheelEvent->deltaY, SDL_MOUSEWHEEL_NORMAL);
+
+    /* horrible chrome hack
+       https://code.google.com/p/chromium/issues/detail?id=241476
+       mouse wheel generates bogus mouse motion events
+       so ignore the next one
+       FIXME: shouldn't do this on firefox
+    */
+    scrollhax = 1;
     return 1;
 }
 
