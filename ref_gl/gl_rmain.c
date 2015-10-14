@@ -273,6 +273,19 @@ static int lr_axis, ud_axis, throttle_axis;
 #endif /* HAVE_JOYSTICK */
 
 
+static void windowed_mouse_changed(struct cvar_s *self, char *oldValue, char *newValue) {
+	VID_Printf(PRINT_DEVELOPER, "_windowed_mouse changed from %s to %s\n", oldValue, newValue);
+
+	SDL_bool grab = _windowed_mouse->intvalue ? SDL_TRUE : SDL_FALSE;
+
+	SDL_SetWindowGrab(window, grab);
+	int retval = SDL_SetRelativeMouseMode(grab);
+	if (retval != 0) {
+		VID_Printf (PRINT_ALL, "Failed to set %srelative mouse state \"%s\"\n", grab ? "" : "non", SDL_GetError());
+	}
+}
+
+
 /*
 =================
 R_CullBox
@@ -1287,9 +1300,6 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 			// TODO: SDL_WINDOW_FULLSCREEN_DESKTOP
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
-		if (_windowed_mouse->intvalue != 0) {
-			flags |= SDL_WINDOW_INPUT_GRABBED;
-		}
 
 		window = SDL_CreateWindow("Quake II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, viddef.width, viddef.height, flags);
 		if (!window) {
@@ -1298,12 +1308,8 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 		}
 		SetSDLIcon();
 
-		if (_windowed_mouse->intvalue != 0) {
-			int retval = SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-			if (retval != 0) {
-				VID_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
-			}
-		}
+		// grab mouse
+		_windowed_mouse->changed(_windowed_mouse, _windowed_mouse->string, _windowed_mouse->string);
 
 		glcontext = SDL_GL_CreateContext(window);
 
@@ -1972,6 +1978,7 @@ void RW_IN_Init(in_state_t *in_state_p)
 
 	// mouse variables
 	_windowed_mouse = Cvar_Get ("_windowed_mouse", "0", CVAR_ARCHIVE);
+	_windowed_mouse->changed = windowed_mouse_changed;
 	m_filter = Cvar_Get ("m_filter", "0", 0);
 	in_mouse = Cvar_Get ("in_mouse", "1", CVAR_ARCHIVE);
 #ifdef HAVE_JOYSTICK
@@ -2264,7 +2271,6 @@ EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEve
 		SDL_Log("Pointer lock grabbed");
 	} else {
 		SDL_Log("Pointer lock lost");
-		SDL_SetRelativeMouseMode(SDL_FALSE);
 		Cvar_SetValue( "_windowed_mouse", 0 );
 
 		// release all keys so Alt etc. don't get stuck on
@@ -2291,7 +2297,6 @@ int FilterEvents(void* userdata, SDL_Event* event)
 		case SDL_MOUSEBUTTONDOWN:
 			if (SDL_GetRelativeMouseMode() != SDL_TRUE) {
 				SDL_Log("Setting Relative + Grab");
-				SDL_SetRelativeMouseMode(SDL_TRUE);
 				Cvar_SetValue( "_windowed_mouse", 1 );
 			}
 			break;
@@ -2403,10 +2408,6 @@ void GetEvent(SDL_Event *event)
 			(event->key.keysym.sym == SDLK_g) ) {
 
 			int newValue = (SDL_GetWindowGrab(window) == SDL_TRUE) ? /*1*/ 0 : /*0*/ 1;
-			/*	
-			SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
-			gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
-			*/	
 			Cvar_SetValue( "_windowed_mouse", newValue );
 			
 			break; /* ignore this key */
