@@ -3,7 +3,7 @@
 
 
 # location of source
-TOPDIR:=..
+TOPDIR?=..
 
 
 LTO:=n
@@ -33,7 +33,7 @@ CFLAGS+=-Wall -Wextra
 CFLAGS+=-Wno-sign-compare -Wno-unused-parameter
 CFLAGS+=$(shell sdl2-config --cflags)
 CFLAGS+=$(shell pkg-config openal --cflags)
-OPTFLAGS:=-O2 -mtune=generic -fno-strict-aliasing -ffloat-store
+OPTFLAGS:=-O2 -mtune=generic -fno-strict-aliasing
 
 
 # lazy assignment because CFLAGS is changed later

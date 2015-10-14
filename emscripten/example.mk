@@ -3,7 +3,7 @@
 
 
 # location of source
-TOPDIR:=..
+TOPDIR?=..
 
 
 LTO:=y
@@ -38,7 +38,8 @@ CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
 LDFLAGS:=-g --preload-file baseq2
-LDFLAGS+=-s TOTAL_MEMORY=268435456
+# 384 MB
+LDFLAGS+=-s TOTAL_MEMORY=402653184
 LDFLAGS+=-s OUTLINING_LIMIT=5000
 LDLIBS:=
 LDLIBS_ref_gl:=

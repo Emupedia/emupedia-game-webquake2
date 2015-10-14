@@ -3,7 +3,7 @@
 
 
 # location of source
-TOPDIR:=..
+TOPDIR?=..
 
 
 LTO:=n
