@@ -2715,17 +2715,17 @@ void KBD_Update(void)
 	KBD_Update_Flag = 1;
 
 #ifdef HAVE_JOYSTICK
-		if (joystick_avail && joy) {
-		  jx = SDL_JoystickGetAxis(joy, lr_axis);
-		  jy = SDL_JoystickGetAxis(joy, ud_axis);
-		  jt = SDL_JoystickGetAxis(joy, throttle_axis);
-		}
+	if (joystick_avail && joy) {
+	  jx = SDL_JoystickGetAxis(joy, lr_axis);
+	  jy = SDL_JoystickGetAxis(joy, ud_axis);
+	  jt = SDL_JoystickGetAxis(joy, throttle_axis);
+	}
 #endif
-		while (keyq_head != keyq_tail)
-		{
-			Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down, Sys_Milliseconds());
-			keyq_tail = (keyq_tail + 1) & 63;
-		}
+	while (keyq_head != keyq_tail)
+	{
+		Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down, Sys_Milliseconds());
+		keyq_tail = (keyq_tail + 1) & 63;
+	}
 
 	KBD_Update_Flag = 0;
 }
