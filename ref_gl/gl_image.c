@@ -2202,7 +2202,7 @@ void GL_LightScaleTexture (unsigned *in, int inwidth, int inheight, qboolean onl
 
 
 // http://graphics.stanford.edu/~seander/bithacks.html
-static inline bool isPow2(unsigned int v) {
+STATICINLINE bool isPow2(unsigned int v) {
 	return (v & (v - 1)) == 0;
 }
 
