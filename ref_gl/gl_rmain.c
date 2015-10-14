@@ -235,12 +235,9 @@ glwstate_t glw_state;
 // this is inside the renderer shared lib, so these are called from vid_so
 
 static qboolean        mouse_avail;
-static int     mouse_buttonstate;
-static int     mouse_oldbuttonstate;
-static int   mouse_x, mouse_y;
-static int	old_mouse_x, old_mouse_y;
-static int		mx, my;
-static float old_windowed_mouse;
+static int   mouse_x = 0, mouse_y = 0;
+static int	old_mouse_x = 0, old_mouse_y = 0;
+static int		mx = 0, my = 0;
 static qboolean mouse_active;
 
 static cvar_t	*_windowed_mouse;
@@ -2036,34 +2033,10 @@ IN_Commands
 */
 void RW_IN_Commands (void)
 {
-    int i;
 #ifdef HAVE_JOYSTICK
     int key_index;
 #endif
-   
-	// TODO: move this to a message loop somewhere
-	// TODO: after that use message timestamp instead of Sys_Milliseconds
-    if (mouse_avail) {
-		for (i = 0; i < 3; i++) {
-			if ( (mouse_buttonstate & (1<<i)) && !(mouse_oldbuttonstate & (1<<i)) )
-				Key_Event(K_MOUSE1 + i, true, Sys_Milliseconds());
 
-			if ( !(mouse_buttonstate & (1<<i)) && (mouse_oldbuttonstate & (1<<i)) )
-				Key_Event(K_MOUSE1 + i, false, Sys_Milliseconds());
-		}
-		/* can't put in loop because K_MOUSE4 doesn't come after K_MOUSE3 */
-		if ((mouse_buttonstate & (1<<3)) && !(mouse_oldbuttonstate & (1<<3)))
-			Key_Event(K_MOUSE4, true, Sys_Milliseconds());
-		if (!(mouse_buttonstate * (1<<3)) && (mouse_oldbuttonstate & (1<<3)))
-			Key_Event(K_MOUSE4, false, Sys_Milliseconds());
-
-		if ((mouse_buttonstate & (1<<4)) && !(mouse_oldbuttonstate & (1<<4)))
-			Key_Event(K_MOUSE5, true, Sys_Milliseconds());
-		if (!(mouse_buttonstate * (1<<4)) && (mouse_oldbuttonstate & (1<<4)))
-			Key_Event(K_MOUSE5, false, Sys_Milliseconds());
-
-		mouse_oldbuttonstate = mouse_buttonstate;
-    }
 #ifdef HAVE_JOYSTICK
     if (joystick_avail && joy) {
 		for (i = 0; i < joy_numbuttons; i++) {
@@ -2359,8 +2332,33 @@ void GetEvent(SDL_Event *event)
 			keyq_head = (keyq_head + 1) & 63;
 		}
 		break;
+
+	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
+		if (event->button.button > 0 && event->button.button < 10) {
+			int key = 0;
+			switch (event->button.button) {
+			// Quake2 and SDL disagree on buttons 2 & 3
+			case SDL_BUTTON_RIGHT:
+				key = K_MOUSE2;
+				break;
+
+			case SDL_BUTTON_MIDDLE:
+				key = K_MOUSE3;
+				break;
+
+			default:
+				key = K_MOUSE1 + event->button.button - 1;
+				break;
+			}
+
+			assert(key != 0);
+			keyq[keyq_head].key = key;
+			keyq[keyq_head].down = event->type == SDL_MOUSEBUTTONDOWN;
+			keyq_head = (keyq_head+1)&63;
+		}
 		break;
+
 #ifdef HAVE_JOYSTICK
 	case SDL_JOYBUTTONDOWN:
 	  keyq[keyq_head].key = 
@@ -2732,30 +2730,6 @@ void KBD_Update(void)
 		  jt = SDL_JoystickGetAxis(joy, throttle_axis);
 		}
 #endif
-		mouse_buttonstate = 0;
-		int bstate = SDL_GetMouseState(NULL, NULL);
-		if (SDL_BUTTON(1) & bstate)
-			mouse_buttonstate |= (1 << 0);
-		if (SDL_BUTTON(3) & bstate) /* quake2 has the right button be mouse2 */
-			mouse_buttonstate |= (1 << 1);
-		if (SDL_BUTTON(2) & bstate) /* quake2 has the middle button be mouse3 */
-			mouse_buttonstate |= (1 << 2);
-		if (SDL_BUTTON(6) & bstate)
-			mouse_buttonstate |= (1 << 3);
-
-		if (SDL_BUTTON(7) & bstate)
-			mouse_buttonstate |= (1 << 4);
-
-		if (old_windowed_mouse != _windowed_mouse->value) {
-			old_windowed_mouse = _windowed_mouse->value;
-
-			// TODO: should refactor all this grab stuff to one place
-			SDL_SetWindowGrab(window, _windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-			int retval = SDL_SetRelativeMouseMode(_windowed_mouse->value ? SDL_TRUE : SDL_FALSE);
-			if (retval != 0) {
-				VID_Printf (PRINT_ALL, "Failed to set relative mouse state \"%s\"\n", SDL_GetError());
-			}
-		}
 		while (keyq_head != keyq_tail)
 		{
 			Key_Event(keyq[keyq_tail].key, keyq[keyq_tail].down, Sys_Milliseconds());
