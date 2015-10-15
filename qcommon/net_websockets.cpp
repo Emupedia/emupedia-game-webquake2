@@ -21,6 +21,8 @@
 
 #endif  // _WIN32
 
+#include <cerrno>
+
 
 enum ReadyState {
 	  Connecting = 0

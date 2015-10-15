@@ -39,8 +39,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define GL_GLEXT_PROTOTYPES 1
 
+
+#ifdef __ANDROID__
+
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
+
+typedef GLfloat GLclampd;
+typedef double  GLdouble;
+
+
+#else  // __ANDROID
+
 #include <GL/gl.h>
 #include <GL/glext.h>
+
+#endif  // __ANDROID
+
 #include <stdbool.h>
 
 

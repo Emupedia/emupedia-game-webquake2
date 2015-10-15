@@ -11,7 +11,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <sys/ipc.h>
-#include <sys/shm.h>
 #include <sys/stat.h>
 #include <string.h>
 #include <ctype.h>
@@ -23,9 +22,17 @@
 #define _GNU_SOURCE
 #endif  // _GNU_SOURCE
 
+
+#include <sys/resource.h>
+
+
+#if !(defined(EMSCRIPTEN) || defined(__ANDROID__))
+
+#include <sys/wait.h>
+#include <execinfo.h>
+
 #include <link.h>
 #include <sys/ucontext.h>
-#include <sys/resource.h>
 
 //for old headers
 #ifndef REG_EIP
@@ -36,17 +43,15 @@
 #endif
 
 
+#endif  // EMSCRIPTEN  __ANDROID__
+
+
 #ifndef GAME_HARD_LINKED
 #include <dlfcn.h>
 #endif  // GAME_HARD_LINKED
 
 
-#ifndef EMSCRIPTEN
-
-#include <sys/wait.h>
-#include <execinfo.h>
-
-#else  // EMSCRIPTEN
+#ifdef EMSCRIPTEN
 
 #include <emscripten.h>
 
@@ -57,6 +62,12 @@
 #include "../client/ref.h"
 
 #include "../game/game.h"
+
+
+// for old android ndk
+#ifndef FNDELAY
+#define FNDELAY O_NDELAY
+#endif  // FNDELAY
 
 
 cvar_t *nostdin;
@@ -192,7 +203,7 @@ static int dlcallback (struct dl_phdr_info *info, size_t size, void *data)
 #endif
 
 
-#ifndef EMSCRIPTEN
+#if !(defined(EMSCRIPTEN) || defined(__ANDROID__))
 
 /* Obtain a backtrace and print it to stderr. 
  * Adapted from http://www.delorie.com/gnu/docs/glibc/libc_665.html
@@ -313,7 +324,7 @@ void Sys_Spinstats_f (void)
 
 unsigned short Sys_GetFPUStatus (void)
 {
-#ifndef EMSCRIPTEN
+#if !(defined(EMSCRIPTEN) || defined(__ANDROID__))
 	unsigned short fpuword;
 	__asm__ __volatile__ ("fnstcw %0" : "=m" (fpuword));
 	return fpuword;
@@ -329,7 +340,7 @@ unsigned short Sys_GetFPUStatus (void)
  */
 void Sys_SetFPU (void)
 {
-#ifndef EMSCRIPTEN
+#if !(defined(EMSCRIPTEN) || defined(__ANDROID__))
 	unsigned short fpuword;
 	fpuword = Sys_GetFPUStatus ();
 	fpuword &= ~(3 << 8);
@@ -347,7 +358,7 @@ void Sys_Init(void)
 #endif
   /* Install our signal handler */
 
-#if !defined(EMSCRIPTEN) && !defined(USE_AFL)
+#if !(defined(EMSCRIPTEN) || defined(__ANDROID__) || defined(USE_AFL))
 
 #ifndef __x86_64__
 	struct sigaction sa;
