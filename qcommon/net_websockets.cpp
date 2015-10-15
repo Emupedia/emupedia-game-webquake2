@@ -1072,7 +1072,15 @@ int	NET_GetPacket (netsrc_t sock, netadr_t *net_from, sizebuf_t *net_message)
 	}
 
 	if (wsState->pendingData.empty()) {
+#ifdef EMSCRIPTEN
+
 		return 0;
+
+#else  // EMSCRIPTEN
+
+		libwebsocket_service(wsState->websocketContext, 0);
+
+#endif  // EMSCRIPTEN
 	}
 
 	// don't iterate via reference, recvPacket will alter the data structure
