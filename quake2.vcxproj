@@ -105,7 +105,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>./build/binaries/debug/quake2.exe</OutputFile>
       <AdditionalDependencies>winmm.lib;wsock32.lib;dxguid.lib;dinput8.lib;dsound.lib;SDL2.lib;opengl32.lib;openal32.lib;websockets_static.lib;ssleay32MDd.lib;libeay32MDd.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>./foreign/libwebsockets</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./foreign/libwebsockets/build/lib/Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dedicated|Win32'">
@@ -146,7 +146,7 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>./emscripten/quake2.exe</OutputFile>
-      <AdditionalLibraryDirectories>./foreign/libwebsockets;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./foreign/libwebsockets/build/lib/Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;wsock32.lib;websockets_static.lib;ssleay32MDd.lib;libeay32MDd.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -187,7 +187,7 @@
       <SubSystem>Windows</SubSystem>
       <OutputFile>./build/binaries/release/quake2.exe</OutputFile>
       <AdditionalDependencies>winmm.lib;wsock32.lib;dxguid.lib;dinput8.lib;dsound.lib;SDL2.lib;opengl32.lib;openal32.lib;websockets_static.lib;ssleay32MDd.lib;libeay32MDd.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>./foreign/libwebsockets</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./foreign/libwebsockets/build/lib/Release</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
