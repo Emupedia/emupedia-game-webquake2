@@ -219,8 +219,8 @@ void VID_Printf (int print_level, const char *fmt, ...) __attribute__((format (p
 	// an implicit "pics/" prepended to the name. (a pic name that starts with a
 	// slash will not use the "pics/" prefix or the ".pcx" postfix)
 void	R_BeginRegistration (char *map);
-struct model_s	* R_RegisterModel (char *name);
-struct image_s	* R_RegisterSkin (char *name);
+struct model_s	* R_RegisterModel(const char *name);
+struct image_s	* R_RegisterSkin(const char *name);
 struct image_s	* Draw_FindPic (char *name);
 void R_SetSky (char *name, float rotate, vec3_t axis);
 void R_EndRegistration (void);

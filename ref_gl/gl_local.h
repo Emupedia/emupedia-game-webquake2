@@ -527,8 +527,6 @@ void	Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data
 int		Draw_GetPalette (void);
 
 
-struct image_s * R_RegisterSkin (char *name);
-
 void LoadPCX (const char *filename, byte **pic, byte **palette, int *width, int *height);
 image_t *GL_LoadPic (const char *name, byte *pic, int width, int height, imagetype_t type, int bits);
 image_t	*GL_FindImage (const char *name, const char *basename, imagetype_t type);

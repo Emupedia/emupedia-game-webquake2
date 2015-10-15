@@ -212,7 +212,7 @@ Mod_ForName
 Loads in a model for the given name
 ==================
 */
-model_t *Mod_ForName (char *name, qboolean crash)
+model_t *Mod_ForName (const char *name_, qboolean crash)
 {
 	model_t		*mod;
 	model_t		*modelhash;
@@ -220,7 +220,11 @@ model_t *Mod_ForName (char *name, qboolean crash)
 	byte		*buf;
 	int			i;
 	unsigned	hash;
-	
+
+	size_t len = strlen(name_);
+	char *name = alloca(len + 1);
+	strcpy(name, name_);
+
 	if (!name || !name[0])
 		VID_Error (ERR_DROP, "Mod_ForName: NULL name");
 		
@@ -1416,7 +1420,7 @@ R_RegisterModel
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-struct model_s * R_RegisterModel (char *name)
+struct model_s * R_RegisterModel(const char *name)
 {
 	model_t	*mod;
 	int		i;

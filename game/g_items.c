@@ -74,7 +74,7 @@ FindItemByClassname
 
 ===============
 */
-gitem_t	*FindItemByClassname (char *classname)
+gitem_t	*FindItemByClassname (const char *classname)
 {
 	int		i;
 	gitem_t	*it;
@@ -97,7 +97,7 @@ FindItem
 
 ===============
 */
-gitem_t	*FindItem (char *pickup_name)
+gitem_t	*FindItem (const char *pickup_name)
 {
 	int		i;
 	gitem_t	*it;

@@ -344,7 +344,7 @@ S_FindName
 
 ==================
 */
-sfx_t *S_FindName (char *name, qboolean create)
+sfx_t *S_FindName(const char *name, qboolean create)
 {
 	int		i;
 	sfx_t	*sfx;
@@ -475,7 +475,7 @@ S_RegisterSound
 
 ==================
 */
-sfx_t *S_RegisterSound (char *name)
+sfx_t *S_RegisterSound(const char *name)
 {
 	sfx_t	*sfx;
 
