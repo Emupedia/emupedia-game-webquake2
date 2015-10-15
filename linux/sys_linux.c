@@ -35,8 +35,11 @@
 #define REG_EIP EIP
 #endif
 
-//#include <fenv.h>
+
+#ifndef GAME_HARD_LINKED
 #include <dlfcn.h>
+#endif  // GAME_HARD_LINKED
+
 
 #ifndef EMSCRIPTEN
 
@@ -470,7 +473,15 @@ char *Sys_ConsoleInput(void)
 #endif  // NO_SERVER
 
 
-/*****************************************************************************/
+#ifdef GAME_HARD_LINKED
+
+
+void Sys_UnloadGame(void) {
+}
+
+
+#else  // GAME_HARD_LINKED
+
 
 static void *game_library;
 
@@ -485,6 +496,10 @@ void Sys_UnloadGame (void)
 		dlclose (game_library);
 	game_library = NULL;
 }
+
+
+#endif  // GAME_HARD_LINKED
+
 
 /*
 =================
