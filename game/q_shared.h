@@ -52,6 +52,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef _WIN32
 #ifdef _MSC_VER
+
+#if _MSC_VER >= 1700
+#include <stdbool.h>
+#endif
 #define STATICINLINE static __inline
 
 // unknown pragmas are SUPPOSED to be ignored, but....
