@@ -653,13 +653,6 @@ void mainloop() {
 
 int main (int argc, char **argv)
 {
-	unsigned int 	time, oldtime, newtime, spins;
-
-	// go back to real user for config loads
-	//saved_euid = geteuid();
-	//seteuid(getuid());
-	//
-
 #ifndef EMSCRIPTEN
 	if (getuid() == 0 || geteuid() == 0)
 		Sys_Error ("For security reasons, do not run Quake II as root.");
@@ -696,9 +689,14 @@ int main (int argc, char **argv)
 	emscripten_set_main_loop(mainloop, 0, 1);
 
 #else  // EMSCRIPTEN
-	oldtime = Sys_Milliseconds ();
+
+	unsigned int oldtime = Sys_Milliseconds ();
     while (1)
     {
+		unsigned int time;
+		unsigned int newtime;
+		unsigned int spins;
+
 		// find time spent rendering last frame
 #ifndef NO_SERVER
 		if (dedicated->intvalue && sys_loopstyle->intvalue)
