@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -89,6 +88,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #pragma intrinsic(memcmp)
 //#pragma intrinsic(memset)
+
+#else  // MSC_VER
+
+#include <stdbool.h>
+
 #endif  // MSC_VER
 
 #if _MSC_VER >= 1400
@@ -145,6 +149,7 @@ typedef unsigned __int64 uint64;
 
 #else /* NON-WIN32 */
 
+#include <stdbool.h>
 #include <stdint.h>
 #define WINAPI
 #define RESTRICT
