@@ -65,7 +65,15 @@ static 	void M_Menu_Video_f (void);
 static 	void M_Menu_Options_f (void);
 static 		void M_Menu_R1Q2_f (void);
 static 		void M_Menu_Keys_f (void);
+
+
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
+
+
 static 	void M_Menu_Quit_f (void);
+
+
+#endif  // !defined(EMSCRIPTEN) || !defined(NDEBUG)
 
 
 static bool playerStuff_MenuInit(int offset);
@@ -4117,11 +4125,17 @@ GALLERY MENU
 =======================================================================
 */
 
+
+#if !defined(EMSCRIPTEN) || !defined(NDEBUG)
+
+
 static void M_Menu_Quit_f (void)
 {
 	CL_Quit_f ();
 }
 
+
+#endif  // !defined(EMSCRIPTEN) || !defined(NDEBUG)
 
 
 //=============================================================================

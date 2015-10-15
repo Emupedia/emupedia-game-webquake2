@@ -524,10 +524,6 @@ void Mod_LoadEdges (lump_t *l)
 //FIXME: this is bad, loads entire file for just 8 bytes!
 qboolean GetWalInfo (const char *name, int *width, int *height)
 {
-#ifdef _DEBUG
-		int		i;
-		char	grey = 8;
-#endif
 		miptex_t	mt;
 		qboolean	closeFile;
 		FILE		*h;
@@ -550,6 +546,9 @@ qboolean GetWalInfo (const char *name, int *width, int *height)
 		*height = LittleLong(mt.height);
 
 #if defined(_DEBUG) && !defined(EMSCRIPTEN)
+		int		i;
+		char	grey = 8;
+
 		FS_CreatePath (va("wals/%s", name));
 		h = fopen (va("wals/%s", name), "wb");
 		fwrite (&mt, 1, sizeof(mt), h);

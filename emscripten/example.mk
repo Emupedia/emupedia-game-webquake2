@@ -30,6 +30,8 @@ CC:=emcc
 CXX:=em++
 CFLAGS:=-g -DNDEBUG -DLINUX -D_GNU_SOURCE=1
 CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
+CFLAGS+=-Wall
+CFLAGS+=-Werror
 OPTFLAGS:=-O3
 
 
