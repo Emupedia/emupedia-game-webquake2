@@ -171,11 +171,15 @@ typedef uint64_t uint64;
 #define Q_strncasecmp strncasecmp
 #define EXPORT
 #define IMPORT
-void Q_strlwr (char *str);
 int Q_vsnprintf (char *buff, size_t len, const char *fmt, va_list va);
 //int Q_snprintf (char *buff, size_t len, const char *fmt, ...);
 
-#endif
+
+#endif  // WIN32
+
+
+void Q_strlwr (char *str);
+
 
 #ifndef STATICINLINE
 #define STATICINLINE static inline

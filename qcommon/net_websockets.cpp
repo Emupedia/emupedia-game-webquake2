@@ -60,6 +60,7 @@ void EMSCRIPTEN_KEEPALIVE q2wsSocketStatusCallback(int socket, ReadyState readyS
 
 #include <libwebsockets.h>
 
+#undef random
 #undef VERSION
 
 #endif  // EMSCRIPTEN
