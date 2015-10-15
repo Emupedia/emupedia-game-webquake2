@@ -2199,7 +2199,6 @@ void Msg_Stats_f (void)
 {
 #ifndef NPROFILE
 	int		total;
-	int		i, j;
 	int		num;
 	int		sum;
 
@@ -2214,10 +2213,10 @@ void Msg_Stats_f (void)
 	total = 0;
 	num = 0;
 
-	for (i = 0; i < sizeof(messageSizes) / sizeof(messageSizes[0]); i += 10)
+	for (unsigned i = 0; i < sizeof(messageSizes) / sizeof(messageSizes[0]); i += 10)
 	{
 		sum = 0;
-		for (j = i; j < i+ 10; j++)
+		for (unsigned j = i; j < i+ 10; j++)
 		{
 			sum += messageSizes[j];
 			total += j * messageSizes[j];
