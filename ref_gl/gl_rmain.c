@@ -1315,6 +1315,8 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 
 #ifdef USE_GLEW
 
+		glewExperimental = true;
+
 		glewInit();
 
 		// swap once for better traces
