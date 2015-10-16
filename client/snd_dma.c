@@ -209,21 +209,21 @@ void S_Init (int fullInit)
 	else
 	{
 #ifdef USE_OPENAL
-			if (ALimp_Init ())
-			{
-				sound_started = 1;
+		if (ALimp_Init ())
+		{
+			sound_started = 1;
 
-				Cmd_AddCommand("play", S_Play);
-				Cmd_AddCommand("stopsound", S_StopAllSounds);
+			Cmd_AddCommand("play", S_Play);
+			Cmd_AddCommand("stopsound", S_StopAllSounds);
 
-				S_OpenAL_AllocChannels ();
-				S_StopAllSounds ();	//inits freeplays
-				S_StartLocalSound ("openalinit.wav");
-			}
-			else
-			{
-				Com_Printf ("OpenAL failed to initialize; no sound available\n", LOG_CLIENT);
-			}
+			S_OpenAL_AllocChannels ();
+			S_StopAllSounds ();	//inits freeplays
+			S_StartLocalSound ("openalinit.wav");
+		}
+		else
+		{
+			Com_Printf ("OpenAL failed to initialize; no sound available\n", LOG_CLIENT);
+		}
 
 #else  // USE_OPENAL
 
