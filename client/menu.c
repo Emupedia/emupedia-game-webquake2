@@ -306,6 +306,8 @@ static void M_DrawCharacter (int cx, int cy, int num)
 	R_DrawChar ( cx + ((viddef.width - 320)>>1), cy + ((viddef.height - 240)>>1), num);
 }
 
+
+static void M_Print (int cx, int cy, char *str) __attribute__((unused));
 static void M_Print (int cx, int cy, char *str)
 {
 	while (*str)
@@ -1233,8 +1235,6 @@ static menuslider_s		s_options_sfxvolume_slider;
 static menulist_s		s_options_joystick_box;
 #endif
 static menulist_s		s_options_cdvolume_box;
-static menulist_s		s_options_quality_list;
-static menulist_s		s_options_compatibility_list;
 static menulist_s		s_options_console_action;
 
 static void CrosshairFunc( void *unused )
@@ -1575,52 +1575,14 @@ static void ConsoleFunc( void *unused )
 	cls.key_dest = key_console;
 }
 
-static void UpdateSoundQualityFunc( void *unused )
-{
-	if ( s_options_quality_list.curvalue == 2)
-	{
-		Cvar_Set ( "s_khz", "44" );
-	}
-	else if ( s_options_quality_list.curvalue == 1)
-	{
-		Cvar_Set ( "s_khz", "22" );
-	}
-	else
-	{
-		Cvar_Set ( "s_khz", "11" );
-	}
-	
-	Cvar_SetValue( "s_primary", (float)s_options_compatibility_list.curvalue );
-
-	M_DrawTextBox( 8, 120 - 48, 36, 3 );
-	M_Print( 16 + 16, 120 - 48 + 8,  "Restarting the sound system. This" );
-	M_Print( 16 + 16, 120 - 48 + 16, "could take up to a minute, so" );
-	M_Print( 16 + 16, 120 - 48 + 24, "please be patient." );
-
-	// the text box won't show up unless we do a buffer swap
-	GLimp_EndFrame();
-
-	CL_Snd_Restart_f();
-}
 
 static void Options_MenuInit( void )
 {
-	int squality;
-
 	static const char *cd_music_items[] =
 	{
 		"disabled",
 		"enabled",
 		0
-	};
-	static const char *quality_items[] =
-	{
-		"11 KHz", "22 KHz", "44 KHz", 0
-	};
-
-	static const char *compatibility_items[] =
-	{
-		"normal writing", "direct writing", 0
 	};
 
 	static const char *yesno_names[] =
@@ -1640,23 +1602,6 @@ static void Options_MenuInit( void )
 	};
 
 	//win_noalttab = Cvar_Get( "win_noalttab", "0", CVAR_ARCHIVE );
-
-	squality = Cvar_IntValue ("s_khz");
-
-	switch (squality)	{
-		case 11:
-			squality = 0;
-			break;
-		case 22:
-			squality = 1;
-			break;
-		case 44:
-			squality = 2;
-			break;
-		default:
-			squality = 1;
-			break;
-	}
 
 	/*
 	** configure controls menu and menu items
@@ -1681,22 +1626,6 @@ static void Options_MenuInit( void )
 	s_options_cdvolume_box.generic.callback	= UpdateCDVolumeFunc;
 	s_options_cdvolume_box.itemnames		= cd_music_items;
 	s_options_cdvolume_box.curvalue 		= !Cvar_IntValue("cd_nocd");
-
-	s_options_quality_list.generic.type	= MTYPE_SPINCONTROL;
-	s_options_quality_list.generic.x		= 0;
-	s_options_quality_list.generic.y		= 20;
-	s_options_quality_list.generic.name		= "sound quality";
-	s_options_quality_list.generic.callback = UpdateSoundQualityFunc;
-	s_options_quality_list.itemnames		= quality_items;
-	s_options_quality_list.curvalue			= squality;
-
-	s_options_compatibility_list.generic.type	= MTYPE_SPINCONTROL;
-	s_options_compatibility_list.generic.x		= 0;
-	s_options_compatibility_list.generic.y		= 30;
-	s_options_compatibility_list.generic.name	= "sound compatibility";
-	s_options_compatibility_list.generic.callback = UpdateSoundQualityFunc;
-	s_options_compatibility_list.itemnames		= compatibility_items;
-	s_options_compatibility_list.curvalue		= Cvar_IntValue( "s_primary" );
 
 	s_options_sensitivity_slider.generic.type	= MTYPE_FIELD;
 	s_options_sensitivity_slider.generic.flags = QMF_NUMBERSONLY;
@@ -1795,8 +1724,6 @@ static void Options_MenuInit( void )
 
 	Menu_AddItem( &s_options_menu, ( void * ) &s_options_sfxvolume_slider );
 	Menu_AddItem( &s_options_menu, ( void * ) &s_options_cdvolume_box );
-	Menu_AddItem( &s_options_menu, ( void * ) &s_options_quality_list );
-	Menu_AddItem( &s_options_menu, ( void * ) &s_options_compatibility_list );
 	Menu_AddItem( &s_options_menu, ( void * ) &s_options_sensitivity_slider );
 	Menu_AddItem( &s_options_menu, ( void * ) &s_options_alwaysrun_box );
 	Menu_AddItem( &s_options_menu, ( void * ) &s_options_invertmouse_box );

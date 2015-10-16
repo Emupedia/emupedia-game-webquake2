@@ -408,14 +408,7 @@ qboolean SNDDMA_InitDirect(void)
 	dma.channels = 2;
 	dma.samplebits = 16;
 
-	if (s_khz->intvalue == 48)
 		dma.speed = 48000;
-	else if (s_khz->intvalue == 44)
-		dma.speed = 44100;
-	else if (s_khz->intvalue == 22)
-		dma.speed = 22050;
-	else
-		dma.speed = 11025;
 
 	if (!cl_quietstartup->intvalue || developer->intvalue)
 		Com_Printf( "Initializing DirectSound\n", LOG_CLIENT|LOG_NOTICE);
@@ -513,12 +506,7 @@ qboolean SNDDMA_InitWav (void)
 	dma.channels = 2;
 	dma.samplebits = 16;
 
-	if (s_khz->intvalue == 44)
 		dma.speed = 44100;
-	else if (s_khz->intvalue == 22)
-		dma.speed = 22050;
-	else
-		dma.speed = 11025;
 
 	memset (&format, 0, sizeof(format));
 	format.wFormatTag = WAVE_FORMAT_PCM;
