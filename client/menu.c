@@ -1493,7 +1493,6 @@ static void ControlsSetMenuItemValues( void )
 {
 	s_options_sfxvolume_slider.curvalue		= Cvar_VariableValue( "s_volume" ) * 10;
 	s_options_cdvolume_box.curvalue 		= !Cvar_IntValue("cd_nocd");
-	//s_options_quality_list.curvalue			= !Cvar_VariableValue( "s_loadas8bit" );
 	//strncpy (s_options_sensitivity_slider.buffer, sensitivity->string, sizeof(s_options_sensitivity_slider.buffer)-1);
 	snprintf (s_options_sensitivity_slider.buffer, sizeof(s_options_sensitivity_slider.buffer)-1, "%.3g", sensitivity->value);
 	//s_options_sensitivity_slider.curvalue	= ( sensitivity->value;
@@ -1581,17 +1580,14 @@ static void UpdateSoundQualityFunc( void *unused )
 	if ( s_options_quality_list.curvalue == 2)
 	{
 		Cvar_Set ( "s_khz", "44" );
-		Cvar_Set ( "s_loadas8bit", "0" );
 	}
 	else if ( s_options_quality_list.curvalue == 1)
 	{
 		Cvar_Set ( "s_khz", "22" );
-		Cvar_Set ( "s_loadas8bit", "0" );
 	}
 	else
 	{
 		Cvar_Set ( "s_khz", "11" );
-		Cvar_Set ( "s_loadas8bit", "1" );
 	}
 	
 	Cvar_SetValue( "s_primary", (float)s_options_compatibility_list.curvalue );
