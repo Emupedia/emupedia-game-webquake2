@@ -24,7 +24,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //int			cache_full_cycle;
 
-byte *S_Alloc (int size);
+
+static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info);
+
 
 /*
 ================
@@ -137,7 +139,6 @@ static void S_OpenAL_UploadSound (byte *data, int width, int channels, sfx_t *sf
 	alBufferData(sfx->bufferNum, sfx->format, data, size, sfx->rate);
 }
 
-static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info);
 qboolean S_OpenAL_LoadSound (sfx_t *sfx)
 {
     char		name[MAX_QPATH];

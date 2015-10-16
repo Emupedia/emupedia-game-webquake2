@@ -64,6 +64,9 @@ qboolean	AL_Init (void);
 void		AL_Shutdown (void);
 
 
+byte *S_Alloc (int size);
+
+
 qboolean S_OpenAL_LoadSound (sfx_t *sfx);
 extern cvar_t	*s_openal_device;
 
