@@ -90,7 +90,7 @@ CFLAGS+=-isystem$(TOPDIR)/foreign/zlib
 
 
 ifneq ($(BUILTIN_GAME),)
-CFLAGS+=-DGAME_HARD_LINKED=$(BUILTIN_GAME)
+CFLAGS+=-DGAME_HARD_LINKED=\"$(BUILTIN_GAME)\"
 endif
 
 

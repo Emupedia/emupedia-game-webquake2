@@ -23,7 +23,7 @@ PURE_CLIENT:=n
 
 STATIC_SDL2:=y
 
-BUILTIN_GAME:=baseq2
+BUILTIN_GAME?=baseq2
 
 # compiler options etc
 CC:=emcc
@@ -39,7 +39,7 @@ OPTFLAGS:=-O3
 CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
-LDFLAGS:=-g --preload-file baseq2
+LDFLAGS:=-g --preload-file $(BUILTIN_GAME)
 # 384 MB
 LDFLAGS+=-s TOTAL_MEMORY=402653184
 LDFLAGS+=-s OUTLINING_LIMIT=5000

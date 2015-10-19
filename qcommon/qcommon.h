@@ -26,7 +26,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "../game/q_shared.h"
 
+
+#ifdef GAME_HARD_LINKED
+
+#define BASEDIRNAME	GAME_HARD_LINKED
+
+#else  // GAME_HARD_LINKED
+
 #define	BASEDIRNAME	"baseq2"
+
+#endif  // GAME_HARD_LINKED
+
 
 #ifdef _WIN32
 	#ifdef _WIN64
