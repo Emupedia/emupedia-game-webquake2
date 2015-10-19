@@ -2325,7 +2325,16 @@ void Qcommon_Init (int argc, char **argv)
 	FS_InitFilesystem ();
 
 	Cbuf_AddText ("exec default.cfg\n");
+
+#ifdef EMSCRIPTEN
+
+	Cbuf_AddText ("exec user_data/config.cfg\n");
+
+#else  // EMSCRIPTEN
+
 	Cbuf_AddText ("exec config.cfg\n");
+
+#endif  // EMSCRIPTEN
 
 	Cbuf_AddEarlyCommands (true);
 	Cbuf_Execute ();

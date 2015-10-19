@@ -3759,6 +3759,12 @@ void CL_WriteConfiguration (void)
 	fclose (f);
 
 	Cvar_WriteVariables (path);
+
+#ifdef EMSCRIPTEN
+
+	userdata_sync();
+
+#endif  // EMSCRIPTEN
 }
 
 

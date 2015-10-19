@@ -606,6 +606,9 @@ static void PlayFunc( void *unused )
 
 	SimpleMultiplayerMenu_UpdateCvars();
 
+	// save changes
+	CL_WriteConfiguration();
+
 	char *addrStr = getenv("Q2SERVER");
 	if (!addrStr) {
 		Com_Error(ERR_FATAL, "No server configured");

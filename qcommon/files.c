@@ -24,6 +24,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
+
+#ifdef EMSCRIPTEN
+
+#include <emscripten.h>
+
+#endif  // EMSCRIPTEN
+
+
 /*
 =============================================================================
 
@@ -1273,10 +1282,18 @@ Called to find where to write a file (demos, savegames, etc)
 */
 char * EXPORT FS_Gamedir (void)
 {
+#ifdef EMSCRIPTEN
+
+	return BASEDIRNAME "/user_data";
+
+#else  // EMSCRIPTEN
+
 	if (fs_gamedir[0])
 		return fs_gamedir;
 	else
 		return BASEDIRNAME;
+
+#endif  // EMSCRIPTEN
 }
 
 /*

@@ -1173,6 +1173,14 @@ void	Sys_SetWindowText(char *buff);
 void	Sys_ProcessTimes_f (void);
 void	Sys_Spinstats_f (void);
 
+
+#ifdef EMSCRIPTEN
+
+void userdata_sync();
+
+#endif  // EMSCRIPTEN
+
+
 /*
 ==============================================================
 

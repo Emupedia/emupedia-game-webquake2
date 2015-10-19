@@ -648,6 +648,10 @@ void mainloop() {
 }
 
 
+#define main realmain
+EMSCRIPTEN_KEEPALIVE int main (int argc, char **argv);
+
+
 #endif  // EMSCRIPTEN
 
 
@@ -685,8 +689,11 @@ int main (int argc, char **argv)
 		NET_PreConnect(&adr);
 	}
 
+	// cancel old null loop
+	emscripten_cancel_main_loop();
+
 	g_oldtime = Sys_Milliseconds();
-	emscripten_set_main_loop(mainloop, 0, 1);
+	emscripten_set_main_loop(mainloop, 0, 0);
 
 #else  // EMSCRIPTEN
 
@@ -726,7 +733,43 @@ int main (int argc, char **argv)
 		oldtime = newtime;
     }
 #endif  // EMSCRIPTEN
+
+	return 0;
 }
+
+
+#ifdef EMSCRIPTEN
+
+
+#undef main
+
+
+void nullloop() {
+}
+
+
+int main (int argc, char **argv) {
+	const char *user_data = "/" BASEDIRNAME "/user_data";
+	mkdir(user_data, 0700);
+
+	// mount user data and execute real main after it's done
+	EM_ASM_({
+		FS.mount(IDBFS, {}, Pointer_stringify($0) );
+		FS.syncfs(true, function(err) {
+			if(err) console.log('ERROR!', err);
+			console.log('finished syncing..');
+			_realmain($1, $2);
+		});
+	}, user_data, argc, argv);
+
+	// set null main loop to avoid error about exit
+	emscripten_set_main_loop(nullloop, 0, 1);
+	return 0;
+}
+
+
+#endif  // EMSCRIPTEN
+
 
 //r1 :redundant
 void Sys_CopyProtect(void)
@@ -772,6 +815,23 @@ void Sys_UpdateURLMenu (const char *s)
 {
 	//FIXME
 }
+
+
+#ifdef EMSCRIPTEN
+
+
+void userdata_sync() {
+	EM_ASM(
+		FS.syncfs(function(error) {
+			if (error) {
+				console.log("Error while syncing", error);
+			}
+		});
+	);
+}
+
+
+#endif  // EMSCRIPTEN
 
 
 #endif  // !_WIN32
