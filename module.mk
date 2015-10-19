@@ -119,7 +119,7 @@ endef  # directory-module
 
 DIRS:= \
 	client \
-	ctf \
+	ctfgame \
 	foreign \
 	game \
 	linux \
