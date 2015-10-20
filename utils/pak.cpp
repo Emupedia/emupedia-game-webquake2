@@ -1,7 +1,3 @@
-#include <dirent.h>
-#include <sys/stat.h>
-
-#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -10,91 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-
-struct DIRwrapper {
-	DIR *dir;
-
-	// this can be used transparently as DIR*
-	operator DIR *() {
-		return dir;
-	}
-
-
-	DIRwrapper(const char *dirname) {
-		assert(dirname != nullptr);
-		dir = opendir(dirname);
-
-		if (dir == nullptr) {
-            printf("failed to opendir \"%s\"\n", dirname);
-			exit(1);
-		}
-	}
-
-
-	// take care of closing dir when destroyed
-	~DIRwrapper() {
-		closedir(dir);
-	}
-};
-
-
-struct FILEDeleter {
-	void operator()(FILE *f) { fclose(f); }
-};
-
-
-static std::vector<char> readFile(std::string filename) {
-	std::unique_ptr<FILE, FILEDeleter> file(fopen(filename.c_str(), "rb"));
-
-	if (!file) {
-		printf("file not found %s\n", filename.c_str());
-		exit(1);
-	}
-
-	int fd = fileno(file.get());
-	if (fd < 0) {
-		printf("no fd\n");
-		exit(1);
-	}
-
-	struct stat statbuf;
-	memset(&statbuf, 0, sizeof(struct stat));
-	int retval = fstat(fd, &statbuf);
-	if (retval < 0) {
-		printf("fstat failed\n");
-		exit(1);
-	}
-
-	uint64_t filesize = static_cast<uint64_t>(statbuf.st_size);
-	std::vector<char> buf(filesize, '\0');
-
-	size_t ret = fread(&buf[0], 1, filesize, file.get());
-	if (ret != filesize)
-	{
-		printf("fread failed\n");
-		exit(1);
-	}
-
-	return buf;
-}
-
-
-struct PackHeader {
-	uint32_t magic;
-	uint32_t dirOffset;
-	uint32_t dirLength;
-} __attribute__((packed));
-
-
-struct DirEntry {
-	char name[56];
-	uint32_t filePos;
-	uint32_t length;
-};
-
-
-static_assert(sizeof(PackHeader) == 12, "FAIL");
-static_assert(sizeof(DirEntry) == 64, "FAIL");
+#include "utils.h"
 
 
 static void recursiveAddFiles(std::string path, std::vector<char> &outBuf, std::vector<DirEntry> &directory) {
