@@ -1684,6 +1684,16 @@ void GetEvent(SDL_Event *event);
 #ifdef EMSCRIPTEN
 EM_BOOL q2_pointerlockchange(int eventType, const EmscriptenPointerlockChangeEvent *pointerlockChangeEvent, void *userData);
 int FilterEvents(void* userdata, SDL_Event* event);
+
+
+const char *q2_beforeunload(int eventType, const void *reserved, void *userData) {
+	// disconnect
+	CL_Disconnect_f();
+
+	return "";
+}
+
+
 #endif
 
 /*
@@ -2010,6 +2020,7 @@ void RW_IN_Init(in_state_t *in_state_p)
 #if EMSCRIPTEN
 	SDL_SetEventFilter(&FilterEvents, NULL);
 	emscripten_set_pointerlockchange_callback(NULL, NULL, true, &q2_pointerlockchange);
+	emscripten_set_beforeunload_callback(NULL, q2_beforeunload);
 #endif
 }
 
