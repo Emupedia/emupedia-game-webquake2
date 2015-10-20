@@ -134,6 +134,13 @@ static void M_PushMenu ( void (*draw) (void), const char *(*key) (int k) )
 
 	if (i == m_menudepth)
 	{
+		if (i == 1 && m_drawfunc == draw) {
+			// this menu is topmost and already open
+			// close the menu
+			M_ForceMenuOff();
+			return;
+		}
+
 		if (m_menudepth >= MAX_MENU_DEPTH)
 			Com_Error (ERR_FATAL, "M_PushMenu: MAX_MENU_DEPTH");
 		m_layers[m_menudepth].draw = m_drawfunc;
