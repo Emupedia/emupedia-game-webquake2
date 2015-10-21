@@ -105,6 +105,8 @@ GLboolean ( APIENTRY * qglIsTexture )(GLuint texture);
 */
 void QGL_Shutdown( void )
 {
+	assert(qglState);
+
 	if (qglState->vbos[0] != 0) {
 		glDeleteBuffers(NUMVBOS, qglState->vbos);
 		memset(qglState->vbos, 0, sizeof(GLuint) * NUMVBOS);
@@ -120,6 +122,12 @@ void QGL_Shutdown( void )
 		qglState->shaders = old->next;
 		free(old);
 	}
+
+	assert(qglState->vertices);
+	free(qglState->vertices); qglState->vertices = NULL;
+
+	assert(qglState->drawCalls);
+	free(qglState->drawCalls); qglState->drawCalls = NULL;
 
 	free(qglState); qglState = NULL;
 }
