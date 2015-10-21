@@ -1422,15 +1422,11 @@ LoadJPG
 */
 void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 {
-	struct jpeg_decompress_struct	cinfo;
-	struct jpeg_error_mgr			jerr;
-	byte							*rawdata, *rgbadata, *scanline, *p, *q;
-	unsigned int					rawsize, i;
-
 	*pic = NULL;
 
 	// Load JPEG file into memory
-	rawsize = FS_LoadFile(filename, (void **)&rawdata);
+	byte *rawdata = NULL;
+	unsigned int rawsize = FS_LoadFile(filename, (void **)&rawdata);
 
 	if (!rawdata)
 		return;	
@@ -1442,6 +1438,8 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 		return; 
 	} 
 
+	struct jpeg_decompress_struct	cinfo;
+	struct jpeg_error_mgr			jerr;
 	cinfo.err = jpeg_std_error(&jerr);
 	jpeg_create_decompress(&cinfo);
 	jpeg_mem_src(&cinfo, rawdata, rawsize);
@@ -1457,7 +1455,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	}
 
 	// Allocate Memory for decompressed image
-	rgbadata = (byte *) malloc(cinfo.output_width * cinfo.output_height * 4);
+	byte *rgbadata = (byte *) malloc(cinfo.output_width * cinfo.output_height * 4);
 	if(!rgbadata)
 	{
 		VID_Printf(PRINT_ALL, "Insufficient memory for JPEG buffer\n");
@@ -1471,7 +1469,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	*height = cinfo.output_height;
 
 	// Allocate Scanline buffer
-	scanline = (byte *) malloc (cinfo.output_width * 3);
+	byte *scanline = (byte *) malloc (cinfo.output_width * 3);
 	if (!scanline)
 	{
 		VID_Printf (PRINT_ALL, "Insufficient memory for JPEG scanline buffer\n");
@@ -1482,13 +1480,13 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	}
 
 	// Read Scanlines, and expand from RGB to RGBA
-	q = rgbadata;
+	byte *q = rgbadata;
 	while (cinfo.output_scanline < cinfo.output_height)
 	{
-		p = scanline;
+		byte *p = scanline;
 		jpeg_read_scanlines(&cinfo, &scanline, 1);
 
-		for (i = 0; i < cinfo.output_width; i++)
+		for (unsigned int i = 0; i < cinfo.output_width; i++)
 		{
 			q[0] = p[0];
 			q[1] = p[1];
