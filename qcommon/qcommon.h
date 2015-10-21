@@ -954,6 +954,7 @@ typedef enum
 
 void FS_ReloadPAKs (void);
 void	FS_InitFilesystem (void);
+void	FS_ShutdownFilesystem(void);
 void	FS_SetGamedir (const char *dir);
 char	*EXPORT FS_Gamedir (void);
 char	*FS_NextPath (const char *prevpath);

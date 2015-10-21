@@ -1721,3 +1721,8 @@ void FS_InitFilesystem (void)
 	if (fs_gamedirvar->string[0])
 		FS_SetGamedir (fs_gamedirvar->string);
 }
+
+
+void FS_ShutdownFilesystem(void) {
+	FS_FlushCache();
+}

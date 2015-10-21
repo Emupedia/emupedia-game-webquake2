@@ -2776,6 +2776,8 @@ Qcommon_Shutdown
 void Qcommon_Shutdown (void)
 {
 	NET_Shutdown();
+
+	FS_ShutdownFilesystem();
 }
 
 void Z_CheckGameLeaks (void)
