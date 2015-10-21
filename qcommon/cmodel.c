@@ -218,11 +218,7 @@ void CMod_LoadNodes (lump_t *l)
 	if (count > MAX_MAP_NODES)
 		Com_Error (ERR_DROP, "Map has too many nodes");
 
-	if (map_nodes != NULL) {
-		// free old
-		free(map_nodes);
-		map_nodes = NULL;
-	}
+	assert(map_nodes == NULL);
 
 	map_nodes = (cnode_t *) malloc(sizeof(cnode_t) * (count + 6)); // extra for box hull
 	out = map_nodes;
@@ -358,10 +354,7 @@ void CMod_LoadPlanes (lump_t *l)
 		Com_Error (ERR_DROP, "Map has too many planes");
 
 	out = map_planes;
-	if (map_fastplanes != NULL) {
-		free(map_fastplanes);
-		map_fastplanes = NULL;
-	}
+	assert(map_fastplanes == NULL);
 	map_fastplanes = (fplane_t *) malloc(sizeof(fplane_t) * (count + 12));  // extra for box hull
 	if (map_fastplanes == NULL) {
 		Com_Error(ERR_DROP, "Failed to allocate fastplanes");
@@ -571,6 +564,20 @@ qboolean CM_MapWillLoad (const char *name)
 	return false;
 }
 
+
+void CM_FreeMap() {
+	if (map_fastplanes != NULL) {
+		free(map_fastplanes);
+		map_fastplanes = NULL;
+	}
+
+	if (map_nodes != NULL) {
+		free(map_nodes);
+		map_nodes = NULL;
+	}
+}
+
+
 /*
 ==================
 CM_LoadMap
@@ -601,6 +608,7 @@ cmodel_t *CM_LoadMap (const char *name, qboolean clientload, uint32 *checksum)
 	}
 
 	// free old stuff
+	CM_FreeMap();
 	numplanes = 0;
 	numnodes = 0;
 	numleafs = 0;
