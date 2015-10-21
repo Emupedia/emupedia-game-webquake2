@@ -62,7 +62,7 @@ mapsurface_t	map_surfaces[MAX_MAP_TEXINFO];
 
 static int			numplanes;
 static cplane_t	map_planes[MAX_MAP_PLANES+6];		// extra for box hull
-static fplane_t	map_fastplanes[MAX_MAP_PLANES+6];		// extra for box hull
+static fplane_t	*map_fastplanes;
 
 static int			numnodes;
 static cnode_t *map_nodes = NULL;
@@ -358,6 +358,14 @@ void CMod_LoadPlanes (lump_t *l)
 		Com_Error (ERR_DROP, "Map has too many planes");
 
 	out = map_planes;
+	if (map_fastplanes != NULL) {
+		free(map_fastplanes);
+		map_fastplanes = NULL;
+	}
+	map_fastplanes = (fplane_t *) malloc(sizeof(fplane_t) * (count + 12));  // extra for box hull
+	if (map_fastplanes == NULL) {
+		Com_Error(ERR_DROP, "Failed to allocate fastplanes");
+	}
 	fout = map_fastplanes;
 	numplanes = count;
 
