@@ -2396,9 +2396,7 @@ qboolean GL_Upload8 (byte *data, int width, int height,  qboolean mipmap, image_
 {
 	int s = width*height;
 
-	unsigned	trans[512*256];
-	if (s > sizeof(trans)/4)
-		VID_Error (ERR_DROP, "GL_Upload8: %s: %dx%d too large", current_texture_filename, width, height);
+	unsigned *trans = (unsigned *) malloc(sizeof(unsigned) * s);
 
 	for (int i = 0; i < s; i++)
 	{
@@ -2426,7 +2424,10 @@ qboolean GL_Upload8 (byte *data, int width, int height,  qboolean mipmap, image_
 		}
 	}
 
-	return GL_Upload32 (trans, width, height, mipmap, 8, image);
+	qboolean retval = GL_Upload32 (trans, width, height, mipmap, 8, image);
+	free(trans);
+
+	return retval;
 }
 
 
