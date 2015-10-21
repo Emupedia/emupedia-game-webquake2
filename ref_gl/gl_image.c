@@ -1434,8 +1434,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	if (rawsize < 10 || rawdata[6] != 'J' || rawdata[7] != 'F' || rawdata[8] != 'I' || rawdata[9] != 'F')
 	{ 
 		VID_Printf (PRINT_ALL, "Invalid JPEG header: %s\n", filename); 
-		FS_FreeFile(rawdata); 
-		return; 
+		goto out;
 	} 
 
 	struct jpeg_decompress_struct	cinfo;
@@ -1450,8 +1449,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	{
 		VID_Printf(PRINT_ALL, "Invalid JPEG colour components\n");
 		jpeg_destroy_decompress(&cinfo);
-		FS_FreeFile(rawdata);
-		return;
+		goto out;
 	}
 
 	// Allocate Memory for decompressed image
@@ -1460,8 +1458,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	{
 		VID_Printf(PRINT_ALL, "Insufficient memory for JPEG buffer\n");
 		jpeg_destroy_decompress(&cinfo);
-		FS_FreeFile(rawdata);
-		return;
+		goto out;
 	}
 
 	// Pass sizes to output
@@ -1475,8 +1472,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 		VID_Printf (PRINT_ALL, "Insufficient memory for JPEG scanline buffer\n");
 		free (rgbadata);
 		jpeg_destroy_decompress (&cinfo);
-		FS_FreeFile (rawdata);
-		return;
+		goto out;
 	}
 
 	// Read Scanlines, and expand from RGB to RGBA
@@ -1502,6 +1498,11 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	jpeg_destroy_decompress (&cinfo);
 
 	*pic = rgbadata;
+
+out:
+	// if we got here, FS_Loadfile must have succeeded
+	assert(rawdata);
+	FS_FreeFile(rawdata);
 }
 
 
