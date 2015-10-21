@@ -513,7 +513,7 @@ void Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data
 	}
 	float t = rows*hscale / 256;
 
-	unsigned	image32[256*256];
+	unsigned *image32 = (unsigned *) malloc(sizeof(unsigned) * 256 * 256);
 	for (int i=0 ; i<trows ; i++)
 	{
 		int row = (int)(i*hscale);
@@ -531,6 +531,7 @@ void Draw_StretchRaw (int x, int y, int w, int h, int cols, int rows, byte *data
 	}
 
 	glTexImage2D (GL_TEXTURE_2D, 0, gl_tex_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, image32);
+	free(image32);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
