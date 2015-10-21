@@ -93,7 +93,7 @@ static std::pair<std::string, std::string> splitPath(std::string filename) {
 
 
 // create dir if and only if necessary
-static void makeDir(std::string directory, std::unordered_set<std::string> &alreadyCreated) {
+static inline void makeDir(std::string directory, std::unordered_set<std::string> &alreadyCreated) {
 	if (alreadyCreated.find(directory) != alreadyCreated.end()) {
 		// should already have been created
 		return;
