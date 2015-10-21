@@ -980,6 +980,8 @@ int	NET_Config (int toOpen)
 		server_port = 0;
 
 		old_config = NET_NONE;
+
+		return i;
 	}
 
 	int flags = toOpen;
