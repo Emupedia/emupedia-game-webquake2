@@ -584,6 +584,11 @@ typedef struct particle_s
 } cparticle_t;
 
 
+extern cparticle_t	*active_particles, *free_particles;
+extern cparticle_t	*particles;
+extern particle_t	*r_particles;
+
+
 #define	PARTICLE_GRAVITY	40
 #define BLASTER_PARTICLE_COLOR		0xe0
 // PMM
@@ -775,6 +780,7 @@ void CL_CheckPredictionError (void);
 //
 cdlight_t *CL_AllocDlight (int entity, qboolean follow);
 void CL_BigTeleportParticles (vec3_t org);
+void CL_ClearParticles (int num);
 void CL_RocketTrail (vec3_t start, vec3_t end, centity_t *old);
 void CL_DiminishingTrail (vec3_t start, vec3_t end, centity_t *old, int flags);
 void CL_FlyEffect (centity_t *ent, vec3_t origin);

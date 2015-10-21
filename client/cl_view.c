@@ -64,7 +64,7 @@ int			r_numentities;
 entity_t	r_entities[MAX_ENTITIES];
 
 int			r_numparticles;
-particle_t	*r_particles;//[MAX_PARTICLES];
+particle_t	*r_particles = NULL;
 
 lightstyle_t	r_lightstyles[MAX_LIGHTSTYLES];
 
@@ -800,9 +800,6 @@ void OnCrossHairChange (cvar_t *self, char *old, char *newValue)
 	SCR_TouchPics();
 }
 
-//ick
-extern cparticle_t	*particles;
-void CL_ClearParticles (int num);
 static int num_particles;
 void _particlecount_changed (cvar_t *self, char *old, char *newValue)
 {

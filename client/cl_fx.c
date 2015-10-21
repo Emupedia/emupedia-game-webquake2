@@ -902,9 +902,9 @@ typedef struct particle_s
 #define	PARTICLE_GRAVITY	40
 */
 
-cparticle_t	*active_particles, *free_particles;
+cparticle_t	*active_particles = NULL, *free_particles = NULL;
 
-cparticle_t	*particles;//[MAX_PARTICLES];
+cparticle_t	*particles = NULL;
 //int			cl_numparticles = MAX_PARTICLES;
 
 extern	cvar_t	*cl_particlecount;
