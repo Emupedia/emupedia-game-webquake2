@@ -4347,4 +4347,14 @@ void CL_Shutdown(void)
 	S_Shutdown();
 	IN_Shutdown ();
 	VID_Shutdown();
+
+	if (particles) {
+		Z_Free(particles);
+		particles = NULL;
+	}
+
+	if (r_particles) {
+		Z_Free(r_particles);
+		r_particles = NULL;
+	}
 }
