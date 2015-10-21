@@ -65,7 +65,7 @@ static cplane_t	map_planes[MAX_MAP_PLANES+6];		// extra for box hull
 static fplane_t	map_fastplanes[MAX_MAP_PLANES+6];		// extra for box hull
 
 static int			numnodes;
-static cnode_t		map_nodes[MAX_MAP_NODES+6];		// extra for box hull
+static cnode_t *map_nodes = NULL;
 
 static int			numleafs = 1;	// allow leaf funcs to be called without a map
 cleaf_t				map_leafs[MAX_MAP_LEAFS];
@@ -218,6 +218,13 @@ void CMod_LoadNodes (lump_t *l)
 	if (count > MAX_MAP_NODES)
 		Com_Error (ERR_DROP, "Map has too many nodes");
 
+	if (map_nodes != NULL) {
+		// free old
+		free(map_nodes);
+		map_nodes = NULL;
+	}
+
+	map_nodes = (cnode_t *) malloc(sizeof(cnode_t) * (count + 6)); // extra for box hull
 	out = map_nodes;
 
 	numnodes = count;
