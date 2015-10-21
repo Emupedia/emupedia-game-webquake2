@@ -995,28 +995,20 @@ of the list so they override previous pack files.
 */
 static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext)
 {
-	
-	int				i;
-	void			**newitem;
 	pack_t			*pack = NULL;
-	packfile_t		*info;
 
 	if (!strcmp (ext, "pak"))
 	{
-		unsigned		pakLen;
-		int				numpackfiles;
-		FILE			*packhandle;
-		dpackheader_t	header;
-
-		packhandle = fopen(packfile, "rb");
+		FILE *packhandle = fopen(packfile, "rb");
 
 		if (!packhandle)
 			return NULL;
 
 		fseek (packhandle, 0, SEEK_END);
-		pakLen = ftell (packhandle);
+		unsigned pakLen = ftell (packhandle);
 		rewind (packhandle);
 
+		dpackheader_t	header;
 		if (fread (&header, sizeof(header), 1, packhandle) != 1)
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: Couldn't read pak header from %s", packfile);
 
@@ -1026,7 +1018,7 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 		if (header.dirlen % sizeof(packfile_t))
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: Bad pak file %s (directory length %u is not a multiple of %d)", packfile, header.dirlen, (int)sizeof(packfile_t));
 
-		numpackfiles = header.dirlen / sizeof(packfile_t);
+		int numpackfiles = header.dirlen / sizeof(packfile_t);
 
 		if (numpackfiles > MAX_FILES_IN_PACK)
 			//Com_Error (ERR_FATAL, "FS_LoadPackFile: packfile %s has %i files (max allowed %d)", packfile, numpackfiles, MAX_FILES_IN_PACK);
@@ -1040,7 +1032,7 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 		}
 
 		//newfiles = Z_TagMalloc (numpackfiles * sizeof(packfile_t), TAGMALLOC_FSLOADPAK);
-		info = (packfile_t *) Z_TagMalloc (numpackfiles * sizeof(packfile_t), TAGMALLOC_FSLOADPAK);
+		packfile_t *info = (packfile_t *) Z_TagMalloc (numpackfiles * sizeof(packfile_t), TAGMALLOC_FSLOADPAK);
 
 		if (fseek (packhandle, header.dirofs, SEEK_SET))
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: fseek() to offset %u in %s failed. Pak file is possibly corrupt.", header.dirofs, packfile);
@@ -1054,13 +1046,13 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 
 		//entry = Z_TagMalloc (sizeof(packfile_t) * numpackfiles, TAGMALLOC_FSLOADPAK);
 
-		for (i=0 ; i<numpackfiles ; i++)
+		for (int i=0 ; i<numpackfiles ; i++)
 		{
 			fast_strlwr (info[i].name);
 			if (info[i].filepos + info[i].filelen >= pakLen)
 				Com_Error (ERR_FATAL, "FS_LoadPackFile: File '%.64s' in pak file %s has illegal offset %u past end of file %u. Pak file is possibly corrupt.", MakePrintable (info[i].name, 0), packfile, info[i].filepos, pakLen);
-			
-			newitem = (void **) rbsearch (info[i].name, pack->rb);
+
+			void **newitem = (void **) rbsearch (info[i].name, pack->rb);
 			*newitem = &info[i];
 		}
 
@@ -1074,19 +1066,15 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 #ifndef NO_ZLIB
 	else if (!strcmp (ext, "pkz"))
 	{
-		unzFile			f;
-		unz_global_info	zipinfo;
-		char			zipFileName[56];
-		unz_file_info	fileInfo;
-
-		f = unzOpen (packfile);
+		unzFile f = unzOpen (packfile);
 		if (!f)
 			return NULL;
 
+		unz_global_info	zipinfo;
 		if (unzGetGlobalInfo (f, &zipinfo) != UNZ_OK)
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: Couldn't read .zip info from '%s'", packfile);
 
-		info = (packfile_t *) Z_TagMalloc (zipinfo.number_entry * sizeof(*info), TAGMALLOC_FSLOADPAK);
+		packfile_t *info = (packfile_t *) Z_TagMalloc (zipinfo.number_entry * sizeof(*info), TAGMALLOC_FSLOADPAK);
 
 		pack = (pack_t *) Z_TagMalloc (sizeof (pack_t), TAGMALLOC_FSLOADPAK);
 		pack->type = PAK_ZIP;
@@ -1095,8 +1083,10 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 		if (unzGoToFirstFile (f) != UNZ_OK)
 			Com_Error (ERR_FATAL, "FS_LoadPackFile: Couldn't seek to first .zip file in '%s'", packfile);
 
+		unz_file_info	fileInfo;
+		char			zipFileName[56];
 		zipFileName[sizeof(zipFileName)-1] = 0;
-		i = 0;
+		int i = 0;
 		do
 		{
 			if (unzGetCurrentFileInfo (f, &fileInfo, zipFileName, sizeof(zipFileName)-1, NULL, 0, NULL, 0) == UNZ_OK)
@@ -1107,7 +1097,7 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 				strcpy (info[i].name, zipFileName);
 				info[i].filepos = unzGetOffset (f);
 				info[i].filelen = fileInfo.uncompressed_size;
-				newitem = (void **) rbsearch (info[i].name, pack->rb);
+				void **newitem = (void **) rbsearch (info[i].name, pack->rb);
 				*newitem = &info[i];
 				i++;
 			}
