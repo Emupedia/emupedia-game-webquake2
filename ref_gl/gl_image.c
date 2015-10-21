@@ -2394,18 +2394,15 @@ static qboolean IsPowerOf2( int value )
 
 qboolean GL_Upload8 (byte *data, int width, int height,  qboolean mipmap, image_t *image)
 {
+	int s = width*height;
+
 	unsigned	trans[512*256];
-	int			i, s;
-	int			p;
-
-	s = width*height;
-
 	if (s > sizeof(trans)/4)
 		VID_Error (ERR_DROP, "GL_Upload8: %s: %dx%d too large", current_texture_filename, width, height);
 
-	for (i=0 ; i<s ; i++)
+	for (int i = 0; i < s; i++)
 	{
-		p = data[i];
+		int p = data[i];
 		trans[i] = d_8to24table[p];
 
 		if (p == 255)
