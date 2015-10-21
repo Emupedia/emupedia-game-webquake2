@@ -102,7 +102,7 @@ typedef struct filelink_s
 	char	*to;
 } filelink_t;
 
-static filelink_t	*fs_links;
+static filelink_t	*fs_links = NULL;
 
 typedef struct searchpath_s
 {
@@ -111,10 +111,10 @@ typedef struct searchpath_s
 	struct searchpath_s *next;
 } searchpath_t;
 
-static searchpath_t	*fs_searchpaths;
-static searchpath_t	*fs_base_searchpaths;	// without gamedirs
+static searchpath_t	*fs_searchpaths = NULL;
+static searchpath_t	*fs_base_searchpaths = NULL;	// without gamedirs
 
-static const char *current_filename;
+static const char *current_filename = NULL;
 
 /*
 
@@ -253,7 +253,7 @@ struct fscache_s
 #endif
 };
 
-static struct rbtree *rb;
+static struct rbtree *rb = NULL;
 
 #ifdef MAGIC_BTREE
 static int _compare(const void *pa, const void *pb)
@@ -1725,4 +1725,26 @@ void FS_InitFilesystem (void)
 
 void FS_ShutdownFilesystem(void) {
 	FS_FlushCache();
+
+	searchpath_t *search = fs_searchpaths;
+	while (search != NULL) {
+		if (search->pack != NULL) {
+			// TODO: destroy pack contents
+			Z_Free(search->pack);
+			search->pack = NULL;
+		}
+
+		searchpath_t *next = search->next;
+		search->next = NULL;
+		Z_Free(search);
+		search = next;
+	}
+	fs_searchpaths = NULL;
+
+	fs_links = NULL;
+	fs_base_searchpaths = NULL;
+	current_filename = NULL;
+
+	rbdestroy(rb);
+	rb = NULL;
 }
