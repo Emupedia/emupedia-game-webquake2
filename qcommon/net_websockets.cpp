@@ -528,6 +528,8 @@ static bool createWebsocketContext(int port) {
 
 	wsState->websocketContext = libwebsocket_create_context(&info);
 	if (!wsState->websocketContext) {
+		delete wsState;
+		wsState = NULL;
 		return false;
 	}
 
