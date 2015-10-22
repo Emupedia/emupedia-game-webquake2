@@ -908,7 +908,7 @@ typedef struct
 
 extern	int			numclusters;
 extern	int			numcmodels;
-extern	cleaf_t		map_leafs[MAX_MAP_LEAFS];
+extern	cleaf_t		*map_leafs;
 
 #define	CM_NumClusters	(numclusters)
 #define	CM_NumInlineModels	(numcmodels)

@@ -68,7 +68,7 @@ static int			numnodes;
 static cnode_t *map_nodes = NULL;
 
 static int			numleafs = 1;	// allow leaf funcs to be called without a map
-cleaf_t				map_leafs[MAX_MAP_LEAFS];
+cleaf_t				*map_leafs;
 static int			emptyleaf, solidleaf;
 
 static int			numleafbrushes;
@@ -294,6 +294,11 @@ void CMod_LoadLeafs (lump_t *l)
 	if (count > MAX_MAP_PLANES)
 		Com_Error (ERR_DROP, "Map has too many planes");
 
+	assert(map_leafs == NULL);
+	map_leafs = (cleaf_t *) malloc(sizeof(cleaf_t) * (count + 1));
+	if (map_leafs == NULL) {
+		Com_Error(ERR_DROP, "Failed to allocate leaves");
+	}
 	out = map_leafs;	
 	numleafs = count;
 	numclusters = 0;
@@ -593,6 +598,11 @@ void CM_FreeMap() {
 	if (map_nodes != NULL) {
 		free(map_nodes);
 		map_nodes = NULL;
+	}
+
+	if (map_leafs != NULL) {
+		free(map_leafs);
+		map_leafs = NULL;
 	}
 
 	if (map_visibility != NULL) {
