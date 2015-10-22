@@ -55,7 +55,7 @@ static int			checkcount;
 static char		map_name[MAX_QPATH];
 
 static int			numbrushsides;
-static cbrushside_t map_brushsides[MAX_MAP_BRUSHSIDES];
+static cbrushside_t *map_brushsides;
 
 int			numtexinfo;
 mapsurface_t	map_surfaces[MAX_MAP_TEXINFO];
@@ -452,6 +452,11 @@ void CMod_LoadBrushSides (lump_t *l)
 	if (count > MAX_MAP_BRUSHSIDES)
 		Com_Error (ERR_DROP, "Map has too many planes (%d > 65536)", count);
 
+	assert(map_brushsides == NULL);
+	map_brushsides = (cbrushside_t *) malloc(sizeof(cbrushside_t) * (count + 6));
+	if (map_brushsides == NULL) {
+		Com_Error(ERR_DROP, "Failed to allocate brushsides");
+	}
 	out = map_brushsides;	
 	numbrushsides = count;
 
@@ -585,6 +590,11 @@ qboolean CM_MapWillLoad (const char *name)
 
 
 void CM_FreeMap() {
+	if (map_brushsides != NULL) {
+		free(map_brushsides);
+		map_brushsides = NULL;
+	}
+
 	if (map_planes != NULL) {
 		free(map_planes);
 		map_planes = NULL;
