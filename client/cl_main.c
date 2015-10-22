@@ -3065,10 +3065,6 @@ skipplayer:;
 
 	// confirm existance of textures, download any that don't exist
 	if (precache_check == TEXTURE_CNT+1) {
-		// from qcommon/cmodel.c
-		extern int			numtexinfo;
-		extern mapsurface_t	map_surfaces[];
-
 		if (allow_download->intvalue && allow_download_maps->intvalue) {
 			while (precache_tex < numtexinfo) {
 				//char fn[MAX_OSPATH];

@@ -910,6 +910,9 @@ extern	int			numclusters;
 extern	int			numcmodels;
 extern	cleaf_t		*map_leafs;
 
+extern int			numtexinfo;
+extern mapsurface_t	*map_surfaces;
+
 #define	CM_NumClusters	(numclusters)
 #define	CM_NumInlineModels	(numcmodels)
 #define CM_LeafCluster(x) (map_leafs[x].cluster)

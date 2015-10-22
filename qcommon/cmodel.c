@@ -58,7 +58,7 @@ static int			numbrushsides;
 static cbrushside_t *map_brushsides;
 
 int			numtexinfo;
-mapsurface_t	map_surfaces[MAX_MAP_TEXINFO];
+mapsurface_t	*map_surfaces;
 
 static int			numplanes;
 static cplane_t	*map_planes;
@@ -182,6 +182,11 @@ void CMod_LoadSurfaces (lump_t *l)
 		Com_Error (ERR_DROP, "CMod_LoadSurfaces: Map has too many surfaces");
 
 	numtexinfo = count;
+	assert(map_surfaces == NULL);
+	map_surfaces = (mapsurface_t *) malloc(sizeof(mapsurface_t) * count);
+	if (map_surfaces == NULL) {
+		Com_Error(ERR_DROP, "Failed to allocate surfaces");
+	}
 	out = map_surfaces;
 
 	for ( i=0 ; i<count ; i++, in++, out++)
@@ -593,6 +598,11 @@ void CM_FreeMap() {
 	if (map_brushsides != NULL) {
 		free(map_brushsides);
 		map_brushsides = NULL;
+	}
+
+	if (map_surfaces != NULL) {
+		free(map_surfaces);
+		map_surfaces = NULL;
 	}
 
 	if (map_planes != NULL) {
