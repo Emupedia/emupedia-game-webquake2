@@ -81,8 +81,8 @@ static int			numbrushes;
 static cbrush_t		map_brushes[MAX_MAP_BRUSHES];
 
 static int			numvisibility;
-static byte			map_visibility[MAX_MAP_VISIBILITY];
-static dvis_t		*map_vis = (dvis_t *)map_visibility;
+static byte			*map_visibility;
+static dvis_t		*map_vis;
 
 static int			numentitychars;
 static char			map_entitystring[MAX_MAP_ENTSTRING];
@@ -533,6 +533,14 @@ void CMod_LoadVisibility (lump_t *l)
 	if (l->filelen > MAX_MAP_VISIBILITY)
 		Com_Error (ERR_DROP, "Map has too large visibility lump");
 
+	assert(map_visibility == NULL);
+	assert(map_vis == NULL);
+	map_visibility = malloc(l->filelen);
+	if (map_visibility == NULL) {
+		Com_Error(ERR_DROP, "Failed to allocate visibility");
+	}
+	map_vis = (dvis_t *) map_visibility;
+
 	memcpy (map_visibility, cmod_base + l->fileofs, l->filelen);
 
 }
@@ -586,6 +594,14 @@ void CM_FreeMap() {
 		free(map_nodes);
 		map_nodes = NULL;
 	}
+
+	if (map_visibility != NULL) {
+		assert(map_vis != NULL);
+		free(map_visibility);
+		map_visibility = NULL;
+		map_vis = NULL;
+	}
+	assert(map_vis == NULL);
 }
 
 
