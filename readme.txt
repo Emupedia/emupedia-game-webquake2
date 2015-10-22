@@ -1,3 +1,122 @@
+WebQuake2
+
+Quake 2 (R1Q2) in web browser using Emscripten.
+
+
+Notes for players
+=================
+
+WebGL and websockets required.
+
+Chrome and Firefox have been tested.
+Chrome has issues with mouse input. This appears to be a Chrome bug.
+Firefox is recommended.
+
+Websockets uses TCP and is sensitive to dropped packets. WebQuake2 is
+meant to be played over LAN. Internet play is not recommended.
+
+Game tries to autodetect fullscreen size. Most of the time this doesn't work.
+Open the console (F5 if using included config) and use vid_width and vid_height
+to set proper video mode.
+
+
+
+Compiling
+=========
+
+Get assets from somewhere. Demo version should work. Full version is
+sold by both Steam and GOG.
+
+
+Emscripten:
+Copy your baseq2 directory under emscripten/
+
+ cd emscripten
+ make
+
+
+Linux:
+ cd binaries
+ make
+
+Copy quake2-bin and q2ded-bin to your quake2 directory.
+
+
+Mingw:
+Default is set up to cross-compile 32-bit binary from Linux.
+ cd mingw
+ make
+
+
+MSVC:
+Open the included project and hope for the best. MSVC 2012 or 2013
+required.
+
+
+To change settings create file local.mk in compile directory.
+example.mk contains variables you can change. Anything set in local.mk should
+override them.
+
+To build outside the source tree copy the correct Makefile somewhere and
+add a local.mk which overrides TOPDIR.
+
+
+Server setup
+============
+1. Compile both emscripten version and a native dedicated server.
+2. Get a web server. nginx is recommended.
+3. Edit quake2.html and set ENV.Q2SERVER to your ip address.
+4. Copy quake2.* files to a web server.
+5. (Optional) Compress files with gzip and configure web server to
+   serve them transparently.
+6. Start up the dedicated server.
+
+
+Minimizing assets for smaller multiplayer downloads
+===================================================
+You can use include pak and unpak utilities. Linux only.
+1. Unpak your standard paks.
+2. Add new default config from configs/ , remove config files you don't need.
+3. Remove single player levels, leave only multiplayer (q2dm*)
+4. Remove monster models in models/monsters
+5. Remove monster sounds. Look under sound/
+6. Pak the files back up
+
+
+
+Useful features
+===============
+
+cl_quit_on_connect
+When this cvar is set the game will quit when connection is
+established. Useful for profiling startup.
+
+cl_quit_on_disconnect
+When this cvar is set the game will quit when client disconnects.
+Useful for timedemo mode.
+
+vid_width <new width>
+vid_height <new height>
+Resize window
+
+
+benchTime utility
+Usage: benchTime <repeats> <command>
+Runs <command> <repeats> times, measures elapsed time and prints some
+stats.
+
+
+benchFPS
+Usage: benchFPS <repeats> <command>
+Runs <command> <repeats> times, looks for fps line in output and prints
+stats about frame time.
+
+
+
+Original R1Q2 readme follows:
+
+
+
 R1Q2 Client README (short version)
 ==================================
 Thanks for downloading R1Q2! This file is a very quick introduction to some of
