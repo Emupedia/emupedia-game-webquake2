@@ -2777,6 +2777,8 @@ void Qcommon_Shutdown (void)
 {
 	NET_Shutdown();
 
+	CM_FreeMap();
+
 	FS_ShutdownFilesystem();
 }
 

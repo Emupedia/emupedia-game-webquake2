@@ -845,6 +845,7 @@ CMODEL
 
 #include "../qcommon/qfiles.h"
 
+void CM_FreeMap();
 cmodel_t	*CM_LoadMap (const char *name, qboolean clientload, uint32 *checksum);
 cmodel_t	*CM_InlineModel (const char *name);	// *1, *2, etc
 
