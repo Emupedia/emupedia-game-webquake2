@@ -86,6 +86,7 @@ typedef struct pack_s
 	//packfile_t		*files;
 	struct rbtree	*rb;
 	packtype_t		type;
+	packfile_t		*info;
 } pack_t;
 
 char	fs_gamedir[MAX_OSPATH];
@@ -1042,6 +1043,7 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 
 		pack = (pack_t *) Z_TagMalloc (sizeof (pack_t), TAGMALLOC_FSLOADPAK);
 		pack->type = PAK_QUAKE;
+		pack->info = info;
 		pack->rb = rbinit ((int (EXPORT *)(const void *, const void *))strcmp, numpackfiles);
 
 		//entry = Z_TagMalloc (sizeof(packfile_t) * numpackfiles, TAGMALLOC_FSLOADPAK);
@@ -1078,6 +1080,7 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 
 		pack = (pack_t *) Z_TagMalloc (sizeof (pack_t), TAGMALLOC_FSLOADPAK);
 		pack->type = PAK_ZIP;
+		pack->info = NULL;
 		pack->rb = rbinit ((int (EXPORT *)(const void *, const void *))strcmp, zipinfo.number_entry);
 
 		if (unzGoToFirstFile (f) != UNZ_OK)
@@ -1729,8 +1732,19 @@ void FS_ShutdownFilesystem(void) {
 	searchpath_t *search = fs_searchpaths;
 	while (search != NULL) {
 		if (search->pack != NULL) {
-			// TODO: destroy pack contents
-			Z_Free(search->pack);
+			pack_t *pack = search->pack;
+			assert(pack->type == PAK_QUAKE);
+			assert(pack->info != NULL);
+			assert(pack->rb != NULL);
+			assert(pack->h.handle != NULL);
+
+			rbdestroy(pack->rb);
+			pack->rb = NULL;
+			Z_Free(pack->info);
+			pack->info = NULL;
+			fclose(pack->h.handle);
+			pack->h.handle = NULL;
+			Z_Free(pack);
 			search->pack = NULL;
 		}
 
