@@ -305,6 +305,7 @@ typedef struct QGLState {
 	unsigned int numDrawCalls, maxDrawCalls;
 
 	unsigned int currentDrawFirstVertex;
+	bool tex0Enabled, tex1Enabled;
 
 	float mvMatrices[NUMMATRICES][16];
 	float projMatrices[NUMMATRICES][16];

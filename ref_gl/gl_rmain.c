@@ -1618,8 +1618,6 @@ retryQGL:
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
 
 	Com_DPrintf("R_Init() complete.\n" );
 	return 0;

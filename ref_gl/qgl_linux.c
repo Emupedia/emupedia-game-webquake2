@@ -291,17 +291,29 @@ void flushDraws(const char *reason) {
 	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, color));
 
 	if (s->texState[0].texEnable) {
+		if (!qglState->tex0Enabled) {
+			qglState->tex0Enabled = true;
 		glEnableVertexAttribArray(2);
+		}
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex0));
 	} else {
+		if (qglState->tex0Enabled) {
+			qglState->tex0Enabled = false;
 		glDisableVertexAttribArray(2);
+		}
 	}
 
 	if (s->texState[1].texEnable) {
+		if (!qglState->tex1Enabled) {
+			qglState->tex1Enabled = true;
 		glEnableVertexAttribArray(3);
+		}
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, tex1));
 	} else {
+		if (qglState->tex1Enabled) {
+			qglState->tex1Enabled = false;
 		glDisableVertexAttribArray(3);
+		}
 	}
 
 	for (unsigned int i = 0; i < qglState->numDrawCalls; i++) {
