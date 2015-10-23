@@ -159,8 +159,8 @@ static void GL_DrawAliasFrameLerp (const dmdl_t *paliashdr, float backlerp)
 				for (int j = 0; j < 3; j++) {
 					int index_xyz = vert->index_xyz[j];
 
-				qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha);
-				qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
+					qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha);
+					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
 				}
 			}
 		}
@@ -173,13 +173,13 @@ static void GL_DrawAliasFrameLerp (const dmdl_t *paliashdr, float backlerp)
 					int index_xyz = vert->index_xyz[j];
 					int index_st = vert->index_st[j];
 
-				qglMTexCoord2f(GL_TEXTURE0, ((float) st[index_st].s) / paliashdr->skinwidth, ((float) st[index_st].t) / paliashdr->skinheight);
+					qglMTexCoord2f(GL_TEXTURE0, ((float) st[index_st].s) / paliashdr->skinwidth, ((float) st[index_st].t) / paliashdr->skinheight);
 
-				// normals and vertexes come from the frame list
-				float l = shadedots[verts[index_xyz].lightnormalindex];
+					// normals and vertexes come from the frame list
+					float l = shadedots[verts[index_xyz].lightnormalindex];
 
-				qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
-				qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
+					qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
+					qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
 				}
 			}
 		}
