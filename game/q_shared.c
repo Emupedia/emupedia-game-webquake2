@@ -918,12 +918,9 @@ int Q_stricmp (const char *s1, const char *s2)
 
 int Com_sprintf (char /*@out@*/*dest, int size, const char *fmt, ...)
 {
-	int			len;
 	va_list		argptr;
-	char		bigbuffer[0x10000];
-
 	va_start (argptr,fmt);
-	len = Q_vsnprintf (bigbuffer, sizeof(bigbuffer), fmt, argptr);
+	int len = Q_vsnprintf(dest, size, fmt, argptr);
 	va_end (argptr);
 
 	if (len == -1 || len == size)
@@ -932,9 +929,7 @@ int Com_sprintf (char /*@out@*/*dest, int size, const char *fmt, ...)
 		len = size-1;
 	}
 
-	bigbuffer[size-1] = '\0';
-	strcpy (dest, bigbuffer);
-
+	dest[size - 1] = '\0';
 	return len;
 }
 
