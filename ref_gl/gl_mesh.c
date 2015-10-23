@@ -418,13 +418,7 @@ R_DrawAliasModel
 */
 void R_DrawAliasModel (entity_t *e)
 {
-	int			i;
-	dmdl_t		*paliashdr;
-	float		an;
-	vec3_t		bbox[8];
-	image_t		*skin;
-
-	paliashdr = (dmdl_t *)currentmodel->extradata;
+	dmdl_t *paliashdr = (dmdl_t *)currentmodel->extradata;
 
 	//r1: always test, even for weapon models
 	if ( ( e->frame >= paliashdr->num_frames ) || ( e->frame < 0 ) )
@@ -441,6 +435,7 @@ void R_DrawAliasModel (entity_t *e)
 		e->oldframe = 0;
 	}
 
+	vec3_t		bbox[8];
 	if ( !( e->flags & RF_WEAPONMODEL ) )
 	{
 		if ( R_CullAliasModel( bbox, e ) )
@@ -530,6 +525,7 @@ void R_DrawAliasModel (entity_t *e)
 
 	if ( currententity->flags & RF_MINLIGHT )
 	{
+		int i;
 		for (i=0 ; i<3 ; i++)
 			if (shadelight[i] > 0.1f)
 				break;
@@ -547,7 +543,7 @@ void R_DrawAliasModel (entity_t *e)
 		float	min;
 
 		scale = 0.1f * (float)sin(r_newrefdef.time*7);
-		for (i=0 ; i<3 ; i++)
+		for (int i=0 ; i<3 ; i++)
 		{
 			min = shadelight[i] * 0.8f;
 			shadelight[i] += scale;
@@ -569,7 +565,7 @@ void R_DrawAliasModel (entity_t *e)
 
 	shadedots = r_avertexnormal_dots[((int)(currententity->angles[1] * (SHADEDOT_QUANT / 360.0f))) & (SHADEDOT_QUANT - 1)];
 	
-	an = currententity->angles[1]/180*M_PI;
+	float an = currententity->angles[1]/180*M_PI;
 	shadevector[0] = (float)cos(-an);
 	shadevector[1] = (float)sin(-an);
 	shadevector[2] = 1;
@@ -606,6 +602,7 @@ void R_DrawAliasModel (entity_t *e)
 	e->angles[PITCH] = -e->angles[PITCH];	// sigh.
 
 	// select skin
+	image_t		*skin;
 	if (currententity->skin)
 		skin = currententity->skin;	// custom player skin
 	else
