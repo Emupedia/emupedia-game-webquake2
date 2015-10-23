@@ -104,8 +104,6 @@ static void GL_DrawAliasFrameLerp (const dmdl_t *paliashdr, float backlerp)
 		+ currententity->oldframe * paliashdr->framesize);
 	const dtrivertx_t *ov = oldframe->verts;
 
-	const int *order = (int *)((byte *)paliashdr + paliashdr->ofs_glcmds);
-
 //	glTranslatef (frame->translate[0], frame->translate[1], frame->translate[2]);
 //	glScalef (frame->scale[0], frame->scale[1], frame->scale[2]);
 
@@ -150,49 +148,40 @@ static void GL_DrawAliasFrameLerp (const dmdl_t *paliashdr, float backlerp)
 
 	GL_LerpVerts( paliashdr->num_xyz, v, ov, verts, lerp, move, frontv, backv );
 
-	for (;;)
+	const dtriangle_t *vertices = (dtriangle_t *) ((byte *)paliashdr + paliashdr->ofs_tris);
 	{
-		// get the vertex count and primitive type
-		int count = *order++;
-		if (!count)
-			break;		// done
-		if (count < 0)
-		{
-			count = -count;
-			qglBegin (GL_TRIANGLE_FAN);
-		}
-		else
-		{
-			qglBegin (GL_TRIANGLE_STRIP);
-		}
+		qglBegin(GL_TRIANGLES);
 
 		if ( currententity->flags & ( RF_SHELL_RED | RF_SHELL_GREEN | RF_SHELL_BLUE ) )
 		{
-			do
-			{
-				int index_xyz = order[2];
-				order += 3;
+			for (int i = 0; i < paliashdr->num_tris; i++) {
+				const dtriangle_t *vert = vertices + i;
+				for (int j = 0; j < 3; j++) {
+					int index_xyz = vert->index_xyz[j];
 
 				qglColor4f( shadelight[0], shadelight[1], shadelight[2], alpha);
 				qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
-
-			} while (--count);
+				}
+			}
 		}
 		else
 		{
-			do
-			{
-				// texture coordinates come from the draw list
-				qglMTexCoord2f(GL_TEXTURE0, ((float *)order)[0], ((float *)order)[1]);
-				int index_xyz = order[2];
-				order += 3;
+			const dstvert_t *st = (dstvert_t *) ((byte *)paliashdr + paliashdr->ofs_st);
+			for (int i = 0; i < paliashdr->num_tris; i++) {
+				const dtriangle_t *vert = vertices + i;
+				for (int j = 0; j < 3; j++) {
+					int index_xyz = vert->index_xyz[j];
+					int index_st = vert->index_st[j];
+
+				qglMTexCoord2f(GL_TEXTURE0, ((float) st[index_st].s) / paliashdr->skinwidth, ((float) st[index_st].t) / paliashdr->skinheight);
 
 				// normals and vertexes come from the frame list
 				float l = shadedots[verts[index_xyz].lightnormalindex];
 
 				qglColor4f (l* shadelight[0], l*shadelight[1], l*shadelight[2], alpha);
 				qglVertex3f(s_lerped[index_xyz][0], s_lerped[index_xyz][1], s_lerped[index_xyz][2]);
-			} while (--count);
+				}
+			}
 		}
 
 		qglEnd ();
