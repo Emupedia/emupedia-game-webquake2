@@ -23,24 +23,24 @@ FILES:= \
 	# empty line
 
 
-r1q2ded_MODULES:=linux qcommon qshared server shlinux shwin zlib win32
-r1q2ded_SRC:=$(d)/q2ded.c
+q2ded_MODULES:=linux qcommon qshared server shlinux shwin zlib win32
+q2ded_SRC:=$(d)/q2ded.c
 
 
 ifneq ($(BUILTIN_GAME),)
-r1q2ded_MODULES+=$(BUILTIN_GAME)
+q2ded_MODULES+=$(BUILTIN_GAME)
 endif
 
 
 ifeq ($(USE_LIBWEBSOCKETS),y)
-r1q2ded_MODULES+=libwebsockets
+q2ded_MODULES+=libwebsockets
 endif  # USE_LIBWEBSOCKETS
 
 
 ifeq ($(BUILD_SERVER),y)
 
 PROGRAMS+= \
-	r1q2ded \
+	q2ded \
 	#empty line
 
 endif  # BUILD_SERVER
