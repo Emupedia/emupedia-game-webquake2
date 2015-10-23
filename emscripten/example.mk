@@ -19,7 +19,7 @@ USE_PNG:=n
 
 BUILD_SERVER:=n
 BUILD_UTILS:=n
-PURE_CLIENT:=n
+PURE_CLIENT:=y
 
 STATIC_SDL2:=y
 
@@ -28,7 +28,7 @@ BUILTIN_GAME?=baseq2
 # compiler options etc
 CC:=emcc
 CXX:=em++
-CFLAGS:=-g -DNDEBUG -DLINUX -D_GNU_SOURCE=1
+CFLAGS:=-DNDEBUG -DLINUX -D_GNU_SOURCE=1
 CFLAGS+=-I$(TOPDIR)/foreign/SDL2/include
 CFLAGS+=-Wall
 CFLAGS+=-Werror
@@ -39,7 +39,7 @@ OPTFLAGS:=-O3
 CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
-LDFLAGS:=-g --preload-file $(BUILTIN_GAME)
+LDFLAGS:=--preload-file $(BUILTIN_GAME)
 # 384 MB
 LDFLAGS+=-s TOTAL_MEMORY=402653184
 LDFLAGS+=-s OUTLINING_LIMIT=5000
