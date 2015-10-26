@@ -1069,12 +1069,15 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 	else if (!strcmp (ext, "pkz"))
 	{
 		unzFile f = unzOpen (packfile);
-		if (!f)
+		if (!f) {
 			return NULL;
+		}
 
 		unz_global_info	zipinfo;
-		if (unzGetGlobalInfo (f, &zipinfo) != UNZ_OK)
-			Com_Error (ERR_FATAL, "FS_LoadPackFile: Couldn't read .zip info from '%s'", packfile);
+
+		if (unzGetGlobalInfo(f, &zipinfo) != UNZ_OK) {
+			Com_Error(ERR_FATAL, "FS_LoadPackFile: Couldn't read .zip info from '%s'", packfile);
+		}
 
 		packfile_t *info = (packfile_t *) Z_TagMalloc (zipinfo.number_entry * sizeof(*info), TAGMALLOC_FSLOADPAK);
 
@@ -1083,8 +1086,9 @@ static pack_t /*@null@*/ *FS_LoadPackFile (const char *packfile, const char *ext
 		pack->info = NULL;
 		pack->rb = rbinit ((int (EXPORT *)(const void *, const void *))strcmp, zipinfo.number_entry);
 
-		if (unzGoToFirstFile (f) != UNZ_OK)
-			Com_Error (ERR_FATAL, "FS_LoadPackFile: Couldn't seek to first .zip file in '%s'", packfile);
+		if (unzGoToFirstFile(f) != UNZ_OK) {
+			Com_Error(ERR_FATAL, "FS_LoadPackFile: Couldn't seek to first .zip file in '%s'", packfile);
+		}
 
 		unz_file_info	fileInfo;
 		char			zipFileName[56];
