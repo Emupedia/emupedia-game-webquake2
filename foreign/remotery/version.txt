@@ -1,0 +1,8 @@
+commit cc69ed4db83f9700ecd0b4cc06656fdcc9287b74
+Merge: 221636d fbacd3e
+Author: Don Williamson <dwilliamson_coder@hotmail.com>
+Date:   Tue Aug 11 12:14:49 2015 +0100
+
+    Merge pull request #61 from dougbinks/OSX_RSIZE_T
+    
+    Support building on older MACOS versions.
