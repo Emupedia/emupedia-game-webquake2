@@ -81,7 +81,7 @@
       <PrecompiledHeaderOutputFile>.\./build/temp/r1q2/debug\quake2.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/r1q2/debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\./build/temp/r1q2/debug\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>.\foreign\zlib;.\foreign\glew\include;.\foreign\SDL2\include;.\foreign\libwebsockets\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\foreign\zlib;.\foreign\glew\include;.\foreign\SDL2\include;.\foreign\libwebsockets\lib;.\foreign\remotery\lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -123,7 +123,7 @@
       <PrecompiledHeaderOutputFile>.\./build/temp/dedicated\quake2.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/dedicated\</ObjectFileName>
       <ProgramDataBaseFileName>.\./build/temp/dedicated\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>.\foreign\zlib;.\foreign\glew\include;.\foreign\SDL2\include;.\foreign\libwebsockets\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\foreign\zlib;.\foreign\glew\include;.\foreign\SDL2\include;.\foreign\libwebsockets\lib;.\foreign\remotery\lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -164,7 +164,7 @@
       <PrecompiledHeaderOutputFile>.\./build/temp/r1q2/release\quake2.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/r1q2/release\</ObjectFileName>
       <ProgramDataBaseFileName>.\./build/temp/r1q2/release\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>.\foreign\zlib;.\foreign\glew\include;.\foreign\SDL2\include;.\foreign\libwebsockets\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\foreign\zlib;.\foreign\glew\include;.\foreign\SDL2\include;.\foreign\libwebsockets\lib;.\foreign\remotery\lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -207,6 +207,7 @@
     <ClCompile Include="foreign\libpng\pngrutil.c" />
     <ClCompile Include="foreign\libpng\pngset.c" />
     <ClCompile Include="foreign\libpng\pngtrans.c" />
+    <ClCompile Include="foreign\remotery\lib\Remotery.c" />
     <ClCompile Include="foreign\zlib\adler32.c" />
     <ClCompile Include="foreign\zlib\crc32.c" />
     <ClCompile Include="foreign\zlib\deflate.c" />
@@ -371,6 +372,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client\anorms.h" />
+    <ClInclude Include="foreign\remotery\lib\Remotery.h" />
     <ClInclude Include="qcommon\bspfile.h" />
     <ClInclude Include="client\cdaudio.h" />
     <ClInclude Include="client\client.h" />

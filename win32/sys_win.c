@@ -75,6 +75,9 @@ int SV_CountPlayers (void);
 
 //#define DEMO
 
+#ifdef RMT_ENABLED
+static Remotery *rmt = NULL;
+#endif  // RMT_ENABLED
 
 HMODULE hSh32 = NULL;
 FARPROC procShell_NotifyIcon = NULL;
@@ -201,14 +204,18 @@ void Sys_Quit (void)
     // Cleanup before shutdown
     //UnhookWindowsHookEx( g_hKeyboardHook );
 
-	if (procShell_NotifyIcon)
-		procShell_NotifyIcon (NIM_DELETE, &pNdata);
+	if (procShell_NotifyIcon) {
+		procShell_NotifyIcon(NIM_DELETE, &pNdata);
+	}
 
-	if (hSh32)
-		FreeLibrary (hSh32);
+	if (hSh32) {
+		FreeLibrary(hSh32);
+	}
 
-		//exit (0);
-		ExitProcess (0);
+	rmt_DestroyGlobalInstance(rmt);
+
+	//exit (0);
+	ExitProcess (0);
 }
 
 void WinError (void)
@@ -1998,6 +2005,8 @@ HINSTANCE	global_hInstance;
 extern cvar_t	*sys_loopstyle;
 static int WinMainHax (HINSTANCE hInstance, LPSTR lpCmdLine)
 {
+	rmt_CreateGlobalInstance(&rmt);
+
 #ifndef NO_SERVER
 //	unsigned int	handle;
 #endif

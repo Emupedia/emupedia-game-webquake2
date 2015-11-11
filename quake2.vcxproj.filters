@@ -22,6 +22,9 @@
     <Filter Include="libpng">
       <UniqueIdentifier>{eeb01906-5fb9-4a6d-80a2-5103c3d1ec51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="remotery">
+      <UniqueIdentifier>{5d689783-4612-4929-b6b5-c3b87b89719c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win32\cd_win.c">
@@ -294,6 +297,9 @@
     <ClCompile Include="qcommon\net_websockets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="foreign\remotery\lib\Remotery.c">
+      <Filter>remotery</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client\anorms.h">
@@ -361,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="ref_gl\gl_local.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="foreign\remotery\lib\Remotery.h">
+      <Filter>remotery</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
