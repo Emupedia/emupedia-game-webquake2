@@ -41,12 +41,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #endif
 
+#include <Remotery.h>
+
 //for broken Makefiles?
 #ifdef __linux__
 #ifndef LINUX
 #define LINUX 1
 #endif
 #endif
+
 
 // q_shared.h -- included first by ALL program modules
 

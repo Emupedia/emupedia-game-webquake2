@@ -18,6 +18,7 @@ USE_GLEW:=y
 USE_LIBWEBSOCKETS:=y
 USE_OPENAL:=y
 USE_PNG:=y
+USE_REMOTERY:=n
 
 BUILD_SERVER:=y
 BUILD_UTILS:=y
@@ -41,7 +42,7 @@ CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
 LDFLAGS:=-g
-LDLIBS:=-lm -ldl
+LDLIBS:=-lm -ldl -lpthread
 LDLIBS_ref_gl:=-lGL $(shell sdl2-config --libs)
 LDLIBS_client:=$(shell pkg-config openal --libs)
 

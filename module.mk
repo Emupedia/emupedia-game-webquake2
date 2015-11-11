@@ -86,6 +86,13 @@ CFLAGS+=-isystem$(TOPDIR)/foreign/libpng
 endif  # USE_PNG
 
 
+CFLAGS+=-isystem$(TOPDIR)/foreign/remotery/lib
+
+ifeq ($(USE_REMOTERY),y)
+CFLAGS+=-DRMT_ENABLED
+endif  # USE_REMOTERY
+
+
 CFLAGS+=-isystem$(TOPDIR)/foreign/zlib
 
 

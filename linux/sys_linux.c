@@ -57,11 +57,17 @@
 
 #endif  // EMSCRIPTEN
 
+
 #include "../qcommon/qcommon.h"
 
 #include "../client/ref.h"
 
 #include "../game/game.h"
+
+
+#ifdef RMT_ENABLED
+static Remotery *rmt = NULL;
+#endif  // RMT_ENABLED
 
 
 // for old android ndk
@@ -162,6 +168,8 @@ void Sys_Quit (void)
 	fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
 
 #endif  // EMSCRIPTEN
+
+	rmt_DestroyGlobalInstance(rmt);
 
 	exit(0);
 }
@@ -657,6 +665,8 @@ EMSCRIPTEN_KEEPALIVE int main (int argc, char **argv);
 
 int main (int argc, char **argv)
 {
+	rmt_CreateGlobalInstance(&rmt);
+
 #ifndef EMSCRIPTEN
 	if (getuid() == 0 || geteuid() == 0)
 		Sys_Error ("For security reasons, do not run Quake II as root.");

@@ -4082,6 +4082,8 @@ void CL_Frame (int msec)
 		return;
 #endif
 
+	rmt_BeginCPUSample(CL_Frame);
+
 #ifdef _DEBUG
 	//if (!ActiveApp)
 		//NET_Client_Sleep (50);
@@ -4098,7 +4100,7 @@ void CL_Frame (int msec)
 	if (cl_async->intvalue != 1)
 	{
 		CL_Synchronous_Frame (msec);
-		return;
+		goto out;
 	}
 
 	//jec - set internal counters
@@ -4235,6 +4237,9 @@ void CL_Frame (int msec)
 	}
 		//cls.framecount++;
 	//}
+
+out:
+	rmt_EndCPUSample();
 }
 
 //============================================================================

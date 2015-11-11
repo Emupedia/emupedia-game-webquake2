@@ -1029,6 +1029,8 @@ void R_DrawWorld (void)
 	if ( r_newrefdef.rdflags & RDF_NOWORLDMODEL )
 		return;
 
+	rmt_BeginCPUSample(R_DrawWorld);
+
 	currentmodel = r_worldmodel;
 
 	FastVectorCopy (r_newrefdef.vieworg, modelorg);
@@ -1056,6 +1058,8 @@ void R_DrawWorld (void)
 	R_DrawSkyBox ();
 
 	R_DrawTriangleOutlines ();
+
+	rmt_EndCPUSample();
 }
 
 

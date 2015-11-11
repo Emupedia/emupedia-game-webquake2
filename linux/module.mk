@@ -49,5 +49,11 @@ endif
 SRC_shlinux:=$(addprefix $(d)/,q_shlinux.c glob.c)
 
 
+ifeq ($(USE_REMOTERY),y)
+SRC_shlinux+=foreign/remotery/lib/Remotery.c
+ALLDIRS+=foreign/remotery/lib
+endif  # USE_REMOTERY
+
+
 d  := $(dirstack_$(sp))
 sp := $(basename $(sp))

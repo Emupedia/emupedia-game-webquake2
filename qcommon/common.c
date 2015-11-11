@@ -2461,6 +2461,8 @@ void Qcommon_Frame (int msec_)
 	if (setjmp (abortframe) )
 		return;			// an ERR_DROP was thrown
 
+	rmt_BeginCPUSample(Qcommon_Frame);
+
 	//Com_Printf ("frame time: %d ms\n", LOG_GENERAL, msec);
 
 	/*if ( log_stats->modified )
@@ -2559,6 +2561,7 @@ void Qcommon_Frame (int msec_)
 			all, sv, gm, cl, rf);
 	}
 
+	rmt_EndCPUSample();
 }
 
 #ifndef NO_ZLIB

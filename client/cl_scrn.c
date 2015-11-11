@@ -795,19 +795,21 @@ SCR_DrawConsole
 */
 void SCR_DrawConsole (void)
 {
+	rmt_BeginCPUSample(SCR_DrawConsole);
+
 	//Con_CheckResize ();
 	
 	if (cls.state <= ca_connecting)
 	{	// forced full screen console
 		Con_DrawConsole (1.0);
-		return;
+		goto out;
 	}
 
 	if (cls.state != ca_active || !cl.refresh_prepped)
 	{	// connected, but can't render
 		Con_DrawConsole (0.5);
 		re.DrawFill (0, viddef.height/2, viddef.width, viddef.height/2, 0);
-		return;
+		goto out;
 	}
 
 	if (FLOAT_NE_ZERO(scr_con_current))
@@ -821,6 +823,9 @@ void SCR_DrawConsole (void)
 			Con_DrawNotify ();	// only draw notify in game
 		}
 	}
+
+out:
+	rmt_EndCPUSample();
 }
 
 //=============================================================================
@@ -1612,6 +1617,8 @@ void SCR_UpdateScreen (void)
 	if (!scr_initialized || !con.initialized)
 		return;				// not initialized yet
 
+	rmt_BeginCPUSample(SCR_UpdateScreen);
+
 	/*
 	** range check cl_camera_separation so we don't inadvertently fry someone's
 	** brain
@@ -1626,7 +1633,7 @@ void SCR_UpdateScreen (void)
 				SCR_DrawConsole ();
 			M_Draw ();
 			GLimp_EndFrame();
-			return;
+			goto out;
 		}
 
 		if (scr_draw_loading == 2)
@@ -1721,4 +1728,8 @@ void SCR_UpdateScreen (void)
 			SCR_DrawLoading ();
 		}
 	GLimp_EndFrame();
+
+out:
+
+	rmt_EndCPUSample();
 }

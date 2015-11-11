@@ -279,6 +279,8 @@ void flushDraws(const char *reason) {
 
 #endif  // NDEBUG
 
+	rmt_BeginCPUSample(flushDraws);
+
 	commitPipelineState();
 
 	bindVBO();
@@ -324,6 +326,8 @@ void flushDraws(const char *reason) {
 
 	qglState->numDrawCalls = 0;
 	qglState->usedVertices = 0;
+
+	rmt_EndCPUSample();
 }
 
 
