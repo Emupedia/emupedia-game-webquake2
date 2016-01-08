@@ -32,8 +32,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "gl_local.h"
 
 #include "../client/client.h"
-#include "../linux/glw.h"
-
 #include "../client/keys.h"
 
 #include <SDL.h>
@@ -222,7 +220,6 @@ struct
 int keyq_head=0;
 int keyq_tail=0;
 
-glwstate_t glw_state;
 						      
 // Console variables that we need to access from this module
 
