@@ -2457,9 +2457,10 @@ void GetEvent(SDL_Event *event)
 
 		}
 		break;
-	case SDL_QUIT:
-		Cbuf_ExecuteText(EXEC_NOW, "quit");
-		break;
+	case SDL_QUIT: {
+		char quit[] = "quit";  // const fuckery
+		Cbuf_ExecuteText(EXEC_NOW, quit);
+		} break;
 	}
 
 }

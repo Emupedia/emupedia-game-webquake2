@@ -222,7 +222,7 @@ model_t *Mod_ForName (const char *name_, qboolean crash)
 	unsigned	hash;
 
 	size_t len = strlen(name_);
-	char *name = alloca(len + 1);
+	char *name = (char *) alloca(len + 1);
 	strcpy(name, name_);
 
 	if (!name || !name[0])

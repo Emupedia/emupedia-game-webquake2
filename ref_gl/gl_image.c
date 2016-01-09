@@ -1423,6 +1423,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 		goto out;
 	} 
 
+	{
 	struct jpeg_decompress_struct	cinfo;
 	struct jpeg_error_mgr			jerr;
 	cinfo.err = jpeg_std_error(&jerr);
@@ -1484,6 +1485,7 @@ void LoadJPG (const char *filename, byte **pic, int *width, int *height)
 	jpeg_destroy_decompress (&cinfo);
 
 	*pic = rgbadata;
+	}
 
 out:
 	// if we got here, FS_Loadfile must have succeeded
