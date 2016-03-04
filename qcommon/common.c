@@ -2785,6 +2785,8 @@ void Qcommon_Shutdown (void)
 	FS_ShutdownFilesystem();
 
 	Cvar_Quit();
+
+	Cmd_Quit();
 }
 
 void Z_CheckGameLeaks (void)

@@ -1531,3 +1531,36 @@ void Cmd_Init (void)
 	Cmd_AddCommand ("wait", Cmd_Wait_f);
 }
 
+
+void Cmd_Quit(void) {
+	rbdestroy(cmdtree); cmdtree = NULL;
+
+	cmd_function_t *cmd = cmd_functions;
+
+	while (cmd) {
+		cmd_function_t *next = cmd->next;
+		cmd->next = NULL;
+
+		Z_Free(cmd);
+
+		cmd = next;
+	}
+
+	cmd_functions = NULL;
+
+	rbdestroy(aliastree); aliastree = NULL;
+
+	cmdalias_t *a = cmd_alias;
+
+	while (a) {
+		cmdalias_t *next = a->next;
+		a->next = NULL;
+
+		Z_Free(a->value); a->value = NULL;
+
+		Z_Free(a);
+
+		a = next;
+	}
+	cmd_alias = NULL;
+}
