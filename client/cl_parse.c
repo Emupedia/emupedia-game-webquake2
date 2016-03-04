@@ -501,8 +501,9 @@ qboolean CL_ParseServerData (void)
 	strncpy (cl.gamedir, str, sizeof(cl.gamedir)-1);
 
 	// set gamedir, fucking christ this is messy!
-	if ((str[0] && (!fs_gamedirvar->string || !fs_gamedirvar->string[0] || strcmp(fs_gamedirvar->string, str))) ||
-		(!str[0] && (fs_gamedirvar->string || fs_gamedirvar->string[0])))
+	bool gamedir_isset = fs_gamedirvar->string && fs_gamedirvar->string[0];
+	if ((str[0] && (!gamedir_isset || strcmp(fs_gamedirvar->string, str))) ||
+		(!str[0] && gamedir_isset))
 	{
 		if (strcmp(fs_gamedirvar->string, str))
 		{
