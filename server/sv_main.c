@@ -3539,30 +3539,35 @@ before Sys_Quit or Sys_Error
 */
 void SV_Shutdown (const char *finalmsg, qboolean reconnect, qboolean crashing)
 {
-	if (svs.clients)
+	if (svs.clients) {
 		SV_FinalMessage (finalmsg, reconnect);
+	}
 
 	Master_Shutdown ();
 
-	if (!crashing || dbg_unload->intvalue)
+	if (!crashing || dbg_unload->intvalue) {
 		SV_ShutdownGameProgs ();
-
+	}
 
 	// free current level
-	if (sv.demofile)
+	if (sv.demofile) {
 		fclose (sv.demofile);
+	}
 	memset (&sv, 0, sizeof(sv));
 	Com_SetServerState (sv.state);
 
 	// free server static data
-	if (svs.clients)
+	if (svs.clients) {
 		Z_Free (svs.clients);
+	}
 
-	if (svs.client_entities)
+	if (svs.client_entities) {
 		Z_Free (svs.client_entities);
+	}
 
-	if (svs.demofile)
+	if (svs.demofile) {
 		fclose (svs.demofile);
+	}
 
 	if (q2_initialized)
 	{
