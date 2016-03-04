@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2016 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,23 @@
 #include "SDL_loadso.h"
 #include <dlfcn.h>
 
-static int UIKit_GL_Initialize(_THIS);
+@interface SDLEAGLContext : EAGLContext
+
+/* The OpenGL ES context owns a view / drawable. */
+@property (nonatomic, strong) SDL_uikitopenglview *sdlView;
+
+@end
+
+@implementation SDLEAGLContext
+
+- (void)dealloc
+{
+    /* When the context is deallocated, its view should be removed from any
+     * SDL window that it's attached to. */
+    [self.sdlView setSDLWindow:NULL];
+}
+
+@end
 
 void *
 UIKit_GL_GetProcAddress(_THIS, const char *proc)
@@ -117,11 +133,21 @@ SDL_GLContext
 UIKit_GL_CreateContext(_THIS, SDL_Window * window)
 {
     @autoreleasepool {
+        SDLEAGLContext *context = nil;
         SDL_uikitopenglview *view;
         SDL_WindowData *data = (__bridge SDL_WindowData *) window->driverdata;
         CGRect frame = UIKit_ComputeViewFrame(window, data.uiwindow.screen);
         EAGLSharegroup *sharegroup = nil;
         CGFloat scale = 1.0;
+        int samples = 0;
+
+        /* The EAGLRenderingAPI enum values currently map 1:1 to major GLES
+         * versions. */
+        EAGLRenderingAPI api = _this->gl_config.major_version;
+
+        if (_this->gl_config.multisamplebuffers > 0) {
+            samples = _this->gl_config.multisamplesamples;
+        }
 
         if (_this->gl_config.share_with_current_context) {
             EAGLContext *context = (__bridge EAGLContext *) SDL_GL_GetCurrentContext();
@@ -142,6 +168,12 @@ UIKit_GL_CreateContext(_THIS, SDL_Window * window)
             }
         }
 
+        context = [[SDLEAGLContext alloc] initWithAPI:api sharegroup:sharegroup];
+        if (!context) {
+            SDL_SetError("OpenGL ES %d context could not be created", _this->gl_config.major_version);
+            return NULL;
+        }
+
         /* construct our view, passing in SDL's OpenGL configuration data */
         view = [[SDL_uikitopenglview alloc] initWithFrame:frame
                                                     scale:scale
@@ -153,13 +185,16 @@ UIKit_GL_CreateContext(_THIS, SDL_Window * window)
                                                 depthBits:_this->gl_config.depth_size
                                               stencilBits:_this->gl_config.stencil_size
                                                      sRGB:_this->gl_config.framebuffer_srgb_capable
-                                             majorVersion:_this->gl_config.major_version
-                                               shareGroup:sharegroup];
+                                             multisamples:samples
+                                                  context:context];
+
         if (!view) {
             return NULL;
         }
 
-        SDLEAGLContext *context = view.context;
+        /* The context owns the view / drawable. */
+        context.sdlView = view;
+
         if (UIKit_GL_MakeCurrent(_this, window, (__bridge SDL_GLContext) context) < 0) {
             UIKit_GL_DeleteContext(_this, (SDL_GLContext) CFBridgingRetain(context));
             return NULL;
@@ -175,11 +210,10 @@ void
 UIKit_GL_DeleteContext(_THIS, SDL_GLContext context)
 {
     @autoreleasepool {
-        /* Transfer ownership the +1'd context to ARC. */
-        SDLEAGLContext *eaglcontext = (SDLEAGLContext *) CFBridgingRelease(context);
-
-        /* Detach the context's view from its window. */
-        [eaglcontext.sdlView setSDLWindow:NULL];
+        /* The context was retained in SDL_GL_CreateContext, so we release it
+         * here. The context's view will be detached from its window when the
+         * context is deallocated. */
+        CFRelease(context);
     }
 }
 

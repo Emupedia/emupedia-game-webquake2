@@ -1,6 +1,6 @@
 /*
  *  Simple DirectMedia Layer
- *  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
+ *  Copyright (C) 1997-2016 Sam Lantinga <slouken@libsdl.org>
  * 
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
@@ -81,7 +81,7 @@ static int SDL_EGL_HasExtension(_THIS, const char *ext)
 {
     int i;
     int len = 0;
-    int ext_len;
+    size_t ext_len;
     const char *exts;
     const char *ext_word;
 
@@ -340,6 +340,18 @@ SDL_EGL_ChooseConfig(_THIS)
         attribs[i++] = _this->gl_config.multisamplesamples;
     }
 
+    if (_this->gl_config.framebuffer_srgb_capable) {
+#ifdef EGL_KHR_gl_colorspace
+        if (SDL_EGL_HasExtension(_this, "EGL_KHR_gl_colorspace")) {
+            attribs[i++] = EGL_GL_COLORSPACE_KHR;
+            attribs[i++] = EGL_GL_COLORSPACE_SRGB_KHR;
+        } else
+#endif
+        {
+            return SDL_SetError("EGL implementation does not support sRGB system framebuffers");
+        }
+    }
+
     attribs[i++] = EGL_RENDERABLE_TYPE;
     if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES) {
 #ifdef EGL_KHR_create_context
@@ -358,9 +370,9 @@ SDL_EGL_ChooseConfig(_THIS)
         attribs[i++] = EGL_OPENGL_BIT;
         _this->egl_data->eglBindAPI(EGL_OPENGL_API);
     }
-    
+
     attribs[i++] = EGL_NONE;
-   
+
     if (_this->egl_data->eglChooseConfig(_this->egl_data->egl_display,
         attribs,
         configs, SDL_arraysize(configs),
@@ -368,7 +380,7 @@ SDL_EGL_ChooseConfig(_THIS)
         found_configs == 0) {
         return SDL_SetError("Couldn't find matching EGL config");
     }
-    
+
     /* eglChooseConfig returns a number of configurations that match or exceed the requested attribs. */
     /* From those, we select the one that matches our requirements more closely via a makeshift algorithm */
 
@@ -414,6 +426,9 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
 
     EGLContext egl_context, share_context = EGL_NO_CONTEXT;
     EGLint profile_mask = _this->gl_config.profile_mask;
+    EGLint major_version = _this->gl_config.major_version;
+    EGLint minor_version = _this->gl_config.minor_version;
+    SDL_bool profile_es = (profile_mask == SDL_GL_CONTEXT_PROFILE_ES);
 
     if (!_this->egl_data) {
         /* The EGL library wasn't loaded, SDL_GetError() should have info */
@@ -425,12 +440,18 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
     }
 
     /* Set the context version and other attributes. */
-    if (_this->gl_config.major_version < 3 && _this->gl_config.flags == 0 &&
-        (profile_mask == 0 || profile_mask == SDL_GL_CONTEXT_PROFILE_ES)) {
-        /* Create a context without using EGL_KHR_create_context attribs. */
-        if (profile_mask == SDL_GL_CONTEXT_PROFILE_ES) {
+    if ((major_version < 3 || (minor_version == 0 && profile_es)) &&
+        _this->gl_config.flags == 0 &&
+        (profile_mask == 0 || profile_es)) {
+        /* Create a context without using EGL_KHR_create_context attribs.
+         * When creating a GLES context without EGL_KHR_create_context we can
+         * only specify the major version. When creating a desktop GL context
+         * we can't specify any version, so we only try in that case when the
+         * version is less than 3.0 (matches SDL's GLX/WGL behavior.)
+         */
+        if (profile_es) {
             attribs[attr++] = EGL_CONTEXT_CLIENT_VERSION;
-            attribs[attr++] = SDL_max(_this->gl_config.major_version, 1);
+            attribs[attr++] = SDL_max(major_version, 1);
         }
     } else {
 #ifdef EGL_KHR_create_context
@@ -439,9 +460,9 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
          */
         if (SDL_EGL_HasExtension(_this, "EGL_KHR_create_context")) {
             attribs[attr++] = EGL_CONTEXT_MAJOR_VERSION_KHR;
-            attribs[attr++] = _this->gl_config.major_version;
+            attribs[attr++] = major_version;
             attribs[attr++] = EGL_CONTEXT_MINOR_VERSION_KHR;
-            attribs[attr++] = _this->gl_config.minor_version;
+            attribs[attr++] = minor_version;
 
             /* SDL profile bits match EGL profile bits. */
             if (profile_mask != 0 && profile_mask != SDL_GL_CONTEXT_PROFILE_ES) {
@@ -465,7 +486,7 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
     attribs[attr++] = EGL_NONE;
 
     /* Bind the API */
-    if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES) {
+    if (profile_es) {
         _this->egl_data->eglBindAPI(EGL_OPENGL_ES_API);
     } else {
         _this->egl_data->eglBindAPI(EGL_OPENGL_API);
