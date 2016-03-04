@@ -866,3 +866,24 @@ void Cvar_Init (void)
 
 	developer = Cvar_Get ("developer", "0", 0);
 }
+
+
+void Cvar_Quit(void) {
+	rbdestroy(cvartree);
+	cvartree = NULL;
+
+	cvar_t *var = cvar_vars;
+	while (var) {
+		cvar_t *next = var->next;
+		var->next = NULL;
+
+		Z_Free(var->name); var->name = NULL;
+		Z_Free(var->string); var->string = NULL;
+
+		Z_Free(var);
+
+		var = next;
+	}
+
+	cvar_vars = NULL;
+}

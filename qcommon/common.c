@@ -2783,6 +2783,8 @@ void Qcommon_Shutdown (void)
 	CM_FreeMap();
 
 	FS_ShutdownFilesystem();
+
+	Cvar_Quit();
 }
 
 void Z_CheckGameLeaks (void)
