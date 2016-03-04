@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2016 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -535,14 +535,16 @@ SDL_WarpMouseInWindow(SDL_Window * window, int x, int y)
     }
 }
 
-void
+int
 SDL_WarpMouseGlobal(int x, int y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
     if (mouse->WarpMouseGlobal) {
-        mouse->WarpMouseGlobal(x, y);
+        return mouse->WarpMouseGlobal(x, y);
     }
+
+    return SDL_Unsupported();
 }
 
 static SDL_bool

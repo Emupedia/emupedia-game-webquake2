@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2016 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -305,7 +305,24 @@ UIKit_DestroyWindow(_THIS, SDL_Window * window)
     @autoreleasepool {
         if (window->driverdata != NULL) {
             SDL_WindowData *data = (SDL_WindowData *) CFBridgingRelease(window->driverdata);
+            NSArray *views = nil;
+
             [data.viewcontroller stopAnimation];
+
+            /* Detach all views from this window. We use a copy of the array
+             * because setSDLWindow will remove the object from the original
+             * array, which would be undesirable if we were iterating over it. */
+            views = [data.views copy];
+            for (SDL_uikitview *view in views) {
+                [view setSDLWindow:NULL];
+            }
+
+            /* iOS may still hold a reference to the window after we release it.
+             * We want to make sure the SDL view controller isn't accessed in
+             * that case, because it would contain an invalid pointer to the old
+             * SDL window. */
+            data.uiwindow.rootViewController = nil;
+            data.uiwindow.hidden = YES;
         }
     }
     window->driverdata = NULL;
@@ -329,9 +346,11 @@ UIKit_GetWindowWMInfo(_THIS, SDL_Window * window, SDL_SysWMinfo * info)
                     SDL_uikitopenglview *glview = (SDL_uikitopenglview *)data.viewcontroller.view;
                     info->info.uikit.framebuffer = glview.drawableFramebuffer;
                     info->info.uikit.colorbuffer = glview.drawableRenderbuffer;
+                    info->info.uikit.resolveFramebuffer = glview.msaaResolveFramebuffer;
                 } else {
                     info->info.uikit.framebuffer = 0;
                     info->info.uikit.colorbuffer = 0;
+                    info->info.uikit.resolveFramebuffer = 0;
                 }
             }
 
