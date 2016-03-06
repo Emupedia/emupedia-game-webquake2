@@ -3560,10 +3560,10 @@ void SV_Shutdown (const char *finalmsg, qboolean reconnect, qboolean crashing)
 	if (svs.clients) {
 		for (unsigned int i = 0; i < maxclients->intvalue; i++) {
 			client_t *cl = &svs.clients[i];
-			if (cl->messageListData != NULL) {
-				Z_Free(cl->messageListData); cl->messageListData = NULL;
-				Z_Free(cl->lastlines); cl->lastlines = NULL;
+			if (cl->state == cs_free) {
+				continue;
 			}
+			SV_CleanClient(cl);
 		}
 		Z_Free (svs.clients);
 	}
