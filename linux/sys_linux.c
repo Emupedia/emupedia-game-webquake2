@@ -665,7 +665,9 @@ EMSCRIPTEN_KEEPALIVE int main (int argc, char **argv);
 
 int main (int argc, char **argv)
 {
+#ifdef RMT_ENABLED
 	rmt_CreateGlobalInstance(&rmt);
+#endif  // RMT_ENABLED
 
 #ifndef EMSCRIPTEN
 	if (getuid() == 0 || geteuid() == 0)
