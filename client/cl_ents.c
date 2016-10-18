@@ -364,16 +364,13 @@ rest of the data stream.
 */
 static void CL_ParsePacketEntities (const frame_t *oldframe, frame_t *newframe)
 {
-	int				newnum;
-	uint32			bits;
-	entity_state_t	*oldstate = NULL;
-	int				oldindex, oldnum;
-
 	newframe->parse_entities = cl.parse_entities;
 	newframe->num_entities = 0;
 
 	// delta from the entities present in oldframe
-	oldindex = 0;
+	int oldindex = 0;
+	int oldnum;
+	entity_state_t	*oldstate = NULL;
 	if (!oldframe)
 		oldnum = 99999;
 	else
@@ -389,7 +386,8 @@ static void CL_ParsePacketEntities (const frame_t *oldframe, frame_t *newframe)
 
 	for (;;)
 	{
-		newnum = CL_ParseEntityBits (&bits);
+		uint32 bits;
+		int newnum = CL_ParseEntityBits (&bits);
 
 		if (net_message.readcount > net_message.cursize)
 			Com_Error (ERR_DROP,"CL_ParsePacketEntities: end of message");
