@@ -24,9 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern	struct model_s	*cl_mod_powerscreen;
 
-//PGM
-int	vidref_val;
-//PGM
 
 /*
 =========================================================================
@@ -2193,11 +2190,7 @@ lerp_time;*/
 					float intensity;
 
 					intensity = 50 + (500 * ((float)sin(time/500.0f) + 1.0f));
-					// FIXME - check out this effect in rendition
-					if(vidref_val == VIDREF_GL)
 						V_AddLight (ent.origin, intensity, -1.0, -1.0, -1.0);
-					else
-						V_AddLight (ent.origin, -1.0f * intensity, 1.0, 1.0, 1.0);
 					}
 				else
 				{
@@ -2209,10 +2202,7 @@ lerp_time;*/
 			{
 				CL_TrackerTrail (cent->lerp_origin, ent.origin, 0);
 				// FIXME - check out this effect in rendition
-				if(vidref_val == VIDREF_GL)
 					V_AddLight (ent.origin, 200, -1, -1, -1);
-				else
-					V_AddLight (ent.origin, -200, 1, 1, 1);
 			}
 //ROGUE
 //======

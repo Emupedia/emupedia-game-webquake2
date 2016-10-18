@@ -831,8 +831,6 @@ void CL_AddDLights (void)
 
 //=====
 //PGM
-	if(vidref_val == VIDREF_GL)
-	{
 		for (i=0 ; i<MAX_DLIGHTS ; i++, dl++)
 		{
 			if (FLOAT_EQ_ZERO(dl->radius))
@@ -844,30 +842,6 @@ void CL_AddDLights (void)
 			V_AddLight (dl->origin, dl->radius,
 				dl->color[0], dl->color[1], dl->color[2]);
 		}
-	}
-	else
-	{
-		for (i=0 ; i<MAX_DLIGHTS ; i++, dl++)
-		{
-			if (FLOAT_EQ_ZERO(dl->radius))
-				continue;
-
-			// negative light in software. only black allowed
-			if (FLOAT_LT_ZERO(dl->color[0]) || FLOAT_LT_ZERO(dl->color[1]) || FLOAT_LT_ZERO(dl->color[2]))
-			{
-				dl->radius = -(dl->radius);
-				dl->color[0] = 1;
-				dl->color[1] = 1;
-				dl->color[2] = 1;
-			}
-			
-			if (dl->follow)
-				CL_GetEntityOrigin (dl->entity, dl->origin);
-
-			V_AddLight (dl->origin, dl->radius,
-				dl->color[0], dl->color[1], dl->color[2]);
-		}
-	}
 //PGM
 //=====
 }
