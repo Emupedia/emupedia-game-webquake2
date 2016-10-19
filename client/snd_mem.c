@@ -25,7 +25,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //int			cache_full_cycle;
 
 
+#ifdef USE_OPENAL
+
+
 static qboolean S_OpenAL_LoadWAV (const char *name, byte **wav, wavInfo_t *info);
+
+
+#endif  // USE_OPENAL
 
 
 /*
