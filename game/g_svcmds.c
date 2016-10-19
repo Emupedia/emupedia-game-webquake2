@@ -122,24 +122,26 @@ SV_FilterPacket
 */
 qboolean SV_FilterPacket (const char *from)
 {
-	byte m[4];
+	union {
+		unsigned in;
+		byte m[4];
+	} u;
+	u.in = 0;
 	int i = 0;
 	const char *p = from;
 	while (*p && i < 4) {
-		m[i] = 0;
+		u.m[i] = 0;
 		while (*p >= '0' && *p <= '9') {
-			m[i] = m[i]*10 + (*p - '0');
+			u.m[i] = u.m[i]*10 + (*p - '0');
 			p++;
 		}
 		if (!*p || *p == ':')
 			break;
 		i++, p++;
 	}
-	
-	unsigned in = *(unsigned *)m;
 
 	for (i=0 ; i<numipfilters ; i++)
-		if ( (in & ipfilters[i].mask) == ipfilters[i].compare)
+		if ( (u.in & ipfilters[i].mask) == ipfilters[i].compare)
 			return (int)filterban->value;
 
 	return (int)!filterban->value;
