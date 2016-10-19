@@ -550,7 +550,7 @@ void CMod_LoadVisibility (lump_t *l)
 
 	assert(map_visibility == NULL);
 	assert(map_vis == NULL);
-	map_visibility = malloc(l->filelen);
+	map_visibility = (byte *) malloc(l->filelen);
 	if (map_visibility == NULL) {
 		Com_Error(ERR_DROP, "Failed to allocate visibility");
 	}
