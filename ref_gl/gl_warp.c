@@ -53,6 +53,7 @@ void BoundPoly (int numverts, float *verts, vec3_t mins, vec3_t maxs)
 
 void SubdividePolygon (int numverts, float *verts)
 {
+	assert(numverts > 0);
 	if (numverts > 60) {
 		VID_Error(ERR_DROP, "SubdividePolygon: numverts = %i", numverts);
 	}
