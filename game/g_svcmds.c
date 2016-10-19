@@ -122,13 +122,9 @@ SV_FilterPacket
 */
 qboolean SV_FilterPacket (char *from)
 {
-	int		i;
-	unsigned	in;
 	byte m[4];
-	char *p;
-
-	i = 0;
-	p = from;
+	int i = 0;
+	char *p = from;
 	while (*p && i < 4) {
 		m[i] = 0;
 		while (*p >= '0' && *p <= '9') {
@@ -140,7 +136,7 @@ qboolean SV_FilterPacket (char *from)
 		i++, p++;
 	}
 	
-	in = *(unsigned *)m;
+	unsigned in = *(unsigned *)m;
 
 	for (i=0 ; i<numipfilters ; i++)
 		if ( (in & ipfilters[i].mask) == ipfilters[i].compare)
