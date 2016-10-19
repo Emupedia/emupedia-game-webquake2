@@ -114,10 +114,10 @@ static qboolean StringToFilter(char *s, ipfilter_t *f){
 SV_FilterPacket
 =================
 */
-qboolean SV_FilterPacket(char *from){
+qboolean SV_FilterPacket(const char *from){
 	byte m[4];
 	int i = 0;
-	char *p = from;
+	const char *p = from;
 	while(*p && i < 4){
 		m[i] = 0;
 		while(*p >= '0' && *p <= '9'){

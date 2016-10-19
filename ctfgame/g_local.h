@@ -829,7 +829,7 @@ void EndDMLevel(void);
 //
 // g_svcmds.c
 //
-qboolean SV_FilterPacket(char *from);
+qboolean SV_FilterPacket(const char *from);
 
 
 void SpawnEntities(const char *mapname, const char *entities, const char *spawnpoint);
