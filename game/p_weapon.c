@@ -1046,15 +1046,7 @@ void Weapon_Machinegun (edict_t *ent)
 
 void Chaingun_Fire (edict_t *ent)
 {
-	int			i;
-	int			shots;
-	vec3_t		start;
-	vec3_t		forward, right, up;
-	float		r, u;
-	vec3_t		offset;
-	int			damage;
-	int			kick = 2;
-
+	int damage;
 	if (deathmatch->value)
 		damage = 6;
 	else
@@ -1101,6 +1093,7 @@ void Chaingun_Fire (edict_t *ent)
 		ent->client->anim_end = FRAME_attack8;
 	}
 
+	int shots;
 	if (ent->client->ps.gunframe <= 9)
 		shots = 1;
 	else if (ent->client->ps.gunframe <= 14)
@@ -1127,24 +1120,29 @@ void Chaingun_Fire (edict_t *ent)
 		return;
 	}
 
+	int kick = 2;
 	if (is_quad)
 	{
 		damage *= 4;
 		kick *= 4;
 	}
 
-	for (i=0 ; i<3 ; i++)
+	for (int i=0 ; i<3 ; i++)
 	{
 		ent->client->kick_origin[i] = crandom() * 0.35;
 		ent->client->kick_angles[i] = crandom() * 0.7;
 	}
 
-	for (i=0 ; i<shots ; i++)
+	vec3_t start;
+
+	for (int i=0 ; i<shots ; i++)
 	{
 		// get start / end positions
+		vec3_t forward, right, up;
 		AngleVectors (ent->client->v_angle, forward, right, up);
-		r = 7 + crandom()*4;
-		u = crandom()*4;
+		float r = 7 + crandom()*4;
+		float u = crandom()*4;
+		vec3_t offset;
 		VectorSet(offset, 0, r, u + ent->viewheight-8);
 		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
