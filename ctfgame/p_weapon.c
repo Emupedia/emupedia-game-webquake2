@@ -1262,7 +1262,7 @@ void weapon_bfg_fire(edict_t *ent){
 		
 		ent->client->ps.gunframe++;
 		
-		PlayerNoise(ent, start, PNOISE_WEAPON);
+		PlayerNoise(ent, ent->s.origin, PNOISE_WEAPON);
 		return;
 	}
 	
