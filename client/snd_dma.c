@@ -1150,16 +1150,6 @@ as the entities are sent to the client
 */
 void S_AddLoopSounds (void)
 {
-	int			i, j;
-	int			sounds[MAX_EDICTS];
-	int			left, right, left_total, right_total;
-	channel_t	*ch;
-	sfx_t		*sfx;
-	sfxcache_t	*sc;
-	int			num;
-	entity_state_t	*ent;
-	vec3_t		origin;
-
 	if (cl_paused->intvalue)
 		return;
 
@@ -1169,28 +1159,29 @@ void S_AddLoopSounds (void)
 	if (!cl.sound_prepped)
 		return;
 
-	for (i=0 ; i<cl.frame.num_entities ; i++)
+	int sounds[MAX_EDICTS];
+	for (int i=0 ; i<cl.frame.num_entities ; i++)
 	{
-		num = (cl.frame.parse_entities + i)&(MAX_PARSE_ENTITIES-1);
-		ent = &cl_parse_entities[num];
+		int num = (cl.frame.parse_entities + i)&(MAX_PARSE_ENTITIES-1);
+		entity_state_t *ent = &cl_parse_entities[num];
 		sounds[i] = ent->sound;
 	}
 
-	for (i=0 ; i<cl.frame.num_entities ; i++)
+	for (int i=0 ; i<cl.frame.num_entities ; i++)
 	{
 		if (!sounds[i])
 			continue;		
 
-		sfx = cl.sound_precache[sounds[i]];
+		sfx_t *sfx = cl.sound_precache[sounds[i]];
 		if (!sfx)
 			continue;		// bad sound effect
 
-		sc = sfx->cache;
+		sfxcache_t *sc = sfx->cache;
 		if (!sc)
 			continue;
 
-		num = (cl.frame.parse_entities + i)&(MAX_PARSE_ENTITIES-1);
-		ent = &cl_parse_entities[num];
+		int num = (cl.frame.parse_entities + i)&(MAX_PARSE_ENTITIES-1);
+		entity_state_t *ent = &cl_parse_entities[num];
 
 		//cmodel sound fix
 		/*if (ent->solid == 31)
@@ -1211,13 +1202,16 @@ void S_AddLoopSounds (void)
 		{
 			VectorCopy (ent->origin, origin);
 		}*/
+		int left_total, right_total;
+		vec3_t origin;
+
 		Snd_GetEntityOrigin (ent->number, origin);
 
 		// find the total contribution of all sounds of this type
 		S_SpatializeOrigin (origin, 255.0f, SOUND_LOOPATTENUATE,
 			&left_total, &right_total);
 
-		for (j=i+1 ; j<cl.frame.num_entities ; j++)
+		for (int j=i+1 ; j<cl.frame.num_entities ; j++)
 		{
 			if (sounds[j] != sounds[i])
 				continue;
@@ -1226,6 +1220,7 @@ void S_AddLoopSounds (void)
 			num = (cl.frame.parse_entities + j)&(MAX_PARSE_ENTITIES-1);
 			ent = &cl_parse_entities[num];
 
+			int left, right;
 			S_SpatializeOrigin (ent->origin, 255.0f, SOUND_LOOPATTENUATE, 
 				&left, &right);
 			left_total += left;
@@ -1236,7 +1231,7 @@ void S_AddLoopSounds (void)
 			continue;		// not audible
 
 		// allocate a channel
-		ch = S_PickChannel(0, 0);
+		channel_t *ch = S_PickChannel(0, 0);
 		if (!ch)
 			return;
 
