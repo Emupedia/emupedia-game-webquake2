@@ -55,8 +55,6 @@ to a noise in hopes of seeing the player from there.
 ===============
 */
 void PlayerNoise(edict_t *who, vec3_t where, int type){
-	edict_t	*noise;
-	
 	if(type == PNOISE_WEAPON){
 		if(who->client->silencer_shots){
 			who->client->silencer_shots--;
@@ -71,6 +69,8 @@ void PlayerNoise(edict_t *who, vec3_t where, int type){
 		return;
 		
 		
+	edict_t	*noise;
+
 	if(!who->mynoise){
 		noise = G_Spawn();
 		noise->classname = "player_noise";
