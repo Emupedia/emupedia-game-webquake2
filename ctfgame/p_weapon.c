@@ -1028,6 +1028,8 @@ void Chaingun_Fire(edict_t *ent){
 	}
 	
 	vec3_t start;
+
+	assert(shots > 0);
 	for(int i = 0; i < shots; i++){
 		// get start / end positions
 		vec3_t forward, right, up;
