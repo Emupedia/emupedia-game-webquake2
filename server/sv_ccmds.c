@@ -617,11 +617,6 @@ goes to map jail.bsp.
 */
 static void SV_GameMap_f (void)
 {
-	char		expanded[MAX_QPATH];
-	char		map[MAX_TOKEN_CHARS];
-	int			i;
-	client_t	*cl;
-
 	if (Cmd_Argc() != 2)
 	{
 		//Com_Printf ("USAGE: gamemap <mapname>\n");
@@ -634,6 +629,7 @@ static void SV_GameMap_f (void)
 	Com_DPrintf("SV_GameMap(%s)\n", Cmd_Argv(1));
 
 	//SV_Map nukes cmd_arg*
+	char map[MAX_TOKEN_CHARS];
 	Q_strncpy (map, Cmd_Argv(1), sizeof(map)-1);
 
 	FS_CreatePath (va("%s/save/current/", FS_Gamedir()));
@@ -648,6 +644,7 @@ static void SV_GameMap_f (void)
 	{	// save the map just exited
 		if (!strchr (map, '.') && !strchr (map, '$'))
 		{
+			char expanded[MAX_QPATH];
 			Com_sprintf (expanded, sizeof(expanded), "maps/%s.bsp", map);
 
 			//r1: check it exists
@@ -666,6 +663,9 @@ static void SV_GameMap_f (void)
 			// when the level is re-entered, the clients will spawn
 			// at spawn points instead of occupying body shells
 			//savedInuse = malloc(maxclients->value * sizeof(qboolean));
+			int i;
+			client_t *cl;
+
 			for (i=0,cl=svs.clients ; i<maxclients->intvalue; i++,cl++)
 			{
 				savedInuse[i] = cl->edict->inuse;
