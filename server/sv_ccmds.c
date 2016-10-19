@@ -666,7 +666,8 @@ static void SV_GameMap_f (void)
 			int i;
 			client_t *cl;
 
-			for (i=0,cl=svs.clients ; i<maxclients->intvalue; i++,cl++)
+			int currentMaxClients = maxclients->intvalue;
+			for (i=0,cl=svs.clients ; i < currentMaxClients; i++,cl++)
 			{
 				savedInuse[i] = cl->edict->inuse;
 				cl->edict->inuse = false;
@@ -675,7 +676,7 @@ static void SV_GameMap_f (void)
 			SV_WriteLevelFile ();
 
 			// we must restore these for clients to transfer over correctly
-			for (i=0,cl=svs.clients ; i<maxclients->intvalue; i++,cl++)
+			for (i=0,cl=svs.clients ; i < currentMaxClients; i++,cl++)
 				cl->edict->inuse = savedInuse[i];
 			//free (savedInuse);
 		}
