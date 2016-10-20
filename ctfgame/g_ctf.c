@@ -1659,7 +1659,6 @@ void CTFScoreboardMessage(edict_t *ent, edict_t *killer){
 	// print level name and exit rules
 	// add the clients in sorted order
 	*string = 0;
-	len = 0;
 	
 	// team one
 	sprintf(string, "if 24 xv 8 yv 8 pic 24 endif "
