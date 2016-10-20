@@ -64,7 +64,7 @@
       <PrecompiledHeaderOutputFile>.\./build/temp/game/release\game.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/game/release\</ObjectFileName>
       <ProgramDataBaseFileName>.\./build/temp/game/release\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>../foreign/zlib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../foreign/zlib;../foreign/remotery/lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -107,7 +107,7 @@
       <PrecompiledHeaderOutputFile>.\./build/temp/game/debug\game.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/game/debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\./build/temp/game/debug\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>../foreign/zlib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../foreign/zlib;../foreign/remotery/lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
