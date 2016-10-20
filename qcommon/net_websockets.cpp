@@ -251,7 +251,7 @@ struct Connection {
 		assert(wsi != NULL);
 		if (readyState == Connecting || readyState == Open) {
 			// game-initiated close, tell libwebsockets to close it
-		libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
+			libwebsocket_callback_on_writable(wsState->websocketContext, wsi);
 			setReadyState(Closed);
 		}
 
