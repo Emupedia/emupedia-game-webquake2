@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quake2", "quake2.vcxproj", "{D2D159D6-D803-42E8-97DC-CA4A1F5F2728}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ctfgame", "ctfgame\ctfgame.vcxproj", "{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug no Websockets|Win32 = Debug no Websockets|Win32
@@ -36,6 +38,16 @@ Global
 		{D2D159D6-D803-42E8-97DC-CA4A1F5F2728}.Release no Websockets|Win32.Build.0 = Release no Websockets|Win32
 		{D2D159D6-D803-42E8-97DC-CA4A1F5F2728}.Release|Win32.ActiveCfg = Release|Win32
 		{D2D159D6-D803-42E8-97DC-CA4A1F5F2728}.Release|Win32.Build.0 = Release|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Debug no Websockets|Win32.ActiveCfg = Debug|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Debug no Websockets|Win32.Build.0 = Debug|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Debug|Win32.Build.0 = Debug|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Dedicated|Win32.ActiveCfg = Debug|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Dedicated|Win32.Build.0 = Debug|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Release no Websockets|Win32.ActiveCfg = Release|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Release no Websockets|Win32.Build.0 = Release|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Release|Win32.ActiveCfg = Release|Win32
+		{06E87433-7A47-4AA6-9F8F-A206EF21CC6E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
