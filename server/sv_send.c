@@ -445,10 +445,9 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 	}
 
 	// send the data to all relevent clients
-	client_t *client;
-	int j;
-	for (j = 0, client = svs.clients; j < maxclients->intvalue; j++, client++)
+	for (int j = 0; j < maxclients->intvalue; j++)
 	{
+		client_t *client = svs.clients + j;
 		if (client->state <= cs_zombie)
 			continue;
 		
