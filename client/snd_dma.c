@@ -1160,14 +1160,18 @@ void S_AddLoopSounds (void)
 		return;
 
 	int sounds[MAX_EDICTS];
-	for (int i=0 ; i<cl.frame.num_entities ; i++)
+	int numEntities = cl.frame.num_entities;
+	assert(numEntities >= 0);
+	assert(numEntities < MAX_EDICTS);
+	for (int i = 0 ; i < numEntities; i++)
 	{
 		int num = (cl.frame.parse_entities + i)&(MAX_PARSE_ENTITIES-1);
 		entity_state_t *ent = &cl_parse_entities[num];
 		sounds[i] = ent->sound;
 	}
 
-	for (int i=0 ; i<cl.frame.num_entities ; i++)
+	assert(numEntities == cl.frame.num_entities);
+	for (int i = 0 ; i < numEntities; i++)
 	{
 		if (!sounds[i])
 			continue;		
@@ -1211,7 +1215,8 @@ void S_AddLoopSounds (void)
 		S_SpatializeOrigin (origin, 255.0f, SOUND_LOOPATTENUATE,
 			&left_total, &right_total);
 
-		for (int j=i+1 ; j<cl.frame.num_entities ; j++)
+		assert(numEntities == cl.frame.num_entities);
+		for (int j = i + 1; j < numEntities; j++)
 		{
 			if (sounds[j] != sounds[i])
 				continue;
