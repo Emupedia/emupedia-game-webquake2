@@ -967,22 +967,17 @@ a deathmatch.
 ============
 */
 void PutClientInServer(edict_t *ent){
-	vec3_t	mins = { -16, -16, -24};
-	vec3_t	maxs = {16, 16, 32};
-	int	index;
-	vec3_t	spawn_origin, spawn_angles;
-	gclient_t	*client;
-	int	i;
-	client_persistant_t	saved;
-	client_respawn_t	resp;
-	
 	// find a spawn point
 	// do it before setting health back up, so farthest
 	// ranging doesn't count this client
+	vec3_t	spawn_origin, spawn_angles;
 	SelectSpawnPoint(ent, spawn_origin, spawn_angles);
 	
-	index = ent - g_edicts - 1;
-	client = ent->client;
+	int index = ent - g_edicts - 1;
+	gclient_t *client = ent->client;
+	
+	client_persistant_t	saved;
+	client_respawn_t	resp;
 	
 	// deathmatch wipes most client data every spawn
 	if(deathmatch->value){
@@ -1043,6 +1038,8 @@ void PutClientInServer(edict_t *ent){
 	ent->flags &= ~FL_NO_KNOCKBACK;
 	ent->svflags &= ~SVF_DEADMONSTER;
 	
+	vec3_t	mins = { -16, -16, -24};
+	vec3_t	maxs = {16, 16, 32};
 	VectorCopy(mins, ent->mins);
 	VectorCopy(maxs, ent->maxs);
 	VectorClear(ent->velocity);
@@ -1084,7 +1081,7 @@ void PutClientInServer(edict_t *ent){
 	VectorCopy(ent->s.origin, ent->s.old_origin);
 	
 	// set the delta angle
-	for(i = 0; i < 3; i++)
+	for(int i = 0; i < 3; i++)
 		client->ps.pmove.delta_angles[i] = ANGLE2SHORT(spawn_angles[i] - client->resp.cmd_angles[i]);
 		
 	ent->s.angles[PITCH] = 0;
