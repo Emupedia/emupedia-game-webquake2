@@ -380,7 +380,7 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 {
 	qboolean reliable = false;
 
-	int leafnum, area1;
+	int leafnum = 0, area1 = 0;
 	if (to != MULTICAST_ALL_R && to != MULTICAST_ALL)
 	{
 		if (!origin)
@@ -392,11 +392,6 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 		}
 		leafnum = CM_PointLeafnum (origin);
 		area1 = CM_LeafArea (leafnum);
-	}
-	else
-	{
-		leafnum = 0;	// just to avoid compiler warnings
-		area1 = 0;
 	}
 
 	//r1: check we have data in the multicast buffer
