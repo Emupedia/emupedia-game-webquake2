@@ -459,6 +459,12 @@ char *Sys_ConsoleInput(void)
 		return NULL;
 
 	fd_set fdset;
+	/* horrible hack for clang analyzer issue
+	    https://llvm.org/bugs/show_bug.cgi?id=8920  */
+#ifdef __clang_analyzer__
+	memset(fdset.__fds_bits, 0, sizeof(fdset.__fds_bits));
+#endif  // __clang_analyzer__
+
 	FD_ZERO(&fdset);
 	FD_SET(0, &fdset); // stdin
 	struct timeval timeout;
