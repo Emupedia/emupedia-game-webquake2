@@ -59,7 +59,7 @@
       <Optimization>MaxSpeed</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\./build/temp/game/release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\./build/temp/game/release\game.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/game/release\</ObjectFileName>
@@ -102,7 +102,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\./build/temp/game/debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\./build/temp/game/debug\game.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/game/debug\</ObjectFileName>

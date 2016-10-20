@@ -76,7 +76,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;USE_OPENAL;USE_GLEW;GLEW_STATIC;GLEW_NO_GLU;USE_LIBWEBSOCKETS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;USE_OPENAL;USE_GLEW;GLEW_STATIC;GLEW_NO_GLU;USE_LIBWEBSOCKETS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\./build/temp/r1q2/debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\./build/temp/r1q2/debug\quake2.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/r1q2/debug\</ObjectFileName>
@@ -117,7 +117,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;DEDICATED_ONLY;USE_LIBWEBSOCKETS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;DEDICATED_ONLY;USE_LIBWEBSOCKETS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\./build/temp/dedicated\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
       <PrecompiledHeaderOutputFile>.\./build/temp/dedicated\quake2.pch</PrecompiledHeaderOutputFile>
@@ -159,7 +159,7 @@
       <Optimization>MaxSpeed</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;USE_OPENAL;USE_GLEW;GLEW_STATIC;USE_LIBWEBSOCKETS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;USE_OPENAL;USE_GLEW;GLEW_STATIC;USE_LIBWEBSOCKETS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\./build/temp/r1q2/release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\./build/temp/r1q2/release\quake2.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\./build/temp/r1q2/release\</ObjectFileName>
