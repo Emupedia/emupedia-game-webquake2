@@ -661,16 +661,13 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 {
 	vec3_t		from;
 	vec3_t		end;
-	trace_t		tr;
-	edict_t		*ignore;
-	int			mask;
-	qboolean	water;
 
 	VectorMA (start, 8192, aimdir, end);
 	VectorCopy (start, from);
-	ignore = self;
-	water = false;
-	mask = MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA;
+	edict_t *ignore = self;
+	qboolean water = false;
+	int mask = MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA;
+	trace_t tr;
 	while (ignore)
 	{
 		tr = gi.trace (from, NULL, NULL, end, ignore, mask);
