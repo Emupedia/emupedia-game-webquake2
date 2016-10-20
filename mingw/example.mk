@@ -38,7 +38,7 @@ OPTFLAGS:=-O2 -mtune=generic -fno-strict-aliasing -ffloat-store
 CXXFLAGS=$(CFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 
 
-LDFLAGS:=-gstabs -mwindows
+LDFLAGS:=-gstabs -mwindows -static-libstdc++ -static-libgcc
 LDLIBS:=-lwinmm -lwsock32
 LDLIBS_client:=-ldsound
 LDLIBS_ref_gl:=-lopengl32
