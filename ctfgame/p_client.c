@@ -48,7 +48,7 @@ static void SP_FixCoopSpots(edict_t *self){
 			continue;
 		VectorSubtract(self->s.origin, spot->s.origin, d);
 		if(VectorLength(d) < 384){
-			if((!self->targetname) || strcasecmp(self->targetname, spot->targetname) != 0){
+			if((!self->targetname) || Q_stricmp(self->targetname, spot->targetname) != 0){
 				//				gi.dprintf("FixCoopSpots changed %s at %s targetname from %s to %s\n", self->classname, vtos(self->s.origin), self->targetname, spot->targetname);
 				self->targetname = spot->targetname;
 			}
@@ -64,7 +64,7 @@ static void SP_FixCoopSpots(edict_t *self){
 static void SP_CreateCoopSpots(edict_t *self){
 	edict_t	*spot;
 	
-	if(strcasecmp(level.mapname, "security") == 0){
+	if(Q_stricmp(level.mapname, "security") == 0){
 		spot = G_Spawn();
 		spot->classname = "info_player_coop";
 		spot->s.origin[0] = 188 - 64;
@@ -100,7 +100,7 @@ The normal starting point for a level.
 void SP_info_player_start(edict_t *self){
 	if(!coop->value)
 		return;
-	if(strcasecmp(level.mapname, "security") == 0){
+	if(Q_stricmp(level.mapname, "security") == 0){
 		// invoke one of our gross, ugly, disgusting hacks
 		self->think = SP_CreateCoopSpots;
 		self->nextthink = level.time + FRAMETIME;
@@ -128,20 +128,20 @@ void SP_info_player_coop(edict_t *self){
 		return;
 	}
 	
-	if((strcasecmp(level.mapname, "jail2") == 0) ||
-			(strcasecmp(level.mapname, "jail4") == 0) ||
-			(strcasecmp(level.mapname, "mine1") == 0) ||
-			(strcasecmp(level.mapname, "mine2") == 0) ||
-			(strcasecmp(level.mapname, "mine3") == 0) ||
-			(strcasecmp(level.mapname, "mine4") == 0) ||
-			(strcasecmp(level.mapname, "lab") == 0) ||
-			(strcasecmp(level.mapname, "boss1") == 0) ||
-			(strcasecmp(level.mapname, "fact3") == 0) ||
-			(strcasecmp(level.mapname, "biggun") == 0) ||
-			(strcasecmp(level.mapname, "space") == 0) ||
-			(strcasecmp(level.mapname, "command") == 0) ||
-			(strcasecmp(level.mapname, "power2") == 0) ||
-			(strcasecmp(level.mapname, "strike") == 0)){
+	if((Q_stricmp(level.mapname, "jail2") == 0) ||
+			(Q_stricmp(level.mapname, "jail4") == 0) ||
+			(Q_stricmp(level.mapname, "mine1") == 0) ||
+			(Q_stricmp(level.mapname, "mine2") == 0) ||
+			(Q_stricmp(level.mapname, "mine3") == 0) ||
+			(Q_stricmp(level.mapname, "mine4") == 0) ||
+			(Q_stricmp(level.mapname, "lab") == 0) ||
+			(Q_stricmp(level.mapname, "boss1") == 0) ||
+			(Q_stricmp(level.mapname, "fact3") == 0) ||
+			(Q_stricmp(level.mapname, "biggun") == 0) ||
+			(Q_stricmp(level.mapname, "space") == 0) ||
+			(Q_stricmp(level.mapname, "command") == 0) ||
+			(Q_stricmp(level.mapname, "power2") == 0) ||
+			(Q_stricmp(level.mapname, "strike") == 0)){
 		// invoke one of our gross, ugly, disgusting hacks
 		self->think = SP_FixCoopSpots;
 		self->nextthink = level.time + FRAMETIME;
