@@ -49,7 +49,7 @@ Default is set up to cross-compile 32-bit binary from Linux.
 
 
 MSVC:
-Open the included project and hope for the best. MSVC 2012 or 2013
+Open the included project and hope for the best. MSVC 2015
 required.
 
 
