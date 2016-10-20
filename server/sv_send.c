@@ -406,7 +406,7 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 		return;
 	}
 
-	byte			*mask;
+	byte *mask = NULL;
 	int				cluster;
 
 	// if doing a serverrecord, store everything
@@ -419,7 +419,6 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 		reliable = true;	// intentional fallthrough
 	case MULTICAST_ALL:
 		leafnum = 0;
-		mask = NULL;
 		break;
 
 	case MULTICAST_PHS_R:
@@ -439,7 +438,6 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 		break;
 
 	default:
-		mask = NULL;
 		Com_Printf ("GAME ERROR: SV_Multicast called with bad multicast_t to, ignored.\n", LOG_SERVER|LOG_ERROR|LOG_GAMEDEBUG);
 		if (sv_gamedebug->intvalue >= 2)
 			Sys_DebugBreak ();
