@@ -659,6 +659,7 @@ fire_rail
 */
 void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick)
 {
+	assert(self != NULL);
 	vec3_t		from;
 	vec3_t		end;
 
