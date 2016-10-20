@@ -378,15 +378,9 @@ MULTICAST_PHS	send to clients potentially hearable from org
 */
 void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 {
-	client_t		*client;
-	byte			*mask;
-	int				leafnum, cluster;
-	int				j;
-	qboolean		reliable;
-	int				area1, area2;
+	qboolean reliable = false;
 
-	reliable = false;
-
+	int leafnum, area1;
 	if (to != MULTICAST_ALL_R && to != MULTICAST_ALL)
 	{
 		if (!origin)
@@ -416,6 +410,9 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 		}
 		return;
 	}
+
+	byte			*mask;
+	int				cluster;
 
 	// if doing a serverrecord, store everything
 	if (svs.demofile)
@@ -455,6 +452,8 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 	}
 
 	// send the data to all relevent clients
+	client_t *client;
+	int j;
 	for (j = 0, client = svs.clients; j < maxclients->intvalue; j++, client++)
 	{
 		if (client->state <= cs_zombie)
@@ -481,7 +480,7 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 		{
 			leafnum = CM_PointLeafnum (client->edict->s.origin);
 			cluster = CM_LeafCluster (leafnum);
-			area2 = CM_LeafArea (leafnum);
+			int area2 = CM_LeafArea (leafnum);
 			if (!CM_AreasConnected (area1, area2))
 				continue;
 			if ( mask && (!(mask[cluster>>3] & (1<<(cluster&7)) ) ) )
