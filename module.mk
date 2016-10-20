@@ -257,7 +257,7 @@ compile_commands.json: $(ALLSRC)
 
 
 cppcheck:
-	cppcheck -I $(TOPDIR) -i $(TOPDIR)/foreign --enable=all --inconclusive -D__linux__ -DHAVE_UNISTD_H -DHAVE_STDARG_H -UNO_ZLIB -U_MSC_VER -U_WIN32 -U_WIN64 $(TOPDIR) 2> cppcheck.log
+	cppcheck -I $(TOPDIR) -i $(TOPDIR)/foreign --enable=warning,performance,information --inconclusive -D__linux__ -DHAVE_UNISTD_H -DHAVE_STDARG_H -UNO_ZLIB -U_MSC_VER -U_WIN32 -U_WIN64 $(TOPDIR) 2> cppcheck.log
 
 
 NOTFOREIGNSRC:=$(filter-out foreign/%,$(ALLSRC))
