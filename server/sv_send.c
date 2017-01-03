@@ -423,19 +423,19 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 
 	case MULTICAST_PHS_R:
 		reliable = true;	// intentional fallthrough
-	case MULTICAST_PHS:
+	case MULTICAST_PHS: {
 		leafnum = CM_PointLeafnum (origin);
 		cluster = CM_LeafCluster (leafnum);
 		mask = CM_ClusterPHS (cluster);
-		break;
+		} break;
 
 	case MULTICAST_PVS_R:
 		reliable = true;	// intentional fallthrough
-	case MULTICAST_PVS:
+	case MULTICAST_PVS: {
 		leafnum = CM_PointLeafnum (origin);
 		cluster = CM_LeafCluster (leafnum);
 		mask = CM_ClusterPVS (cluster);
-		break;
+		} break;
 
 	default:
 		Com_Printf ("GAME ERROR: SV_Multicast called with bad multicast_t to, ignored.\n", LOG_SERVER|LOG_ERROR|LOG_GAMEDEBUG);
