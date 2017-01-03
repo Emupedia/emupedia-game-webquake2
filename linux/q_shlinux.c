@@ -150,7 +150,7 @@ static qboolean CompareAttributes(char *path, char *name,
 	if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0)
 		return false;
 
-	sprintf(fn, "%s/%s", path, name);
+	snprintf(fn, MAX_OSPATH, "%s/%s", path, name);
 	if (stat(fn, &st) == -1)
 		return false; // shouldn't happen
 
@@ -190,7 +190,7 @@ char *Sys_FindFirst (char *path, unsigned musthave, unsigned canhave)
 //			if (*findpattern)
 //				printf("%s matched %s\n", findpattern, d->d_name);
 			if (CompareAttributes(findbase, d->d_name, musthave, canhave)) {
-				sprintf (findpath, "%s/%s", findbase, d->d_name);
+				snprintf(findpath, MAX_OSPATH, "%s/%s", findbase, d->d_name);
 				return findpath;
 			}
 		}
@@ -209,7 +209,7 @@ char *Sys_FindNext (unsigned musthave, unsigned canhave)
 //			if (*findpattern)
 //				printf("%s matched %s\n", findpattern, d->d_name);
 			if (CompareAttributes(findbase, d->d_name, musthave, canhave)) {
-				sprintf (findpath, "%s/%s", findbase, d->d_name);
+				snprintf(findpath, MAX_OSPATH, "%s/%s", findbase, d->d_name);
 				return findpath;
 			}
 		}
