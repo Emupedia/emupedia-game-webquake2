@@ -421,8 +421,8 @@ extern unzFile ZEXPORT unzOpen2 (path, pzlib_filefunc_def)
     if (unz_copyright[0]!=' ')
         return NULL;
 
-	//i don't like the uninit memory floating around :)
-	memset (&us, 0, sizeof(us));
+    //i don't like the uninit memory floating around :)
+    memset (&us, 0, sizeof(us));
 
     if (pzlib_filefunc_def==NULL)
         fill_fopen_filefunc(&us.z_filefunc);
@@ -989,12 +989,12 @@ local int unzlocal_CheckCurrentFileCoherencyHeader (s,piSizeVar,
         return UNZ_ERRNO;
 
 
-	if (err==UNZ_OK) {
+    if (err==UNZ_OK) {
         if (unzlocal_getLong(&s->z_filefunc, s->filestream,&uMagic) != UNZ_OK)
             err=UNZ_ERRNO;
         else if (uMagic!=0x04034b50)
-			err=UNZ_BADZIPFILE;
-	}
+            err=UNZ_BADZIPFILE;
+    }
 
     if (unzlocal_getShort(&s->z_filefunc, s->filestream,&uData) != UNZ_OK)
         err=UNZ_ERRNO;
