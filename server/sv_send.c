@@ -380,7 +380,7 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 {
 	qboolean reliable = false;
 
-	int leafnum = 0, area1 = 0;
+	int area1 = 0;
 	if (to != MULTICAST_ALL_R && to != MULTICAST_ALL)
 	{
 		if (!origin)
@@ -390,7 +390,7 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 				Sys_DebugBreak ();
 			return;
 		}
-		leafnum = CM_PointLeafnum (origin);
+		int leafnum = CM_PointLeafnum (origin);
 		area1 = CM_LeafArea (leafnum);
 	}
 
@@ -407,7 +407,6 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 	}
 
 	byte *mask = NULL;
-	int				cluster;
 
 	// if doing a serverrecord, store everything
 	if (svs.demofile)
@@ -423,16 +422,16 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 	case MULTICAST_PHS_R:
 		reliable = true;	// intentional fallthrough
 	case MULTICAST_PHS: {
-		leafnum = CM_PointLeafnum (origin);
-		cluster = CM_LeafCluster (leafnum);
+		int leafnum = CM_PointLeafnum (origin);
+		int cluster = CM_LeafCluster (leafnum);
 		mask = CM_ClusterPHS (cluster);
 		} break;
 
 	case MULTICAST_PVS_R:
 		reliable = true;	// intentional fallthrough
 	case MULTICAST_PVS: {
-		leafnum = CM_PointLeafnum (origin);
-		cluster = CM_LeafCluster (leafnum);
+		int leafnum = CM_PointLeafnum (origin);
+		int cluster = CM_LeafCluster (leafnum);
 		mask = CM_ClusterPVS (cluster);
 		} break;
 
@@ -469,8 +468,8 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 
 		if (mask)
 		{
-			leafnum = CM_PointLeafnum (client->edict->s.origin);
-			cluster = CM_LeafCluster (leafnum);
+			int leafnum = CM_PointLeafnum (client->edict->s.origin);
+			int cluster = CM_LeafCluster (leafnum);
 			int area2 = CM_LeafArea (leafnum);
 			if (!CM_AreasConnected (area1, area2))
 				continue;
