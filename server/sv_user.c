@@ -2287,25 +2287,16 @@ static void SV_SetClientSetting (client_t *cl)
 //#ifdef _DEBUG
 void SV_RunMultiMoves (client_t *cl)
 {
-	int			i;
-	unsigned	bits;
-	unsigned	offset;
-	unsigned	nummoves;
-
-	int			lastframe;
-
-	usercmd_t	last;
-	usercmd_t	move;
-	usercmd_t	*oldcmd;
-
-	bits = MSG_ReadByte (&net_message);
+	unsigned bits = MSG_ReadByte (&net_message);
 
 	//3 bits   5 bits
 	//[xxx]    [xxxxx]
 	//nummoves offset
 
-	nummoves = bits & 0xE0;
-	offset = bits & 0x1F;
+	unsigned nummoves = bits & 0xE0;
+	unsigned offset = bits & 0x1F;
+
+	int			lastframe;
 
 	//special value 31 indicates lastframe is beyond representation of 5 bits, suck up long
 	if (offset == 31)
@@ -2357,12 +2348,15 @@ void SV_RunMultiMoves (client_t *cl)
 		return;
 	}
 
+	usercmd_t	last;
+	usercmd_t	move;
+
 	memset (&last, 0, sizeof(last));
 
-	oldcmd = &cl->lastcmd;
+	usercmd_t	*oldcmd = &cl->lastcmd;
 
 	//r1: check there are actually enough usercmds in the message!
-	for (i = 0; i < nummoves; i++)
+	for (int i = 0; i < nummoves; i++)
 	{
 		MSG_ReadDeltaUsercmd (&net_message, &last, &move, cl->protocol == PROTOCOL_R1Q2 ? MINOR_VERSION_R1Q2 : 0);
 
