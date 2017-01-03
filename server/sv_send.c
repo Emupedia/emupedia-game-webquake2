@@ -418,7 +418,6 @@ void EXPORT SV_Multicast (vec3_t /*@null@*/ origin, multicast_t to)
 	case MULTICAST_ALL_R:
 		reliable = true;	// intentional fallthrough
 	case MULTICAST_ALL:
-		leafnum = 0;
 		break;
 
 	case MULTICAST_PHS_R:
