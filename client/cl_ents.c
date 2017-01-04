@@ -2148,8 +2148,8 @@ lerp_time;*/
 					uint32 frameindex;
 
 					frameindex = s1->frame;
-					if (frameindex > 6)
-						frameindex = 6;
+					if (frameindex > 5)
+						frameindex = 5;
 
 					j = bfg_lightramp[frameindex];
 				}
