@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
-#include <html5.h>
+#include <emscripten/html5.h>
 #endif  // EMSCRIPTEN
 
 #ifndef WIN32
