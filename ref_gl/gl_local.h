@@ -518,7 +518,6 @@ void GL_BeginBuildingLightmaps (void);
 
 void	Draw_GetPicSize (int *w, int *h, char *name);
 void	Draw_Pic (int x, int y, char *name);
-void	Draw_StretchPic (int x, int y, int w, int h, char *name);
 
 int		Draw_GetPalette (void);
 
