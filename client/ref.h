@@ -143,7 +143,6 @@ typedef struct
 	void	(*DrawStretchPic) (int x, int y, int w, int h, char *name);
 	void	(*DrawTileClear) (int x, int y, int w, int h, char *name);
 	void	(*DrawFill) (int x, int y, int w, int h, int c);
-	void	(*DrawFadeScreen) (void);
 } refexport_t;
 
 
@@ -225,6 +224,7 @@ void R_RenderFrame (refdef_t *fd);
 
 void	R_DrawString(int x, int y, const char *s, int xorVal, unsigned int maxLen);
 void	R_DrawChar (int x, int y, int c);
+void	Draw_FadeScreen (void);
 
 
 int 	R_Init( void *hinstance, void *hWnd );

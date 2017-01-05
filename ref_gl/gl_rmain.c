@@ -1960,7 +1960,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 	re.DrawStretchPic = Draw_StretchPic;
 	re.DrawTileClear = Draw_TileClear;
 	re.DrawFill = Draw_Fill;
-	re.DrawFadeScreen= Draw_FadeScreen;
 
 	Swap_Init ();
 

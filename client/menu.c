@@ -4131,7 +4131,7 @@ void M_Draw (void)
 		re.DrawFill (0,0,viddef.width, viddef.height, 0);
 	else
 #endif
-		re.DrawFadeScreen ();
+		Draw_FadeScreen ();
 
 	m_drawfunc ();
 
