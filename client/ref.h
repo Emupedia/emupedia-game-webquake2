@@ -138,9 +138,6 @@ typedef struct
 	// if api_version is different, the dll cannot be used
 	int		api_version;
 
-	// called when the library is loaded
-	int		(*Init) ( void *hinstance, void *wndproc );
-
 	void	(*DrawGetPicSize) (int *w, int *h, char *name);	// will return 0 0 if not found
 	void	(*DrawPic) (int x, int y, char *name);
 	void	(*DrawStretchPic) (int x, int y, int w, int h, char *name);
