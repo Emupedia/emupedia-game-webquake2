@@ -42,7 +42,6 @@ extern viddef_t viddef;
 #define VID_HEIGHT viddef.height
 
 #define Draw_Char R_DrawChar
-#define Draw_Fill re.DrawFill
 
 void Action_DoEnter( menuaction_s *a )
 {

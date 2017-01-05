@@ -202,7 +202,7 @@ void SCR_DrawDebugGraph (void)
 
 	x = scr_vrect.x;
 	y = scr_vrect.y+scr_vrect.height;
-	//re.DrawFill (x, y-scr_graphheight->value, w, scr_graphheight->value, 8);
+	//Draw_Fill (x, y-scr_graphheight->value, w, scr_graphheight->value, 8);
 
 	for (a=0 ; a<w ; a++)
 	{
@@ -214,7 +214,7 @@ void SCR_DrawDebugGraph (void)
 		if (FLOAT_LT_ZERO(v))
 			v += scr_graphheight->value * (1+(int)(-v/scr_graphheight->value));
 		h = (int)v % scr_graphheight->intvalue;
-		re.DrawFill (x+w-1-a, y - h, 1,	h, color);
+		Draw_Fill (x+w-1-a, y - h, 1,	h, color);
 	}
 }
 
@@ -808,7 +808,7 @@ void SCR_DrawConsole (void)
 	if (cls.state != ca_active || !cl.refresh_prepped)
 	{	// connected, but can't render
 		Con_DrawConsole (0.5);
-		re.DrawFill (0, viddef.height/2, viddef.width, viddef.height/2, 0);
+		Draw_Fill (0, viddef.height/2, viddef.width, viddef.height/2, 0);
 		goto out;
 	}
 
