@@ -564,7 +564,7 @@ static void SCR_DrawCrosshair (void)
 	if (!crosshair_pic[0])
 		return;
 
-	re.DrawPic (scr_vrect.x + scr_crosshair_x->intvalue + ((scr_vrect.width - crosshair_width)>>1)
+	Draw_Pic (scr_vrect.x + scr_crosshair_x->intvalue + ((scr_vrect.width - crosshair_width)>>1)
 	, scr_vrect.y + + scr_crosshair_y->intvalue + ((scr_vrect.height - crosshair_height)>>1), crosshair_pic);
 }
 

@@ -715,7 +715,7 @@ void SCR_DrawNet (void)
 		< CMD_BACKUP-1)
 		return;
 
-	re.DrawPic (scr_vrect.x+64, scr_vrect.y, "net");
+	Draw_Pic (scr_vrect.x+64, scr_vrect.y, "net");
 }
 
 /*
@@ -734,7 +734,7 @@ void SCR_DrawPause (void)
 		return;
 
 	re.DrawGetPicSize (&w, &h, "pause");
-	re.DrawPic ((viddef.width-w)/2, viddef.height/2 + 8, "pause");
+	Draw_Pic ((viddef.width-w)/2, viddef.height/2 + 8, "pause");
 }
 
 /*
@@ -751,7 +751,7 @@ void SCR_DrawLoading (void)
 
 	scr_draw_loading = 0;
 	re.DrawGetPicSize (&w, &h, "loading");
-	re.DrawPic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
+	Draw_Pic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
 }
 
 //=============================================================================
@@ -1194,7 +1194,7 @@ void SCR_DrawField (int x, int y, int color, int width, int value)
 		else
 			frame = ptr[0] -'0';
 
-		re.DrawPic (x, y, sb_nums[color][frame]);
+		Draw_Pic (x, y, sb_nums[color][frame]);
 		x += CHAR_WIDTH;
 		ptr++;
 		l--;
@@ -1313,7 +1313,7 @@ void SCR_ExecuteLayoutString (char *s)
 						token = COM_Parse (&s);
 						SCR_AddDirtyPoint (x, y);
 						SCR_AddDirtyPoint (x+23, y+23);
-						re.DrawPic (x, y, (char *)token);
+						Draw_Pic (x, y, (char *)token);
 					}
 					else
 					{
@@ -1333,7 +1333,7 @@ void SCR_ExecuteLayoutString (char *s)
 						{
 							SCR_AddDirtyPoint (x, y);
 							SCR_AddDirtyPoint (x+23, y+23);
-							re.DrawPic (x, y, cl.configstrings[CS_IMAGES+value]);
+							Draw_Pic (x, y, cl.configstrings[CS_IMAGES+value]);
 						}
 					}
 					continue;
@@ -1371,7 +1371,7 @@ void SCR_ExecuteLayoutString (char *s)
 							continue;	// negative number = don't show
 
 						if (cl.frame.playerstate.stats[STAT_FLASHES] & 4)
-							re.DrawPic (x, y, "field_3");
+							Draw_Pic (x, y, "field_3");
 
 						SCR_DrawField (x, y, color, width, value);
 						continue;
@@ -1388,7 +1388,7 @@ void SCR_ExecuteLayoutString (char *s)
 							color = 1;
 
 						if (cl.frame.playerstate.stats[STAT_FLASHES] & 1)
-							re.DrawPic (x, y, "field_3");
+							Draw_Pic (x, y, "field_3");
 
 						SCR_DrawField (x, y, color, width, value);
 						continue;
@@ -1402,7 +1402,7 @@ void SCR_ExecuteLayoutString (char *s)
 						color = 0;	// green
 
 						if (cl.frame.playerstate.stats[STAT_FLASHES] & 2)
-							re.DrawPic (x, y, "field_3");
+							Draw_Pic (x, y, "field_3");
 
 						SCR_DrawField (x, y, color, width, value);
 						continue;
@@ -1515,7 +1515,7 @@ void SCR_ExecuteLayoutString (char *s)
 
 					if (!ci->icon)
 						ci = &cl.baseclientinfo;
-					re.DrawPic (x, y, ci->iconname);
+					Draw_Pic (x, y, ci->iconname);
 					continue;
 				}
 				else if (!strcmp(token, "ctf"))
@@ -1643,7 +1643,7 @@ void SCR_UpdateScreen (void)
 			R_SetPalette(NULL);
 			scr_draw_loading = 0;
 			re.DrawGetPicSize (&w, &h, "loading");
-			re.DrawPic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
+			Draw_Pic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
 //			GLimp_EndFrame();
 //			return;
 		} 

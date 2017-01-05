@@ -139,9 +139,7 @@ typedef struct
 	int		api_version;
 
 	void	(*DrawGetPicSize) (int *w, int *h, char *name);	// will return 0 0 if not found
-	void	(*DrawPic) (int x, int y, char *name);
 } refexport_t;
-
 
 typedef struct
 {
@@ -225,6 +223,7 @@ void	Draw_FadeScreen (void);
 void	Draw_Fill (int x, int y, int w, int h, int c);
 void	Draw_TileClear (int x, int y, int w, int h, char *name);
 void	Draw_StretchPic (int x, int y, int w, int h, char *name);
+void	Draw_Pic (int x, int y, char *name);
 
 
 int 	R_Init( void *hinstance, void *hWnd );

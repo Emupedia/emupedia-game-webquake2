@@ -104,7 +104,7 @@ void CL_DrawInventory (void)
 	// repaint everything next framed
 	SCR_DirtyScreen ();
 
-	re.DrawPic (x, y+8, "inventory");
+	Draw_Pic (x, y+8, "inventory");
 
 	y += 24;
 	x += 24;

@@ -517,7 +517,6 @@ void GL_EndBuildingLightmaps (void);
 void GL_BeginBuildingLightmaps (void);
 
 void	Draw_GetPicSize (int *w, int *h, char *name);
-void	Draw_Pic (int x, int y, char *name);
 
 int		Draw_GetPalette (void);
 
