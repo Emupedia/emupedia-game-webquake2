@@ -141,7 +141,6 @@ typedef struct
 	void	(*DrawGetPicSize) (int *w, int *h, char *name);	// will return 0 0 if not found
 	void	(*DrawPic) (int x, int y, char *name);
 	void	(*DrawStretchPic) (int x, int y, int w, int h, char *name);
-	void	(*DrawTileClear) (int x, int y, int w, int h, char *name);
 } refexport_t;
 
 
@@ -225,6 +224,7 @@ void	R_DrawString(int x, int y, const char *s, int xorVal, unsigned int maxLen);
 void	R_DrawChar (int x, int y, int c);
 void	Draw_FadeScreen (void);
 void	Draw_Fill (int x, int y, int w, int h, int c);
+void	Draw_TileClear (int x, int y, int w, int h, char *name);
 
 
 int 	R_Init( void *hinstance, void *hWnd );

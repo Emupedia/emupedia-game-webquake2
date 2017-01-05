@@ -1958,7 +1958,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 	re.DrawGetPicSize = Draw_GetPicSize;
 	re.DrawPic = Draw_Pic;
 	re.DrawStretchPic = Draw_StretchPic;
-	re.DrawTileClear = Draw_TileClear;
 
 	Swap_Init ();
 
