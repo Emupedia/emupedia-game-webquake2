@@ -127,11 +127,6 @@ typedef struct
 } refdef_t;
 
 
-typedef struct
-{
-} refimport_t;
-
-
 typedef struct in_state {
 	// Pointers to functions back in client, set by vid_so
 	void (*IN_CenterView_fp)(void);
@@ -140,7 +135,7 @@ typedef struct in_state {
 } in_state_t;
 
 
-void GetRefAPI (refimport_t rimp );
+void GetRefAPI();
 
 
 void RW_IN_Init(in_state_t *in_state_p);

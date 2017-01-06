@@ -583,15 +583,6 @@ extern double vid_scaled_width, vid_scaled_height;
 extern glconfig_t  gl_config;
 extern glstate_t   gl_state;
 
-/*
-====================================================================
-
-IMPORTED FUNCTIONS
-
-====================================================================
-*/
-
-extern	refimport_t		ri;
 
 /*
 ====================================================================

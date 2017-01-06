@@ -111,8 +111,6 @@ VID_LoadRefresh
 */
 qboolean VID_LoadRefresh( char *name )
 {
-	refimport_t		ri;
-
 	if ( reflib_active )
 	{
 		KBD_Close();
@@ -121,7 +119,7 @@ qboolean VID_LoadRefresh( char *name )
 		VID_FreeReflib ();
 	}
 
-	GetRefAPI( ri );
+	GetRefAPI();
 
 	/* Init IN (Mouse) */
 	in_state.IN_CenterView_fp = IN_CenterView;

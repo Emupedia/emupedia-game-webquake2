@@ -49,8 +49,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 void R_Clear (void);
 
-refimport_t		ri;
-
 model_t		*r_worldmodel;
 
 double		gldepthmin, gldepthmax;
@@ -1947,9 +1945,8 @@ GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-void GetRefAPI (refimport_t rimp )
+void GetRefAPI()
 {
-	ri = rimp;
 	Swap_Init ();
 }
 
