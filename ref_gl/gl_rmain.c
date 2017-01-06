@@ -1947,17 +1947,10 @@ GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-refexport_t GetRefAPI (refimport_t rimp )
+void GetRefAPI (refimport_t rimp )
 {
-	refexport_t	re;
-
 	ri = rimp;
-
-	re.api_version = API_VERSION;
-
 	Swap_Init ();
-
-	return re;
 }
 
 

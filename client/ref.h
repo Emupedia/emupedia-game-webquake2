@@ -127,18 +127,6 @@ typedef struct
 } refdef_t;
 
 
-
-#define	API_VERSION		3
-
-//
-// these are the functions exported by the refresh module
-//
-typedef struct
-{
-	// if api_version is different, the dll cannot be used
-	int		api_version;
-} refexport_t;
-
 typedef struct
 {
 	void		(*Vid_MenuInit)( void );
@@ -154,7 +142,7 @@ typedef struct in_state {
 } in_state_t;
 
 
-refexport_t GetRefAPI (refimport_t rimp );
+void GetRefAPI (refimport_t rimp );
 
 
 void RW_IN_Init(in_state_t *in_state_p);

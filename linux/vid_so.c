@@ -12,9 +12,6 @@
 
 qboolean reload_video = false;
 
-// Structure containing functions exported from refresh DLL
-refexport_t	re;
-
 // Console variables that we need to access from this module
 cvar_t		*vid_gamma;
 cvar_t		*vid_xpos;			// X coordinate of window position
@@ -104,7 +101,6 @@ void VID_FreeReflib (void)
 	KBD_Close();
 	RW_IN_Shutdown();
 
-	memset (&re, 0, sizeof(re));
 	reflib_active  = false;
 }
 
@@ -128,13 +124,7 @@ qboolean VID_LoadRefresh( char *name )
 	ri.Vid_MenuInit = VID_MenuInit;
 	ri.Vid_NewWindow = VID_NewWindow;
 
-	re = GetRefAPI( ri );
-
-	if (re.api_version != API_VERSION)
-	{
-		VID_FreeReflib ();
-		Com_Error (ERR_FATAL, "%s has incompatible api_version", name);
-	}
+	GetRefAPI( ri );
 
 	/* Init IN (Mouse) */
 	in_state.IN_CenterView_fp = IN_CenterView;
