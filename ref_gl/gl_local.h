@@ -516,8 +516,6 @@ void GL_CreateSurfaceLightmap (msurface_t *surf);
 void GL_EndBuildingLightmaps (void);
 void GL_BeginBuildingLightmaps (void);
 
-void	Draw_GetPicSize (int *w, int *h, char *name);
-
 int		Draw_GetPalette (void);
 
 

@@ -733,7 +733,7 @@ void SCR_DrawPause (void)
 	if (!cl_paused->intvalue)
 		return;
 
-	re.DrawGetPicSize (&w, &h, "pause");
+	Draw_GetPicSize (&w, &h, "pause");
 	Draw_Pic ((viddef.width-w)/2, viddef.height/2 + 8, "pause");
 }
 
@@ -750,7 +750,7 @@ void SCR_DrawLoading (void)
 		return;
 
 	scr_draw_loading = 0;
-	re.DrawGetPicSize (&w, &h, "loading");
+	Draw_GetPicSize (&w, &h, "loading");
 	Draw_Pic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
 }
 
@@ -1223,7 +1223,7 @@ void SCR_TouchPics (void)
 			Cvar_Set ("crosshair", "0");
 
 		Com_sprintf (crosshair_pic, sizeof(crosshair_pic), "ch%i", crosshair->intvalue);
-		re.DrawGetPicSize (&crosshair_width, &crosshair_height, crosshair_pic);
+		Draw_GetPicSize (&crosshair_width, &crosshair_height, crosshair_pic);
 		if (!crosshair_width)
 			crosshair_pic[0] = 0;
 	}
@@ -1642,7 +1642,7 @@ void SCR_UpdateScreen (void)
 
 			R_SetPalette(NULL);
 			scr_draw_loading = 0;
-			re.DrawGetPicSize (&w, &h, "loading");
+			Draw_GetPicSize (&w, &h, "loading");
 			Draw_Pic ((viddef.width-w)/2, (viddef.height-h)/2, "loading");
 //			GLimp_EndFrame();
 //			return;

@@ -230,7 +230,7 @@ void VID_MenuDraw (void)
 	/*
 	** draw the banner
 	*/
-	re.DrawGetPicSize( &w, &h, "m_banner_video" );
+	Draw_GetPicSize( &w, &h, "m_banner_video" );
 	Draw_Pic( viddef.width / 2 - w / 2, viddef.height /2 - 110, "m_banner_video" );
 
 	/*

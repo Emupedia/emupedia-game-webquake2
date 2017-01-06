@@ -111,7 +111,7 @@ static void M_Banner( char *name )
 {
 	int w, h;
 
-	re.DrawGetPicSize (&w, &h, name );
+	Draw_GetPicSize (&w, &h, name );
 	Draw_Pic( viddef.width / 2 - w / 2, viddef.height / 2 - 110, name );
 }
 
@@ -452,7 +452,7 @@ static void M_Main_Draw (void)
 
 	for ( i = 0; names[i] != 0; i++ )
 	{
-		re.DrawGetPicSize( &w, &h, names[i] );
+		Draw_GetPicSize( &w, &h, names[i] );
 
 		if ( w > widest )
 			widest = w;
@@ -473,7 +473,7 @@ static void M_Main_Draw (void)
 
 	M_DrawCursor( xoffset - 25, ystart + m_main_cursor * 40 + 11, (int)(cls.realtime / 100)%NUM_CURSOR_FRAMES );
 
-	re.DrawGetPicSize( &w, &h, "m_main_plaque" );
+	Draw_GetPicSize( &w, &h, "m_main_plaque" );
 	Draw_Pic( xoffset - 30 - w, ystart, "m_main_plaque" );
 
 	Draw_Pic( xoffset - 30 - w, ystart + h + 5, "m_main_logo" );

@@ -1955,8 +1955,6 @@ refexport_t GetRefAPI (refimport_t rimp )
 
 	re.api_version = API_VERSION;
 
-	re.DrawGetPicSize = Draw_GetPicSize;
-
 	Swap_Init ();
 
 	return re;
