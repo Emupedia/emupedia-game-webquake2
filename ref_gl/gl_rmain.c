@@ -1947,7 +1947,6 @@ GetRefAPI
 */
 void GetRefAPI()
 {
-	Swap_Init ();
 }
 
 

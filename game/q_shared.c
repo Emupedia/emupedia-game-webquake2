@@ -737,7 +737,6 @@ int32 LongSwap (int32 l)
 	return ((int)b1<<24) + ((int)b2<<16) + ((int)b3<<8) + b4;
 }
 
-void Swap_Init (void){}
 
 /*
 ============

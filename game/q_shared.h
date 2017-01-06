@@ -533,7 +533,6 @@ int Q_strncasecmp (const char *s1, const char *s2, size_t n);
 //=============================================
 
 
-void	Swap_Init (void);
 char	*va(const char *format, ...) __attribute__ ((format (printf, 1, 2)));
 
 //=============================================
