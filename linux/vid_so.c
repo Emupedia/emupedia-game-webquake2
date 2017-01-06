@@ -119,8 +119,6 @@ qboolean VID_LoadRefresh( char *name )
 		VID_FreeReflib ();
 	}
 
-	GetRefAPI();
-
 	/* Init IN (Mouse) */
 	in_state.IN_CenterView_fp = IN_CenterView;
 	in_state.viewangles = cl.viewangles;

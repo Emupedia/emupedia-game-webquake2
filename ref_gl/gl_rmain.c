@@ -1936,19 +1936,6 @@ void R_DrawBeam( entity_t *e )
 	glDepthMask( GL_TRUE );
 }
 
-//===================================================================
-
-
-/*
-@@@@@@@@@@@@@@@@@@@@@
-GetRefAPI
-
-@@@@@@@@@@@@@@@@@@@@@
-*/
-void GetRefAPI()
-{
-}
-
 
 static void Force_CenterView_f (void)
 {

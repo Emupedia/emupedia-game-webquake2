@@ -135,9 +135,6 @@ typedef struct in_state {
 } in_state_t;
 
 
-void GetRefAPI();
-
-
 void RW_IN_Init(in_state_t *in_state_p);
 void RW_IN_Shutdown(void);
 void RW_IN_Commands(void);
