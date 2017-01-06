@@ -132,6 +132,7 @@ DIRS:= \
 	linux \
 	qcommon \
 	ref_gl \
+	ref_null \
 	server \
 	utils \
 	win32 \

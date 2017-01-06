@@ -37,8 +37,23 @@ FILES:= \
 	# empty line
 
 
-quake2_MODULES:=client linux qcommon qshared ref_gl shlinux shwin win32 zlib
+quake2_MODULES:=client linux qcommon qshared shlinux shwin win32 zlib
 quake2_SRC:=
+
+
+ifeq ($(RENDERER),opengl)
+
+quake2_MODULES+=ref_gl
+
+else ifeq ($(RENDERER),null)
+
+quake2_MODULES+=ref_null
+
+else
+
+$(error Bad RENDERER "$(RENDERER)" selected)
+
+endif
 
 
 ifeq ($(PURE_CLIENT),y)

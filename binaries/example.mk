@@ -23,6 +23,7 @@ USE_REMOTERY:=n
 BUILD_SERVER:=y
 BUILD_UTILS:=y
 PURE_CLIENT:=n
+RENDERER:=opengl
 
 
 # compiler options etc
