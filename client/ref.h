@@ -129,7 +129,6 @@ typedef struct
 
 typedef struct
 {
-	void		(*Vid_MenuInit)( void );
 	void		(*Vid_NewWindow)( int width, int height );
 } refimport_t;
 

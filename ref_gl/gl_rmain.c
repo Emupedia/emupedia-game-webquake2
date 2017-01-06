@@ -1549,8 +1549,8 @@ retryQGL:
 		return -1;
 	}
 
-	Com_DPrintf("Vid_MenuInit()\n");
-	ri.Vid_MenuInit();
+	Com_DPrintf("VID_MenuInit()\n");
+	VID_MenuInit();
 
 	/*
 	** get our various GL strings

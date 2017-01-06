@@ -121,7 +121,6 @@ qboolean VID_LoadRefresh( char *name )
 		VID_FreeReflib ();
 	}
 
-	ri.Vid_MenuInit = VID_MenuInit;
 	ri.Vid_NewWindow = VID_NewWindow;
 
 	GetRefAPI( ri );
