@@ -1354,7 +1354,7 @@ static qboolean GLimp_InitGraphics( qboolean fullscreen )
 	}
 
 	// let the sound and input subsystems know about the new window
-	ri.Vid_NewWindow(viddef.width, viddef.height);
+	VID_NewWindow(viddef.width, viddef.height);
 
 	return true;
 }

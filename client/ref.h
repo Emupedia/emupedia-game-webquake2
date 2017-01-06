@@ -129,7 +129,6 @@ typedef struct
 
 typedef struct
 {
-	void		(*Vid_NewWindow)( int width, int height );
 } refimport_t;
 
 
@@ -171,6 +170,7 @@ void	VID_Init(void);
 void	VID_Shutdown(void);
 void	VID_CheckChanges(void);
 void VID_Error (int err_level, const char *fmt, ...) __attribute__((format (printf, 2, 3), noreturn));
+void VID_NewWindow ( int width, int height);
 
 void	VID_MenuInit(void);
 void	VID_MenuDraw(void);
