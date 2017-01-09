@@ -515,7 +515,7 @@ extern	edict_t			*g_edicts;
 #endif
 
 
-#ifdef USE_AFL
+#ifdef USE_AFL_NET
 
 
 #define random random_afl

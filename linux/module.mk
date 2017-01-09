@@ -16,7 +16,7 @@ FILES:= \
 	# empty line
 
 
-ifeq ($(AFL),y)
+ifeq ($(AFL_NET),y)
 
 
 FILES+= \

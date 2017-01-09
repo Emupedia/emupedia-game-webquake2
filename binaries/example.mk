@@ -11,6 +11,7 @@ ASAN:=n
 TSAN:=n
 UBSAN:=n
 AFL:=n
+AFL_NET:=n
 
 
 USE_JPEG:=y

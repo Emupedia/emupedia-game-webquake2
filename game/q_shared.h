@@ -209,7 +209,7 @@ typedef bool qboolean;
 #define Q_BIGENDIAN 0
 
 
-#ifdef USE_AFL
+#ifdef USE_AFL_NET
 
 
 #define crand crandom
@@ -217,7 +217,7 @@ float crandom();
 float frand();
 
 
-#else  //  USE_AFL
+#else  //  USE_AFL_NET
 
 
 //#define random()	(randomMT() / ((float)0xFFFFFFFFU))
@@ -230,7 +230,7 @@ float frand();
 #define	crand()		(((int)randomMT() - 0x7FFFFFFF) * 0.000000000465661287307739257812f)
 
 
-#endif  //  USE_AFL
+#endif  //  USE_AFL_NET
 
 
 #ifndef NULL

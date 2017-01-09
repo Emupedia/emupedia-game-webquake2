@@ -14,11 +14,18 @@ ALLDIRS:=baseq2
 default: all
 
 
+ifeq ($(AFL_NET),y)
+
+CFLAGS+=-DUSE_AFL_NET -DUSE_AFL
+
+endif  # AFL
+
+
 ifeq ($(AFL),y)
 
 CFLAGS+=-DUSE_AFL
 
-endif
+endif  # AFL
 
 
 ifeq ($(ASAN),y)

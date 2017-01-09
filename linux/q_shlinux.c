@@ -96,7 +96,25 @@ Sys_Milliseconds
 unsigned int curtime = 0;
 
 
-#ifndef USE_AFL
+#ifdef USE_AFL
+
+
+void Sys_DebugBreak (void)
+{
+	exit(1);
+}
+
+
+unsigned int Sys_Milliseconds (void)
+{
+	static unsigned int curtime = 0;
+	curtime++;
+
+	return curtime;
+}
+
+
+#else  // USE_AFL
 
 
 unsigned int Sys_Milliseconds (void)
@@ -119,13 +137,14 @@ unsigned int Sys_Milliseconds (void)
 }
 
 
-#endif  // USE_AFL
-
-
 void Sys_DebugBreak (void)
 {
 	__builtin_trap();
 }
+
+
+#endif  // USE_AFL
+
 
 void Sys_Mkdir (char *path)
 {
