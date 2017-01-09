@@ -43,7 +43,17 @@ quake2_SRC:=
 
 ifeq ($(RENDERER),opengl)
 
+
+ifeq ($(USE_GLEW),y)
+
+quake2_MODULES+=ref_gl glew
+
+else  # glew
+
 quake2_MODULES+=ref_gl
+
+endif  # glew
+
 
 else ifeq ($(RENDERER),null)
 
@@ -69,13 +79,6 @@ ifeq ($(USE_JPEG),y)
 
 quake2_MODULES+=libjpeg
 CFLAGS+=-DUSE_JPEG
-
-endif
-
-
-ifeq ($(USE_GLEW),y)
-
-quake2_MODULES+=glew
 
 endif
 
