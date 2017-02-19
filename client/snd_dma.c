@@ -1742,7 +1742,7 @@ void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 	if (!sound_started)
 		return;
 
-	rmt_BeginCPUSample(S_Update);
+	BEGIN_CPU_SAMPLE(S_Update);
 
 	// if the laoding plaque is up, clear everything
 	// out to make sure we aren't looping a dirty
@@ -1816,7 +1816,7 @@ void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 	S_Update_();
 
 out:
-	rmt_EndCPUSample();
+	END_CPU_SAMPLE();
 }
 
 void GetSoundtime(void)

@@ -27,6 +27,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../game/q_shared.h"
 
 
+#ifdef RMT_ENABLED
+
+
+#define BEGIN_CPU_SAMPLE(str)
+#define END_CPU_SAMPLE()
+
+
+#else  // RMT_ENABLED
+
+
+#define BEGIN_CPU_SAMPLE(str)
+#define END_CPU_SAMPLE()
+
+
+#endif  // RMT_ENABLED
+
+
 #ifdef GAME_HARD_LINKED
 
 #define BASEDIRNAME	GAME_HARD_LINKED

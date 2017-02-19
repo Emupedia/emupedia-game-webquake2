@@ -4082,7 +4082,7 @@ void CL_Frame (int msec)
 		return;
 #endif
 
-	rmt_BeginCPUSample(CL_Frame);
+	BEGIN_CPU_SAMPLE(CL_Frame);
 
 #ifdef _DEBUG
 	//if (!ActiveApp)
@@ -4239,7 +4239,7 @@ void CL_Frame (int msec)
 	//}
 
 out:
-	rmt_EndCPUSample();
+	END_CPU_SAMPLE();
 }
 
 //============================================================================

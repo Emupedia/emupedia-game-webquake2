@@ -795,7 +795,7 @@ SCR_DrawConsole
 */
 void SCR_DrawConsole (void)
 {
-	rmt_BeginCPUSample(SCR_DrawConsole);
+	BEGIN_CPU_SAMPLE(SCR_DrawConsole);
 
 	//Con_CheckResize ();
 	
@@ -825,7 +825,7 @@ void SCR_DrawConsole (void)
 	}
 
 out:
-	rmt_EndCPUSample();
+	END_CPU_SAMPLE();
 }
 
 //=============================================================================
@@ -1617,7 +1617,7 @@ void SCR_UpdateScreen (void)
 	if (!scr_initialized || !con.initialized)
 		return;				// not initialized yet
 
-	rmt_BeginCPUSample(SCR_UpdateScreen);
+	BEGIN_CPU_SAMPLE(SCR_UpdateScreen);
 
 	/*
 	** range check cl_camera_separation so we don't inadvertently fry someone's
@@ -1731,5 +1731,5 @@ void SCR_UpdateScreen (void)
 
 out:
 
-	rmt_EndCPUSample();
+	END_CPU_SAMPLE();
 }

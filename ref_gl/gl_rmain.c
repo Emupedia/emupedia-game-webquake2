@@ -480,7 +480,7 @@ void R_DrawEntitiesOnList (void)
 	if (!r_drawentities->intvalue)
 		return;
 
-	rmt_BeginCPUSample(R_DrawEntitiesOnList);
+	BEGIN_CPU_SAMPLE(R_DrawEntitiesOnList);
 
 	// draw non-transparent first
 	for (i=0 ; i<r_newrefdef.num_entities ; i++)
@@ -562,7 +562,7 @@ void R_DrawEntitiesOnList (void)
 	}
 	glDepthMask (1);		// back to writing
 
-	rmt_EndCPUSample();
+	END_CPU_SAMPLE();
 }
 
 /*
@@ -957,7 +957,7 @@ void R_RenderView (refdef_t *fd)
 	if (!r_worldmodel && !( r_newrefdef.rdflags & RDF_NOWORLDMODEL ) )
 		VID_Error (ERR_DROP, "R_RenderView: NULL worldmodel");
 
-	rmt_BeginCPUSample(R_RenderView);
+	BEGIN_CPU_SAMPLE(R_RenderView);
 
 	//if (r_speeds->intvalue)
 	//{
@@ -996,7 +996,7 @@ void R_RenderView (refdef_t *fd)
 			c_visible_lightmaps); 
 	}
 
-	rmt_EndCPUSample();
+	END_CPU_SAMPLE();
 }
 
 
