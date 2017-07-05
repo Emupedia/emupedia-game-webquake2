@@ -1,0 +1,5 @@
+Revision: 835e064aa52ac343786951f5c0d9b0b4cb60f752
+Author: Tuomas Närväinen <tuomas.narvainen@alternativegames.net>
+Date: 11.9.2015 14:36:28
+Message:
+Don't send P2PConnect more than once.
